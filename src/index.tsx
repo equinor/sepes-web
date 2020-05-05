@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import  { acquireTokenSilent }  from './auth/AuthFunctions';
+import  { acquireTokenSilent, signIn }  from './auth/AuthFunctions';
 import { UserAgentApplication }  from 'msal';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const myMSALObj = new UserAgentApplication({
   auth: {
@@ -17,15 +18,28 @@ const myMSALObj = new UserAgentApplication({
     storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
   }
 });
-
-acquireTokenSilent(myMSALObj);
+//signIn(myMSALObj);
+if(myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()){
+  signIn(myMSALObj);
+  console.log("Sign In PopUp");
+}
+else{
+  acquireTokenSilent(myMSALObj);
+  console.log("Sign in Silent");
+}
+export const UserConfig = React.createContext(myMSALObj);
 if(myMSALObj.getAccount()){
   ReactDOM.render(
     <React.StrictMode>
+      <UserConfig.Provider value={myMSALObj}>
       <App />
+      </UserConfig.Provider>
     </React.StrictMode>,
     document.getElementById('root')
   );
+}
+else{
+  //acquireTokenSilent(myMSALObj);
 }
 
 
