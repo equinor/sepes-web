@@ -3,7 +3,7 @@ import Logo from '../common/Logo';
 
 const Home = () => {
     return (
-        <p></p>
+        <></>
     )
 }
 

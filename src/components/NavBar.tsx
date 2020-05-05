@@ -9,9 +9,8 @@ import {
     DropdownMenu,
     DropdownItem,
     Container,
-    NavbarBrand,
-    NavbarToggler,
-    NavLink} from 'reactstrap';
+    NavbarBrand
+} from 'reactstrap';
 import Logo from './common/Logo';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
