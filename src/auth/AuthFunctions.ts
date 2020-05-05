@@ -18,7 +18,6 @@ export function signIn(myMSALObj:any) {
     myMSALObj.acquireTokenSilent(tokenRequest)
     .then((tokenResponse:any) => {
         // Callback code here
-        console.log(tokenResponse.accessToken);
     }).catch((error:string) => {
         console.log(error);
     });
