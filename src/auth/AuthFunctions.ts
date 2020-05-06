@@ -1,5 +1,5 @@
 export function signIn(myMSALObj:any) {
-    myMSALObj.loginPopup(loginRequest)
+    myMSALObj.loginRedirect(loginRequest)
       .then((loginResponse : any) => {
         console.log('id_token acquired at: ' + new Date().toString());
         console.log(loginResponse);

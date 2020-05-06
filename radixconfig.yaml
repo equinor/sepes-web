@@ -23,4 +23,3 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "400m"
-            SEPES_NAME: "radix-sepes-dev"
