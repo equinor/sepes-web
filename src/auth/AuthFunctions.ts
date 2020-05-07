@@ -4,7 +4,10 @@ import { myMSALObj }  from './AuthConfig';
     myMSALObj.acquireTokenSilent(loginRequest)
     .then((tokenResponse:any) => {  
         // Callback code here
-    }).catch((error:string) => {
+      }).catch((error:string) => {
+        console.log(error);
+    });
+  }
 
 
   export const apiCallWithToken = async (url:any) => {
