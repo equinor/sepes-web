@@ -8,20 +8,6 @@ spec:
       build:
         from: master
     - name: dev
-      ports:
-        - name: http
-          port: 3000
-      publicPort: http
-      environmentConfig:
-        - environment: prod          
-          monitoring: true
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "200m"
-            limits:
-              memory: "512Mi"
-              cpu: "400m"
       build:
         from: develop
   components:
@@ -31,7 +17,10 @@ spec:
           port: 3000
       publicPort: http
       environmentConfig:
-        - environment: prod          
+        - environment: prod
+          variables: 
+            REACT_APP_SEPES_REDIRECT_URI "https://web-sepes-web-dev.radix.equinor.com/"
+          replicas: 2
           monitoring: true
           resources:
             requests:
@@ -40,3 +29,13 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "400m"
+        - environment: dev
+          variables: 
+            REACT_APP_SEPES_REDIRECT_URI "https://web-sepes-web-dev.radix.equinor.com/"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256"
+              cpu: "200m"
