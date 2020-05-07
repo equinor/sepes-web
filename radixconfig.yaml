@@ -19,7 +19,7 @@ spec:
       environmentConfig:
         - environment: prod
           variables: 
-            REACT_APP_SEPES_REDIRECT_URI "https://web-sepes-web-dev.radix.equinor.com/"
+            REACT_APP_SEPES_REDIRECT_URI "https://web-sepes-web-prod.radix.equinor.com/"
           replicas: 2
           monitoring: true
           resources:
