@@ -2,8 +2,7 @@ import { myMSALObj }  from './AuthConfig';
 
   export const acquireTokenSilent = async () => {
     myMSALObj.acquireTokenSilent(loginRequest)
-    .then((tokenResponse:any) => {
-      console.log(tokenResponse.accessToken, "token");    
+    .then((tokenResponse:any) => {  
         // Callback code here
     }).catch((error:string) => {
         console.log(error);
@@ -14,7 +13,6 @@ import { myMSALObj }  from './AuthConfig';
     myMSALObj.acquireTokenSilent(loginRequest)
     .then((tokenResponse:any) => {
 
-      console.log(tokenResponse, "token");
       if(tokenResponse.accessToken){
         const headers = new Headers();
         const bearer = `Bearer ${tokenResponse.accessToken}`;
@@ -30,9 +28,9 @@ import { myMSALObj }  from './AuthConfig';
     
     fetch(url, options)
       .then(response => response.json())
-      .then(response => console.log(response))
+      .then(response => console.log('res', response))
       .catch(error => console.log(error))
-      }
+      } 
       
         // Callback code here
     }).catch((error:string) => {
