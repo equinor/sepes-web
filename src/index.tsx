@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import  { acquireTokenSilent, signIn }  from './auth/AuthFunctions';
+import  { acquireTokenSilent, signInRedirect }  from './auth/AuthFunctions';
 import { UserAgentApplication }  from 'msal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,13 +18,13 @@ const myMSALObj = new UserAgentApplication({
     storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
   }
 });
-//signIn(myMSALObj);
+
 if(myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()){
-  signIn(myMSALObj);
+  signInRedirect();
   console.log("Sign In PopUp");
 }
 else{
-  acquireTokenSilent(myMSALObj);
+  acquireTokenSilent();
   console.log("Sign in Silent");
 }
 export const UserConfig = React.createContext(myMSALObj);

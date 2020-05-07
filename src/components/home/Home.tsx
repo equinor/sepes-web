@@ -1,7 +1,10 @@
-import React from 'react';
-import Logo from '../common/Logo';
+import React, {useEffect} from 'react';
+import { callStudyList } from '../../services/Api';
 
 const Home = () => {
+    useEffect(() => {
+        callStudyList()
+    }, []);
     return (
         <></>
     )
