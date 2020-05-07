@@ -3,7 +3,7 @@ import { callStudyList } from '../../services/Api';
 
 const Home = () => {
     useEffect(() => {
-        callStudyList()
+        //callStudyList()
     }, []);
     return (
         <></>
