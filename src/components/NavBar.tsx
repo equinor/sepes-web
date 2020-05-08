@@ -38,20 +38,6 @@ const NavBar = () => {
     const [userDropDown, setUserDropDown] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-    
-
-
-
-  /*
-  const BlackDropDownToggle = styled(DropdownToggle)`
-    color: #343a40 !important;
-    .dropdown-item.active *,
-    .dropdown-item:active * {
-      color: #fff;
-      text-decoration: none;
-      background-color: #fff !important;
-    }
-  `;*/
 
     const toggleUserDropdown = () => {
         setUserDropDown(!userDropDown);
