@@ -1,0 +1,8 @@
+version: "3.8"
+services: 
+  web:
+    build: .
+    ports: 
+      - 8080:3000
+    environment: 
+      - REACT_APP_SEPES_REDIRECT_URI=http://localhost:8080/
