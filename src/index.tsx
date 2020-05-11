@@ -7,6 +7,7 @@ import  { acquireTokenSilent, signInRedirect }  from './auth/AuthFunctions';
 import { UserAgentApplication }  from 'msal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
+import NoAccess from './components/common/NoAccess';
 
 if(myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()){
   signInRedirect();
@@ -27,7 +28,13 @@ if(myMSALObj.getAccount()){
     document.getElementById('root')
   );
 }
-
+/*
+else{
+  ReactDOM.render(
+    <NoAccess />, document.getElementById('root')
+  )
+}
+*/
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
