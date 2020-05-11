@@ -34,7 +34,7 @@ spec:
             REACT_APP_SEPES_REDIRECT_URI: "https://web-sepes-web-dev.radix.equinor.com/"
           resources:
             requests:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "100m"
             limits:
               memory: "256Mi"
