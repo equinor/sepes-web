@@ -11,32 +11,35 @@ import { myMSALObj }  from './AuthConfig';
 
 
   export const apiCallWithToken = async (url:any) => {
-    myMSALObj.acquireTokenSilent(loginRequest)
-    .then((tokenResponse:any) => {
-
-      if(tokenResponse.accessToken){
-        const headers = new Headers();
-        const bearer = `Bearer ${tokenResponse.accessToken}`;
+    return new Promise(function (resolve, reject){
+      myMSALObj.acquireTokenSilent(loginRequest)
+      .then((tokenResponse:any) => {
   
-        headers.append("Authorization", bearer);
-  
-        const options = {
-            method: "GET",
-            headers: headers
-    };
-  
-    console.log('request made to Graph API at: ' + new Date().toString());
+        if(tokenResponse.accessToken){
+          const headers = new Headers();
+          const bearer = `Bearer ${tokenResponse.accessToken}`;
     
-    fetch(url, options)
-      .then(response => response.json())
-      .then(response => console.log('res', response))
-      .catch(error => console.log(error))
-      } 
+          headers.append("Authorization", bearer);
+    
+          const options = {
+              method: "GET",
+              headers: headers
+      };
+    
+      console.log('request made to Graph API at: ' + new Date().toString());
       
-        // Callback code here
-    }).catch((error:string) => {
-        console.log(error);
-    });
+      return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+        .then((response) => response.json())
+        .then((responseData) => { return resolve(responseData); })
+        .catch(error => console.log(error))
+        } 
+        
+          // Callback code here
+      }).catch((error:string) => {
+          console.log(error);
+      });
+    })
+    
   }
 
   function authCallback(error:any, response:any) {
