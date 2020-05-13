@@ -63,7 +63,7 @@ const NavBar = () => {
     return (<>
     <Navbar
         style={{ paddingBottom: '0', color: 'red' }}
-        className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-0"
+        className="navbar-expand-sm navbar-toggleable-sm box-shadow border-bottom mb-0"
         light
       >
         <Container fluid>
@@ -106,18 +106,6 @@ const NavBar = () => {
             </ul>
         </Container>
       </Navbar>
-      <Navbar
-      style={{ paddingTop: '0', color: 'red' }}
-      className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-0"
-      light
-    >
-      <Collapse
-        className="d-sm-inline-flex flex-sm-row"
-        isOpen={isOpen}
-        navbar
-      >
-      </Collapse>
-    </Navbar>
     </>);
     }
 
