@@ -20,7 +20,7 @@ spec:
         - environment: prod
           variables: 
             REACT_APP_SEPES_REDIRECT_URI: "https://web-sepes-web-prod.radix.equinor.com/"
-            REACT_APP_SEPES_BASE_API_URL: "https://web-sepes-api-prod.radix.equinor.com/"
+            REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-prod.radix.equinor.com/"
           replicas: 2
           monitoring: true
           resources:
@@ -33,7 +33,7 @@ spec:
         - environment: dev
           variables: 
             REACT_APP_SEPES_REDIRECT_URI: "https://web-sepes-web-dev.radix.equinor.com/"
-            REACT_APP_SEPES_BASE_API_URL: "https://web-sepes-api-dev.radix.equinor.com/"
+            REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-dev.radix.equinor.com/"
           resources:
             requests:
               memory: "256Mi"
