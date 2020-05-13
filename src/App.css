@@ -1,7 +1,17 @@
+html, body, #root, #root>div {
+  background-color: #E5E5E5;
+}
+#root {
+  background-color: #E5E5E5;
+  height: 100%;
+}
 .App {
   text-align: center;
+  background-color: #E5E5E5;
 }
 
+
+/*
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +46,4 @@
     transform: rotate(360deg);
   }
 }
+*/

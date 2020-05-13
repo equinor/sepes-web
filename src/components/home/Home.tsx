@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import * as api from '../../services/Api';
+import Studies from "./Studies";
+import { Button, Card } from '@equinor/eds-core-react'
 
 const Home = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
@@ -28,8 +30,16 @@ const Home = () => {
     }
     
     return (
-        <div><h2>In Development</h2><button onClick={() => getStudyList()}>Send request to Back-End</button>Response: {studyList}</div>
+        <div style={{marginTop: "20px"}}>
+        <Studies />
+        <Card style={{backgroundColor: "#D5EAF4", marginLeft: "20px", width: "20%", borderRadius: "4px"}}>
+            <Button>New study</Button>
+        </Card>
+        <h2>In Development</h2><button onClick={() => getStudyList()}>Send request to Back-End</button>Response: {studyList}
+        </div>
     )
 }
+
+//const mockData = [{name: "study1"}, {name: "study2"}]
 
 export default Home; 
