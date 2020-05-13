@@ -11,7 +11,7 @@ spec:
       build:
         from: develop
   components:
-    - name: web
+    - name: frontend
       ports:
         - name: http
           port: 3000
