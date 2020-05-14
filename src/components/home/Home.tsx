@@ -30,16 +30,26 @@ const Home = () => {
     }
     
     return (
-        <div style={{marginTop: "20px"}}>
-        <Studies />
-        <Card style={{backgroundColor: "#D5EAF4", marginLeft: "20px", width: "20%", borderRadius: "4px"}}>
-            <Button>New study</Button>
-        </Card>
+        <>
         <h2>In Development</h2><button onClick={() => getStudyList()}>Send request to Back-End</button>Response: {studyList}
+        <div style={{marginTop: "20px"}}>
+            <div style={{width: "70%", float:"left"}}>
+                <Studies />
+            </div>
+            <div style={{width: "29%", float:"right", padding:"10px"}}>
+                <Button style={{width:"15em"}}>New study</Button>
+            </div>
         </div>
+        
+        </>
     )
 }
 
+/*
+<Card style={{backgroundColor: "#D5EAF4",, width: "20%", borderRadius: "4px"}}>
+
+</Card>
+*/
 //const mockData = [{name: "study1"}, {name: "study2"}]
 
 export default Home; 

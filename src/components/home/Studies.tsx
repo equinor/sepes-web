@@ -5,7 +5,7 @@ import StudyComponent from './StudyComponent';
 const Studies = (props:any) => {
     
     return (
-        <div style={{width: "70%"}}>
+        <div>
             <StudyComponent name="test1" description= "test2"/>
             <StudyComponent name="test1" description= "test2"/>
             <StudyComponent name="test1" description= "test2"/>
