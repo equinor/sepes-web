@@ -3,13 +3,12 @@ import StudyComponent from './StudyComponent';
 
 
 const Studies = (props:any) => {
-    
+    console.log("Studylist", props.studyList, )
     return (
         <div>
-            <StudyComponent name="test1" description= "test2"/>
-            <StudyComponent name="test1" description= "test2"/>
-            <StudyComponent name="test1" description= "test2"/>
-            <StudyComponent name="test1" description= "test2"/>      
+            {props.studyList ? props.studyList.map(study => {
+                return (<StudyComponent name={study.studyName} description= "test2"/>);
+            }): "No studies yet"}     
         </div>         
     )
 }

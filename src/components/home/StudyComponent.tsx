@@ -24,23 +24,27 @@ const Dot = styled.span`
 
 const StudyComponent = (props:any) => {
     return (
-        <Card style={{backgroundColor: "white", marginLeft: "20px", marginBottom: "20px", float: "left", display: "flex", borderRadius: "4px"}}>         
-            <div>
-                <div style={{width:"10%"}}>
-                    <Dot>SP</Dot>
-                </div>
-                <div style={{width:"20%"}}>
-                    <Title>Study 1</Title>
-                </div>
-                <div style={{width:"69%"}}>
-                    <Description>Description with longer text than title</Description>
-                </div>
-                
-            </div>
+        <Card style={{backgroundColor: "white", marginLeft: "20px", marginBottom: "20px", float: "left", display: "flex", borderRadius: "4px"}}>
+            <Dot>SP</Dot><Title>{props.name}</Title>      
+            
             
             
         </Card>
     )
 }
 
+/*
+<div>
+                <div style={{width:"10%"}}>
+                    
+                </div>
+                <div style={{width:"20%"}}>
+                    
+                </div>
+                <div style={{width:"69%"}}>
+                    
+                </div>
+                
+            </div>
+*/
 export default StudyComponent; 
