@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { UserConfig } from '../index'
+import { TopBar } from '@equinor/eds-core-react'
 import {
     Collapse,
     Navbar,
@@ -48,7 +49,7 @@ const NavBar = () => {
 
     return (<>
     <Navbar
-        style={{ paddingBottom: '0', color: 'red' }}
+        style={{ paddingBottom: '0', color: 'red', backgroundColor: 'white' }}
         className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-0"
         light
       >
@@ -92,7 +93,11 @@ const NavBar = () => {
             </ul>
         </Container>
       </Navbar>
-      <Navbar
+    </>);
+    }
+
+    /*
+          <Navbar
       style={{ paddingTop: '0', color: 'red' }}
       className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-0"
       light
@@ -103,8 +108,5 @@ const NavBar = () => {
         navbar
       >
       </Collapse>
-    </Navbar>
-    </>);
-    }
-
+    </Navbar>*/
 export default NavBar;

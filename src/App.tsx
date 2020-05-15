@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router  } from 'react-router-dom';
 import Home from './components/home/Home';
 import Layout from './components/Layout';
 import './App.css';
+//import './styles/app';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
 function App() {
