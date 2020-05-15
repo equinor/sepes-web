@@ -62,5 +62,5 @@ export function signInRedirect(){
   }
 
   export const loginRequest = {
-    scopes: ["e90cbb61-896e-4ec7-aa37-23511700e1ed"]
+    scopes: [process.env.REACT_APP_SEPES_CLIENTID + ""]
   };
