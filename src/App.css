@@ -1,3 +1,6 @@
+html * {
+  font-family: Equinor !important; }
+  
 .App {
   text-align: center;
 }
