@@ -21,6 +21,7 @@ Cypress:
 2. Npm install in root folder of project
 3. Create a file named "docker-compose.yml". Inside this file, you can create environment variables that can be used in the app. For instance ClientID or redirectUris
 
+```javascript
 version: "3.7"
 services: 
   web:
@@ -32,6 +33,7 @@ services:
       - REACT_APP_SEPES_BASE_API_URL=http://localhost:8081/
       - REACT_APP_SEPES_AUTHORITY=https://login.microsoftonline.com/placeyourIdHere
       - REACT_APP_SEPES_CLIENTID=123
+```
 4. The environment variables are used in the AuthConfig and AuthFunctions files under the "Auth" folder. These needs to be the same as the radixconfig variables (used in the pipeline) and docker-compose.yml (local variables) files.
 5. To run the app, run "Docker-compose up -d --build
 	- If it does not work properly, try a different version of docker compose. Top line in docker-compose.yml.
