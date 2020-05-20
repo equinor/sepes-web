@@ -1,7 +1,7 @@
 # sepes-web
 Source code for the Sepes web application
 
-# Making commits
+## Making commits
 
 We use commitizen to make our commits. To make a commit, run "npm run commi" to start the questionare. We use these rules to say if a change is MAJOR, MINOR or a PATCH:
 
