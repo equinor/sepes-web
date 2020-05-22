@@ -16,35 +16,37 @@ const Dot = styled.span`
 
   const Title = styled.span`
    margin-left:30px;
+   font-weight: bold;
   `;
 
   const Description = styled.span`
     float:right;
   `;
 
+  const SmallText = styled.span`
+    font-size:10px;
+  `;
+
+  const Wrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+    width: 100%;
+    grid-gap: 10px;
+`;
+//repeat(auto-fit, minmax(19rem, 1fr))
 const StudyComponent = (props:any) => {
     return (
-        <Card style={{backgroundColor: "white", marginLeft: "20px", marginBottom: "20px", float: "left", display: "flex", borderRadius: "4px"}}>
-            <Dot>SP</Dot><Title>{props.name}</Title>      
+        <div style={{backgroundColor: "white", marginLeft: "20px", marginBottom: "10px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px"}}>
+          <Wrapper>
+            <div>
+              <Dot style={{float:"left"}}>SP</Dot>
+              <Title>{props.name}</Title>
+            </div>
             
-            
-            
-        </Card>
+            <p>{props.description}</p>      
+          </Wrapper>
+        </div>
     )
 }
 
-/*
-<div>
-                <div style={{width:"10%"}}>
-                    
-                </div>
-                <div style={{width:"20%"}}>
-                    
-                </div>
-                <div style={{width:"69%"}}>
-                    
-                </div>
-                
-            </div>
-*/
 export default StudyComponent; 
