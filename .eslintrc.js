@@ -4,7 +4,7 @@ module.exports = {
 		browser: true,
 		es6: true
 	},
-	extends: ['airbnb'],
+	extends: ['airbnb', 'airbnb/hooks'],
 	globals: {
 		Atomics: 'readonly',
 		SharedArrayBuffer: 'readonly'
