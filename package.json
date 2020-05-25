@@ -35,7 +35,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -64,5 +65,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   }
 }
