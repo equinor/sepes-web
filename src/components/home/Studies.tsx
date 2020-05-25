@@ -7,7 +7,7 @@ const Studies = (props: any) => {
     return (
         <div>
             {props.studyList ? props.studyList.map(study => {
-                return (<StudyComponent name={study.studyName} description={mockDescription} key={study.studyId} />);
+                return (<StudyComponent name={study.studyName} description={mockDescription} key={study.studyId} url={'/studies/' + study.studyId} />);
             }) : "No studies yet"}
         </div>
     )

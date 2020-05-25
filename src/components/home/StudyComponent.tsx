@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Dot = styled.span`
     height: 100px;
@@ -39,7 +40,7 @@ const StudyComponent = (props: any) => {
       <Wrapper>
         <div>
           <Dot style={{ float: "left" }}>SP</Dot>
-          <Title>{props.name}</Title>
+          <Link to={props.url}><Title>{props.name}</Title></Link>
         </div>
 
         <p>{props.description}</p>
