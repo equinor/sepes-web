@@ -31,11 +31,12 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -60,10 +61,18 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0"
+    "@cypress/code-coverage": "^3.7.5",
+    "@cypress/instrument-cra": "^1.1.1",
+    "cypress": "^4.6.0",
+    "cypress-dark": "^1.7.14",
+    "cypress-plugin-retries": "^1.5.2"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   }
 }
