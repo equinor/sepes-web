@@ -26,5 +26,5 @@ yarn-error.log*
 
 #code coverage
 .nyc_output
-.cypress-coverage
-.jest-coverage
+/cypress-coverage
+/jest-coverage
