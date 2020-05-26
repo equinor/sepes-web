@@ -33,7 +33,7 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
     - name: docker build
       run: |
-        docker build . -t sepes-web:latest
+        docker build . -t frontend/sepes-web:latest
         docker push sepes.azurecr.io/frontend/sepes-web:latest
 
     # Runs a set of commands using the runners shell
