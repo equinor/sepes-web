@@ -1,6 +1,7 @@
 import React from 'react';
-import { Route, BrowserRouter as Router  } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Home from './components/home/Home';
+import StudyDetails from './components/studyDetails/StudyDetails';
 import Layout from './components/Layout';
 import './App.css';
 //import './styles/app';
@@ -12,9 +13,10 @@ function App() {
       <ErrorBoundary>
         <Layout />
         <Route exact path="/" component={Home} />
+        <Route path="/studies" component={StudyDetails} />
       </ErrorBoundary>
     </Router >
-    
+
   );
 }
 
