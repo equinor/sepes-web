@@ -1,0 +1,20 @@
+{
+    "baseUrl": "http://localhost:8080/",
+    "defaultCommandTimeout": 10000,
+    "pageLoadTimeout": 100000,
+    "requestTimeout": 100000,
+    "responseTimeout": 100000,
+    "chromeWebSecurity": false,
+    "video": false,
+    "nodeVersion": "system",
+    "env": {
+      "TENANT_ID": "",
+      "CLIENT_ID": "",
+      "CLIENT_SECRET": "",
+      "API_URL": "http://localhost:8081/api",
+      "SCOPE": "",
+      "RETRIES": 3
+    },
+    "viewportWidth": 1920,
+    "viewportHeight": 1080
+  }

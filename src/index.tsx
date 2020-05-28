@@ -3,26 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import  { acquireTokenSilent, signInRedirect }  from './auth/AuthFunctions';
-import { UserAgentApplication }  from 'msal';
+import { acquireTokenSilent, signInRedirect } from './auth/AuthFunctions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
-import NoAccess from './components/common/NoAccess';
 
-if(myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()){
+if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
   signInRedirect();
-  console.log("Sign In PopUp");
+  console.log('Sign In PopUp');
 }
-else{
+else {
   acquireTokenSilent();
-  console.log("Sign in Silent");
+  console.log('Sign in Silent');
 }
 export const UserConfig = React.createContext(myMSALObj);
-if(myMSALObj.getAccount()){
+if (myMSALObj.getAccount()) {
   ReactDOM.render(
     <React.StrictMode>
       <UserConfig.Provider value={myMSALObj}>
-      <App />
+        <App />
       </UserConfig.Provider>
     </React.StrictMode>,
     document.getElementById('root')
