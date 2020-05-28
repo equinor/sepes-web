@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services/Api';
 import Studies from "./Studies";
-import { Button, Card } from '@equinor/eds-core-react'
+import { Button } from '@equinor/eds-core-react'
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     grid-template-columns: 9fr 3fr;
     grid-template-rows: 142px;
     width: 100%;
-    grid-gap: 10px;
+    grid-gap: 20px;
     margin-Top: 20px;
 `;
 
@@ -43,7 +43,7 @@ const Home = () => {
     return (
         <Wrapper>
             <Studies studyList={studyList} />
-            <Button style={{ width: "90%" }}>New study</Button>
+            <Button style={{ marginRight: '20px' }}>New study</Button>
         </Wrapper>
     )
 }

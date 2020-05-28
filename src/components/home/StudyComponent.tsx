@@ -40,7 +40,7 @@ const StudyComponent = (props: any) => {
       <Wrapper>
         <div>
           <Dot style={{ float: "left" }}>SP</Dot>
-          <Link to={props.url}><Title>{props.name}</Title></Link>
+          <Title><Link to={props.url} style={{color: "black"}}>{props.name}</Link></Title>
         </div>
 
         <p>{props.description}</p>
