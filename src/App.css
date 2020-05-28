@@ -1,3 +1,6 @@
+html * {
+  font-family: Equinor !important; }
+  
 html, body, #root, #root>div {
   background-color: #E5E5E5;
 }

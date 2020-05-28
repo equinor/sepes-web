@@ -9,14 +9,13 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 
 function App() {
   return (
-    <Router >
+    <Router>
       <ErrorBoundary>
         <Layout />
         <Route exact path="/" component={Home} />
         <Route path="/studies" component={StudyDetails} />
       </ErrorBoundary>
-    </Router >
-
+    </Router>
   );
 }
 
