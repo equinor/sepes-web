@@ -28,7 +28,7 @@ import { myMSALObj }  from './AuthConfig';
     
       console.log('request made to Graph API at: ' + new Date().toString());
       
-      return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+      return fetch("http://localhost:8081/" + url, options)
         .then((response) => response.json())
         .then((responseData) => { return resolve(responseData); })
         .catch(error => console.log(error))
