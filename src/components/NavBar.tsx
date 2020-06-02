@@ -48,7 +48,7 @@ const NavBar = () => {
 
     return (<>
     <Navbar
-        style={{ paddingBottom: '0', color: 'red' }}
+        style={{ color: 'red' }}
         className="navbar-expand-sm navbar-toggleable-sm box-shadow border-bottom mb-0"
         light
       >
