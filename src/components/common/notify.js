@@ -1,6 +1,5 @@
 import React from 'react';
 import { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
