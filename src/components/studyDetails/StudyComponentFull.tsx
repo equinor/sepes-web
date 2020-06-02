@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Dollar from '../../icons/dollar.svg'
-import Lock from '../../icons/lock_off.svg'
+import { Button, TextField } from '@equinor/eds-core-react';
+import CheckBox from '@material-ui/core/Checkbox';
+import Dollar from '../../icons/dollar.svg';
+import Lock from '../../icons/lock_off.svg';
 import {
     faDollarSign,
     faLockOpen
@@ -47,29 +49,61 @@ const TitleWrapper = styled.div`
     grid-gap: 5px;
 `;
 
-const IconWrapper = styled.div`
-display: grid;
-grid-template-columns: 30px 1fr;
+const SmallIconWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 30px 1fr;
 `;
-
+const SaveCancelWrapper = styled.div`
+display: grid;
+grid-template-columns: 1fr 1fr;
+grid-gap: 5px;
+`;
 
 //repeat(auto-fit,minmax(100px,1fr));
 const StudyComponentFull = (props: any) => {
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>(props.description || "");
+  const [descriptionOnChange, setDescriptionOnChange] = useState<string>(props.description || "");
+  const [checked, setChecked] = useState<boolean>(false);
+
+  const handleSave = () => {
+    setEditMode(false);
+    setDescription(descriptionOnChange)
+  };
+
+  const handleCancel = () => {
+    setEditMode(false);
+    setDescriptionOnChange(description);
+  }
+
   return (
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
             <Title>{props.name}</Title>
-            <SmallText>Bouvet</SmallText>
-            <IconWrapper>
-                <img src={Dollar} /> <span>wbs</span>
-            </IconWrapper>
-            <IconWrapper>
-                <img src={Lock} /> <span>Unlocked</span>
-            </IconWrapper>
+            {!editMode ? <SmallText>Bouvet</SmallText>: <TextField value="Bouvet" label="Supplier"/>}
+            <>
+                {!editMode ? <SmallIconWrapper><img src={Dollar} /> <span>wbs</span></SmallIconWrapper>: <TextField value="some.wbs. 1231123" label="wbs" />}
+            </>
+            <SmallIconWrapper>
+                {!editMode ? <><img src={Lock} /> <span>Unlocked</span></>: <CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>}
+            </SmallIconWrapper>
+            {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>
-        <Description>{props.description}</Description>
-        <Dot style={{ margin: 'auto' }}>SP</Dot>
+        {!editMode ? 
+          <Description>{description}</Description>:
+          <TextField multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
+        <div style={{ margin: 'auto' }}>
+          <Dot >SP</Dot>
+          {editMode ?
+          <>
+          <Button variant="outlined" style={{marginBottom: "10px"}}>Change logo</Button> 
+          <SaveCancelWrapper>
+            
+            <Button onClick={() => handleSave()}>Save</Button>
+            <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
+          </SaveCancelWrapper></>: null}
+        </div>
       </Wrapper>
     </div>
   )
