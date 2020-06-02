@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search } from '@equinor/eds-core-react';
+import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Delete from '../../icons/delete_to_trash.svg';
+import ArrowRight from '../../icons/chevron_right.svg';
+
 
 const Wrapper = styled.div`
     display: grid;
@@ -16,28 +17,28 @@ const Wrapper = styled.div`
     grid-gap: 23px;
 `;
 
-const DataSetComponent = (props: any) => {
+const SandboxComponent = (props: any) => {
 
     const rows = [
         {
-            name: 'Equinor standard phrase',
+            name: 'Equinor standard phrases',
         },
         {
-            name: 'Abbreviations',
+            name: 'Equinor standard phrases',
+        },
+        {
+            name: 'Equinor standard phrases',
         }
     ]
 
     return (
-        <Wrapper>
-            <div>
-                <Search />
-            </div>
-            <div>
+        <div>
+            <Button variant="outlined">Add sandbox</Button>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead style={{backgroundColor: "#F7F7F7", borderBottom: "2px solid #DCDCDC"}}>
                     <TableRow>
-                        <TableCell>Dataset</TableCell>
+                        <TableCell>Sandbox</TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
                     </TableHead>
@@ -47,17 +48,16 @@ const DataSetComponent = (props: any) => {
                         <TableCell component="th" scope="row">
                             {row.name}
                         </TableCell>
-                        <TableCell align="right"><img src={Delete}/></TableCell>
+                        <TableCell align="right"><img src={ArrowRight}/></TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            </div>
-        </Wrapper>
+        </div> 
     )
 }
 
 
 
-export default DataSetComponent;
+export default SandboxComponent;
