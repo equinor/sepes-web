@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { Button, TextField } from '@equinor/eds-core-react';
+import { Button, TextField, Icon } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
-import Dollar from '../../icons/dollar.svg';
-import Lock from '../../icons/lock_off.svg';
-import {
-    faDollarSign,
-    faLockOpen
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { dollar, lock } from '@equinor/eds-icons';
+
+const icons = {
+  dollar,
+  lock
+};
+Icon.add(icons);
 
 const Dot = styled.span`
     height: 100px;
@@ -83,10 +82,10 @@ const StudyComponentFull = (props: any) => {
             <Title>{props.name}</Title>
             {!editMode ? <SmallText>Bouvet</SmallText>: <TextField value="Bouvet" label="Supplier"/>}
             <>
-                {!editMode ? <SmallIconWrapper><img src={Dollar} /> <span>wbs</span></SmallIconWrapper>: <TextField value="some.wbs. 1231123" label="wbs" />}
+                {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>wbs</span></SmallIconWrapper>: <TextField value="some.wbs. 1231123" label="wbs" />}
             </>
             <SmallIconWrapper>
-                {!editMode ? <><img src={Lock} /> <span>Unlocked</span></>: <CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>}
+                {!editMode ? <><Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: <CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>}
             </SmallIconWrapper>
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>

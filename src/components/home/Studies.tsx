@@ -7,10 +7,10 @@ const Studies = (props: any) => {
     return (
         <div>
             {props.studyList ? props.studyList.map(study => {
-                return (<StudyComponent name={study.studyName} description={mockDescription} key={study.studyId} url={'/studies/' + study.studyId} />);
+                return (<StudyComponent name={study.name} description={mockDescription} key={study.studyId} url={'/studies/' + study.id} />);
             }) : "No studies yet"}
         </div>
     )
 }
 
-export default Studies; 
+export default Studies;

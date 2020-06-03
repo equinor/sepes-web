@@ -1,14 +1,14 @@
 import React from 'react';
 import { Search } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Delete from '../../icons/delete_to_trash.svg';
+import { delete_to_trash } from '@equinor/eds-icons';
+import { Table, Icon } from '@equinor/eds-core-react';
+
+const { Body, Row, Cell, Head } = Table;
+const icons = {
+    delete_to_trash
+};
+Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,26 +33,22 @@ const DataSetComponent = (props: any) => {
                 <Search />
             </div>
             <div>
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead style={{backgroundColor: "#F7F7F7", borderBottom: "2px solid #DCDCDC"}}>
-                    <TableRow>
-                        <TableCell>Dataset</TableCell>
-                        <TableCell align="right"></TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
+                <Table style={{width: "100%"}}>
+                    <Head>
+                    <Row>
+                        <Cell as="th" scope="col">Dataset</Cell>
+                        <Cell as="th" scope="col"></Cell>
+                    </Row>
+                    </Head>
+                    <Body>
                     {rows.map((row) => (
-                        <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">
-                            {row.name}
-                        </TableCell>
-                        <TableCell align="right"><img src={Delete}/></TableCell>
-                        </TableRow>
+                        <Row key={row.name}>
+                        <Cell component="th" scope="row">{row.name}</Cell>
+                        <Cell align="right"><Icon name="delete_to_trash" size={24} /></Cell>
+                        </Row>
                     ))}
-                    </TableBody>
+                    </Body>
                 </Table>
-            </TableContainer>
             </div>
         </Wrapper>
     )

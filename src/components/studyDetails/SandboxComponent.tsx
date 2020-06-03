@@ -1,15 +1,13 @@
 import React from 'react';
-import { Button } from '@equinor/eds-core-react';
+import { Button, Table, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import ArrowRight from '../../icons/chevron_right.svg';
+import { chevron_right } from '@equinor/eds-icons';
 
+const { Body, Row, Cell, Head } = Table;
+const icons = {
+    chevron_right
+};
+Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
@@ -34,7 +32,30 @@ const SandboxComponent = (props: any) => {
     return (
         <div>
             <Button variant="outlined">Add sandbox</Button>
-            <TableContainer component={Paper}>
+            <Table style={{width: "100%"}}>
+                <Head style={{backgroundColor: "#F7F7F7"}}>
+                    <Row>
+                        <Cell as="th" scope="col">Sandbox</Cell>
+                        <Cell as="th" scope="col"></Cell>
+                    </Row>
+                </Head>
+                <Body>
+                {rows.map((row) => (
+                        <Row>
+                        <Cell>
+                            {row.name}
+                        </Cell>
+                        <Cell><Icon name="chevron_right" size={24} /></Cell>
+                        </Row>
+                    ))}
+                </Body>
+            </Table>
+        </div>
+    )
+}
+
+/*
+<TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead style={{backgroundColor: "#F7F7F7", borderBottom: "2px solid #DCDCDC"}}>
                     <TableRow>
@@ -54,10 +75,6 @@ const SandboxComponent = (props: any) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div> 
-    )
-}
-
-
+*/
 
 export default SandboxComponent;
