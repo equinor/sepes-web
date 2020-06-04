@@ -92,18 +92,6 @@ const NavBar = () => {
             </ul>
         </Container>
       </Navbar>
-      <Navbar
-      style={{ paddingTop: '0', color: 'red' }}
-      className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-0"
-      light
-    >
-      <Collapse
-        className="d-sm-inline-flex flex-sm-row"
-        isOpen={isOpen}
-        navbar
-      >
-      </Collapse>
-    </Navbar>
     </>);
     }
 

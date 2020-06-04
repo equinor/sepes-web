@@ -1,0 +1,12 @@
+@import './equinor-font.scss';
+@import './equinor-colors.scss';
+
+html * {
+  font-family: Equinor !important;
+}
+html {
+  background-color: #E5E5E5;
+}
+#root {
+  background-color: #E5E5E5;
+}
