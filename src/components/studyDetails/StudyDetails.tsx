@@ -18,14 +18,14 @@ const ComponentWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-gap: 100px;
-    backgroundColor: FFFFFF;
+    backgroundColor: #FFFFFF;
 `;
 
 const LeftWrapper = styled.div`
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-gap: 10px;
-    backgroundColor: FFFFFF;
+    backgroundColor: #FFFFFF;
 `;
 
 
