@@ -1,46 +1,82 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
+import * as api from '../../services/Api';
+import { PromptState } from 'msal/lib-commonjs/utils/Constants';
 
 let mockDescription = "Random Extended Three Letter Acronyms. Løsning for å finne navn til hva som helst. Genererer tilfeldig utvidetet trebokstavforkortelser"
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rowns: 1fr 4fr;
     width: 100%;
     grid-gap: 10px;
 `;
 
 const ComponentWrapper = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 100px;
-    backgroundColor: #FFFFFF;
+    @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 100px;
+    }
+    background-color: #FFFFFF;
 `;
 
 const LeftWrapper = styled.div`
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-gap: 10px;
-    backgroundColor: #FFFFFF;
+`;
+
+const RightWrapper = styled.div`
+    @media (max-width: 768px) {
+        margin-top: 20px;
+}
 `;
 
 
 const StudyDetails = () => {
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [study, setStudy] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsSubscribed(true);
+        getStudy();
+        return () => setIsSubscribed(false);
+    }, []);
+
+    const getStudy = () => {
+        const id = window.location.pathname.split('/')[2];
+        if (!id){
+            return;
+        }
+        setLoading(true);
+        api.getStudy(id).then((result: any) => {
+            if (isSubscribed) {
+                setStudy(result);
+                console.log("resultStudy: ", result)
+            }
+            else {
+                console.log("Err");
+            }
+            setLoading(false);
+        })
+    }
+
     return (
     <Wrapper>
-        <StudyComponentFull name="ProsjektNavnet" description={ mockDescription } />
-        <ComponentWrapper style={{backgroundColor: "#FFFFFF", margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px"}}>
+        <StudyComponentFull name={study.name && study.name} description={ study.description && study.description} />
+        <ComponentWrapper style={{ margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px" }}>
             <LeftWrapper>
-                <DataSetComponent />
-                <SandBoxComponent />
+                <DataSetComponent dataSets={study.dataSets} />
+                <SandBoxComponent sandBoxes={study.sandBoxes} />
             </LeftWrapper>
-            
-            <ParticipantComponent />
-            
+            <RightWrapper>
+                <ParticipantComponent />
+            </RightWrapper>
         </ComponentWrapper>
     </Wrapper>);
 };

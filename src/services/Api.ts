@@ -1,5 +1,9 @@
 import {  apiCallWithToken } from '../auth/AuthFunctions';
 
-export const callStudyList = async () => {
-    return await apiCallWithToken("api/studies");
+export const getStudyList = async () => {
+    return apiCallWithToken('api/studies');
+}
+
+export const getStudy = async (id:string) => {
+    return apiCallWithToken('api/studies/' + id);
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services/Api';
 import Studies from "./Studies";
-import { Button } from '@equinor/eds-core-react'
+import { Button } from '@equinor/eds-core-react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -28,7 +29,7 @@ const Home = () => {
 
     const getStudyList = () => {
         setLoading(true);
-        api.callStudyList().then((result: any) => {
+        api.getStudyList().then((result: any) => {
             if (isSubscribed) {
                 setStudyList(result);
                 console.log("result: ", result)
@@ -43,7 +44,7 @@ const Home = () => {
     return (
         <Wrapper>
             <Studies studyList={studyList} />
-            <Button style={{ marginRight: '20px' }}>New study</Button>
+            <Button onClick={() => { window.location.pathname = '/studies'; }} style={{ marginRight: '20px' }}>New study</Button>
         </Wrapper>
     )
 }
