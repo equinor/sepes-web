@@ -18,14 +18,6 @@ const Wrapper = styled.div`
 
 const DataSetComponent = (props: any) => {
 
-    const rows = [
-        {
-            name: 'Equinor standard phrase',
-        },
-        {
-            name: 'Abbreviations',
-        }
-    ]
 
     return (
         <Wrapper>
@@ -41,7 +33,7 @@ const DataSetComponent = (props: any) => {
                     </Row>
                     </Head>
                     <Body>
-                    {rows.map((row) => (
+                    {props.dataSets && props.dataSets.map((row) => (
                         <Row key={row.name}>
                         <Cell component="th" scope="row">{row.name}</Cell>
                         <Cell align="right"><Icon name="delete_to_trash" size={24} /></Cell>

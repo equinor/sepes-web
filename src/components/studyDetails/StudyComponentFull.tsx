@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, TextField, Icon } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, lock } from '@equinor/eds-icons';
 
 const icons = {
@@ -61,8 +62,8 @@ grid-gap: 5px;
 //repeat(auto-fit,minmax(100px,1fr));
 const StudyComponentFull = (props: any) => {
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>(props.description || "");
-  const [descriptionOnChange, setDescriptionOnChange] = useState<string>(props.description || "");
+  const [description, setDescription] = useState<string>("");
+  const [descriptionOnChange, setDescriptionOnChange] = useState<string>("");
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleSave = () => {
@@ -75,6 +76,14 @@ const StudyComponentFull = (props: any) => {
     setDescriptionOnChange(description);
   }
 
+  useEffect(() => {
+    if(props.description){
+      setDescription(props.description);
+      setDescriptionOnChange(props.description);
+    }
+    
+  },props.description)
+
   return (
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
@@ -85,7 +94,9 @@ const StudyComponentFull = (props: any) => {
                 {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>wbs</span></SmallIconWrapper>: <TextField value="some.wbs. 1231123" label="wbs" />}
             </>
             <SmallIconWrapper>
-                {!editMode ? <><Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: <CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>}
+                {!editMode ? <>
+                <Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: 
+                <FormControlLabel control={<CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>} label="Restricted"/>}
             </SmallIconWrapper>
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>
@@ -96,12 +107,13 @@ const StudyComponentFull = (props: any) => {
           <Dot >SP</Dot>
           {editMode ?
           <>
-          <Button variant="outlined" style={{marginBottom: "10px"}}>Change logo</Button> 
+          <Button variant="outlined" style={{margin: "5px 0 20px 0"}}>Change logo</Button>
           <SaveCancelWrapper>
-            
             <Button onClick={() => handleSave()}>Save</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
-          </SaveCancelWrapper></>: null}
+          </SaveCancelWrapper>
+          </>
+          : null}
         </div>
       </Wrapper>
     </div>

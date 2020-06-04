@@ -40,7 +40,7 @@ const SandboxComponent = (props: any) => {
                     </Row>
                 </Head>
                 <Body>
-                {rows.map((row) => (
+                {props.sandBoxes && props.sandBoxes.map((row) => (
                         <Row>
                         <Cell>
                             {row.name}
@@ -53,28 +53,5 @@ const SandboxComponent = (props: any) => {
         </div>
     )
 }
-
-/*
-<TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead style={{backgroundColor: "#F7F7F7", borderBottom: "2px solid #DCDCDC"}}>
-                    <TableRow>
-                        <TableCell>Sandbox</TableCell>
-                        <TableCell align="right"></TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">
-                            {row.name}
-                        </TableCell>
-                        <TableCell align="right"><img src={ArrowRight}/></TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-*/
 
 export default SandboxComponent;
