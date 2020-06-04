@@ -1,15 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { UserConfig } from '../index'
 import {
-    Collapse,
-    Navbar,
-    NavItem,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Container,
-    NavbarBrand
+  Collapse,
+  Navbar,
+  NavItem,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Container,
+  NavbarBrand
 } from 'reactstrap';
 import Logo from './common/Logo';
 import { Link } from 'react-router-dom';
@@ -26,7 +26,7 @@ const Brand = styled.div`
     flex-shrink: 0;
   `;
 
-  const Title = styled.span`
+const Title = styled.span`
     font-weight: 500;
     margin-right: 2em;
     margin-left: 2em;
@@ -34,30 +34,30 @@ const Brand = styled.div`
   `;
 
 const NavBar = () => {
-    const user = useContext(UserConfig);
-    const [userDropDown, setUserDropDown] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
+  const user = useContext(UserConfig);
+  const [userDropDown, setUserDropDown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
 
-    const toggleUserDropdown = () => {
-        setUserDropDown(!userDropDown);
-      };
-      const toggle = () => {
-        setIsOpen(!isOpen);
-      };
+  const toggleUserDropdown = () => {
+    setUserDropDown(!userDropDown);
+  };
+  const toggle = () => {
+    setIsOpen(!isOpen);
+  };
 
-    return (<>
+  return (<>
     <Navbar
-        style={{ color: 'red' }}
-        className="navbar-expand-sm navbar-toggleable-sm box-shadow border-bottom mb-0"
-        light
-      >
-        <Container fluid>
-          <NavbarBrand tag={Link} to="/"> 
+      style={{ paddingBottom: '0', color: 'red', backgroundColor: 'white' }}
+      className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-0"
+      light
+    >
+      <Container fluid>
+        <NavbarBrand tag={Link} to="/">
           <Brand>
-              <Logo />
-              <Title>
-                Sepes
+            <Logo />
+            <Title>
+              Sepes
               </Title>
               </Brand>
           </NavbarBrand>
