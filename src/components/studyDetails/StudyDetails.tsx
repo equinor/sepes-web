@@ -5,7 +5,8 @@ import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
 import * as api from '../../services/Api';
-import { PromptState } from 'msal/lib-commonjs/utils/Constants';
+import loadingGif from '../../assets/loading.gif'
+//import { PromptState } from 'msal/lib-commonjs/utils/Constants';
 
 let mockDescription = "Random Extended Three Letter Acronyms. Løsning for å finne navn til hva som helst. Genererer tilfeldig utvidetet trebokstavforkortelser"
 
@@ -40,6 +41,7 @@ const RightWrapper = styled.div`
 const StudyDetails = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [study, setStudy] = useState<any>({});
+    const [newStudy, setNewStudy] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -57,6 +59,7 @@ const StudyDetails = () => {
         api.getStudy(id).then((result: any) => {
             if (isSubscribed) {
                 setStudy(result);
+                setNewStudy(false);
                 console.log("resultStudy: ", result)
             }
             else {
@@ -66,9 +69,10 @@ const StudyDetails = () => {
         })
     }
 
-    return (
+    return (<>
+        {!loading ?
     <Wrapper>
-        <StudyComponentFull name={study.name && study.name} description={ study.description && study.description} />
+        <StudyComponentFull wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} newStudy={newStudy} supplier={study.createdBy} />
         <ComponentWrapper style={{ margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px" }}>
             <LeftWrapper>
                 <DataSetComponent dataSets={study.dataSets} />
@@ -78,7 +82,9 @@ const StudyDetails = () => {
                 <ParticipantComponent />
             </RightWrapper>
         </ComponentWrapper>
-    </Wrapper>);
+    </Wrapper>
+    : <img src={loadingGif} alt="loading..."/> } </>
+    );
 };
 
 export default StudyDetails;

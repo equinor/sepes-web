@@ -53,22 +53,31 @@ const SmallIconWrapper = styled.div`
   display: grid;
   grid-template-columns: 30px 1fr;
 `;
+
 const SaveCancelWrapper = styled.div`
 display: grid;
 grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
 
-//repeat(auto-fit,minmax(100px,1fr));
 const StudyComponentFull = (props: any) => {
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
-  const [descriptionOnChange, setDescriptionOnChange] = useState<string>("");
+  const [editMode, setEditMode] = useState<boolean>(props.newStudy);
+  const [description, setDescription] = useState<string>(props.description);
+  const [descriptionOnChange, setDescriptionOnChange] = useState<string>(props.description);
+  const [wbs, setWbs] = useState<string>(props.wbs);
+  const [wbsOnChange, setWbsOnChange] = useState<string>(props.wbs);
+  const [studyName, setstudyName] = useState<string>(props.name);
+  const [studyNameOnChange, setstudyNameOnChange] = useState<string>(props.name);
+  const [supplier, setSupplier] = useState<string>(props.supplier);
+  const [supplierOnChange, setSupplierOnChange] = useState<string>(props.supplier);
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleSave = () => {
     setEditMode(false);
-    setDescription(descriptionOnChange)
+    setDescription(descriptionOnChange);
+    setWbs(wbsOnChange);
+    setstudyName(studyNameOnChange);
+    setSupplier(supplierOnChange);
   };
 
   const handleCancel = () => {
@@ -76,22 +85,14 @@ const StudyComponentFull = (props: any) => {
     setDescriptionOnChange(description);
   }
 
-  useEffect(() => {
-    if(props.description){
-      setDescription(props.description);
-      setDescriptionOnChange(props.description);
-    }
-    
-  },props.description)
-
   return (
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            <Title>{props.name}</Title>
-            {!editMode ? <SmallText>Bouvet</SmallText>: <TextField value="Bouvet" label="Supplier"/>}
+            {!editMode ? <Title>{studyName}</Title> : <TextField multiline={true} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
+            {!editMode ? <SmallText>{supplier}</SmallText>: <TextField onChange={e => setSupplierOnChange(e.target.value)} value={supplierOnChange} label="Supplier"/>}
             <>
-                {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>wbs</span></SmallIconWrapper>: <TextField value="some.wbs. 1231123" label="wbs" />}
+                {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbs}</span></SmallIconWrapper>: <TextField onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
             </>
             <SmallIconWrapper>
                 {!editMode ? <>
@@ -104,12 +105,12 @@ const StudyComponentFull = (props: any) => {
           <Description>{description}</Description>:
           <TextField multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
         <div style={{ margin: 'auto' }}>
-          <Dot >SP</Dot>
+          <Dot>SP</Dot>
           {editMode ?
           <>
           <Button variant="outlined" style={{margin: "5px 0 20px 0"}}>Change logo</Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>Save</Button>
+            <Button onClick={() => handleSave()}>{props.newStudy? "Create Study": "Save"}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>

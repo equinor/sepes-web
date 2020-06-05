@@ -16,22 +16,22 @@ Icon.add(icons);
 
 const rows = [
     {
-        name: 'Equinor standard phrase',
+        name: 'Equinor standard phrase1',
         Email: 'test@test-cp',
         Role: 'sponsor',
     },
     {
-        name: 'Equinor standard phrase',
+        name: 'Equinor standard phrase2',
         Email: 'test@test-cp',
         Role: 'sponsor',
     },
     {
-        name: 'Equinor standard phrase',
+        name: 'Equinor standard phrase3',
         Email: 'test@test-cp',
         Role: 'sponsor',
     },
     {
-        name: 'Equinor standard phrase',
+        name: 'Equinor standard phrase4',
         Email: 'test@test-cp',
         Role: 'sponsor',
     }
