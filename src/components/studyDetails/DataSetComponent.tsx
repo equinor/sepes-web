@@ -29,7 +29,7 @@ const DataSetComponent = (props: any) => {
                     <Head>
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
-                        <Cell as="th" scope="col"></Cell>
+                        <Cell as="th" scope="col"/>
                     </Row>
                     </Head>
                     <Body>

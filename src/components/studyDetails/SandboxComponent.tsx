@@ -9,25 +9,7 @@ const icons = {
 };
 Icon.add(icons);
 
-const Wrapper = styled.div`
-    display: grid;
-    grid-template-rows: 35px 1fr;
-    grid-gap: 23px;
-`;
-
 const SandboxComponent = (props: any) => {
-
-    const rows = [
-        {
-            name: 'Equinor standard phrases',
-        },
-        {
-            name: 'Equinor standard phrases',
-        },
-        {
-            name: 'Equinor standard phrases',
-        }
-    ]
 
     return (
         <div>
@@ -41,7 +23,7 @@ const SandboxComponent = (props: any) => {
                 </Head>
                 <Body>
                 {props.sandBoxes && props.sandBoxes.map((row) => (
-                        <Row>
+                        <Row key={row.name}>
                         <Cell>
                             {row.name}
                         </Cell>
