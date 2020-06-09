@@ -51,6 +51,8 @@ jobs:
       - name: docker build
         run: |
           docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:stable
+          docker images
 
   # PR:
   #   runs-on: ubuntu-latest
