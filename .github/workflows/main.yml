@@ -23,16 +23,17 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_URL }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-    - name: docker build
-      run: |
-        docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
-        docker push ${{ secrets.ACR_URL }}/sepes-web:latest
+    # - uses: azure/docker-login@v1
+    #   with:
+    #     login-server: ${{ secrets.ACR_URL }}
+    #     username: ${{ secrets.ACR_USERNAME }}
+    #     password: ${{ secrets.ACR_PASSWORD }}
+    # - name: docker build
+    #   run: |
+    #     docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
+    #     docker push ${{ secrets.ACR_URL }}/sepes-web:latest
 
+    - run: echo ${{ github.ref }}
 
  # Job running if trigger was from Master branch
   master:
