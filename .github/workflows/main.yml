@@ -50,20 +50,20 @@ jobs:
 
       - name: docker build
         run: |
-          echo master
+          docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
 
-  PR:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v2
+  # PR:
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request'
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URL }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+  #     - uses: azure/docker-login@v1
+  #       with:
+  #         login-server: ${{ secrets.ACR_URL }}
+  #         username: ${{ secrets.ACR_USERNAME }}
+  #         password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: docker build
-        run: |
-          echo pull-request
+  #     - name: docker build
+  #       run: |
+  #         echo pull-request
