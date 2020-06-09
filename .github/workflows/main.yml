@@ -38,7 +38,7 @@ jobs:
  # Job running if trigger was from Master branch
   master:
     runs-on: ubuntu-latest
-    if: github.ref == 'ref/head/workflows'
+    if: github.ref == 'refs/heads/workflows'
     steps:
       - uses: actions/checkout@v2
 
