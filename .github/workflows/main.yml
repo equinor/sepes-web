@@ -23,15 +23,15 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # - uses: azure/docker-login@v1
-    #   with:
-    #     login-server: ${{ secrets.ACR_URL }}
-    #     username: ${{ secrets.ACR_USERNAME }}
-    #     password: ${{ secrets.ACR_PASSWORD }}
-    # - name: docker build
-    #   run: |
-    #     docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
-    #     docker push ${{ secrets.ACR_URL }}/sepes-web:latest
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_URL }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - name: docker build
+      run: |
+        docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
+        docker push ${{ secrets.ACR_URL }}/sepes-web:latest
 
     - run: echo ${{ github.ref }}
 
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: docker build
+      - name: docker tag
         run: |
           docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
           docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:stable
@@ -66,9 +66,9 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: docker build
+      - name: docker tag
         run: |
           prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
           docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
-          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:$prNumber
-          docker push ${{ secrets.ACR_URL }}/sepes-web:$prNumber
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+          docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
