@@ -33,7 +33,7 @@ jobs:
     #     docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
     #     docker push ${{ secrets.ACR_URL }}/sepes-web:latest
 
-    - run: echo ${{ github.ref }}
+    - run: echo ${{ github.event_name }}
 
  # Job running if trigger was from Master branch
   master:
