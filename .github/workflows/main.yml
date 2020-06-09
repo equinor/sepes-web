@@ -38,7 +38,7 @@ jobs:
  # Job running if trigger was from Master branch
   master:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/workflows'
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
 
@@ -54,18 +54,20 @@ jobs:
           docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:stable
           docker push ${{ secrets.ACR_URL }}/sepes-web:stable
 
-  # PR:
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'pull_request'
-  #   steps:
-  #     - uses: actions/checkout@v2
+  PR:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - uses: azure/docker-login@v1
-  #       with:
-  #         login-server: ${{ secrets.ACR_URL }}
-  #         username: ${{ secrets.ACR_USERNAME }}
-  #         password: ${{ secrets.ACR_PASSWORD }}
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-  #     - name: docker build
-  #       run: |
-  #         echo pull-request
+      - name: docker build
+        run: |
+          docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:${{ github.ref }}
+          docker push ${{ secrets.ACR_URL }}/sepes-web:${{ github.ref }}
