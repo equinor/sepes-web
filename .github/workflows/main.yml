@@ -68,6 +68,7 @@ jobs:
 
       - name: docker build
         run: |
+          prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
           docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
-          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:${{ github.ref }}
-          docker push ${{ secrets.ACR_URL }}/sepes-web:${{ github.ref }}
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:$prNumber
+          docker push ${{ secrets.ACR_URL }}/sepes-web:$prNumber
