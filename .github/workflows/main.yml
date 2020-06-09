@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - master
+      - workflows
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -33,7 +34,7 @@ jobs:
         docker push ${{ secrets.ACR_URL }}/sepes-web:latest
 
 
-
+ # Job running if trigger was from Master branch
   master:
     runs-on: ubuntu-latest
     if: github.ref == 'ref/head/workflows'
