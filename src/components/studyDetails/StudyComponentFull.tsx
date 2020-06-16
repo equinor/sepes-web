@@ -89,11 +89,9 @@ const StudyComponentFull = (props: any) => {
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            {!editMode ? <Title>{studyName}</Title> : <TextField multiline={true} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
-            {!editMode ? <SmallText>{supplier}</SmallText>: <TextField onChange={e => setSupplierOnChange(e.target.value)} value={supplierOnChange} label="Supplier"/>}
-            <>
-                {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbs}</span></SmallIconWrapper>: <TextField onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
-            </>
+            {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" multiline={true} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
+            {!editMode ? <SmallText>{supplier}</SmallText>: <TextField placeholder="Who is the supplier?" onChange={e => setSupplierOnChange(e.target.value)} value={supplierOnChange} label="Supplier"/>}
+            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbs}</span></SmallIconWrapper>: <TextField placeholder="Wbs for the study" onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
             <SmallIconWrapper>
                 {!editMode ? <>
                 <Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: 
@@ -103,7 +101,7 @@ const StudyComponentFull = (props: any) => {
         </TitleWrapper>
         {!editMode ? 
           <Description>{description}</Description>:
-          <TextField multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
+          <TextField placeholder="Describe the study" multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
         <div style={{ margin: 'auto' }}>
           <Dot>SP</Dot>
           {editMode ?
