@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { UserConfig } from '../index'
 import {
-  Collapse,
   Navbar,
   NavItem,
   Dropdown,
