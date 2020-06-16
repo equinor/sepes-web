@@ -73,6 +73,7 @@ const StudyDetails = () => {
         {!loading ?
     <Wrapper>
         <StudyComponentFull wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} newStudy={newStudy} supplier={study.createdBy} />
+        {!newStudy ?
         <ComponentWrapper style={{ margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px" }}>
             <LeftWrapper>
                 <DataSetComponent dataSets={study.dataSets} />
@@ -81,7 +82,7 @@ const StudyDetails = () => {
             <RightWrapper>
                 <ParticipantComponent />
             </RightWrapper>
-        </ComponentWrapper>
+        </ComponentWrapper> : null}
     </Wrapper>
     : <img src={loadingGif} alt="loading..."/> } </>
     );
