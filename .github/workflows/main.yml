@@ -6,7 +6,9 @@ name: CI
 # events but only for the master branch
 on:
   pull_request:
-    branches: [ master ]
+  push:
+    branches:
+      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,3 +31,43 @@ jobs:
       run: |
         docker build . -t ${{ secrets.ACR_URL }}/sepes-web:latest
         docker push ${{ secrets.ACR_URL }}/sepes-web:latest
+
+    - run: echo ${{ github.ref }}
+
+ # Job running if trigger was from Master branch
+  master:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: docker tag
+        run: |
+          docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:stable
+          docker push ${{ secrets.ACR_URL }}/sepes-web:stable
+
+  PR:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: docker tag
+        run: |
+          prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+          docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
+          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+          docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
