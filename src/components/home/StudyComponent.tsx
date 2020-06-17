@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Typography } from '@equinor/eds-core-react'
 import { Link } from 'react-router-dom';
 
 const Dot = styled.span`
@@ -29,9 +30,10 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: minmax(100px,350px) 1fr;
+    grid-template-columns: minmax(100px,350px) minmax(150px,1fr);
     width: 100%;
     grid-gap: 10px;
+  }
 `;
 //repeat(auto-fit,minmax(100px,1fr));
 const StudyComponent = (props: any) => {
@@ -39,8 +41,8 @@ const StudyComponent = (props: any) => {
     <div style={{ backgroundColor: "white", marginLeft: "20px", marginBottom: "10px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <div>
-          <Dot style={{ float: "left" }}>SP</Dot>
-          <Title><Link to={props.url} style={{color: "black"}}>{props.name}</Link></Title>
+          <Dot style={{ float: "left", marginRight: '30px' }}>SP</Dot>
+          <Typography variant="h6" ><Link to={props.url} style={{color: "black"}}>{props.name}</Link></Typography>
         </div>
 
         <p>{props.description}</p>
@@ -49,4 +51,4 @@ const StudyComponent = (props: any) => {
   )
 }
 
-export default StudyComponent; 
+export default StudyComponent;

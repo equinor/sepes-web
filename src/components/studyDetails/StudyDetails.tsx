@@ -5,44 +5,20 @@ import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
 import * as api from '../../services/Api';
-import loadingGif from '../../assets/loading.gif'
-//import { PromptState } from 'msal/lib-commonjs/utils/Constants';
+import loadingGif from '../../assets/loading.gif';
+import { Tabs } from '@equinor/eds-core-react';
 
-let mockDescription = "Random Extended Three Letter Acronyms. Løsning for å finne navn til hva som helst. Genererer tilfeldig utvidetet trebokstavforkortelser"
-
-const Wrapper = styled.div`
-    display: grid;
-    width: 100%;
-    grid-gap: 10px;
-`;
-
-const ComponentWrapper = styled.div`
-    @media (min-width: 768px) {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        grid-gap: 100px;
-    }
-    background-color: #FFFFFF;
-`;
-
-const LeftWrapper = styled.div`
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 10px;
-`;
-
-const RightWrapper = styled.div`
-    @media (max-width: 768px) {
-        margin-top: 20px;
-}
-`;
-
+const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [study, setStudy] = useState<any>({});
     const [newStudy, setNewStudy] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
+    const [showDatasets, setShowDatasets] = useState<boolean>(false);
+    const [showSandboxes, setShowSandboxes] = useState<boolean>(false);
+    const [showParticipants, setShowParticipants] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState<number>(0);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -52,7 +28,7 @@ const StudyDetails = () => {
 
     const getStudy = () => {
         const id = window.location.pathname.split('/')[2];
-        if (!id){
+        if (!id) {
             return;
         }
         setLoading(true);
@@ -69,7 +45,55 @@ const StudyDetails = () => {
         })
     }
 
+    const changeComponent = (e:any) => {
+        hideComponents();
+        setActiveTab(e);
+        if (e === 1) {
+            setShowDatasets(true);
+        }
+        if (e === 2) {
+            setShowSandboxes(true);
+        }
+        if (e === 3) {
+            setShowParticipants(true);
+        }
+    }
+
+    const hideComponents = () => {
+        setShowDatasets(false);
+        setShowParticipants(false);
+        setShowSandboxes(false);
+    }
+
     return (<>
+        {!loading ?
+    <>
+        <StudyComponentFull study={study} newStudy={newStudy} />
+        {!newStudy ?
+        <div style={{ margin: '20px 20px 20px 20px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
+                <TabList>
+                    <Tab>Overview</Tab>
+                    <Tab>Data sets</Tab>
+                    <Tab>Sandboxes</Tab>
+                    <Tab>Participants</Tab>
+                    <Tab>Study defaults</Tab>
+                </TabList>
+            </Tabs>
+            <div style={{ padding: '20px' }}>
+        {showDatasets ? <DataSetComponent dataSets={study.dataSets} /> : null}
+        {showParticipants ? <ParticipantComponent /> : null}
+        {showSandboxes ? <SandBoxComponent sandBoxes={study.sandBoxes} /> : null}
+            </div>
+        </div> : null }
+    </>
+    : <img src={loadingGif} alt="loading..."/> } </>
+    );
+};
+
+/*
+wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} vendor={study.createdBy}
+return (<>
         {!loading ?
     <Wrapper>
         <StudyComponentFull wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} newStudy={newStudy} supplier={study.createdBy} />
@@ -86,6 +110,7 @@ const StudyDetails = () => {
     </Wrapper>
     : <img src={loadingGif} alt="loading..."/> } </>
     );
-};
+*/
+
 
 export default StudyDetails;

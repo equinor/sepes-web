@@ -1,12 +1,12 @@
 import React from 'react';
-import { Search } from '@equinor/eds-core-react';
+import { Search, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { delete_to_trash } from '@equinor/eds-icons';
+import { close } from '@equinor/eds-icons';
 import { Table, Icon } from '@equinor/eds-core-react';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
-    delete_to_trash
+    close
 };
 Icon.add(icons);
 
@@ -16,27 +16,42 @@ const Wrapper = styled.div`
     grid-gap: 23px;
 `;
 
+const Bar = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 0.3fr 1fr;
+    margin-left: 50%;
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
+`;
+
+const removeDataset= (name:string) => {
+    alert('Remove dataset with name: ' + name + ' ?');
+}
+
 const DataSetComponent = (props: any) => {
 
 
     return (
         <Wrapper>
-            <div>
+            <Bar>
+                <Button variant="outlined">Add study specific data set</Button>
+                <span style={{ textAlign: 'center' }}>or</span>
                 <Search />
-            </div>
+            </Bar>
             <div>
-                <Table style={{width: "100%"}}>
+                <Table style={{ width: '100%' }}>
                     <Head>
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
-                        <Cell as="th" scope="col"/>
+                        <Cell style={{ width: '10px' }} as="th" scope="col" />
                     </Row>
                     </Head>
                     <Body>
                     {props.dataSets && props.dataSets.map((row) => (
                         <Row key={row.name}>
                         <Cell component="th" scope="row">{row.name}</Cell>
-                        <Cell align="right"><Icon name="delete_to_trash" size={24} /></Cell>
+                        <Cell><Icon name="close" size={24} onClick={() => removeDataset(row.name)} /></Cell>
                         </Row>
                     ))}
                     </Body>
