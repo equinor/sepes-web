@@ -3,6 +3,7 @@ import { Search, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Table, Icon } from '@equinor/eds-core-react';
+import { Link } from 'react-router-dom';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -12,7 +13,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 35px 1fr;
+    grid-template-rows: 20px 20px 1fr;
     grid-gap: 23px;
 `;
 
@@ -30,8 +31,6 @@ const removeDataset= (name:string) => {
 }
 
 const DataSetComponent = (props: any) => {
-
-
     return (
         <Wrapper>
             <Bar>
@@ -39,6 +38,7 @@ const DataSetComponent = (props: any) => {
                 <span style={{ textAlign: 'center' }}>or</span>
                 <Search />
             </Bar>
+            <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
             <div>
                 <Table style={{ width: '100%' }}>
                     <Head>
@@ -60,7 +60,5 @@ const DataSetComponent = (props: any) => {
         </Wrapper>
     )
 }
-
-
 
 export default DataSetComponent;
