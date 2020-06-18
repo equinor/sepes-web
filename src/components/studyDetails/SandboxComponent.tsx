@@ -13,7 +13,7 @@ const SandboxComponent = (props: any) => {
 
     return (
         <div>
-            <Button variant="outlined" style={{ float: 'right', marginBottom: '20px' }}>Add resource</Button>
+            <Button variant="outlined" style={{ float: 'right', marginBottom: '19px' }}>Add resource</Button>
             <Table style={{ width: '100%' }}>
                 <Head style={{ backgroundColor: '#F7F7F7' }}>
                     <Row>
