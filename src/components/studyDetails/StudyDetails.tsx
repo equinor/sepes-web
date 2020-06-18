@@ -5,8 +5,9 @@ import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
 import * as api from '../../services/Api';
-import loadingGif from '../../assets/loading.gif';
+//import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
+import Loading from '../common/LoadingComponent';
 
 const { TabList, Tab } = Tabs;
 
@@ -65,9 +66,10 @@ const StudyDetails = () => {
         setShowSandboxes(false);
     }
 
-    return (<>
-        {!loading ?
+    return (
     <>
+        {!loading
+        ? <>
         <StudyComponentFull study={study} newStudy={newStudy} />
         {!newStudy ?
         <div style={{ margin: '20px 20px 20px 20px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
@@ -86,8 +88,9 @@ const StudyDetails = () => {
         {showSandboxes ? <SandBoxComponent sandBoxes={study.sandBoxes} /> : null}
             </div>
         </div> : null }
+          </>
+    : <Loading /> }
     </>
-    : <img src={loadingGif} alt="loading..."/> } </>
     );
 };
 
