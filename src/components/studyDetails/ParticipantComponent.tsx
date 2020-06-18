@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Button, Table, Icon } from '@equinor/eds-core-react';
-import { delete_to_trash } from '@equinor/eds-icons';
+import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,7 +10,7 @@ import Select from '@material-ui/core/Select';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
-    delete_to_trash
+    close
 };
 Icon.add(icons);
 
@@ -48,9 +48,18 @@ const SearchWrapper = styled.div`
     display: grid;
     grid-template-columns: 2fr 0.5fr 0.5fr;
     grid-gap: 10px;
+    margin-left: 50%;
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
 `;
 
 const ParicipantComponent = (props: any) => {
+
+    const removeParticipant = (name:string) => {
+        alert('Remove participant with name: ' + name + ' ?');
+    }
+
     return (
         <Wrapper>
             <SearchWrapper>
@@ -78,7 +87,7 @@ const ParicipantComponent = (props: any) => {
                         <Cell as="th" scope="col">Name</Cell>
                         <Cell as="th" scope="col">E-mail</Cell>
                         <Cell as="th" scope="col">Role</Cell>
-                        <Cell as="th" scope="col"></Cell>
+                        <Cell style={{ width: '10px' }} as="th" scope="col"></Cell>
                     </Row>
                     </Head>
                     <Body>
@@ -89,7 +98,7 @@ const ParicipantComponent = (props: any) => {
                         </Cell>
                         <Cell align="right">{row.Email}</Cell>
                         <Cell align="right">{row.Role}</Cell>
-                        <Cell align="right"><Icon name="delete_to_trash" size={24} /></Cell>
+                        <Cell align="right"><Icon name="close" size={24} onClick={() => removeParticipant(row.name)} /></Cell>
                         </Row>
                     ))}
                     </Body>

@@ -61,15 +61,16 @@ grid-gap: 5px;
 `;
 
 const StudyComponentFull = (props: any) => {
+  const { description, wbsCode, createdBy, name } = props.study;
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
-  const [description, setDescription] = useState<string>(props.description);
-  const [descriptionOnChange, setDescriptionOnChange] = useState<string>(props.description);
-  const [wbs, setWbs] = useState<string>(props.wbs);
-  const [wbsOnChange, setWbsOnChange] = useState<string>(props.wbs);
-  const [studyName, setstudyName] = useState<string>(props.name);
-  const [studyNameOnChange, setstudyNameOnChange] = useState<string>(props.name);
-  const [supplier, setSupplier] = useState<string>(props.supplier);
-  const [supplierOnChange, setSupplierOnChange] = useState<string>(props.supplier);
+  const [descriptionL, setDescription] = useState<string>(description);
+  const [descriptionOnChange, setDescriptionOnChange] = useState<string>(description);
+  const [wbsL, setWbs] = useState<string>(wbsCode);
+  const [wbsOnChange, setWbsOnChange] = useState<string>(wbsCode);
+  const [studyName, setstudyName] = useState<string>(name);
+  const [studyNameOnChange, setstudyNameOnChange] = useState<string>(name);
+  const [vendor, setVendor] = useState<string>(createdBy);
+  const [vendorOnChange, setSupplierOnChange] = useState<string>(createdBy);
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleSave = () => {
@@ -77,7 +78,7 @@ const StudyComponentFull = (props: any) => {
     setDescription(descriptionOnChange);
     setWbs(wbsOnChange);
     setstudyName(studyNameOnChange);
-    setSupplier(supplierOnChange);
+    setVendor(vendorOnChange);
   };
 
   const handleCancel = () => {
@@ -89,9 +90,9 @@ const StudyComponentFull = (props: any) => {
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" multiline={true} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
-            {!editMode ? <SmallText>{supplier}</SmallText>: <TextField placeholder="Who is the supplier?" onChange={e => setSupplierOnChange(e.target.value)} value={supplierOnChange} label="Supplier"/>}
-            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbs}</span></SmallIconWrapper>: <TextField placeholder="Wbs for the study" onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
+            {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
+            {!editMode ? <SmallText>{vendor}</SmallText>: <TextField placeholder="Who is the vendor?" onChange={e => setSupplierOnChange(e.target.value)} value={vendorOnChange} label="Vendor" meta="Required"/>}
+            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbsL}</span></SmallIconWrapper>: <TextField helperIcon={dollar} placeholder="Wbs for the study" onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
             <SmallIconWrapper>
                 {!editMode ? <>
                 <Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: 
@@ -100,7 +101,7 @@ const StudyComponentFull = (props: any) => {
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>
         {!editMode ? 
-          <Description>{description}</Description>:
+          <Description>{descriptionL}</Description>:
           <TextField placeholder="Describe the study" multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
         <div style={{ margin: 'auto' }}>
           <Dot>SP</Dot>

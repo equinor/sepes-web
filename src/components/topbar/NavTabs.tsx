@@ -16,7 +16,7 @@ const NavTabs = (props: any) => {
 
     const getActiveTab = () => {
         const location = window.location.pathname;
-        return location === '/' ? 0 : 1;
+        return location !== '/datasets' ? 0 : 1;
     }
 
     const redirect = (e: any) => {
@@ -28,7 +28,6 @@ const NavTabs = (props: any) => {
             <Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
                 <TabList>
                     <Tab>Studies</Tab>
-                    <Tab>Data sets</Tab>
                 </TabList>
             </Tabs>
         </Wrapper>

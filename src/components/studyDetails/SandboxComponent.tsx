@@ -13,12 +13,12 @@ const SandboxComponent = (props: any) => {
 
     return (
         <div>
-            <Button variant="outlined">Add sandbox</Button>
-            <Table style={{width: "100%"}}>
-                <Head style={{backgroundColor: "#F7F7F7"}}>
+            <Button variant="outlined" style={{ float: 'right', marginBottom: '20px' }}>Add resource</Button>
+            <Table style={{ width: '100%' }}>
+                <Head style={{ backgroundColor: '#F7F7F7' }}>
                     <Row>
                         <Cell as="th" scope="col">Sandbox</Cell>
-                        <Cell as="th" scope="col"></Cell>
+                        <Cell style={{ width: '10px' }} as="th" scope="col"></Cell>
                     </Row>
                 </Head>
                 <Body>
