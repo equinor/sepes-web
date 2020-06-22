@@ -42,6 +42,40 @@ import { myMSALObj }  from './AuthConfig';
     
   }
 
+  export const apiRequestWithToken = async (url:any, body:any, method:string) => {
+    return new Promise(function (resolve, reject){
+      myMSALObj.acquireTokenSilent(loginRequest)
+      .then((tokenResponse:any) => {
+  
+        if(tokenResponse.accessToken){
+          const headers = new Headers();
+          const bearer = `Bearer ${tokenResponse.accessToken}`;
+    
+          headers.append("Authorization", bearer);
+          headers.append("Accept", "application/json");
+          headers.append("Content-Type", "application/json");
+          const options = {
+              method,
+              headers: headers,
+              body: JSON.stringify(body)
+      };
+    
+      console.log('request made to Graph API at: ' + new Date().toString());
+      
+      return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+        .then((response) => response.json())
+        .then((responseData) => { return resolve(responseData); })
+        .catch(error => console.log(error))
+        } 
+        
+          // Callback code here
+      }).catch((error:string) => {
+          console.log(error);
+      });
+    })
+    
+  }
+
   function authCallback(error:any, response:any) {
     //handle redirect response
     if(response){

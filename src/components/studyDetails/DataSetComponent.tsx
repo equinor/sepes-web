@@ -36,7 +36,7 @@ const DataSetComponent = (props: any) => {
             <Bar>
                 <Button variant="outlined">Add study specific data set</Button>
                 <span style={{ textAlign: 'center' }}>or</span>
-                <Search />
+                <Search placeHolder="Add data set from catalogue" />
             </Bar>
             <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
             <div>

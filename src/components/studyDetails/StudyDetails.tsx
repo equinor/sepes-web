@@ -70,7 +70,7 @@ const StudyDetails = () => {
     <>
         {!loading
         ? <>
-        <StudyComponentFull study={study} newStudy={newStudy} />
+        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} />
         {!newStudy ?
         <div style={{ margin: '20px 20px 20px 20px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
