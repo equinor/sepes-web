@@ -3,11 +3,14 @@ import styled from 'styled-components';
 import { Button, TextField, Icon } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, lock } from '@equinor/eds-icons';
+import { dollar, lock, lock_open } from '@equinor/eds-icons';
+import { StudyObj } from '../common/interfaces';
+import { createStudy, editStudy } from '../../services/Api';
 
 const icons = {
   dollar,
-  lock
+  lock,
+  lock_open
 };
 Icon.add(icons);
 
@@ -61,7 +64,7 @@ grid-gap: 5px;
 `;
 
 const StudyComponentFull = (props: any) => {
-  const { description, wbsCode, createdBy, name } = props.study;
+  const { description, wbsCode, createdBy, name, id, vendor, restricted } = props.study;
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
   const [descriptionL, setDescription] = useState<string>(description);
   const [descriptionOnChange, setDescriptionOnChange] = useState<string>(description);
@@ -69,47 +72,84 @@ const StudyComponentFull = (props: any) => {
   const [wbsOnChange, setWbsOnChange] = useState<string>(wbsCode);
   const [studyName, setstudyName] = useState<string>(name);
   const [studyNameOnChange, setstudyNameOnChange] = useState<string>(name);
-  const [vendor, setVendor] = useState<string>(createdBy);
-  const [vendorOnChange, setSupplierOnChange] = useState<string>(createdBy);
-  const [checked, setChecked] = useState<boolean>(false);
+  const [vendorL, setVendor] = useState<string>(vendor);
+  const [vendorOnChange, setSupplierOnChange] = useState<string>(vendor);
+  const [checked, setChecked] = useState<boolean>(restricted);
+  const [inputError, setInputError] = useState<boolean>(false);
 
   const handleSave = () => {
-    setEditMode(false);
-    setDescription(descriptionOnChange);
-    setWbs(wbsOnChange);
-    setstudyName(studyNameOnChange);
-    setVendor(vendorOnChange);
+    if (studyNameOnChange === '' || wbsOnChange === '') {
+      setInputError(true);
+    }
+    else {
+      setEditMode(false);
+      setDescription(descriptionOnChange);
+      setWbs(wbsOnChange);
+      setstudyName(studyNameOnChange);
+      setVendor(vendorOnChange);
+    }
+    /*
+
+    */
+    const newStudy = {
+        name: studyNameOnChange,
+        vendor: vendorOnChange,
+        wbsCode: wbsOnChange,
+        restricted: checked,
+        description: descriptionOnChange,
+        logoUrl: ''
+    }
+    sendStudyToApi(newStudy);
+    props.setNewStudy(false);
   };
 
+  const sendStudyToApi = (study: StudyObj) => {
+    if (props.newStudy) {
+      createStudy(study);
+    }
+    else {
+      study.id = id;
+      editStudy(study, id);
+    }
+  }
+
   const handleCancel = () => {
+    setInputError(false);
     setEditMode(false);
     setDescriptionOnChange(description);
+  }
+
+  const changeVariantBasedOnInputError = () => {
+    if (inputError) {
+      return 'error';
+    }
+    return 'default';
   }
 
   return (
     <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
-            {!editMode ? <SmallText>{vendor}</SmallText>: <TextField placeholder="Who is the vendor?" onChange={e => setSupplierOnChange(e.target.value)} value={vendorOnChange} label="Vendor" meta="Required"/>}
-            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbsL}</span></SmallIconWrapper>: <TextField helperIcon={dollar} placeholder="Wbs for the study" onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
+            {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" variant={changeVariantBasedOnInputError()} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
+            {!editMode ? <SmallText>{vendorL}</SmallText> : <TextField placeholder="Who is the vendor?" variant={changeVariantBasedOnInputError()} onChange={e => setSupplierOnChange(e.target.value)} value={vendorOnChange} label="Vendor" meta="Required"/>}
+            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbsL}</span></SmallIconWrapper>: <TextField helperIcon={icons.dollar} placeholder="Wbs for the study" onChange={e => setWbsOnChange(e.target.value)} value={wbsOnChange} label="wbs" />}
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name="lock" size={24} /> <span>Unlocked</span></>: 
-                <FormControlLabel control={<CheckBox style={{color:"#007079"}} checked={checked} onChange={() => setChecked(!checked)}/>} label="Restricted"/>}
+                <Icon color="#007079" name={checked ? "lock": "lock_open"} size={24} /> <span>{checked ? 'Locked' : 'Unlocked'}</span></>: 
+                <FormControlLabel control={<CheckBox style={{ color: '#007079' }} checked={checked} onChange={() => setChecked(!checked)} />} label="Restricted" />}
             </SmallIconWrapper>
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>
-        {!editMode ? 
+        {!editMode ?
           <Description>{descriptionL}</Description>:
-          <TextField placeholder="Describe the study" multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{margin: "auto", marginLeft: "0"}} value={descriptionOnChange} /> }
+          <TextField placeholder="Describe the study" multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{ margin: 'auto', marginLeft: '0' }} value={descriptionOnChange} /> }
         <div style={{ margin: 'auto' }}>
           <Dot>SP</Dot>
           {editMode ?
           <>
-          <Button variant="outlined" style={{margin: "5px 0 20px 0"}}>Change logo</Button>
+          <Button variant="outlined" style={{ margin: '5px 0 20px 0' }}>Change logo</Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>{props.newStudy? "Create Study": "Save"}</Button>
+            <Button onClick={() => handleSave()}>{props.newStudy? 'Create Study': "Save"}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>
