@@ -30,7 +30,7 @@ const Title = styled.span`
    font-size: 28px;
   `;
 
-const Description = styled.span`
+const DescriptionWrapper = styled.div`
     margin: auto;
     margin-left: 0;
   `;
@@ -64,9 +64,9 @@ grid-gap: 5px;
 `;
 
 const StudyComponentFull = (props: any) => {
-  const { description, wbsCode, createdBy, name, id, vendor, restricted } = props.study;
+  const { description, wbsCode, name, id, vendor, restricted } = props.study;
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
-  const [descriptionL, setDescription] = useState<string>(description);
+  const [descriptionL, setDescription] = useState<any>(description);
   const [descriptionOnChange, setDescriptionOnChange] = useState<string>(description);
   const [wbsL, setWbs] = useState<string>(wbsCode);
   const [wbsOnChange, setWbsOnChange] = useState<string>(wbsCode);
@@ -88,9 +88,7 @@ const StudyComponentFull = (props: any) => {
       setstudyName(studyNameOnChange);
       setVendor(vendorOnChange);
     }
-    /*
 
-    */
     const newStudy = {
         name: studyNameOnChange,
         vendor: vendorOnChange,
@@ -141,7 +139,7 @@ const StudyComponentFull = (props: any) => {
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
         </TitleWrapper>
         {!editMode ?
-          <Description>{descriptionL}</Description>:
+          <DescriptionWrapper>{descriptionL}</DescriptionWrapper>:
           <TextField placeholder="Describe the study" multiline={true} onChange={e => setDescriptionOnChange(e.target.value)} label="Description" style={{ margin: 'auto', marginLeft: '0' }} value={descriptionOnChange} /> }
         <div style={{ margin: 'auto' }}>
           <Dot>SP</Dot>

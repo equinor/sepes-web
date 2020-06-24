@@ -6,4 +6,5 @@ export interface StudyObj {
     description: string;
     logoUrl: string;
     id?: string;
+    datasets?: [];
 }
