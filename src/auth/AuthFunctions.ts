@@ -42,7 +42,7 @@ import { myMSALObj }  from './AuthConfig';
     
   }
 
-  export const apiRequestWithToken = async (url:any, body:any, method:string) => {
+  export const apiRequestWithToken = async (url:any, method:string, body?:any) => {
     return new Promise(function (resolve, reject){
       myMSALObj.acquireTokenSilent(loginRequest)
       .then((tokenResponse:any) => {

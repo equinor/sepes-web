@@ -83,9 +83,9 @@ const StudyDetails = () => {
                 </TabList>
             </Tabs>
             <div style={{ padding: '20px' }}>
-        {showDatasets ? <DataSetComponent dataSets={study.dataSets} /> : null}
+        {showDatasets ? <DataSetComponent study={study && study} /> : null}
         {showParticipants ? <ParticipantComponent /> : null}
-        {showSandboxes ? <SandBoxComponent sandBoxes={study.sandBoxes} /> : null}
+        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
             </div>
         </div> : null }
           </>

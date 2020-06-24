@@ -22,7 +22,7 @@ const SandboxComponent = (props: any) => {
                     </Row>
                 </Head>
                 <Body>
-                {props.sandBoxes && props.sandBoxes.map((row) => (
+                {props.sandboxes && props.sandboxes.map((row) => (
                         <Row key={row.name}>
                         <Cell>
                             {row.name}
