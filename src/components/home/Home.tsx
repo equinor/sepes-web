@@ -4,6 +4,7 @@ import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Loading from '../common/LoadingComponent'
 
 const Wrapper = styled.div`
     display: grid;
@@ -40,10 +41,12 @@ const Home = () => {
     }
 
     return (
+        <> {!loading ?
         <Wrapper>
             <Studies studyList={studyList} />
             <Button onClick={() => { window.location.pathname = '/studies'; }} style={{ marginRight: '20px' }}>New study</Button>
-        </Wrapper>
+        </Wrapper> : <Loading />}
+        </>
     )
 }
 
