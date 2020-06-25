@@ -20,6 +20,7 @@ const StudyDetails = () => {
     const [showSandboxes, setShowSandboxes] = useState<boolean>(false);
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [datasets, setDatasets] = useState<any>([]);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -83,7 +84,7 @@ const StudyDetails = () => {
                 </TabList>
             </Tabs>
             <div style={{ padding: '20px' }}>
-        {showDatasets ? <DataSetComponent study={study && study} /> : null}
+        {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
         {showParticipants ? <ParticipantComponent /> : null}
         {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
             </div>

@@ -24,3 +24,7 @@ export const getDatasetList = async () => {
 export const addStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'PUT');
 };
+
+export const removeStudyDataset = async (studyId:string, datasetId:string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
+};

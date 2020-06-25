@@ -53,8 +53,8 @@ const Home = () => {
                 console.log("Err");
             }
             setLoading(false);
-        })
-    }
+        });
+    };
 
     return (
         <>
