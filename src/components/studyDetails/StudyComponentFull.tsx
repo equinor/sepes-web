@@ -76,6 +76,7 @@ const StudyComponentFull = (props: any) => {
   const [vendorOnChange, setSupplierOnChange] = useState<string>(vendor);
   const [checked, setChecked] = useState<boolean>(restricted);
   const [inputError, setInputError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSave = () => {
     if (studyNameOnChange === '' || wbsOnChange === '') {
@@ -102,8 +103,18 @@ const StudyComponentFull = (props: any) => {
   };
 
   const sendStudyToApi = (study: StudyObj) => {
+    setLoading(true);
     if (props.newStudy) {
-      createStudy(study);
+      createStudy(study).then((result: any) => {
+        if (result) {
+            window.location.pathname = '/studies/' + result.id;
+            console.log("result: ", result);
+        }
+        else {
+            console.log("Err");
+        }
+        setLoading(false);
+    });
     }
     else {
       study.id = id;

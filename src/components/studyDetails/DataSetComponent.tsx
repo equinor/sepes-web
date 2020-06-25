@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
-import { getDatasetList, addStudyDataset } from '../../services/Api';
+import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 
 const { Body, Row, Cell, Head } = Table;
@@ -37,7 +37,7 @@ const DatasetItem = styled.div`
 `;
 
 const DataSetComponent = (props: any) => {
-    const datasets = props.study.datasets;
+    const [datasets, setDatasets] = useState<any>(props.study.datasets);
     const [searchValue, setSearchValue] = useState('');
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -48,9 +48,22 @@ const DataSetComponent = (props: any) => {
         const value = event.target.value;
         setSearchValue(value);
     }
-    const removeDataset = (id:any) => {
-        console.log("delete dataset");
+    const removeDataset = (row:any) => {
+        const studyId = window.location.pathname.split('/')[2];
+        //Removing it on clientside, keeping it for now.
+        //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
+        removeStudyDataset(studyId, row.id).then((result: any) => {
+            if (result) {
+                props.setStudy({...props.study, datasets: result.datasets });
+                console.log("result Datasets after delete: ", result);
+            }
+            else {
+                console.log("Err");
+            }
+            setLoading(false);
+        });
     }
+
     useEffect(() => {
         setIsSubscribed(true);
         getDatasets();
@@ -62,7 +75,7 @@ const DataSetComponent = (props: any) => {
         getDatasetList().then((result: any) => {
             if (isSubscribed) {
                 setDatasetsList(result);
-                console.log("resultDatasets: ", result);
+                console.log("resultDatasetLists: ", result);
             }
             else {
                 console.log("Err");
@@ -73,13 +86,15 @@ const DataSetComponent = (props: any) => {
 
     const addDatasetToStudy = (row:any) => {
         setIsOpen(false);
-        console.log(datasets);
-        console.log(row);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];
-            datasets.push(row);
+            //Removing it on clientside. Keep it here for now.
+            //let list = props.study.datasets;
+            //list.push(row);
+            //props.setStudy({...props.study, datasets: list});
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result) {
+                    props.setStudy({...props.study, datasets: result.datasets });
                     console.log("resultDatasets: ", result);
                 }
                 else {
@@ -92,7 +107,7 @@ const DataSetComponent = (props: any) => {
 
     const checkIfDatasetIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        datasets.forEach((element) => {
+        props.study.datasets.forEach((element) => {
             if (element.id === id) {
                 elementExist = true;
             }
@@ -112,7 +127,7 @@ const DataSetComponent = (props: any) => {
                     <Search onChange={handleOnSearchValueChange} placeHolder="Add data set from catalogue" />
                     <div style={{ backgroundColor: '#ffffff', boxShadow: '2px 2px #E5E5E5', borderRadius: '4px' }}>
                     {(isOpen || searchValue) && datasetsList && datasetsList.map((row: any) => (
-                        row.name.includes(searchValue) ? <DatasetItem key={row.id} onClick={() => { addDatasetToStudy(row); }}>{row.name}</DatasetItem> : null
+                        row.name.includes(searchValue) && !checkIfDatasetIsAlreadyAdded(row.id) ? <DatasetItem key={row.id} onClick={() => { addDatasetToStudy(row); }}>{row.name}</DatasetItem> : null
                     ))}
                     </div>
                 </div>
@@ -127,10 +142,10 @@ const DataSetComponent = (props: any) => {
                     </Row>
                     </Head>
                     <Body>
-                    {datasets && datasets.map((row) => (
+                    {props.study.datasets && props.study.datasets.map((row) => (
                         <Row key={row.id}>
                         <Cell component="th" scope="row">{row.name}</Cell>
-                        <Cell><Icon name="close" size={24} onClick={() => removeDataset(row.id)} /></Cell>
+                        <Cell><Icon name="close" size={24} onClick={() => removeDataset(row)} /></Cell>
                         </Row>
                     ))}
                     </Body>
