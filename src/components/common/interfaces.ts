@@ -5,6 +5,6 @@ export interface StudyObj {
     restricted: boolean;
     description: string;
     logoUrl: string;
-    id?: string;
+    id: string;
     datasets?: [];
 }
