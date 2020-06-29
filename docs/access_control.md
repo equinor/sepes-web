@@ -1,6 +1,6 @@
 # Sepes Access control
 
-Ønsker at løsningen skal ha minst mulig med Equionor å gjøre. For å redusere risk bildet. Kun roller som er nødvendige i AccessIT skal være i AccessIT
+Ønsker at løsningen skal ha minst mulig med Equinor å gjøre. For å redusere risk bildet. Kun roller som er nødvendige i AccessIT skal være i AccessIT
 
 /TODO Check non-accessit roles - can guest users in azure ad be deleted fom azure ad when study is deleted. 
 
@@ -44,5 +44,7 @@ All with Equinor accounts can see all unrestricted studies
 
 
 > \* Study metadata includes Study name, restricted (Y/N), Study description and avatar
+
 > \** Add datasets available for this study. Need some way to mark datasets in an "Dataset Admin page".
+
 > \*** Requires Dataset Admin approval
