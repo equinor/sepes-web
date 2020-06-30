@@ -1,4 +1,4 @@
-import { apiCallWithToken, apiRequestWithToken } from '../auth/AuthFunctions';
+import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
 import { StudyObj } from "../components/common/interfaces"
 
 export const getStudyList = async () => {
@@ -39,4 +39,16 @@ export const addStudyParticipant = async (studyId:string, participantId:string, 
 
 export const removeStudyParticipant = async (studyId:string, participantId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/participants/' + participantId, 'DELETE');
+};
+
+export const postStudy = async (study: StudyObj, imageUrl:string) => {
+  return postputStudy(study, 'api/studies/', 'POST', imageUrl);
+};
+
+export const putStudy = async (study: StudyObj, imageUrl:string) => {
+  return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
+};
+
+export const postOnlyBlobimage = async (imageUrl: string) => {
+  return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
 };

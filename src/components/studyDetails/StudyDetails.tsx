@@ -9,6 +9,7 @@ import * as api from '../../services/Api';
 //import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
 import Loading from '../common/LoadingComponent';
+import * as notify from '../common/notify';
 
 const { TabList, Tab } = Tabs;
 
@@ -37,13 +38,14 @@ const StudyDetails = () => {
         }
         setLoading(true);
         api.getStudy(id).then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && result) {
                 setStudy(result);
                 setNewStudy(false);
                 console.log("resultStudy: ", result)
             }
             else {
                 console.log("Err");
+                notify.show('Error getting study');
             }
             setLoading(false);
         })
@@ -77,7 +79,7 @@ const StudyDetails = () => {
     <>
         {!loading
         ? <>
-        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} />
+        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} />
         {!newStudy ?
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
