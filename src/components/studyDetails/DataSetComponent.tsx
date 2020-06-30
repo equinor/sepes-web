@@ -6,6 +6,8 @@ import { Table, Icon } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
+import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
+import DatasetsTable from '../common//customComponents/DatasetsTable';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -38,16 +40,11 @@ const DatasetItem = styled.div`
 
 const DataSetComponent = (props: any) => {
     const [datasets, setDatasets] = useState<any>(props.study.datasets);
-    const [searchValue, setSearchValue] = useState('');
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleOnSearchValueChange = (event) => {
-        const value = event.target.value;
-        setSearchValue(value);
-    }
     const removeDataset = (row:any) => {
         const studyId = window.location.pathname.split('/')[2];
         //Removing it on clientside, keeping it for now.
@@ -124,33 +121,21 @@ const DataSetComponent = (props: any) => {
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    <Search onChange={handleOnSearchValueChange} placeHolder="Add data set from catalogue" />
-                    <div style={{ backgroundColor: '#ffffff', boxShadow: '2px 2px #E5E5E5', borderRadius: '4px' }}>
-                    {(isOpen || searchValue) && datasetsList && datasetsList.map((row: any) => (
-                        row.name.includes(searchValue) && !checkIfDatasetIsAlreadyAdded(row.id) ? <DatasetItem key={row.id} onClick={() => { addDatasetToStudy(row); }}>{row.name}</DatasetItem> : null
-                    ))}
-                    </div>
+                    <SearchWithDropdown 
+                        handleOnClick={addDatasetToStudy} 
+                        arrayList={datasetsList}
+                        isOpen={isOpen}
+                        filter={checkIfDatasetIsAlreadyAdded}
+                        />
                 </div>
             </Bar>
             <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
-            <div>
-                <Table style={{ width: '100%' }}>
-                    <Head>
-                    <Row>
-                        <Cell as="th" scope="col">Dataset</Cell>
-                        <Cell style={{ width: '10px' }} as="th" scope="col" />
-                    </Row>
-                    </Head>
-                    <Body>
-                    {props.study.datasets && props.study.datasets.map((row) => (
-                        <Row key={row.id}>
-                        <Cell component="th" scope="row">{row.name}</Cell>
-                        <Cell><Icon name="close" size={24} onClick={() => removeDataset(row)} /></Cell>
-                        </Row>
-                    ))}
-                    </Body>
-                </Table>
-            </div>
+            <DatasetsTable
+                datasets={props.study.datasets}
+                removeDataset={removeDataset}
+                editMode={true}
+                />
+            
         </Wrapper>
     )
 }

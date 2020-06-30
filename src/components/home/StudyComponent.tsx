@@ -39,10 +39,14 @@ const Wrapper = styled.div`
     grid-template-columns: minmax(125px,350px) minmax(200px,1fr);
     width: 100%;
     grid-gap: 10px;
+    border-radius:4px;
     padding: 16px;
+    min-width:120px;
+    margin: 0 0 16px 32px;
+    background-color: #ffffff;
     @media (max-width: 768px) {
       display: block;
-      margin-Right: '32px';
+      margin: 0 0 16px 0;
   }
   }
 `;
@@ -51,7 +55,6 @@ const StudyComponent = (props: any) => {
   const { name, description, restricted, id, vendor } = props.study;
   const url = '/studies/' + id;
   return (
-    <div style={{ backgroundColor: "white", marginLeft: "32px", marginBottom: "16px", borderRadius: "4px", minWidth: "120px" }}>
       <Wrapper>
         <div>
           <Dot style={{ float: "left", marginRight: '30px' }}>SP</Dot>
@@ -64,7 +67,6 @@ const StudyComponent = (props: any) => {
 
         <div>{description}</div>
       </Wrapper>
-    </div>
   )
 }
 

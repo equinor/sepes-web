@@ -33,6 +33,7 @@ const Title = styled.span`
 const DescriptionWrapper = styled.div`
     margin: auto;
     margin-left: 0;
+    min-width:200px;
   `;
 
 const SmallText = styled.span`
@@ -41,9 +42,12 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr 4fr 150px;
+    grid-template-columns: 1fr minmax(200px,4fr) 150px;
     width: 100%;
     grid-gap: 10px;
+    @media (max-width: 768px) {
+      display: block;
+  }
 `;
 
 const TitleWrapper = styled.div`
@@ -136,7 +140,7 @@ const StudyComponentFull = (props: any) => {
   }
 
   return (
-    <div style={{ backgroundColor: "white", margin: "20px 20px 0px 20px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
+    <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
             {!editMode ? <Title>{studyName}</Title> : <TextField placeholder="What is the study name?" variant={changeVariantBasedOnInputError()} onChange={e => setstudyNameOnChange(e.target.value)} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyNameOnChange} /> }
@@ -147,7 +151,7 @@ const StudyComponentFull = (props: any) => {
                 <Icon color="#007079" name={checked ? "lock": "lock_open"} size={24} /> <span>{checked ? 'Locked' : 'Unlocked'}</span></>: 
                 <FormControlLabel control={<CheckBox style={{ color: '#007079' }} checked={checked} onChange={() => setChecked(!checked)} />} label="Restricted" />}
             </SmallIconWrapper>
-            {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "50%"}}>Edit</Button>: null}
+            {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "100px"}}>Edit</Button>: null}
         </TitleWrapper>
         {!editMode ?
           <DescriptionWrapper>{descriptionL}</DescriptionWrapper>:
