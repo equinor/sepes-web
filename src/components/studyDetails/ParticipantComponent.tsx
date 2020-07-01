@@ -4,12 +4,12 @@ import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
+import { ParticipantObj } from '../common/interfaces';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -43,8 +43,8 @@ const ParicipantComponent = (props: any) => {
     const [participantNotSelected, setParticipantNotSelected] =  useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] =  useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<any>();
-    const [text, setText] = useState<any>('');
-    const [role, setRole] = useState<any>('');
+    const [text, setText] = useState<string>('');
+    const [role, setRole] = useState<string>('');
 
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
@@ -61,7 +61,7 @@ const ParicipantComponent = (props: any) => {
         })
     }
 
-    const addParticipant = (row:any) => {
+    const addParticipant = () => {
         setText('');
         setParticipantNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
@@ -78,8 +78,8 @@ const ParicipantComponent = (props: any) => {
         })
     }
 
-    const selectParticipant = (row:any) => {
-        setText(row.name);
+    const selectParticipant = (row:ParticipantObj) => {
+        setText(row.name + ' - ' + row.emailAddress);
         setParticipantNotSelected(false);
         setSelectedParticipant(row.id);
         setIsOpen(false);
@@ -87,7 +87,6 @@ const ParicipantComponent = (props: any) => {
 
     const checkIfParticipantIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        console.log(id);
         props.study.participants.forEach((element) => {
             if (element.id === id) {
                 elementExist = true;

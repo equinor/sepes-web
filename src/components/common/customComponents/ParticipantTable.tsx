@@ -24,7 +24,7 @@ const DatasetsTable = (props: any) => {
                     {props.participants && props.participants.map((row) => (
                         <Row key={row.id}>
                         <Cell>{row.name}</Cell>
-                        <Cell align="right">{row.Emailaddress}</Cell>
+                        <Cell align="right">{row.emailAddress}</Cell>
                         <Cell align="right">{row.Role}</Cell>
                         {props.editMode ? <Cell align="right"><Icon name="close" size={24} onClick={() => props.removeParticipant(row)} /></Cell> : null }
                         </Row>
