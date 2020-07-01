@@ -29,6 +29,18 @@ export const removeStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
 };
 
+export const getParticipantList = async () => {
+    return apiCallWithToken('api/participants');
+};
+
+export const addStudyParticipant = async (studyId:string, participantId:string, role:string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + participantId + '/' + role, 'PUT');
+};
+
+export const removeStudyParticipant = async (studyId:string, participantId:string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + participantId, 'DELETE');
+};
+
 export const postStudy = async (study: StudyObj, imageUrl:string) => {
   return postputStudy(study, 'api/studies/', 'POST', imageUrl);
 };

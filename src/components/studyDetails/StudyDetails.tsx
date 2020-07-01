@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
+import Overview from './Overview';
 import * as api from '../../services/Api';
 //import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
@@ -20,6 +21,7 @@ const StudyDetails = () => {
     const [showDatasets, setShowDatasets] = useState<boolean>(false);
     const [showSandboxes, setShowSandboxes] = useState<boolean>(false);
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
+    const [showOverview, setShowOverview] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [datasets, setDatasets] = useState<any>([]);
 
@@ -52,6 +54,9 @@ const StudyDetails = () => {
     const changeComponent = (e:any) => {
         hideComponents();
         setActiveTab(e);
+        if (e === 0) {
+            setShowOverview(true);
+        }
         if (e === 1) {
             setShowDatasets(true);
         }
@@ -67,6 +72,7 @@ const StudyDetails = () => {
         setShowDatasets(false);
         setShowParticipants(false);
         setShowSandboxes(false);
+        setShowOverview(false);
     }
 
     return (
@@ -75,7 +81,7 @@ const StudyDetails = () => {
         ? <>
         <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} />
         {!newStudy ?
-        <div style={{ margin: '20px 20px 20px 20px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+        <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
                 <TabList>
                     <Tab>Overview</Tab>
@@ -85,10 +91,11 @@ const StudyDetails = () => {
                     <Tab>Study defaults</Tab>
                 </TabList>
             </Tabs>
-            <div style={{ padding: '20px' }}>
+            <div style={{ padding: '16px' }}>
         {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
-        {showParticipants ? <ParticipantComponent /> : null}
+        {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
         {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
+        {showOverview ? <Overview datasets={study.datasets} participants={study.participants} />  : null}
             </div>
         </div> : null }
           </>
@@ -96,27 +103,5 @@ const StudyDetails = () => {
     </>
     );
 };
-
-/*
-wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} vendor={study.createdBy}
-return (<>
-        {!loading ?
-    <Wrapper>
-        <StudyComponentFull wbs={study.wbsCode && study.wbsCode} name={study.name && study.name} description={study.description && study.description} newStudy={newStudy} supplier={study.createdBy} />
-        {!newStudy ?
-        <ComponentWrapper style={{ margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px" }}>
-            <LeftWrapper>
-                <DataSetComponent dataSets={study.dataSets} />
-                <SandBoxComponent sandBoxes={study.sandBoxes} />
-            </LeftWrapper>
-            <RightWrapper>
-                <ParticipantComponent />
-            </RightWrapper>
-        </ComponentWrapper> : null}
-    </Wrapper>
-    : <img src={loadingGif} alt="loading..."/> } </>
-    );
-*/
-
 
 export default StudyDetails;

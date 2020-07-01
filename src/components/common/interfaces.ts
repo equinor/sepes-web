@@ -8,3 +8,10 @@ export interface StudyObj {
     id: string;
     datasets?: [];
 }
+
+export interface ParticipantObj {
+    name: string;
+    emailAddress: string;
+    role: string;
+    id: string;
+}
