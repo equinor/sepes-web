@@ -6,7 +6,9 @@ export interface StudyObj {
     description: string;
     logoUrl: string;
     id: string;
-    datasets?: [];
+    datasets: [];
+    participants: [];
+    sandboxes: [];
 }
 
 export interface ParticipantObj {
