@@ -49,6 +49,8 @@ export const putStudy = async (study: StudyObj, imageUrl:string) => {
   return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
 };
 
+/*
 export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
 };
+*/
