@@ -70,11 +70,10 @@ grid-gap: 5px;
 
 
 const StudyComponentFull = (props: any) => {
-  const { id, logoUrl } = props.study;
-  const [studyL, setStudyL] = useState<StudyObj>(props.study);
+  const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
-  const [imageUrl, setImageUrl] = useState<string>(logoUrl);
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [inputError, setInputError] = useState<boolean>(false);
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
 
@@ -84,9 +83,8 @@ const StudyComponentFull = (props: any) => {
     }
     else {
       if (imageUrl) {
-        setStudyOnChange({...studyL, logoUrl: imageUrl});
+        setStudyOnChange({...studyOnChange, logoUrl: imageUrl});
       }
-      setStudyL(studyOnChange);
       setEditMode(false);
       sendStudyToApi(studyOnChange);
       props.setNewStudy(false);
@@ -101,6 +99,7 @@ const StudyComponentFull = (props: any) => {
             window.location.pathname = '/studies/' + result.id;
             console.log("result: ", result);
             let newStudy = result;
+            props.setStudy(newStudy);
             if(imageUrl && newStudy.id){
               putStudy(newStudy, imageUrl).then((result: any) => {
                 if (result) {
@@ -124,6 +123,7 @@ const StudyComponentFull = (props: any) => {
       putStudy(study, imageUrl).then((result: any) => {
         if (result) {
             console.log("result: ", result);
+            props.setStudy(result);
         }
         else {
             console.log("Err");
@@ -136,6 +136,8 @@ const StudyComponentFull = (props: any) => {
   const handleCancel = () => {
     setInputError(false);
     setEditMode(false);
+    //Remove line under if we want to keep changes when clicking cancel, but don't send to api
+    setStudyOnChange(props.study);
   }
 
   const changeVariantBasedOnInputError = () => {
@@ -145,23 +147,31 @@ const StudyComponentFull = (props: any) => {
     return 'default';
   }
 
+  function handleChange(evt) {
+    const value = evt.target.value;
+    setStudyOnChange({
+      ...studyOnChange,
+      [evt.target.name]: value
+    });
+  }
+
   return (
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            {!editMode ? <Title>{studyL.name}</Title> : <TextField placeholder="What is the study name?" variant={changeVariantBasedOnInputError()} onChange={e => setStudyOnChange({...studyOnChange, name: e.target.value})} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyOnChange.name} /> }
-            {!editMode ? <SmallText>{studyL.vendor}</SmallText> : <TextField placeholder="Who is the vendor?" variant={changeVariantBasedOnInputError()} onChange={e => setStudyOnChange({...studyOnChange, vendor: e.target.value})} value={studyOnChange.vendor} label="Vendor" meta="Required"/>}
-            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{studyL.wbsCode}</span></SmallIconWrapper>: <TextField helperIcon={icons.dollar} placeholder="Wbs for the study" onChange={e => setStudyOnChange({...studyOnChange, wbsCode: e.target.value})} value={studyOnChange.wbsCode} label="wbs" />}
+            {!editMode ? <Title>{name}</Title> : <TextField name='name' placeholder="What is the study name?" variant={changeVariantBasedOnInputError()} onChange={handleChange} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyOnChange.name} /> }
+            {!editMode ? <SmallText>{vendor}</SmallText> : <TextField name='vendor' placeholder="Who is the vendor?" variant={changeVariantBasedOnInputError()} onChange={handleChange} value={studyOnChange.vendor} label="Vendor" meta="Required"/>}
+            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbsCode}</span></SmallIconWrapper>: <TextField name='wbsCode' helperIcon={icons.dollar} placeholder="Wbs for the study" onChange={handleChange} label="wbs" value={studyOnChange.wbsCode} />}
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name={studyL.restricted ? "lock": "lock_open"} size={24} /> <span>{studyL.restricted ? 'Locked' : 'Unlocked'}</span></>: 
+                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Locked' : 'Unlocked'}</span></>: 
                 <FormControlLabel control={<CheckBox style={{ color: '#007079' }} checked={studyOnChange.restricted} onChange={() => setStudyOnChange({...studyOnChange, restricted: !studyOnChange.restricted})} />} label="Restricted" />}
             </SmallIconWrapper>
             {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "100px"}}>Edit</Button>: null}
         </TitleWrapper>
         {!editMode ?
-          <DescriptionWrapper>{studyL.description}</DescriptionWrapper>:
-          <TextField placeholder="Describe the study" multiline={true} onChange={e => setStudyOnChange({...studyOnChange, description: e.target.value})} label="Description" style={{ margin: 'auto', marginLeft: '0' }} value={studyOnChange.description} /> }
+          <DescriptionWrapper>{description}</DescriptionWrapper>:
+          <TextField name='description' placeholder="Describe the study" multiline={true} onChange={handleChange} label="Description" style={{ margin: 'auto', marginLeft: '0' }} value={studyOnChange.description} /> }
         <div style={{ margin: 'auto' }}>
           {!showImagePicker ? <Dot>SP</Dot>
           : null}
