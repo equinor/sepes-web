@@ -48,7 +48,7 @@ const StudyDetails = () => {
                 notify.show('Error getting study');
             }
             setLoading(false);
-        })
+        });
     }
 
     const changeComponent = (e:any) => {

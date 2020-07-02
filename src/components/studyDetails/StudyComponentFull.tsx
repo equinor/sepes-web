@@ -159,19 +159,68 @@ const StudyComponentFull = (props: any) => {
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
       <Wrapper>
         <TitleWrapper>
-            {!editMode ? <Title>{name}</Title> : <TextField name='name' placeholder="What is the study name?" variant={changeVariantBasedOnInputError()} onChange={handleChange} label="Study name" meta="Required" style={{margin: "auto", marginLeft: "0"}} value={studyOnChange.name} /> }
-            {!editMode ? <SmallText>{vendor}</SmallText> : <TextField name='vendor' placeholder="Who is the vendor?" variant={changeVariantBasedOnInputError()} onChange={handleChange} value={studyOnChange.vendor} label="Vendor" meta="Required"/>}
-            {!editMode ? <SmallIconWrapper><Icon color="#007079" name="dollar" size={24} /> <span>{wbsCode}</span></SmallIconWrapper>: <TextField name='wbsCode' helperIcon={icons.dollar} placeholder="Wbs for the study" onChange={handleChange} label="wbs" value={studyOnChange.wbsCode} />}
+            {!editMode ? <Title>{name}</Title> :
+            <TextField
+              name='name'
+              placeholder="What is the study name?"
+              variant={changeVariantBasedOnInputError()}
+              onChange={handleChange}
+              label="Study name" meta="Required"
+              style={{margin: "auto", marginLeft: "0"}}
+              value={studyOnChange.name} /> }
+            {!editMode ? <SmallText>{vendor}</SmallText> :
+            <TextField
+              name='vendor'
+              placeholder="Who is the vendor?"
+              variant={changeVariantBasedOnInputError()}
+              onChange={handleChange}
+              value={studyOnChange.vendor}
+              label="Vendor"
+              meta="Required"
+            />
+              }
+            {!editMode ? 
+            <SmallIconWrapper>
+              <Icon color="#007079" name="dollar" size={24} />
+              <span>{wbsCode}</span>
+            </SmallIconWrapper>:
+            <TextField
+              name='wbsCode'
+              helperIcon={icons.dollar}
+              placeholder="Wbs for the study"
+              onChange={handleChange}
+              label="wbs"
+              value={studyOnChange.wbsCode}
+            />
+            }
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Locked' : 'Unlocked'}</span></>: 
-                <FormControlLabel control={<CheckBox style={{ color: '#007079' }} checked={studyOnChange.restricted} onChange={() => setStudyOnChange({...studyOnChange, restricted: !studyOnChange.restricted})} />} label="Restricted" />}
+                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Locked' : 'Unlocked'}</span></>:
+                <FormControlLabel
+                  control={<CheckBox style={{ color: '#007079' }}
+                  checked={studyOnChange.restricted}
+                  onChange={() => setStudyOnChange({...studyOnChange, restricted: !studyOnChange.restricted})} />}
+                  label="Restricted"
+                />}
             </SmallIconWrapper>
-            {!editMode ? <Button variant="outlined" onClick={() => setEditMode(true)} style={{width: "100px"}}>Edit</Button>: null}
+            {!editMode ?
+            <Button
+              variant="outlined"
+              onClick={() => setEditMode(true)}
+              style={{width: "100px"}}>
+                Edit
+            </Button>: null}
         </TitleWrapper>
         {!editMode ?
           <DescriptionWrapper>{description}</DescriptionWrapper>:
-          <TextField name='description' placeholder="Describe the study" multiline={true} onChange={handleChange} label="Description" style={{ margin: 'auto', marginLeft: '0' }} value={studyOnChange.description} /> }
+          <TextField
+            name='description'
+            placeholder="Describe the study"
+            multiline={true}
+            onChange={handleChange}
+            label="Description"
+            style={{ margin: 'auto', marginLeft: '0' }}
+            value={studyOnChange.description} /> }
         <div style={{ margin: 'auto' }}>
           {!showImagePicker ? <Dot>SP</Dot>
           : null}
@@ -179,9 +228,14 @@ const StudyComponentFull = (props: any) => {
           <>
           {showImagePicker ? <AddImageAndCompressionContainer setImageUrl={setImageUrl} />
           : null}
-          <Button onClick={() => setShowImagePicker(!showImagePicker)} variant="outlined" style={{ margin: '5px 0 20px 0' }}>{showImagePicker ? 'Hide image picker' : 'Change logo'}</Button>
+          <Button
+            onClick={() => setShowImagePicker(!showImagePicker)}
+            variant="outlined" 
+            style={{ margin: '5px 0 20px 0' }}>
+              {showImagePicker ? 'Hide image picker' : 'Change logo'}
+          </Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>{props.newStudy? 'Create Study': "Save"}</Button>
+            <Button onClick={() => handleSave()}>{props.newStudy? 'Create Study': 'Save'}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>
