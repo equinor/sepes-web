@@ -61,6 +61,11 @@ const DataSetComponent = (props: any) => {
         });
     }
 
+    const redirectToStudySpecificDataset = () => {
+        const studyId = window.location.pathname.split('/')[2];
+        window.location.pathname = '/studies/' + studyId + '/datasets/studyspecific';
+    }
+
     useEffect(() => {
         setIsSubscribed(true);
         getDatasets();
@@ -115,18 +120,18 @@ const DataSetComponent = (props: any) => {
     return (
         <Wrapper>
             <Bar>
-                <Button variant="outlined">Add study specific data set</Button>
+                <Button variant="outlined" onClick={() => { redirectToStudySpecificDataset(); }}>Add study specific data set</Button>
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    <SearchWithDropdown 
-                        handleOnClick={addDatasetToStudy} 
+                    <SearchWithDropdown
+                        handleOnClick={addDatasetToStudy}
                         arrayList={datasetsList}
                         isOpen={isOpen}
                         filter={checkIfDatasetIsAlreadyAdded}
-                        />
+                    />
                 </div>
             </Bar>
             <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
@@ -135,7 +140,6 @@ const DataSetComponent = (props: any) => {
                 removeDataset={removeDataset}
                 editMode={true}
                 />
-            
         </Wrapper>
     )
 }

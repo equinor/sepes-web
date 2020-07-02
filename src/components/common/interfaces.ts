@@ -17,3 +17,20 @@ export interface ParticipantObj {
     role: string;
     id: string;
 }
+
+export interface DatasetObj {
+    name?:string;
+    location?:string;
+    classification?:string;
+    lraId?:number;
+    dataId?:number;
+    sourceSystem?:string;
+    baDataOwner?:string;
+    asset?:string;
+    countryOfOrigin?:string;
+    areaL1?:string;
+    areaL2?:string;
+    tags?:string;
+    description?:string;
+    studies?:[];
+}

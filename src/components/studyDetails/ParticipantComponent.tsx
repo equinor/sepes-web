@@ -127,7 +127,7 @@ const ParicipantComponent = (props: any) => {
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    <SearchWithDropdown 
+                    <SearchWithDropdown
                         handleOnClick={selectParticipant}
                         isOpen={isOpen}
                         filter={checkIfParticipantIsAlreadyAdded}

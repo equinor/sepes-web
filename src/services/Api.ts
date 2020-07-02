@@ -1,5 +1,5 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
-import { StudyObj } from "../components/common/interfaces"
+import { StudyObj, DatasetObj } from "../components/common/interfaces"
 
 export const getStudyList = async () => {
     return apiCallWithToken('api/studies');
@@ -27,6 +27,10 @@ export const addStudyDataset = async (studyId:string, datasetId:string) => {
 
 export const removeStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
+};
+
+export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
 };
 
 export const getParticipantList = async () => {
