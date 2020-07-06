@@ -26,8 +26,8 @@ const Dot = styled.span`
   `;
 
 const CustomLogoComponent = (props: any) => {
-    const [logoUrl, setLogoUrl] = useState<string>('');
-
+    //const [logoUrl, setLogoUrl] = useState<string>('');
+    /*
     useEffect(() => {
         getStudyImage();
       }, [logoUrl]);
@@ -45,9 +45,9 @@ const CustomLogoComponent = (props: any) => {
           //props.setLoading(false);
         });
       }
-      }
+      }*/
     return (
-        logoUrl ? <Logo src={logoUrl} alt='studyLogo' /> : <Dot>SP</Dot>
+        props.logoUrl ? <Logo src={props.logoUrl} alt='studyLogo' /> : <Dot>SP</Dot>
     )
 }
 
