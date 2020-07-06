@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, TextField, Icon } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
@@ -7,6 +7,8 @@ import { dollar, lock, lock_open } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/ImageDropzone';
+import { getImage } from '../../services/BlobStorage';
+import CustomLogoComponent from '../common/CustomLogoComponent';
 
 const icons = {
   dollar,
@@ -15,6 +17,7 @@ const icons = {
 };
 Icon.add(icons);
 
+/*
 const Dot = styled.span`
     height: 100px;
     width: 100px;
@@ -25,7 +28,7 @@ const Dot = styled.span`
     color: #FFFFFF;
     line-height: 100px;
     font-size:3em;
-  `;
+  `;*/
 
 const Title = styled.span`
    font-size: 28px;
@@ -68,6 +71,18 @@ grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
 
+/*
+const Logo = styled.img`
+    height: 125px;
+    width: 125px;
+    display: inline-block;
+    @media (max-width: 768px) {
+      display: block;
+      height: 100px;
+      width: 100px;
+  }
+  `;
+*/
 
 const StudyComponentFull = (props: any) => {
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
@@ -76,7 +91,37 @@ const StudyComponentFull = (props: any) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [inputError, setInputError] = useState<boolean>(false);
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
-
+  //const [logoUrlFromBlob, setLogoUrlFromBlob] = useState<string>('');
+/*
+  if (props.study.logoUrl) {
+    getImage(props.study.logoUrl).then((res) => {
+      if (res) {
+        setLogoUrlFromBlob(res);
+      }
+      else {
+        console.log('Error getting logo');
+      }
+      props.setLoading(false);
+    });
+  }
+  
+  useEffect(() => {
+    getStudyImage();
+  }, [logoUrlFromBlob]);
+  const getStudyImage = () => {
+    props.setLoading(true);
+    if (props.study.logoUrl) {
+    getImage(props.study.logoUrl).then((res) => {
+      if (res) {
+        setLogoUrlFromBlob(res);
+      }
+      else {
+        console.log('Error getting logo');
+      }
+      props.setLoading(false);
+    });
+  }
+  } */
   const handleSave = () => {
     if (studyOnChange.name === '' || studyOnChange.vendor === '') {
       setInputError(true);
@@ -136,8 +181,10 @@ const StudyComponentFull = (props: any) => {
   const handleCancel = () => {
     setInputError(false);
     setEditMode(false);
+    setImageUrl('');
     //Remove line under if we want to keep changes when clicking cancel, but don't send to api
     setStudyOnChange(props.study);
+    setShowImagePicker(false);
   }
 
   const changeVariantBasedOnInputError = () => {
@@ -222,11 +269,11 @@ const StudyComponentFull = (props: any) => {
             style={{ margin: 'auto', marginLeft: '0' }}
             value={studyOnChange.description} /> }
         <div style={{ margin: 'auto' }}>
-          {!showImagePicker ? <Dot>SP</Dot>
+          {!showImagePicker ? <CustomLogoComponent logoUrl={logoUrl} />
           : null}
           {editMode ?
           <>
-          {showImagePicker ? <AddImageAndCompressionContainer setImageUrl={setImageUrl} />
+          {showImagePicker ? <AddImageAndCompressionContainer setImageUrl={setImageUrl} imageUrl={imageUrl} />
           : null}
           <Button
             onClick={() => setShowImagePicker(!showImagePicker)}

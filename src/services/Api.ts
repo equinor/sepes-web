@@ -1,5 +1,6 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj } from "../components/common/interfaces"
+import { StudyObj, DatasetObj } from "../components/common/interfaces";
+
 
 export const getStudyList = async () => {
     return apiCallWithToken('api/studies');
