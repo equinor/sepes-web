@@ -5,6 +5,7 @@ import { DatasetObj } from '../common/interfaces';
 import { getDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back } from '@equinor/eds-icons';
+import LoadingComponent from '../common/LoadingComponent';
 
 const icons = {
     arrow_back
@@ -70,6 +71,7 @@ const DatasetDetails = (props: any) => {
     }
 
     return (
+        !loading ?
         <Wrapper>
             <div>
                 <div style={{ marginBottom: '16px' }}>
@@ -129,6 +131,7 @@ const DatasetDetails = (props: any) => {
                 </div>
             </RightWrapper>
         </Wrapper>
+        : <LoadingComponent />
     )
 }
 
