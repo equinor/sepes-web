@@ -12,8 +12,8 @@ const App = () => {
         <Router>
             <Layout>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/studies/:id/datasets/studyspecific" component={StudySpecificDataset} />
-                <Route exact path="/studies/:id/datasets/studyspecific/:datasetid" component={DatasetDetails} />
+                <Route exact path="/studies/:id/datasets" component={StudySpecificDataset} />
+                <Route exact path="/studies/:id/datasets/:datasetid" component={DatasetDetails} />
                 <Route exact path="/studies/:id" component={StudyDetails} />
                 <Route exact path="/studies/" component={StudyDetails} />
             </Layout>

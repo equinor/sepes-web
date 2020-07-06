@@ -1,18 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Typography, TextField  } from '@equinor/eds-core-react';
+import { Typography, Icon } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { getDataset } from '../../services/Api';
+import { Link } from 'react-router-dom';
+import { arrow_back } from '@equinor/eds-icons';
+
+const icons = {
+    arrow_back
+  };
+  Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
+    grid-template-columns: 1fr 1fr;
     grid-gap:16px;
     padding:32px;
-    width:400px;
+    background-color:#ffffff
   `;
 
-const datasetId = window.location.pathname.split('/')[5];
+const LeftWrapper = styled.div`
+    display: grid;
+    grid-gap:16px;
+  `;
 
+const RightWrapper = styled.div`
+    margin-top:64px;
+    display: grid;
+    grid-gap:16px;
+  `;
+
+
+const linkStyle = {
+    marginTop: '16px',
+    color: '#007079',
+    fontSize: '22px'
+};
+let studyId = '';
+let datasetId = '';
 const DatasetDetails = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
@@ -26,7 +51,9 @@ const DatasetDetails = (props: any) => {
 
     const getStudyList = () => {
         setLoading(true);
-        getDataset(datasetId).then((result: any) => {
+        datasetId = window.location.pathname.split('/')[4];
+        studyId = window.location.pathname.split('/')[2];
+        getDataset(datasetId, studyId).then((result: any) => {
             if (result) {
                 setDataset(result);
                 console.log("result: ", result);
@@ -38,10 +65,70 @@ const DatasetDetails = (props: any) => {
         });
     };
 
+    const returnField = (fieldName) => {
+        return <Typography variant="h6">{fieldName || '-'}</Typography>;
+    }
+
     return (
-        <div>
-            DatasetDetails page to name {dataset?.name}
-        </div>
+        <Wrapper>
+            <div>
+                <div style={{ marginBottom: '16px' }}>
+                    <Typography variant="h2">{dataset?.name}</Typography>
+                    <span>This data is only available for this study</span>
+                </div>
+                <Link to={'/studies/' + studyId} style={linkStyle}><Icon color="#007079" name="arrow_back" size={24} />Back to study</Link>
+            </div>
+            <RightWrapper>
+                <div>
+                    <div>Data set name</div>
+                    {returnField(dataset?.name)}
+                </div>
+                <div>
+                    <div>location</div>
+                    {returnField(dataset?.location)}
+                </div>
+                <div>
+                    <div>Storage account url</div>
+                    {returnField(dataset?.location)}
+                </div>
+                <div>
+                    <div>Data classification</div>
+                    {returnField(dataset?.classification)}
+                </div>
+                <div>
+                    <div>LRA ID</div>
+                    {returnField(dataset?.lraId)}
+                </div>
+                <div>
+                    <div>Data ID</div>
+                    {returnField(dataset?.dataId)}
+                </div>
+                <div>
+                    <div>Source system</div>
+                    {returnField(dataset?.sourceSystem)}
+                </div>
+                <div>
+                    <div>BA data owner</div>
+                    {returnField(dataset?.baDataOwner)}
+                </div>
+                <div>
+                    <div>Asset</div>
+                    {returnField(dataset?.asset)}
+                </div>
+                <div>
+                    <div>Country of origin</div>
+                    {returnField(dataset?.countryOfOrigin)}
+                </div>
+                <div>
+                    <div>Area L1</div>
+                    {returnField(dataset?.areaL1)}
+                </div>
+                <div>
+                    <div>Area L2</div>
+                    {returnField(dataset?.areaL2)}
+                </div>
+            </RightWrapper>
+        </Wrapper>
     )
 }
 

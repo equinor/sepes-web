@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
+import { Link } from 'react-router-dom';
+
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -8,6 +10,7 @@ const icons = {
 };
 Icon.add(icons);
 
+const studyId = window.location.pathname.split('/')[2];
 const DatasetsTable = (props: any) => {
     return (
         <div>
@@ -21,7 +24,7 @@ const DatasetsTable = (props: any) => {
                     <Body>
                     {props.datasets && props.datasets.map((row) => (
                         <Row key={row.id}>
-                        <Cell component="th" scope="row">{row.name}</Cell>
+                        <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/studies/" + props.studyId +"/datasets/" + row.id} >{row.name}</Link></Cell>
                         {props.editMode ? <Cell><Icon name="close" size={24} onClick={() => props.removeDataset(row)} /></Cell> :  null}
                         </Row>
                     ))}
