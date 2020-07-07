@@ -91,37 +91,7 @@ const StudyComponentFull = (props: any) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [inputError, setInputError] = useState<boolean>(false);
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
-  //const [logoUrlFromBlob, setLogoUrlFromBlob] = useState<string>('');
-/*
-  if (props.study.logoUrl) {
-    getImage(props.study.logoUrl).then((res) => {
-      if (res) {
-        setLogoUrlFromBlob(res);
-      }
-      else {
-        console.log('Error getting logo');
-      }
-      props.setLoading(false);
-    });
-  }
-  
-  useEffect(() => {
-    getStudyImage();
-  }, [logoUrlFromBlob]);
-  const getStudyImage = () => {
-    props.setLoading(true);
-    if (props.study.logoUrl) {
-    getImage(props.study.logoUrl).then((res) => {
-      if (res) {
-        setLogoUrlFromBlob(res);
-      }
-      else {
-        console.log('Error getting logo');
-      }
-      props.setLoading(false);
-    });
-  }
-  } */
+
   const handleSave = () => {
     if (studyOnChange.name === '' || studyOnChange.vendor === '') {
       setInputError(true);

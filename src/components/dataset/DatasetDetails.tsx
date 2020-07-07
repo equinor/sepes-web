@@ -20,17 +20,11 @@ const Wrapper = styled.div`
     background-color:#ffffff
   `;
 
-const LeftWrapper = styled.div`
-    display: grid;
-    grid-gap:16px;
-  `;
-
 const RightWrapper = styled.div`
     margin-top:64px;
     display: grid;
     grid-gap:16px;
   `;
-
 
 const linkStyle = {
     marginTop: '16px',
