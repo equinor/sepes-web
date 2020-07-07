@@ -8,7 +8,7 @@ const Layout = (props: any) => {
     return (
         <>
             <Bar />
-            <ErrorBoundary>
+            <ErrorBoundary appInsights={props.appInsights}>
                 <ReactNotification />
                 {props.children}
             </ErrorBoundary>
