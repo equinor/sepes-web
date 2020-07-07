@@ -63,7 +63,7 @@ const DataSetComponent = (props: any) => {
 
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
-        window.location.pathname = '/studies/' + studyId + '/datasets/studyspecific';
+        window.location.pathname = '/studies/' + studyId + '/datasets';
     }
 
     useEffect(() => {
@@ -139,6 +139,7 @@ const DataSetComponent = (props: any) => {
                 datasets={props.study.datasets}
                 removeDataset={removeDataset}
                 editMode={true}
+                studyId={props.study.id}
                 />
         </Wrapper>
     )

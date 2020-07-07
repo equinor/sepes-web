@@ -16,11 +16,12 @@ const Overview = (props: any) => {
     return (
         <Wrapper>
             <DatasetsTable
-                datasets={props.datasets}
+                datasets={props.study.datasets}
                 editMode={false}
+                studyId={props.study.id}
                 />
             <ParticipantTable
-                participants={props.participants}
+                participants={props.study.participants}
                 editMode={false}
                 />
         </Wrapper>

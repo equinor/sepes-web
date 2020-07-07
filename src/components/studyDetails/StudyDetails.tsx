@@ -95,7 +95,7 @@ const StudyDetails = () => {
         {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
         {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
         {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
-        {showOverview ? <Overview datasets={study.datasets} participants={study.participants} />  : null}
+        {showOverview ? <Overview study={study} /> : null}
             </div>
         </div> : null }
           </>

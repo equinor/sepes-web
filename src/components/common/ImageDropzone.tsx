@@ -1,14 +1,6 @@
 import React from 'react';
 import imageCompression from 'browser-image-compression';
 import Dropzone from './Dropzone';
-//import { NotificationManager } from 'react-notifications';
-
-interface pieceInfo {
-  pieceName: string;
-  artistName: string;
-  description: string;
-  imageUrl: string;
-}
 
 let link1 = document.createElement('img');
 const AddImageAndCompressionContainer = (

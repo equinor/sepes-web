@@ -33,6 +33,14 @@ export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetO
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
 };
 
+export const getStandardDataset = async (datasetId: string) => {
+    return apiCallWithToken('api/datasets/' + datasetId);
+};
+
+export const getDataset = async (datasetId: string, studyId:string) => {
+    return apiCallWithToken('api/studies/' + studyId + '/datasets/' + datasetId);
+};
+
 export const getParticipantList = async () => {
     return apiCallWithToken('api/participants');
 };

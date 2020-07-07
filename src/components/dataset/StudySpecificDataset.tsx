@@ -37,8 +37,8 @@ const StudySpecificDataset = (props: any) => {
         }
         addStudySpecificDataset(studyId, dataset).then((result: any) => {
             if (result) {
-                console.log("resultStudy: ", result)
-                window.location.pathname = '/studies/' + studyId;
+                console.log("resultStudy: ", result);
+                window.location.pathname = '/studies/' + studyId + '/datasets/studyspecific/' + result.id;
             }
             else {
                 console.log("Err");
@@ -86,9 +86,21 @@ const StudySpecificDataset = (props: any) => {
     return (
         <div style={{ backgroundColor: '#ffffff' }}>
         <Wrapper>
-            <Typography variant="h3">Create study specific dataset</Typography>
+            <div>
+                <Typography variant="h2">Create study specific dataset</Typography>
+                <span>This data is only available for this study</span>
+            </div>
             <TextField
                 placeholder="Please add data set name..."
+                name="name"
+                label="Dataset name"
+                meta="Required"
+                variant={changeVariantBasedOnInputError()}
+                style={{ width }}
+                onChange={handleChange}
+            />
+            <TextField
+                placeholder="Please add storage account name..."
                 name="name"
                 label="Dataset name"
                 meta="Required"
@@ -111,68 +123,11 @@ const StudySpecificDataset = (props: any) => {
                 name="classification"
             />
             <TextField
-                placeholder="Please add LRA ID..."
-                name="lraId" label="LRA ID name"
-                meta="Required" type="number"
-                style={{ width }}
-                onChange={handleChange}
-            />
-            <TextField
                 placeholder="Please add Data ID..."
                 name="dataId"
                 label="DataId"
                 meta=""
                 type="number"
-                style={{ width }}
-                onChange={handleChange}
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Source system"
-                options={options}
-                onChange={handleDropdownChange}
-                name="sourceSystem"
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Ba data owner"
-                options={options}
-                onChange={handleDropdownChange}
-                name="baDataOwner"
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Asset"
-                options={options}
-                onChange={handleDropdownChange}
-                name="asset"
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Country of origin"
-                options={options}
-                onChange={handleDropdownChange}
-                name="countryOfOrigin"
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Area L1"
-                options={options}
-                onChange={handleDropdownChange}
-                name="areaL1"
-            />
-            <CoreDevDropdown
-                width={width}
-                label="Area L2"
-                options={options}
-                onChange={handleDropdownChange}
-                name="areaL2"
-            />
-            <TextField
-                placeholder="Please add tags..."
-                name="tags"
-                label="Tags"
-                meta="Comma seperated values"
                 style={{ width }}
                 onChange={handleChange}
             />
