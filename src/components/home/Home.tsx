@@ -5,6 +5,7 @@ import { Button } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Loading from '../common/LoadingComponent';
+import * as testapi from '../../services/BlobStorage';
 
 const Wrapper = styled.div`
     display: grid;
@@ -34,7 +35,8 @@ let mockText = 'Sepes is great! You should use it and everyone else should as we
 const Home = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [studyList, setStudyList] = useState<any>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [logosLoading, setLogosLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setIsSubscribed(true);
