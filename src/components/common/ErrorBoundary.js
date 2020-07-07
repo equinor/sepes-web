@@ -56,6 +56,7 @@ class ErrorBoundary extends Component {
             return (
                 <div style={{ paddingTop: '128px', textAlign: 'center' }}>
                     {this.makeErrorMessage(this.state.errorMessage)}
+                    {this.props.appInsights.trackTrace(this.state.errorMessage)}
                     <Link to={'/'} style={linkStyle}>Go back</Link>
                 </div>
             );

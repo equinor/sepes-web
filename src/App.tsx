@@ -5,12 +5,19 @@ import StudyDetails from './components/studyDetails/StudyDetails';
 import Layout from './components/Layout';
 import StudySpecificDataset from './components/dataset/StudySpecificDataset';
 import DatasetDetails from './components/dataset/DatasetDetails';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import './styles/app.scss';
 
 const App = () => {
+
+    const appInsights = new ApplicationInsights({ config: {
+        instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
+      } });
+      appInsights.loadAppInsights();
+
     return (
         <Router>
-            <Layout>
+            <Layout appInsights={appInsights}>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/studies/:id/datasets" component={StudySpecificDataset} />
                 <Route exact path="/studies/:id/datasets/:datasetid" component={DatasetDetails} />
