@@ -10,26 +10,26 @@ const icons = {
 };
 Icon.add(icons);
 
-const studyId = window.location.pathname.split('/')[2];
 const DatasetsTable = (props: any) => {
+    const { editMode, datasets } = props;
     return (
         <div>
-            <Table style={{ width: '100%' }}>
+            <Table style={{ width: '100%', marginBottom: '24px' }}>
                     <Head>
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
-                        {props.editMode ? <Cell style={{ width: '10px' }} as="th" scope="col" /> : null}
+                        {editMode ? <Cell style={{ width: '10px' }} as="th" scope="col" /> : null}
                     </Row>
                     </Head>
                     <Body>
-                    {props.datasets && props.datasets.map((row) => (
+                    {datasets && datasets.map((row) => (
                         <Row key={row.id}>
                         <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/studies/" + props.studyId +"/datasets/" + row.id} >{row.name}</Link></Cell>
                         {props.editMode ? <Cell><Icon name="close" size={24} onClick={() => props.removeDataset(row)} /></Cell> :  null}
                         </Row>
                     ))}
                     </Body>
-                </Table>
+            </Table>
         </div>
     )
 }

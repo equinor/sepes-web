@@ -11,8 +11,8 @@ Icon.add(icons);
 const DatasetsTable = (props: any) => {
     return (
         <div>
-            <Table style={{width: "100%"}}>
-                    <Head style={{backgroundColor: "#F7F7F7", borderBottom: "2px solid #DCDCDC"}}>
+            <Table style={{ width: '100%', marginBottom: '24px' }}>
+                    <Head style={{ backgroundColor: '#F7F7F7', borderBottom: '2px solid #DCDCDC' }}>
                     <Row>
                         <Cell as="th" scope="col">Name</Cell>
                         <Cell as="th" scope="col">E-mail</Cell>

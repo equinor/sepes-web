@@ -13,36 +13,6 @@ const icons = {
 };
 Icon.add(icons);
 
-/*
-const Dot = styled.span`
-    height: 125px;
-    width: 125px;
-    background-color: #EAEAEA;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    color: #FFFFFF;
-    line-height: 125px;
-    font-size:3em;
-    @media (max-width: 768px) {
-      display: block;
-      height: 100px;
-      width: 100px;
-      line-height: 100px;
-  }
-  `;
-
-  const Logo = styled.img`
-    height: 125px;
-    width: 125px;
-    display: inline-block;
-    @media (max-width: 768px) {
-      display: block;
-      height: 100px;
-      width: 100px;
-  }
-  `;
-*/
 const SmallText = styled.div`
     font-size:10px;
     display:inline-block;
@@ -78,28 +48,7 @@ const LogoTitleWrapper = styled.div`
 
 const StudyComponent = (props: any) => {
   const { name, description, restricted, id, vendor } = props.study;
-  //const [logoUrl, setLogoUrl] = useState<string>('');
   const url = '/studies/' + id;
-  //const [loading, setLoading] = useState<boolean>(false);
-
-  /*
-  useEffect(() => {
-    getStudyImage();
-  }, [logoUrl]);
-  const getStudyImage = () => {
-    props.setLoading(true);
-    if (props.study.logoUrl) {
-    getImage(props.study.logoUrl).then((res) => {
-      if (res) {
-        setLogoUrl(res);
-      }
-      else {
-        console.log('Error getting logo');
-      }
-      props.setLoading(false);
-    });
-  }
-  }*/
 
   return (
       <Wrapper>
