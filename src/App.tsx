@@ -14,9 +14,7 @@ const App = () => {
         instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
       } });
       appInsights.loadAppInsights();
-      
-      appInsights.trackEvent({name: 'It woooorks'});
-      appInsights.trackTrace({message: 'Halloooo'});
+
     return (
         <Router>
             <Layout appInsights={appInsights}>
