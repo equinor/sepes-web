@@ -1,24 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services/Api';
 import Studies from "./Studies";
-import { Button } from '@equinor/eds-core-react'
+import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+import Loading from '../common/LoadingComponent';
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 9fr 3fr;
-    grid-template-rows: 142px;
+    grid-template-columns: 9fr minmax(100px,400px);
+    grid-template-rows: 172px;
     width: 100%;
-    grid-gap: 20px;
-    margin-Top: 20px;
+    grid-gap: 48px;
+    margin-Top: 24px;
+    @media (max-width: 768px) {
+        display: block;
+    }
 `;
+
+const RightWrapper = styled.div`
+    background-color: #D5EAF4;
+    padding: 16px;
+    border-Radius: 4px;
+    margin-Right: 32px;
+    @media (max-width: 768px) {
+        display: block;
+        margin: 0 32px 32px 32px;
+    }
+`;
+
+let mockText = 'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [studyList, setStudyList] = useState<any>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    // Commented out to prevent errors when testing on dev. Same as clicking button
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -28,45 +43,30 @@ const Home = () => {
 
     const getStudyList = () => {
         setLoading(true);
-        api.callStudyList().then((result: any) => {
+        api.getStudyList().then((result: any) => {
             if (isSubscribed) {
                 setStudyList(result);
-                console.log("result: ", result)
+                console.log("result: ", result);
             }
             else {
                 console.log("Err");
             }
             setLoading(false);
-        })
-    }
+        });
+    };
 
     return (
+        <>
+        {!loading ?
         <Wrapper>
             <Studies studyList={studyList} />
-            <Button style={{ marginRight: '20px' }}>New study</Button>
-        </Wrapper>
+            <RightWrapper>
+                <p>{mockText}</p>
+                <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { window.location.pathname = '/studies'; }}>New study</Button>
+            </RightWrapper>
+        </Wrapper> : <Loading />}
+        </>
     )
 }
 
-/*
-<>
-                <div style={{ marginTop: "20px" }}>
-                    <div style={{ width: "70%", float: "left" }}>
-                        <Studies studyList={studyList} />
-                    </div>
-                    <div style={{ width: "29%", float: "right", padding: "10px" }}>
-                        <button style={{ width: "15em" }}>New study</button>
-                    </div>
-                </div>
-
-            </>
-
-
-            <h2>In Development</h2><button onClick={() => getStudyList()}>Send request to Back-End</button>Response: {studyList}
-            <Card style={{ backgroundColor: "#D5EAF4",, width: "20%", borderRadius: "4px"}}>
-
-</Card>
-        * /}
-//const mockData = [{name: "study1"}, {name: "study2"}]
-*/
-export default Home; 
+export default Home;

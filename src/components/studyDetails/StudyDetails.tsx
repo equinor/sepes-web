@@ -1,48 +1,107 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
+import Overview from './Overview';
+import * as api from '../../services/Api';
+//import loadingGif from '../../assets/loading.gif';
+import { Tabs } from '@equinor/eds-core-react';
+import Loading from '../common/LoadingComponent';
+import * as notify from '../common/notify';
 
-let mockDescription = "Random Extended Three Letter Acronyms. Løsning for å finne navn til hva som helst. Genererer tilfeldig utvidetet trebokstavforkortelser"
-
-const Wrapper = styled.div`
-    display: grid;
-    grid-template-rowns: 1fr 4fr;
-    width: 100%;
-    grid-gap: 10px;
-`;
-
-const ComponentWrapper = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 100px;
-    backgroundColor: #FFFFFF;
-`;
-
-const LeftWrapper = styled.div`
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 10px;
-    backgroundColor: #FFFFFF;
-`;
-
+const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [study, setStudy] = useState<any>({});
+    const [newStudy, setNewStudy] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showDatasets, setShowDatasets] = useState<boolean>(false);
+    const [showSandboxes, setShowSandboxes] = useState<boolean>(false);
+    const [showParticipants, setShowParticipants] = useState<boolean>(false);
+    const [showOverview, setShowOverview] = useState<boolean>(true);
+    const [activeTab, setActiveTab] = useState<number>(0);
+    const [datasets, setDatasets] = useState<any>([]);
+
+    useEffect(() => {
+        setIsSubscribed(true);
+        getStudy();
+        return () => setIsSubscribed(false);
+    }, []);
+
+    const getStudy = () => {
+        const id = window.location.pathname.split('/')[2];
+        if (!id) {
+            return;
+        }
+        setLoading(true);
+        api.getStudy(id).then((result: any) => {
+            if (isSubscribed && result) {
+                setStudy(result);
+                setNewStudy(false);
+                console.log("resultStudy: ", result)
+            }
+            else {
+                console.log("Err");
+                notify.show('Error getting study');
+            }
+            setLoading(false);
+        });
+    }
+
+    const changeComponent = (e:any) => {
+        hideComponents();
+        setActiveTab(e);
+        if (e === 0) {
+            setShowOverview(true);
+        }
+        if (e === 1) {
+            setShowDatasets(true);
+        }
+        if (e === 2) {
+            setShowSandboxes(true);
+        }
+        if (e === 3) {
+            setShowParticipants(true);
+        }
+    }
+
+    const hideComponents = () => {
+        setShowDatasets(false);
+        setShowParticipants(false);
+        setShowSandboxes(false);
+        setShowOverview(false);
+    }
+
     return (
-    <Wrapper>
-        <StudyComponentFull name="ProsjektNavnet" description={ mockDescription } />
-        <ComponentWrapper style={{backgroundColor: "#FFFFFF", margin: "0 20px 0 20px", padding: "20px", borderRadius: "4px"}}>
-            <LeftWrapper>
-                <DataSetComponent />
-                <SandBoxComponent />
-            </LeftWrapper>
-            
-            <ParticipantComponent />
-            
-        </ComponentWrapper>
-    </Wrapper>);
+    <>
+        {!loading
+        ? <>
+        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} setStudy={setStudy} />
+        {!newStudy ?
+        <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
+                <TabList>
+                    <Tab>Overview</Tab>
+                    <Tab>Data sets</Tab>
+                    <Tab>Sandboxes</Tab>
+                    <Tab>Participants</Tab>
+                    <Tab>Study defaults</Tab>
+                </TabList>
+            </Tabs>
+            <div style={{ padding: '16px' }}>
+        {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
+        {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
+        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
+        {showOverview ? <Overview study={study} setStudy={setStudy} /> : null}
+            </div>
+        </div> : null }
+          </>
+    : <Loading /> }
+    </>
+    );
 };
 
 export default StudyDetails;

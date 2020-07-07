@@ -28,3 +28,4 @@ yarn-error.log*
 .nyc_output
 /cypress-coverage
 /jest-coverage
+/.env
