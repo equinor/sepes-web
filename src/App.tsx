@@ -9,7 +9,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import './styles/app.scss';
 
 const App = () => {
-
+    console.log(process.env);
     const appInsights = new ApplicationInsights({ config: {
         instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
       } });

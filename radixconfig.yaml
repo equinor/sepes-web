@@ -16,7 +16,7 @@ spec:
         - name: http
           port: 3000
       secrets:
-        - SEPES_Appi_Key
+        - REACT_APP_INSTRUMENTATION_KEY
       publicPort: http
       environmentConfig:
         - environment: prod
