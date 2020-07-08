@@ -11,7 +11,7 @@ import './styles/app.scss';
 const App = () => {
     console.log(process.env);
     const appInsights = new ApplicationInsights({ config: {
-        instrumentationKey: process.env.SEPES_Appi_Key
+        instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
       } });
       appInsights.loadAppInsights();
 
