@@ -34,6 +34,10 @@ export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetO
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
 };
 
+export const editStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + dataset?.id, 'PUT', dataset);
+};
+
 export const getStandardDataset = async (datasetId: string) => {
     return apiCallWithToken('api/datasets/' + datasetId);
 };

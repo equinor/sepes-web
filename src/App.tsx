@@ -19,6 +19,7 @@ const App = () => {
             <Layout appInsights={appInsights}>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/studies/:id/datasets" component={StudySpecificDataset} />
+                <Route exact path="/studies/:id/datasets/:datasetid/edit" component={StudySpecificDataset} />
                 <Route exact path="/studies/:id/datasets/:datasetid" component={DatasetDetails} />
                 <Route exact path="/studies/:id" component={StudyDetails} />
                 <Route exact path="/studies/" component={StudyDetails} />

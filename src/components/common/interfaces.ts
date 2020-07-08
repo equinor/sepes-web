@@ -34,4 +34,5 @@ export interface DatasetObj {
     tags?:string;
     description?:string;
     studies?:[];
+    id?;
 }
