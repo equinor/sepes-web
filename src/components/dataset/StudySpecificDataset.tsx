@@ -64,9 +64,9 @@ const StudySpecificDataset = (props: any) => {
         }
         if (!editDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                if (result) {
+                if (result.datasets.length) {
                     console.log("resultStudy: ", result);
-                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
+                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id;
                 }
                 else {
                     console.log("Err");
@@ -125,7 +125,7 @@ const StudySpecificDataset = (props: any) => {
 
     const checkForInputErrors = () => {
         console.log(dataset?.name);
-        if (!dataset?.name?.length) {
+        if (!dataset?.name?.length || !dataset?.classification?.length) {
             setInputerError(true);
             return true;
         }
