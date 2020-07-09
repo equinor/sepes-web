@@ -67,6 +67,7 @@ const Overview = (props: any) => {
                     </Button>: null}
                     <Button
                         variant="outlined"
+                        style={{ marginBottom: '16px' }}
                         onClick={() => { setEditMode(!editMode); handleCancel(); }}
                     >
                         {!editMode ? 'Edit results and learnings': 'Cancel'}

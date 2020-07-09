@@ -17,7 +17,10 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-gap:16px;
     padding:32px;
-    background-color:#ffffff
+    background-color:#ffffff;
+    @media (max-width: 768px) {
+        display: block;
+    }
   `;
 
 const RightWrapper = styled.div`

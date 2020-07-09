@@ -29,9 +29,16 @@ const Wrapper = styled.div`
     margin: 0 0 16px 32px;
     background-color: #ffffff;
     @media (max-width: 768px) {
-      display: block;
+      grid-template-columns: minmax(116px,200px) 1fr;
       margin: 0 0 16px 0;
-  }
+      grid-gap: 8px;
+    }
+    @media (max-width: 384px) {
+      display:block;
+      margin: 0 0 16px 0;
+      min-width:200px;
+
+    }
   }
 `;
 
@@ -47,17 +54,17 @@ const LogoTitleWrapper = styled.div`
 `;
 
 const StudyComponent = (props: any) => {
-  const { name, description, restricted, id, vendor } = props.study;
+  const { name, description, restricted, id, vendor, logoUrl } = props.study;
   const url = '/studies/' + id;
 
   return (
       <Wrapper>
         <LogoTitleWrapper>
-          <CustomLogoComponent logoUrl={props.study.logoUrl} />
+          <CustomLogoComponent logoUrl={logoUrl} />
           <div>
-            <Typography variant="h6" ><Link to={url} style={{ color: 'black' }}>{name}</Link></Typography>
+            <Typography variant="h6"><Link to={url} style={{ color: 'black' }}>{name}</Link></Typography>
             <SmallText>{vendor}</SmallText>
-            <div><SmallText>{restricted ? 'Restricted': 'Not restricted'}<Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /></SmallText></div>
+            <div><SmallText>{restricted ? 'Restricted' : 'Not restricted'}<Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} /></SmallText></div>
           </div>
         </LogoTitleWrapper>
 
