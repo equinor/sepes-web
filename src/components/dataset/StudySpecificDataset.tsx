@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField  } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { addStudySpecificDataset } from '../../services/Api';
+import { addStudySpecificDataset, getDataset, editStudySpecificDataset } from '../../services/Api';
 
 const Wrapper = styled.div`
     display: grid;
@@ -25,27 +25,69 @@ const options = [
   ];
 const width = '400px';
 const studyId = window.location.pathname.split('/')[2];
+const datasetId = window.location.pathname.split('/')[4];
 
 const StudySpecificDataset = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
     const [inputerError, setInputerError] = useState<boolean>();
+    const [editDataset, setEditDataset] = useState<boolean>(false);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>();
+
+    useEffect(() => {
+        setIsSubscribed(true);
+        getDatasetFromApi();
+        return () => setIsSubscribed(false);
+    }, []);
+
+    const getDatasetFromApi = () => {
+        if (datasetId) {
+            setLoading(true);
+            getDataset(datasetId, studyId).then((result: any) => {
+                if (result) {
+                    setDataset(result);
+                    setEditDataset(true);
+                    console.log("result: ", result);
+                }
+                else {
+                    console.log("Err");
+                }
+                setLoading(false);
+            });
+        }
+        
+    };
 
     const addDataset = () => {
         if (checkForInputErrors()) {
             return;
         }
-        addStudySpecificDataset(studyId, dataset).then((result: any) => {
-            if (result) {
-                console.log("resultStudy: ", result);
-                window.location.pathname = '/studies/' + studyId + '/datasets/studyspecific/' + result.id;
-            }
-            else {
-                console.log("Err");
-                //notify.show('Error getting study');
-            }
-            setLoading(false);
-        });
+        if (!editDataset) {
+            addStudySpecificDataset(studyId, dataset).then((result: any) => {
+                if (result.datasets.length) {
+                    console.log("resultStudy: ", result);
+                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id;
+                }
+                else {
+                    console.log("Err");
+                    //notify.show('Error getting study');
+                }
+                setLoading(false);
+            });
+        }
+        else {
+            editStudySpecificDataset(studyId, dataset).then((result: any) => {
+                if (result) {
+                    console.log("resultStudy: ", result);
+                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
+                }
+                else {
+                    console.log("Err");
+                    //notify.show('Error getting study');
+                }
+                setLoading(false);
+            });
+        }
     }
 
     const handleChange = evt => {
@@ -56,7 +98,6 @@ const StudySpecificDataset = (props: any) => {
     }
 
     const handleDropdownChange = (value, name:string) => {
-        console.log(value);
         setDataset({
           ...dataset,
           [name]: value
@@ -64,7 +105,12 @@ const StudySpecificDataset = (props: any) => {
       }
 
     const handleCancel = evt => {
-        window.location.pathname = '/studies/' + studyId;
+        if (!editDataset) {
+            window.location.pathname = '/studies/' + studyId;
+        }
+        else {
+            window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId;
+        }
     }
 
     const changeVariantBasedOnInputError = () => {
@@ -75,19 +121,27 @@ const StudySpecificDataset = (props: any) => {
       }
 
     const checkForInputErrors = () => {
-        console.log(dataset?.name);
-        if (!dataset?.name?.length) {
+        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset.storageAccountName) {
             setInputerError(true);
             return true;
         }
         return false;
     }
 
+    const returnField = (fieldName, value) => {
+        return (
+        <div>
+            <div>{fieldName}</div>
+            <Typography variant="h6">{value || '-'}</Typography>
+        </div>
+        );
+    }
+
     return (
         <div style={{ backgroundColor: '#ffffff' }}>
         <Wrapper>
             <div>
-                <Typography variant="h2">Create study specific dataset</Typography>
+                <Typography variant="h2">{!editDataset ? 'Create study specific dataset' : 'Edit study specific dataset'}</Typography>
                 <span>This data is only available for this study</span>
             </div>
             <TextField
@@ -98,23 +152,24 @@ const StudySpecificDataset = (props: any) => {
                 variant={changeVariantBasedOnInputError()}
                 style={{ width }}
                 onChange={handleChange}
+                value={dataset?.name}
             />
-            <TextField
+            {!editDataset ? <TextField
                 placeholder="Please add storage account name..."
-                name="name"
-                label="Dataset name"
+                name="storageAccountName"
+                label="Storage account name"
                 meta="Required"
                 variant={changeVariantBasedOnInputError()}
                 style={{ width }}
                 onChange={handleChange}
-            />
-            <CoreDevDropdown
+            /> : returnField('Storage account name', dataset?.storageAccountName) }
+            {!editDataset ? <CoreDevDropdown
                 width={width}
                 label="Location"
                 options={options}
                 onChange={handleDropdownChange}
                 name="location"
-            />
+            /> : returnField('Location', dataset?.location)}
             <CoreDevDropdown
                 width={width}
                 label="Data classification"
@@ -130,6 +185,7 @@ const StudySpecificDataset = (props: any) => {
                 type="number"
                 style={{ width }}
                 onChange={handleChange}
+                value={dataset?.dataId}
             />
             <SaveCancelWrapper>
                 <Button onClick={addDataset}>Save</Button>

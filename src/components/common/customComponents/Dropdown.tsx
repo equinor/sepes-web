@@ -88,13 +88,6 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   //if (selectedOption.name === 'Loading...' && options !== undefined && options.length) {
   //  setSelectedOption(options[0]);
   //} else {
-    /*
-  options = [
-    { name: "All projects" },
-    { name: "IMR projects" },
-    { name: "IMR projects with SSP" },
-    { name: "SSP projects" }
-  ];*/
   //}
 
   const arrowUp = (

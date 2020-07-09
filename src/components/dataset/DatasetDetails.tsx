@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon } from '@equinor/eds-core-react';
+import { Typography, Icon, Button } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { getDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
@@ -40,11 +40,11 @@ const DatasetDetails = (props: any) => {
 
     useEffect(() => {
         setIsSubscribed(true);
-        getStudyList();
+        getDatasetFromApi();
         return () => setIsSubscribed(false);
     }, []);
 
-    const getStudyList = () => {
+    const getDatasetFromApi = () => {
         setLoading(true);
         datasetId = window.location.pathname.split('/')[4];
         studyId = window.location.pathname.split('/')[2];
@@ -59,6 +59,10 @@ const DatasetDetails = (props: any) => {
             setLoading(false);
         });
     };
+
+    const handleEditMetdata = evt => {
+        window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId + '/edit';
+    }
 
     const returnField = (fieldName) => {
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
@@ -123,6 +127,13 @@ const DatasetDetails = (props: any) => {
                     <div>Area L2</div>
                     {returnField(dataset?.areaL2)}
                 </div>
+                <Button
+                    style={{ width: '150px' }}
+                    variant="outlined"
+                    onClick={handleEditMetdata}
+                >
+                    Edit metadata
+                </Button>
             </RightWrapper>
         </Wrapper>
         : <LoadingComponent />
