@@ -17,19 +17,6 @@ const icons = {
 };
 Icon.add(icons);
 
-/*
-const Dot = styled.span`
-    height: 100px;
-    width: 100px;
-    background-color: #EAEAEA;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    color: #FFFFFF;
-    line-height: 100px;
-    font-size:3em;
-  `;*/
-
 const Title = styled.span`
    font-size: 28px;
   `;

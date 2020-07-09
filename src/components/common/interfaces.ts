@@ -21,6 +21,7 @@ export interface ParticipantObj {
 
 export interface DatasetObj {
     name?:string;
+    storageAccountName?:string;
     location?:string;
     classification?:string;
     lraId?:number;
@@ -34,5 +35,5 @@ export interface DatasetObj {
     tags?:string;
     description?:string;
     studies?:[];
-    id?;
+    id?:string;
 }

@@ -76,20 +76,18 @@ const StudySpecificDataset = (props: any) => {
             });
         }
         else {
-            /* Need backend endpoint
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
-                    //window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
+                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
                     //notify.show('Error getting study');
                 }
                 setLoading(false);
-            });*/
+            });
         }
-        
     }
 
     const handleChange = evt => {
@@ -100,7 +98,6 @@ const StudySpecificDataset = (props: any) => {
     }
 
     const handleDropdownChange = (value, name:string) => {
-        console.log(value);
         setDataset({
           ...dataset,
           [name]: value
@@ -124,8 +121,7 @@ const StudySpecificDataset = (props: any) => {
       }
 
     const checkForInputErrors = () => {
-        console.log(dataset?.name);
-        if (!dataset?.name?.length || !dataset?.classification?.length) {
+        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset.storageAccountName) {
             setInputerError(true);
             return true;
         }
@@ -160,13 +156,13 @@ const StudySpecificDataset = (props: any) => {
             />
             {!editDataset ? <TextField
                 placeholder="Please add storage account name..."
-                name="name"
+                name="storageAccountName"
                 label="Storage account name"
                 meta="Required"
                 variant={changeVariantBasedOnInputError()}
                 style={{ width }}
                 onChange={handleChange}
-            /> : returnField('Storage account name', dataset?.name) }
+            /> : returnField('Storage account name', dataset?.storageAccountName) }
             {!editDataset ? <CoreDevDropdown
                 width={width}
                 label="Location"
@@ -189,6 +185,7 @@ const StudySpecificDataset = (props: any) => {
                 type="number"
                 style={{ width }}
                 onChange={handleChange}
+                value={dataset?.dataId}
             />
             <SaveCancelWrapper>
                 <Button onClick={addDataset}>Save</Button>
