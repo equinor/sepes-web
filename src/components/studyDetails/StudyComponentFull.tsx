@@ -58,19 +58,6 @@ grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
 
-/*
-const Logo = styled.img`
-    height: 125px;
-    width: 125px;
-    display: inline-block;
-    @media (max-width: 768px) {
-      display: block;
-      height: 100px;
-      width: 100px;
-  }
-  `;
-*/
-
 const StudyComponentFull = (props: any) => {
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
@@ -102,7 +89,7 @@ const StudyComponentFull = (props: any) => {
             console.log("result: ", result);
             let newStudy = result;
             props.setStudy(newStudy);
-            if(imageUrl && newStudy.id){
+            if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
                 if (result) {
                     console.log("result: ", result);
