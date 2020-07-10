@@ -3,7 +3,7 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField  } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { addStudySpecificDataset, getDataset, editStudySpecificDataset } from '../../services/Api';
+import { addStudySpecificDataset, getDataset, editStudySpecificDataset, createStandardDataset } from '../../services/Api';
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,7 +33,6 @@ const StudySpecificDataset = (props: any) => {
     const [inputerError, setInputerError] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
-
     useEffect(() => {
         setIsSubscribed(true);
         getDatasetFromApi();
@@ -41,7 +40,7 @@ const StudySpecificDataset = (props: any) => {
     }, []);
 
     const getDatasetFromApi = () => {
-        if (datasetId) {
+        if (checkUrlIfGenerealDataset() && datasetId) {
             setLoading(true);
             getDataset(datasetId, studyId).then((result: any) => {
                 if (result) {
@@ -55,14 +54,21 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
-        
     };
+
+    const checkUrlIfGenerealDataset = () => {
+        if (!isNaN(studyId as any)) {
+            return true;
+        }
+        return false;
+    }
 
     const addDataset = () => {
         if (checkForInputErrors()) {
             return;
         }
-        if (!editDataset) {
+        const isDatasetspecificDataset = checkUrlIfGenerealDataset();
+        if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
                     console.log("resultStudy: ", result);
@@ -75,11 +81,24 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
-        else {
+        else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
                     window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
+                }
+                else {
+                    console.log("Err");
+                    //notify.show('Error getting study');
+                }
+                setLoading(false);
+            });
+        }
+        else {
+            createStandardDataset(dataset).then((result: any) => {
+                if (result) {
+                    console.log("resultStudy: ", result);
+                    //window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
