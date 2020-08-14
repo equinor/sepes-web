@@ -114,30 +114,25 @@ const StudySpecificDataset = (props: any) => {
           ...dataset,
           [evt.target.name]: evt.target.value
         });
-    }
+    };
 
-    const handleDropdownChange = (value, name:string) => {
+    const handleDropdownChange = (value, name:string): void => {
         setDataset({
           ...dataset,
           [name]: value
         });
-      }
+    };
 
     const handleCancel = evt => {
-        if (!editDataset) {
-            window.location.pathname = '/studies/' + studyId;
-        }
-        else {
-            window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId;
-        }
-    }
+        window.history.back();
+    };
 
     const changeVariantBasedOnInputError = () => {
         if (inputerError) {
           return 'error';
         }
         return 'default';
-      }
+    };
 
     const checkForInputErrors = () => {
         if (!dataset?.name?.length || !dataset?.classification?.length || !dataset.storageAccountName) {
@@ -145,7 +140,7 @@ const StudySpecificDataset = (props: any) => {
             return true;
         }
         return false;
-    }
+    };
 
     const returnField = (fieldName, value) => {
         return (
@@ -154,7 +149,7 @@ const StudySpecificDataset = (props: any) => {
             <Typography variant="h6">{value || '-'}</Typography>
         </div>
         );
-    }
+    };
 
     return (
         <div style={{ backgroundColor: '#ffffff' }}>

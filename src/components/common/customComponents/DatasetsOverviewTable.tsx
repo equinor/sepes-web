@@ -12,19 +12,14 @@ const icons = {
 };
 Icon.add(icons);
 
-/*
-export default {
-    title: 'Components|Selection controls/Checkbox',
-    component: Checkbox,
-  }*/
-
 const UnstyledList = styled.ul`
-  margin: 0;
+  margin-Top: 8px;
   padding: 0 24px 0 24px;
   z-index:99;
   position:absolute;
   background-color:white;
   border-radius:4px;
+  box-shadow: 0 0 4px 4px #E7E7E7
 `;
 
 const ButtonWrapper = styled.div`
@@ -36,28 +31,36 @@ const ButtonWrapper = styled.div`
 `;
 
 interface checkedColumns {
-    name?: boolean;
-    sourceSystem?: boolean;
-    areaL2?: string;
-    areaL1?: string;
-    asset?: string;
-    baDataOwner?: string;
-    classification?: string;
-    countryOfOrigin?: string;
-    dataId?: number;
-    lraId?: number;
-    tags?: string;
+    name: boolean;
+    sourceSystem: boolean;
+    areaL2: boolean;
+    areaL1: boolean;
+    asset: boolean;
+    baDataOwner: boolean;
+    classification: boolean;
+    countryOfOrigin: boolean;
+    dataId: boolean;
+    lraId: boolean;
+    tags: boolean;
 }
 
 
 const DatasetsOverviewTable = (props: any) => {
     const { datasets } = props;
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
-        name: true
+        name: true,
+        sourceSystem: true,
+        areaL2: true,
+        areaL1: true,
+        asset: true,
+        baDataOwner: true,
+        classification: true,
+        countryOfOrigin: true,
+        dataId: true,
+        lraId: true,
+        tags: true
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
-    //setCheckedColumns({ ...checkedColums, name: true });
-    //const showColumnsPicker = true;
     const handleColumnsChange = (evt) => {
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
     }
@@ -69,12 +72,25 @@ const DatasetsOverviewTable = (props: any) => {
         return checker ? <Cell>{fieldName}</Cell> : null;
     }
 
-    const redirectToCreateDataset = () => {
+    const returnCheckbox = (checked: boolean, label: string, name: string) => {
+        return (
+            <Checkbox
+                checked={checked}
+                label={label}
+                name={name}
+                value={checked}
+                onChange={handleColumnsChange}
+                defaultChecked
+            />
+        )
+    }
+
+    const redirectToCreateDataset = (): void => {
         window.location.pathname = 'datasets/new';
     }
 
     return (
-        <div style={{ paddingBottom: '24px' }}>
+        <div style={{ padding: '0 16px 600px 16px' }}>
             <ButtonWrapper>
             <Button
                 variant="outlined"
@@ -92,83 +108,17 @@ const DatasetsOverviewTable = (props: any) => {
             {showColumnsPicker ?
             <UnstyledList>
                 <li style={{display:'grid'}}>
-                    <Checkbox
-                        checked={checkedColums?.name}
-                        label="Name"
-                        name="name"
-                        value={checkedColums?.name}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.sourceSystem}
-                        label="Source system"
-                        name="sourceSystem"
-                        value={checkedColums?.sourceSystem}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.areaL2}
-                        label="Area L2"
-                        name="areaL2"
-                        value={checkedColums?.areaL2}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.areaL1}
-                        label="Area L1"
-                        name="areaL1"
-                        value={checkedColums?.areaL1}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.asset}
-                        label="Asset"
-                        name="asset"
-                        value={checkedColums?.asset}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.baDataOwner}
-                        label="BA data owner"
-                        name="baDataOwner"
-                        value={checkedColums?.baDataOwner}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.classification}
-                        label="Classification"
-                        name="classification"
-                        value={checkedColums?.classification}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.countryOfOrigin}
-                        label="Country of origin"
-                        name="countryOfOrigin"
-                        value={checkedColums?.countryOfOrigin}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.dataId}
-                        label="Data ID"
-                        name="dataId"
-                        value={checkedColums?.dataId}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.lraId}
-                        label="LRA ID"
-                        name="lraId"
-                        value={checkedColums?.lraId}
-                        onChange={handleColumnsChange}
-                    />
-                    <Checkbox
-                        checked={checkedColums?.tags}
-                        label="Tags"
-                        name="tags"
-                        value={checkedColums?.tags}
-                        onChange={handleColumnsChange}
-                    />
+                    {returnCheckbox(checkedColums.name, 'Name', 'name')}
+                    {returnCheckbox(checkedColums.sourceSystem, 'Source system', 'sourceSystem')}
+                    {returnCheckbox(checkedColums.areaL2, 'Area L2', 'areaL2')}
+                    {returnCheckbox(checkedColums.areaL1, 'Area L1', 'areaL1')}
+                    {returnCheckbox(checkedColums.asset, 'Asset', 'asset')}
+                    {returnCheckbox(checkedColums.baDataOwner, 'BA data owner', 'baDataOwner')}
+                    {returnCheckbox(checkedColums.classification, 'Classification', 'classification')}
+                    {returnCheckbox(checkedColums.countryOfOrigin, 'Country of origin', 'countryOfOrigin')}
+                    {returnCheckbox(checkedColums.dataId, 'Data ID', 'dataId')}
+                    {returnCheckbox(checkedColums.lraId, 'LRA ID', 'lraId')}
+                    {returnCheckbox(checkedColums.tags, 'Tags', 'tags')}
                 </li>
             </UnstyledList>: null }
             </div>
