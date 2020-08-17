@@ -18,10 +18,10 @@ import axios from 'axios';
       .then((tokenResponse:any) => {
   
         if(tokenResponse.accessToken){
-          const headers = new Headers();
+          //const headers = new Headers();
           const bearer = `Bearer ${tokenResponse.accessToken}`;
-    
-          headers.append("Authorization", bearer);
+          const headers = makeHeaders(tokenResponse.accessToken)
+          //headers.append("Authorization", bearer);
     
           const options = {
               method: "GET",
@@ -43,6 +43,19 @@ import axios from 'axios';
     })
     
   }
+
+  const makeHeaders = (accessToken: any) => {
+    const cyToken = localStorage.getItem("cyToken");
+    if (cyToken) {
+	    accessToken = cyToken;
+    }
+    const headers = new Headers();
+    const bearer = `Bearer ${accessToken}`;
+    headers.append("Authorization", bearer);
+    headers.append("Content-Type", "application/json")
+    headers.append('Accept', 'application/json');
+    return headers;
+}
 
   export const apiRequestWithToken = async (url:any, method:string, body?:any) => {
     return new Promise(function (resolve, reject){

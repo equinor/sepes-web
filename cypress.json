@@ -1,5 +1,5 @@
 {
-    "baseUrl": "http://localhost:8080/",
+    "baseUrl": "http://localhost:3000/",
     "defaultCommandTimeout": 10000,
     "pageLoadTimeout": 100000,
     "requestTimeout": 100000,
@@ -11,7 +11,7 @@
       "TENANT_ID": "",
       "CLIENT_ID": "",
       "CLIENT_SECRET": "",
-      "API_URL": "http://localhost:8081/api",
+      "API_URL": "http://localhost:44371/",
       "SCOPE": "",
       "RETRIES": 3
     },

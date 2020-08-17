@@ -1,4 +1,4 @@
-describe('Login spec', function () {    
+describe('Create study', function () {
     before(() => {
         cy.login();
     });
@@ -10,4 +10,3 @@ describe('Login spec', function () {
     it('visits page', () => {
         cy.visit('/');
     });
-});
