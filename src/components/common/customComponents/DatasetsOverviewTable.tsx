@@ -4,7 +4,7 @@ import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
 import { DatasetObj } from '../../common/interfaces'
-
+import { Link } from 'react-router-dom';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -142,7 +142,7 @@ const DatasetsOverviewTable = (props: any) => {
                     <Body>
                     {datasets && datasets.map((row: DatasetObj) => (
                         <Row key={row.id}>
-                            {returnCell(checkedColums.name, row.name)}
+                            <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link></Cell>
                             {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                             {returnCell(checkedColums.areaL2, row.areaL2)}
                             {returnCell(checkedColums.areaL1, row.areaL1)}
