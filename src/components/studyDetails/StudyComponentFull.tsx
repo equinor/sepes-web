@@ -9,6 +9,7 @@ import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/ImageDropzone';
 import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 
 const icons = {
   dollar,
@@ -63,12 +64,13 @@ const StudyComponentFull = (props: any) => {
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [inputError, setInputError] = useState<boolean>(false);
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
+  const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   const handleSave = () => {
-    if (studyOnChange.name === '' || studyOnChange.vendor === '') {
-      setInputError(true);
+    setUserPressedCreate(true);
+    if (checkRequiredFieldsArNotNull()) {
+      return;
     }
     else {
       if (imageUrl) {
@@ -122,20 +124,23 @@ const StudyComponentFull = (props: any) => {
     }
   }
 
+  const checkRequiredFieldsArNotNull = ():boolean => {
+    if (studyOnChange.name === '' || studyOnChange === undefined || studyOnChange.vendor === '' || studyOnChange.vendor === undefined) {
+      return true;
+    }
+    return false;
+  }
+
   const handleCancel = () => {
-    setInputError(false);
+    if (props.newStudy) {
+      window.location.pathname = '/';
+      return;
+    }
     setEditMode(false);
     setImageUrl('');
     //Remove line under if we want to keep changes when clicking cancel, but don't send to api
     setStudyOnChange(props.study);
     setShowImagePicker(false);
-  }
-
-  const changeVariantBasedOnInputError = () => {
-    if (inputError) {
-      return 'error';
-    }
-    return 'default';
   }
 
   function handleChange(evt) {
@@ -154,7 +159,7 @@ const StudyComponentFull = (props: any) => {
             <TextField
               name='name'
               placeholder="What is the study name?"
-              variant={changeVariantBasedOnInputError()}
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
               onChange={handleChange}
               label="Study name" meta="Required"
               style={{margin: "auto", marginLeft: "0"}}
@@ -163,7 +168,7 @@ const StudyComponentFull = (props: any) => {
             <TextField
               name='vendor'
               placeholder="Who is the vendor?"
-              variant={changeVariantBasedOnInputError()}
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
               onChange={handleChange}
               value={studyOnChange.vendor}
               label="Vendor"
@@ -226,7 +231,7 @@ const StudyComponentFull = (props: any) => {
               {showImagePicker ? 'Hide image picker' : 'Change logo'}
           </Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>{props.newStudy? 'Create Study': 'Save'}</Button>
+            <Button onClick={() => handleSave()}>{props.newStudy ? 'Create Study': 'Save'}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>

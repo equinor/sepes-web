@@ -3,7 +3,14 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField  } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { addStudySpecificDataset, getDataset, editStudySpecificDataset, createStandardDataset, getStandardDataset, updateStandardDataset } from '../../services/Api';
+import { addStudySpecificDataset,
+    getDataset,
+    editStudySpecificDataset,
+    createStandardDataset,
+    getStandardDataset,
+    updateStandardDataset
+} from '../../services/Api';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 
 const Wrapper = styled.div`
     display: grid;
@@ -30,9 +37,9 @@ const datasetId = window.location.pathname.split('/')[4];
 const StudySpecificDataset = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
-    const [inputerError, setInputerError] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
+    const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     useEffect(() => {
         setIsSubscribed(true);
         getDatasetFromApi();
@@ -69,13 +76,6 @@ const StudySpecificDataset = (props: any) => {
         }
     };
 
-    const checkUrlIfGenerealDataset2 = () => {
-        if (!isNaN(studyId as any)) {
-            return true;
-        }
-        return false;
-    }
-
     const checkUrlIfGeneralDataset = () => {
         if (window.location.pathname.split('/')[1] === 'datasets') {
             return true;
@@ -91,6 +91,7 @@ const StudySpecificDataset = (props: any) => {
     }
 
     const addDataset = () => {
+        setUserPressedCreate(true);
         if (checkForInputErrors()) {
             return;
         }
@@ -167,16 +168,8 @@ const StudySpecificDataset = (props: any) => {
         window.history.back();
     };
 
-    const changeVariantBasedOnInputError = () => {
-        if (inputerError) {
-          return 'error';
-        }
-        return 'default';
-    };
-
     const checkForInputErrors = () => {
         if (!dataset?.name?.length || !dataset?.classification?.length) {
-            setInputerError(true);
             return true;
         }
         return false;
@@ -204,7 +197,7 @@ const StudySpecificDataset = (props: any) => {
                 name="name"
                 label="Dataset name"
                 meta="Required"
-                variant={changeVariantBasedOnInputError()}
+                variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
                 style={{ width }}
                 onChange={handleChange}
                 value={dataset?.name}
@@ -214,7 +207,7 @@ const StudySpecificDataset = (props: any) => {
                 name="storageAccountName"
                 label="Storage account name"
                 meta="Required"
-                variant={changeVariantBasedOnInputError()}
+                variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                 style={{ width }}
                 onChange={handleChange}
             /> : returnField('Storage account name', dataset?.storageAccountName) }
