@@ -44,16 +44,20 @@ export const getDataset = async (datasetId: string, studyId:string) => {
 };
 
 //Standard dataset
-/*
+
 export const getStandardDataset = async (datasetId: string) => {
     return apiCallWithToken('api/datasets/' + datasetId);
-};*/
+};
 
 export const createStandardDataset = async (dataset?:DatasetObj) => {
     return apiRequestWithToken('api/datasets/', 'POST', dataset);
 };
 
-export const getStandardDataset = async () => {
+export const updateStandardDataset = async (datsetId: string, dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/datasets/' + datsetId, 'PUT', dataset);
+};
+
+export const getStandardDatasets = async () => {
     return apiCallWithToken('api/datasets/');
 };
 

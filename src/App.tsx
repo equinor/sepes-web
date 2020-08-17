@@ -27,6 +27,7 @@ const App = () => {
                 <Route exact path="/datasets/" component={Datasets} />
                 <Route exact path="/datasets/new" component={StudySpecificDataset} />
                 <Route exact path={'/datasets/:datasetid(\\d+)'} component={DatasetDetails} />
+                <Route exact path={'/datasets/:datasetid(\\d+)/edit'} component={StudySpecificDataset} />
             </Layout>
         </Router>
     );

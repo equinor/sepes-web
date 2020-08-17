@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@equinor/eds-core-react';
-import { getStandardDataset } from '../../services/Api';
+import { getStandardDatasets } from '../../services/Api';
 import DatasetsOverviewTable from '../common/customComponents/DatasetsOverviewTable';
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ const Dataset = (props: any) => {
     }, []);
 
     const getDatasets = () => {
-        getStandardDataset().then((result: any) => {
+        getStandardDatasets().then((result: any) => {
             if (result) {
                 setDatasets(result);
                 console.log("result: ", result);

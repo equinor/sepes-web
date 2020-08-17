@@ -3,7 +3,7 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField  } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { addStudySpecificDataset, getDataset, editStudySpecificDataset, createStandardDataset } from '../../services/Api';
+import { addStudySpecificDataset, getDataset, editStudySpecificDataset, createStandardDataset, getStandardDataset, updateStandardDataset } from '../../services/Api';
 
 const Wrapper = styled.div`
     display: grid;
@@ -40,7 +40,7 @@ const StudySpecificDataset = (props: any) => {
     }, []);
 
     const getDatasetFromApi = () => {
-        if (checkUrlIfGenerealDataset() && datasetId) {
+        if (!checkUrlIfGeneralDataset() && datasetId) {
             setLoading(true);
             getDataset(datasetId, studyId).then((result: any) => {
                 if (result) {
@@ -54,10 +54,37 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
+        else if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
+            getStandardDataset(studyId).then((result: any) => {
+                if (result) {
+                    setDataset(result);
+                    setEditDataset(true);
+                    console.log("result: ", result);
+                }
+                else {
+                    console.log("Err");
+                }
+                setLoading(false);
+            });
+        }
     };
 
-    const checkUrlIfGenerealDataset = () => {
+    const checkUrlIfGenerealDataset2 = () => {
         if (!isNaN(studyId as any)) {
+            return true;
+        }
+        return false;
+    }
+
+    const checkUrlIfGeneralDataset = () => {
+        if (window.location.pathname.split('/')[1] === 'datasets') {
+            return true;
+        }
+        return false;
+    }
+
+    const checkUrlNewDataset = () => {
+        if (window.location.pathname.split('/')[2] === 'new') {
             return true;
         }
         return false;
@@ -67,7 +94,7 @@ const StudySpecificDataset = (props: any) => {
         if (checkForInputErrors()) {
             return;
         }
-        const isDatasetspecificDataset = checkUrlIfGenerealDataset();
+        const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
@@ -94,11 +121,24 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
-        else {
+        else if(!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
-                    //window.location.pathname = '/datasets/' + result.id;
+                    window.location.pathname = '/datasets/' + result.id;
+                }
+                else {
+                    console.log("Err");
+                    //notify.show('Error getting study');
+                }
+                setLoading(false);
+            });
+        }
+        else {
+            updateStandardDataset(studyId, dataset).then((result: any) => {
+                if (result) {
+                    console.log("resultStudy: ", result);
+                    window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
@@ -135,7 +175,7 @@ const StudySpecificDataset = (props: any) => {
     };
 
     const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset.storageAccountName) {
+        if (!dataset?.name?.length || !dataset?.classification?.length) {
             setInputerError(true);
             return true;
         }
@@ -150,6 +190,7 @@ const StudySpecificDataset = (props: any) => {
         </div>
         );
     };
+    
 
     return (
         <div style={{ backgroundColor: '#ffffff' }}>

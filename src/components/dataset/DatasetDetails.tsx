@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { getDataset } from '../../services/Api';
+import { getDataset, getStandardDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back } from '@equinor/eds-icons';
 import LoadingComponent from '../common/LoadingComponent';
@@ -51,20 +51,48 @@ const DatasetDetails = (props: any) => {
         setLoading(true);
         datasetId = window.location.pathname.split('/')[4];
         studyId = window.location.pathname.split('/')[2];
-        getDataset(datasetId, studyId).then((result: any) => {
-            if (result) {
-                setDataset(result);
-                console.log("result: ", result);
-            }
-            else {
-                console.log("Err");
-            }
-            setLoading(false);
-        });
+        if (checkUrlIfGeneralDataset()) {
+            datasetId = studyId;
+            getStandardDataset(datasetId).then((result: any) => {
+                if (result) {
+                    setDataset(result);
+                    console.log("result: ", result);
+                }
+                else {
+                    console.log("Err");
+                }
+                setLoading(false);
+            });
+        }
+        else {
+            getDataset(datasetId, studyId).then((result: any) => {
+                if (result) {
+                    setDataset(result);
+                    console.log("result: ", result);
+                }
+                else {
+                    console.log("Err");
+                }
+                setLoading(false);
+            });
+    }
     };
 
+    const checkUrlIfGeneralDataset = () => {
+        if (window.location.pathname.split('/')[1] === 'datasets') {
+            return true;
+        }
+        return false;
+    }
+
     const handleEditMetdata = evt => {
-        window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId + '/edit';
+        if (checkUrlIfGeneralDataset()) {
+            window.location.pathname = '/datasets/' + datasetId + '/edit';
+        }
+        else {
+            window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId + '/edit';
+        }
+        
     }
 
     const returnField = (fieldName) => {
@@ -77,9 +105,9 @@ const DatasetDetails = (props: any) => {
             <div>
                 <div style={{ marginBottom: '16px' }}>
                     <Typography variant="h2">{dataset?.name}</Typography>
-                    <span>This data is only available for this study</span>
+                    {!checkUrlIfGeneralDataset() ?<span>This data is only available for this study</span>: null}
                 </div>
-                <Link to={'/studies/' + studyId} style={linkStyle}><Icon color="#007079" name="arrow_back" size={24} />Back to study</Link>
+                { !checkUrlIfGeneralDataset() ? <Link to={'/studies/' + studyId} style={linkStyle}><Icon color="#007079" name="arrow_back" size={24} />Back to study</Link>: null }
             </div>
             <RightWrapper>
                 <div>
