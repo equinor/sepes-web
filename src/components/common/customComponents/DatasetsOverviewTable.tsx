@@ -90,7 +90,7 @@ const DatasetsOverviewTable = (props: any) => {
     }
 
     return (
-        <div style={{ padding: '0 16px 600px 16px' }}>
+        <div style={{ padding: '0 16px 16px 16px' }}>
             <ButtonWrapper>
             <Button
                 variant="outlined"
@@ -107,7 +107,7 @@ const DatasetsOverviewTable = (props: any) => {
             </Button>
             {showColumnsPicker ?
             <UnstyledList>
-                <li style={{display:'grid'}}>
+                <li style={{ display: 'grid' }}>
                     {returnCheckbox(checkedColums.name, 'Name', 'name')}
                     {returnCheckbox(checkedColums.sourceSystem, 'Source system', 'sourceSystem')}
                     {returnCheckbox(checkedColums.areaL2, 'Area L2', 'areaL2')}
@@ -126,33 +126,33 @@ const DatasetsOverviewTable = (props: any) => {
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                     <Head>
                     <Row>
-                        {returnCell(checkedColums?.name, 'Dataset', true)}
-                        {returnCell(checkedColums?.sourceSystem, 'Source system', true)}
-                        {returnCell(checkedColums?.areaL2, 'Area L2', true)}
-                        {returnCell(checkedColums?.areaL1, 'Area L1', true)}
-                        {returnCell(checkedColums?.asset, 'Asset', true)}
-                        {returnCell(checkedColums?.baDataOwner, 'BA data owner', true)}
-                        {returnCell(checkedColums?.classification, 'Classification', true)}
-                        {returnCell(checkedColums?.countryOfOrigin, 'Country of origin', true)}
-                        {returnCell(checkedColums?.dataId, 'Data ID', true)}
-                        {returnCell(checkedColums?.lraId, 'LRA ID', true)}
-                        {returnCell(checkedColums?.tags, 'Tags', true)}
+                        {returnCell(checkedColums.name, 'Dataset', true)}
+                        {returnCell(checkedColums.sourceSystem, 'Source system', true)}
+                        {returnCell(checkedColums.areaL2, 'Area L2', true)}
+                        {returnCell(checkedColums.areaL1, 'Area L1', true)}
+                        {returnCell(checkedColums.asset, 'Asset', true)}
+                        {returnCell(checkedColums.baDataOwner, 'BA data owner', true)}
+                        {returnCell(checkedColums.classification, 'Classification', true)}
+                        {returnCell(checkedColums.countryOfOrigin, 'Country of origin', true)}
+                        {returnCell(checkedColums.dataId, 'Data ID', true)}
+                        {returnCell(checkedColums.lraId, 'LRA ID', true)}
+                        {returnCell(checkedColums.tags, 'Tags', true)}
                     </Row>
                     </Head>
                     <Body>
                     {datasets && datasets.map((row: DatasetObj) => (
                         <Row key={row.id}>
-                            {returnCell(checkedColums?.name, row.name)}
-                            {returnCell(checkedColums?.sourceSystem, row.sourceSystem)}
-                            {returnCell(checkedColums?.areaL2, row.areaL2)}
-                            {returnCell(checkedColums?.areaL1, row.areaL1)}
-                            {returnCell(checkedColums?.asset, row.asset)}
-                            {returnCell(checkedColums?.baDataOwner, row.baDataOwner)}
-                            {returnCell(checkedColums?.classification, row.classification)}
-                            {returnCell(checkedColums?.countryOfOrigin, row.countryOfOrigin)}
-                            {returnCell(checkedColums?.dataId, row.dataId)}
-                            {returnCell(checkedColums?.lraId, row.lraId)}
-                            {returnCell(checkedColums?.tags, row.tags)}
+                            {returnCell(checkedColums.name, row.name)}
+                            {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
+                            {returnCell(checkedColums.areaL2, row.areaL2)}
+                            {returnCell(checkedColums.areaL1, row.areaL1)}
+                            {returnCell(checkedColums.asset, row.asset)}
+                            {returnCell(checkedColums.baDataOwner, row.baDataOwner)}
+                            {returnCell(checkedColums.classification, row.classification)}
+                            {returnCell(checkedColums.countryOfOrigin, row.countryOfOrigin)}
+                            {returnCell(checkedColums.dataId, row.dataId)}
+                            {returnCell(checkedColums.lraId, row.lraId)}
+                            {returnCell(checkedColums.tags, row.tags)}
                         </Row>
                     ))}
                     </Body>
