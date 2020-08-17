@@ -30,6 +30,7 @@ export const removeStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
 };
 
+//Specific dataset
 export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
 };
@@ -38,12 +39,22 @@ export const editStudySpecificDataset = async (studyId: string, dataset?:Dataset
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific/' + dataset?.id, 'PUT', dataset);
 };
 
-export const getStandardDataset = async (datasetId: string) => {
-    return apiCallWithToken('api/datasets/' + datasetId);
-};
-
 export const getDataset = async (datasetId: string, studyId:string) => {
     return apiCallWithToken('api/studies/' + studyId + '/datasets/' + datasetId);
+};
+
+//Standard dataset
+/*
+export const getStandardDataset = async (datasetId: string) => {
+    return apiCallWithToken('api/datasets/' + datasetId);
+};*/
+
+export const createStandardDataset = async (dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/datasets/', 'POST', dataset);
+};
+
+export const getStandardDataset = async () => {
+    return apiCallWithToken('api/datasets/');
 };
 
 export const getParticipantList = async () => {
