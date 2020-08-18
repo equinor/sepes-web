@@ -2,6 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Divider } from '@equinor/eds-core-react';
+import { Icon } from '@equinor/eds-core-react';
+import { cloud_upload, delete_forever } from '@equinor/eds-icons';
+
+const icons = {
+    cloud_upload,
+    delete_forever
+};
+Icon.add(icons);
+
+export const EquinorIcon = (name: string, color: string, size: number, onClick?:any, clickAble?: boolean) => {
+    if (clickAble) {
+        return <Icon onClick={onClick} color={color} name={name} size={size} style={{cursor: 'pointer'}}/>
+    }
+    return <Icon onClick={onClick} color={color} name={name} size={size} />
+}
 
 export const EquinorLink = styled(Link)`
     font-size: 14px;

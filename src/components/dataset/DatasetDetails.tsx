@@ -4,18 +4,22 @@ import { Typography, Icon, Button } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { getDataset, getStandardDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
-import { arrow_back } from '@equinor/eds-icons';
+import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import LoadingComponent from '../common/LoadingComponent';
+import FileDropzoneContainer from '../common/upload/FileDropzone';
+import { EquinorIcon } from '../common/StyledComponents';
+import { bytesToMB } from '../common/helpers';
 
 const icons = {
-    arrow_back
+    arrow_back,
+    delete_forever
   };
   Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap:16px;
+    grid-gap:256px;
     padding:32px;
     background-color:#ffffff;
     @media (max-width: 768px) {
@@ -29,24 +33,32 @@ const RightWrapper = styled.div`
     grid-gap:16px;
   `;
 
-const linkStyle = {
-    marginTop: '16px',
-    color: '#007079',
-    fontSize: '22px'
-};
+  const AttachmentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 196px 16px;
+  padding: 8px;
+`;
 let studyId = '';
 let datasetId = '';
 const DatasetDetails = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
+    const [imageUrl, setImageUrl] = useState('');
+    const [files, setFiles] = useState<any>([]);
 
     useEffect(() => {
         setIsSubscribed(true);
         getDatasetFromApi();
         return () => setIsSubscribed(false);
-    }, []);
+    }, [files, setFiles]);
 
+    const RemoveFile = (i: number):void => {
+        setImageUrl('');
+        const filesTemp = files;
+        filesTemp.splice(i, 1);
+        setFiles(filesTemp);
+    }
     const getDatasetFromApi = () => {
         setLoading(true);
         datasetId = window.location.pathname.split('/')[4];
@@ -92,7 +104,6 @@ const DatasetDetails = (props: any) => {
         else {
             window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId + '/edit';
         }
-        
     }
 
     const returnField = (fieldName) => {
@@ -104,10 +115,38 @@ const DatasetDetails = (props: any) => {
         <Wrapper>
             <div>
                 <div style={{ marginBottom: '16px' }}>
-                    <Typography variant="h2">{dataset?.name}</Typography>
+                    <Typography variant="h1">{dataset?.name}</Typography>
                     {!checkUrlIfGeneralDataset() ?<span>This data is only available for this study</span>: null}
                 </div>
-                { !checkUrlIfGeneralDataset() ? <Link to={'/studies/' + studyId} style={linkStyle}><Icon color="#007079" name="arrow_back" size={24} />Back to study</Link>: null }
+                { !checkUrlIfGeneralDataset() ?
+                <Link to={'/studies/' + studyId} 
+                    style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                        <Icon
+                        color="#007079"
+                        name="arrow_back"
+                        size={24}
+                        style={{marginRight: '16px'}}
+                        />Back to study
+                </Link> : null }
+                <FileDropzoneContainer setImageUrl={setImageUrl} setFiles={setFiles} />
+                <AttachmentWrapper>
+                    {files.map((file:File, i:number) => {
+                        return (
+                            <>
+                                <div>{file.name}</div>
+                                <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
+                                <Icon
+                                    onClick={() => RemoveFile(i)}
+                                    color='#007079'
+                                    name='delete_forever'
+                                    size={24}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            </>
+                        );
+                        }
+                    )}
+                </AttachmentWrapper>
             </div>
             <RightWrapper>
                 <div>
