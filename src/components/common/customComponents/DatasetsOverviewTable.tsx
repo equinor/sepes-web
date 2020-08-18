@@ -142,7 +142,7 @@ const DatasetsOverviewTable = (props: any) => {
                     <Body>
                     {datasets && datasets.map((row: DatasetObj) => (
                         <Row key={row.id}>
-                            <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link></Cell>
+                            {checkedColums.name ? <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link></Cell> : null}
                             {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                             {returnCell(checkedColums.areaL2, row.areaL2)}
                             {returnCell(checkedColums.areaL1, row.areaL1)}

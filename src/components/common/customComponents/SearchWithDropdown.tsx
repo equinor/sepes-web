@@ -5,6 +5,7 @@ import { Search, Button } from '@equinor/eds-core-react';
 const DatasetItem = styled.div`
     padding: 16px;
     z-index:99;
+    cursor: pointer;
     &:hover {
         background-color: #D5EAF4;
     }
