@@ -7,8 +7,7 @@ const FileDropzoneContainer = (
 ) => {
   function handleImageUpload(fileEvent: File[]) {
     var file = fileEvent[0];
-    console.log(file);
-    props.setFiles(fileEvent)
+    props.setFiles(fileEvent);
     props.setImageUrl(URL.createObjectURL(file));
   }
 

@@ -46,7 +46,6 @@ const DatasetDetails = (props: any) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [imageUrl, setImageUrl] = useState('');
     const [files, setFiles] = useState<any>([]);
-    let filesTemp = [];
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -55,13 +54,9 @@ const DatasetDetails = (props: any) => {
     }, [files, setFiles]);
 
     const RemoveFile = (i: number):void => {
-        console.log(i);
         setImageUrl('');
-        filesTemp = files;
-        
+        const filesTemp = files;
         filesTemp.splice(i, 1);
-        console.log(filesTemp)
-        console.log(files)
         setFiles(filesTemp);
     }
     const getDatasetFromApi = () => {
