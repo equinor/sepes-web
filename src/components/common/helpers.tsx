@@ -20,3 +20,7 @@ export const checkIfRequiredFieldsAreNull = (value:any, userPressedCreate?:boole
     return 'default';
 
 }
+
+export const bytesToMB = (sizeInBytes: number) => {
+    return (sizeInBytes / (1024*1024)).toFixed(2);
+}

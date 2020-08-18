@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, lock, lock_open } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
-import AddImageAndCompressionContainer from '../common/ImageDropzone';
+import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';

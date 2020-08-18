@@ -16,7 +16,7 @@ const NavTabs = (props: any) => {
 
     const getActiveTab = () => {
         const location = window.location.pathname;
-        return location !== '/datasets' ? 0 : 1;
+        return !location.includes('datasets') ? 0 : 1;
     }
 
     const redirect = (e: any) => {
