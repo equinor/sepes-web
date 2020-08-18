@@ -26,7 +26,7 @@ const DatasetsTable = (props: any) => {
                         <Cell>{row.name}</Cell>
                         <Cell align="right">{row.emailAddress}</Cell>
                         <Cell align="right">{row.Role}</Cell>
-                        {props.editMode ? <Cell align="right"><Icon name="close" size={24} onClick={() => props.removeParticipant(row)} /></Cell> : null }
+                        {props.editMode ? <Cell align="right"><Icon name="close" style={{ cursor: 'pointer' }} size={24} onClick={() => props.removeParticipant(row)} /></Cell> : null }
                         </Row>
                     ))}
                     </Body>

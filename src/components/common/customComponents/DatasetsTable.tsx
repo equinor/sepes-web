@@ -24,8 +24,8 @@ const DatasetsTable = (props: any) => {
                     <Body>
                     {datasets && datasets.map((row) => (
                         <Row key={row.id}>
-                        <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/studies/" + props.studyId +"/datasets/" + row.id} >{row.name}</Link></Cell>
-                        {props.editMode ? <Cell><Icon name="close" size={24} onClick={() => props.removeDataset(row)} /></Cell> :  null}
+                        <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }} to={"/studies/" + props.studyId +"/datasets/" + row.id} >{row.name}</Link></Cell>
+                        {props.editMode ? <Cell><Icon style={{ cursor: 'pointer' }} name="close" size={24} onClick={() => props.removeDataset(row)} /></Cell> :  null}
                         </Row>
                     ))}
                     </Body>
