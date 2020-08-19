@@ -11,6 +11,8 @@ import { addStudySpecificDataset,
     updateStandardDataset
 } from '../../services/Api';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { useHistory } from 'react-router-dom';
+import StudyDetails from '../studyDetails/StudyDetails';
 
 const Wrapper = styled.div`
     display: grid;
@@ -31,28 +33,32 @@ const options = [
     { name: "4", id:'4' }
   ];
 const width = '400px';
-const studyId = window.location.pathname.split('/')[2];
-const datasetId = window.location.pathname.split('/')[4];
+let studyId = '';
+let datasetId = '';
 
 const StudySpecificDataset = (props: any) => {
+    const history = useHistory();
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     useEffect(() => {
+        checkIfEditMode();
         setIsSubscribed(true);
         getDatasetFromApi();
         return () => setIsSubscribed(false);
-    }, []);
+    }, [editDataset]);
 
     const getDatasetFromApi = () => {
+        studyId = window.location.pathname.split('/')[2];
+        datasetId = window.location.pathname.split('/')[4];
         if (!checkUrlIfGeneralDataset() && datasetId) {
             setLoading(true);
             getDataset(datasetId, studyId).then((result: any) => {
                 if (result) {
                     setDataset(result);
-                    setEditDataset(true);
+                    //setEditDataset(true);
                     console.log("result: ", result);
                 }
                 else {
@@ -65,7 +71,7 @@ const StudySpecificDataset = (props: any) => {
             getStandardDataset(studyId).then((result: any) => {
                 if (result) {
                     setDataset(result);
-                    setEditDataset(true);
+                    //setEditDataset(true);
                     console.log("result: ", result);
                 }
                 else {
@@ -75,6 +81,16 @@ const StudySpecificDataset = (props: any) => {
             });
         }
     };
+
+    const checkIfEditMode = () => {
+        datasetId = window.location.pathname.split('/')[4];
+        if (!checkUrlIfGeneralDataset() && datasetId) {
+            setEditDataset(true);
+        }
+        if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
+            setEditDataset(true);
+        }
+    }
 
     const checkUrlIfGeneralDataset = () => {
         if (window.location.pathname.split('/')[1] === 'datasets') {
@@ -100,7 +116,8 @@ const StudySpecificDataset = (props: any) => {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
                     console.log("resultStudy: ", result);
-                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id;
+                    history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
+                    //window.location.pathname = '/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id;
                 }
                 else {
                     console.log("Err");
@@ -113,7 +130,8 @@ const StudySpecificDataset = (props: any) => {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
-                    window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
+                    history.push('/studies/' + studyId + '/datasets/' + result.id);
+                    //window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
@@ -126,7 +144,8 @@ const StudySpecificDataset = (props: any) => {
             createStandardDataset(dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
-                    window.location.pathname = '/datasets/' + result.id;
+                    history.push('/datasets/' + result.id);
+                    //window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
@@ -139,7 +158,8 @@ const StudySpecificDataset = (props: any) => {
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
-                    window.location.pathname = '/datasets/' + result.id;
+                    history.push('/datasets/' + result.id);
+                    //window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
                     console.log("Err");
@@ -165,7 +185,24 @@ const StudySpecificDataset = (props: any) => {
     };
 
     const handleCancel = evt => {
-        window.history.back();
+        studyId = window.location.pathname.split('/')[2];
+        datasetId = window.location.pathname.split('/')[4];
+        let studySpecificDataset = false;
+        if (window.location.pathname.split('/')[1] === 'studies') {
+            studySpecificDataset = true;
+        }
+        if (!editDataset && studySpecificDataset) {
+            history.push('/studies/' + studyId);
+        }
+        else if (studySpecificDataset) {
+            history.push('/studies/' + studyId + '/datasets/' + datasetId);
+        }
+        else if (!checkUrlNewDataset()) {
+            history.push('/datasets/' + studyId);
+        }
+        else {
+            history.push('/datasets');
+        }
     };
 
     const checkForInputErrors = () => {

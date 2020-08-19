@@ -10,6 +10,7 @@ import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { useHistory } from 'react-router-dom';
 
 const icons = {
   dollar,
@@ -60,6 +61,7 @@ grid-gap: 5px;
 `;
 
 const StudyComponentFull = (props: any) => {
+  const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
@@ -87,7 +89,8 @@ const StudyComponentFull = (props: any) => {
     if (props.newStudy) {
       createStudy(study).then((result: any) => {
         if (result) {
-            window.location.pathname = '/studies/' + result.id;
+            //window.location.pathname = '/studies/' + result.id;
+            history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
             props.setStudy(newStudy);
@@ -133,7 +136,8 @@ const StudyComponentFull = (props: any) => {
 
   const handleCancel = () => {
     if (props.newStudy) {
-      window.location.pathname = '/';
+      history.push('/')
+      //window.location.pathname = '/';
       return;
     }
     setEditMode(false);
