@@ -9,6 +9,7 @@ import LoadingComponent from '../common/LoadingComponent';
 import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { EquinorIcon } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
+import { useHistory } from 'react-router-dom';
 
 const icons = {
     arrow_back,
@@ -41,6 +42,7 @@ const RightWrapper = styled.div`
 let studyId = '';
 let datasetId = '';
 const DatasetDetails = (props: any) => {
+    const history = useHistory();
     const [dataset, setDataset] = useState<DatasetObj>();
     const [loading, setLoading] = useState<boolean>();
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
@@ -99,10 +101,10 @@ const DatasetDetails = (props: any) => {
 
     const handleEditMetdata = evt => {
         if (checkUrlIfGeneralDataset()) {
-            window.location.pathname = '/datasets/' + datasetId + '/edit';
+            history.push('/datasets/' + datasetId + '/edit');
         }
         else {
-            window.location.pathname = '/studies/' + studyId + '/datasets/' + datasetId + '/edit';
+            history.push('/studies/' + studyId + '/datasets/' + datasetId + '/edit');
         }
     }
 
@@ -127,7 +129,16 @@ const DatasetDetails = (props: any) => {
                         size={24}
                         style={{marginRight: '16px'}}
                         />Back to study
-                </Link> : null }
+                </Link> : 
+                <Link to={'/datasets'} 
+                style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                    <Icon
+                    color="#007079"
+                    name="arrow_back"
+                    size={24}
+                    style={{marginRight: '16px'}}
+                    />Back to datasets
+                </Link> }
                 <FileDropzoneContainer setImageUrl={setImageUrl} setFiles={setFiles} />
                 <AttachmentWrapper>
                     {files.map((file:File, i:number) => {

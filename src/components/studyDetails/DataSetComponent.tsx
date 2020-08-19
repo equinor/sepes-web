@@ -3,7 +3,7 @@ import { Search, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Table, Icon } from '@equinor/eds-core-react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
@@ -39,6 +39,7 @@ const DatasetItem = styled.div`
 `;
 
 const DataSetComponent = (props: any) => {
+    const history = useHistory();
     const [datasets, setDatasets] = useState<any>(props.study.datasets);
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -63,7 +64,8 @@ const DataSetComponent = (props: any) => {
 
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
-        window.location.pathname = '/studies/' + studyId + '/datasets';
+        history.push('/studies/' + studyId + '/datasets');
+        //window.location.pathname = '/studies/' + studyId + '/datasets';
     }
 
     useEffect(() => {

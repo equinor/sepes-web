@@ -4,7 +4,7 @@ import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
 import { DatasetObj } from '../../common/interfaces'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -46,6 +46,7 @@ interface checkedColumns {
 
 
 const DatasetsOverviewTable = (props: any) => {
+    const history = useHistory();
     const { datasets } = props;
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
         name: true,
@@ -86,7 +87,7 @@ const DatasetsOverviewTable = (props: any) => {
     }
 
     const redirectToCreateDataset = (): void => {
-        window.location.pathname = 'datasets/new';
+        history.push('datasets/new');
     }
 
     return (

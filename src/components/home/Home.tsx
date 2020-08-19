@@ -4,6 +4,7 @@ import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import Loading from '../common/LoadingComponent';
+import { useHistory } from 'react-router-dom';
 
 const Wrapper = styled.div`
     display: grid;
@@ -31,6 +32,7 @@ const RightWrapper = styled.div`
 let mockText = 'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {
+    const history = useHistory();
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [studyList, setStudyList] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -62,7 +64,7 @@ const Home = () => {
             <Studies studyList={studyList} />
             <RightWrapper>
                 <p>{mockText}</p>
-                <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { window.location.pathname = '/studies'; }}>New study</Button>
+                <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { history.push('/studies'); }}>New study</Button>
             </RightWrapper>
         </Wrapper> : <Loading />}
         </>
