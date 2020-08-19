@@ -5,6 +5,7 @@ import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
 import { DatasetObj } from '../../common/interfaces'
 import { Link, useHistory } from 'react-router-dom';
+import DatasetSearchFilter from './DatasetSearchFilter';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -44,6 +45,19 @@ interface checkedColumns {
     tags: boolean;
 }
 
+interface filter {
+    name: string;
+    sourceSystem: string;
+    areaL2: string;
+    areaL1: string;
+    asset: string;
+    baDataOwner: string;
+    classification: string;
+    countryOfOrigin: string;
+    dataId: string;
+    lraId: string;
+    tags: string;
+}
 
 const DatasetsOverviewTable = (props: any) => {
     const history = useHistory();
@@ -60,6 +74,20 @@ const DatasetsOverviewTable = (props: any) => {
         dataId: true,
         lraId: true,
         tags: true
+    });
+
+    const [filter, setFilter] = useState<filter>({
+        name: '',
+        sourceSystem: '',
+        areaL2: '',
+        areaL1: '',
+        asset: '',
+        baDataOwner: '',
+        classification: '',
+        countryOfOrigin: '',
+        dataId: '',
+        lraId: '',
+        tags: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
     const handleColumnsChange = (evt) => {
@@ -88,6 +116,14 @@ const DatasetsOverviewTable = (props: any) => {
 
     const redirectToCreateDataset = (): void => {
         history.push('datasets/new');
+    }
+
+    const applyFilter = (datasets: any) => {
+        if (filter.name === '')
+        {
+            return datasets;
+        }
+        return datasets.filter(dataset => dataset.name.toLowerCase().includes(filter.name.toLowerCase()));
     }
 
     return (
@@ -141,9 +177,25 @@ const DatasetsOverviewTable = (props: any) => {
                     </Row>
                     </Head>
                     <Body>
-                    {datasets && datasets.map((row: DatasetObj) => (
+                        <Row key={1}>
+                            <Cell><DatasetSearchFilter setFilter={setFilter} filter={filter} column="name" /></Cell>
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                            <Cell />
+                        </Row>
+                    {datasets && applyFilter(datasets).map((row: DatasetObj, i: number) => (
                         <Row key={row.id}>
-                            {checkedColums.name ? <Cell component="th" scope="row"><Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link></Cell> : null}
+                            {checkedColums.name && 
+                            <Cell component="th" scope="row">
+                            <Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link>
+                            </Cell>}
                             {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                             {returnCell(checkedColums.areaL2, row.areaL2)}
                             {returnCell(checkedColums.areaL1, row.areaL1)}
