@@ -37,3 +37,10 @@ export interface DatasetObj {
     studies?:[];
     id?:string;
 }
+
+export interface SandboxObj {
+    name:string;
+    location:string;
+    template:string;
+    id:string;
+}
