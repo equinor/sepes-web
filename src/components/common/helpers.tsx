@@ -14,7 +14,7 @@ export const lineBreak = (text: string) => {
 };
 
 export const checkIfRequiredFieldsAreNull = (value:any, userPressedCreate?:boolean) => {
-    if (value === '' || value === undefined && userPressedCreate) {
+    if ((value === '' || value === undefined) && userPressedCreate) {
         return 'error';
     }
     return 'default';

@@ -1,5 +1,5 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj } from "../components/common/interfaces";
+import { StudyObj, DatasetObj, SandboxObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
@@ -79,6 +79,12 @@ export const postStudy = async (study: StudyObj, imageUrl:string) => {
 
 export const putStudy = async (study: StudyObj, imageUrl:string) => {
   return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
+};
+
+//Sandbox
+
+export const createSandbox = async (studyId: string, sandbox:SandboxObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'PUT', sandbox);
 };
 
 /*

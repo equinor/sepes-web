@@ -38,7 +38,7 @@ const LogoutWrapper = styled.div`
     padding:16px;
     z-index:99999;
     border-radius:4px;
-    box-shadow: 1px 1px #E5E5E5;
+    box-shadow: 0 0 4px 4px #E7E7E7;
 `;
 
 const LEFT_CHOICES = {
