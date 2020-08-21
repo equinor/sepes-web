@@ -68,12 +68,12 @@ const DatasetsOverviewTable = (props: any) => {
         areaL2: true,
         areaL1: true,
         asset: true,
-        baDataOwner: true,
-        classification: true,
-        countryOfOrigin: true,
-        dataId: true,
-        lraId: true,
-        tags: true
+        baDataOwner: false,
+        classification: false,
+        countryOfOrigin: false,
+        dataId: false,
+        lraId: false,
+        tags: false
     });
 
     const [filter, setFilter] = useState<filter>({
@@ -114,16 +114,43 @@ const DatasetsOverviewTable = (props: any) => {
         )
     }
 
+    const returnFilter = (column: string, checker: boolean) => {
+        if (checker) {
+            return <Cell><DatasetSearchFilter setFilter={setFilter} filter={filter} column={column} /></Cell>
+        }
+    }
+
     const redirectToCreateDataset = (): void => {
         history.push('datasets/new');
     }
 
-    const applyFilter = (datasets: any) => {
-        if (filter.name === '')
-        {
-            return datasets;
+    const filterList = ( column: string, filterColumn: string, resDataset) => {
+        if (filterColumn !== '') {
+            return resDataset.filter(dataset => {
+                if (dataset[column]) {
+                    return dataset[column].toString().toLowerCase().includes(filterColumn.toString().toLowerCase());
+                }
+            });
         }
-        return datasets.filter(dataset => dataset.name.toLowerCase().includes(filter.name.toLowerCase()));
+        else {
+            return resDataset;
+        }
+    }
+
+    const applyFilter = () => {
+        let retDatasets = datasets;
+        retDatasets = filterList('name', filter.name, retDatasets);
+        retDatasets = filterList('sourceSystem', filter.sourceSystem, retDatasets);
+        retDatasets = filterList('areaL1', filter.areaL1, retDatasets);
+        retDatasets = filterList('areaL2', filter.areaL2, retDatasets);
+        retDatasets = filterList('asset', filter.asset, retDatasets);
+        retDatasets = filterList('baDataOwner', filter.baDataOwner, retDatasets);
+        retDatasets = filterList('classification', filter.classification, retDatasets);
+        retDatasets = filterList('countryOfOrigin', filter.countryOfOrigin, retDatasets);
+        retDatasets = filterList('dataId', filter.dataId, retDatasets);
+        retDatasets = filterList('lraId', filter.lraId, retDatasets);
+        retDatasets = filterList('tags', filter.tags, retDatasets);
+        return retDatasets;
     }
 
     return (
@@ -178,19 +205,19 @@ const DatasetsOverviewTable = (props: any) => {
                     </Head>
                     <Body>
                         <Row key={1}>
-                            <Cell><DatasetSearchFilter setFilter={setFilter} filter={filter} column="name" /></Cell>
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
-                            <Cell />
+                            {returnFilter('name', checkedColums.name)}
+                            {returnFilter('sourceSystem', checkedColums.sourceSystem)}
+                            {returnFilter('areaL2', checkedColums.areaL2)}
+                            {returnFilter('areaL1', checkedColums.areaL1)}
+                            {returnFilter('asset', checkedColums.asset)}
+                            {returnFilter('baDataOwner', checkedColums.baDataOwner)}
+                            {returnFilter('classification', checkedColums.classification)}
+                            {returnFilter('countryOfOrigin', checkedColums.countryOfOrigin)}
+                            {returnFilter('dataId', checkedColums.dataId)}
+                            {returnFilter('lraId', checkedColums.lraId)}
+                            {returnFilter('tags', checkedColums.tags)}
                         </Row>
-                    {datasets && applyFilter(datasets).map((row: DatasetObj, i: number) => (
+                    {datasets && applyFilter().map((row: DatasetObj, i: number) => (
                         <Row key={row.id}>
                             {checkedColums.name && 
                             <Cell component="th" scope="row">

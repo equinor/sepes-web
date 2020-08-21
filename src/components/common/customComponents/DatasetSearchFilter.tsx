@@ -27,7 +27,7 @@ const DatasetSearchFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, fi
         : <TextField
             onClick={() => setFilterActive(true)}
             placeholder="Filter"
-            name="name"
+            name={column}
             value={filter[column]}
             />}
         </div>
