@@ -10,6 +10,7 @@ import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
 import { ParticipantObj } from '../common/interfaces';
+import * as notify from '../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -54,7 +55,7 @@ const ParicipantComponent = (props: any) => {
                 console.log("participants: ", result);
             }
             else {
-                console.log("Err deleting participants");
+                notify.show('danger', '500');
                 //Show error component
             }
             setLoading(false);
@@ -114,7 +115,7 @@ const ParicipantComponent = (props: any) => {
                 console.log("participants: ", result);
             }
             else {
-                console.log("Err getting perticipants");
+                notify.show('danger', '500');
             }
             setLoading(false);
         })

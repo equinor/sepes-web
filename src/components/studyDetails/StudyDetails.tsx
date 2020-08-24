@@ -44,8 +44,8 @@ const StudyDetails = () => {
                 console.log("resultStudy: ", result)
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
-                notify.show('Error getting study');
             }
             setLoading(false);
         });

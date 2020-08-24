@@ -7,6 +7,7 @@ import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import styled from 'styled-components';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,6 +34,7 @@ const Overview = (props: any) => {
                 props.setStudy(result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
         });

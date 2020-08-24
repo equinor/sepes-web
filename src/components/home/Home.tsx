@@ -5,6 +5,7 @@ import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import Loading from '../common/LoadingComponent';
 import { useHistory } from 'react-router-dom';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -51,6 +52,7 @@ const Home = () => {
                 console.log("result: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
             setLoading(false);

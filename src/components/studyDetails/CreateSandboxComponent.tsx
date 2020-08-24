@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
-import SandboxTable from '../common/customComponents/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
 import { SandboxObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { createSandbox } from '../../services/Api';
-import Dataset from '../dataset/Datasets';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -71,6 +70,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 console.log("result: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
              }
         });

@@ -12,7 +12,7 @@ import { addStudySpecificDataset,
 } from '../../services/Api';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
-import StudyDetails from '../studyDetails/StudyDetails';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -62,6 +62,7 @@ const StudySpecificDataset = (props: any) => {
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
                 }
                 setLoading(false);
@@ -117,11 +118,10 @@ const StudySpecificDataset = (props: any) => {
                 if (result.datasets.length) {
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
-                    //window.location.pathname = '/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id;
                 }
                 else {
                     console.log("Err");
-                    //notify.show('Error getting study');
+                    notify.show('danger', '500');
                 }
                 setLoading(false);
             });
@@ -131,11 +131,10 @@ const StudySpecificDataset = (props: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
-                    //window.location.pathname = '/studies/' + studyId + '/datasets/' + result.id;
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
-                    //notify.show('Error getting study');
                 }
                 setLoading(false);
             });
@@ -145,11 +144,10 @@ const StudySpecificDataset = (props: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
-                    //window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
-                    //notify.show('Error getting study');
                 }
                 setLoading(false);
             });
@@ -159,11 +157,10 @@ const StudySpecificDataset = (props: any) => {
                 if (result) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
-                    //window.location.pathname = '/datasets/' + result.id;
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
-                    //notify.show('Error getting study');
                 }
                 setLoading(false);
             });
