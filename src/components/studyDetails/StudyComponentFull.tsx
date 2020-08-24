@@ -11,6 +11,7 @@ import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import * as notify from '../common/notify';
 
 const icons = {
   dollar,
@@ -100,6 +101,7 @@ const StudyComponentFull = (props: any) => {
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
                 }
                 props.setLoading(false);
@@ -107,6 +109,7 @@ const StudyComponentFull = (props: any) => {
             }
         }
         else {
+            notify.show('danger', '500');
             console.log("Err");
         }
         props.setLoading(false);
@@ -120,6 +123,7 @@ const StudyComponentFull = (props: any) => {
             props.setStudy(result);
         }
         else {
+            notify.show('danger', '500');
             console.log("Err");
         }
         props.setLoading(false);
@@ -137,7 +141,6 @@ const StudyComponentFull = (props: any) => {
   const handleCancel = () => {
     if (props.newStudy) {
       history.push('/')
-      //window.location.pathname = '/';
       return;
     }
     setEditMode(false);

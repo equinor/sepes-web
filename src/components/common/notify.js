@@ -39,33 +39,34 @@ const getCardVariant = variant => {
 const getIcon = type => {
     switch (type) {
         case 'danger':
-            return <FontAwesomeIcon icon={faExclamationTriangle} size="1x" style={{ color: '#FF1243', fontSize: '20px', paddingTop: '2px' }} />
+            return <FontAwesomeIcon icon={faExclamationTriangle} size="1x" style={{ color: '#FF1243', fontSize: '20px', marginRight: '6px' }} />
         default:
-            return <FontAwesomeIcon icon={faInfoCircle} size="1x" style={{ color: '#1E92F4', paddingTop: '2px' }} />
+            return <FontAwesomeIcon icon={faInfoCircle} size="1x" style={{ color: '#1E92F4', marginRight: '6px' }} />
     }
 }
 
 const CustomContent = (props) => {
-    const { type, exceptionMessage } = props.info;
+    const { type, message } = props;
     const icon = getIcon(type)
 
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <p>{icon} {exceptionMessage}</p>
+            <p>{icon} Code: {message}</p>
             <span>
                 <p style={{ display: 'inline', fontSize: '14px' }}>
-                    Please contact support. Providing the following Event Id could make it easier to locate the problem: id
+                    $(errorMessage_here) <br/><br/>
+                    Please contact support. Providing the following Event Id could make it easier to locate the problem: $eventId
                 </p>
             </span>
         </Card>
     );
 };
 
-export const show = info => {
+export const show = (type, message) => {
     store.addNotification({
         title: 'Error',
-        content: <CustomContent info={info} />,
+        content: <CustomContent type={type} message={message} />,
         type: 'danger',
         insert: 'top',
         container: 'top-center',

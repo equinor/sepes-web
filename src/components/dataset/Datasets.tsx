@@ -3,6 +3,7 @@ import { Button } from '@equinor/eds-core-react';
 import { getStandardDatasets } from '../../services/Api';
 import DatasetsOverviewTable from '../common/customComponents/DatasetsOverviewTable';
 import styled from 'styled-components';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
   margin: 32px;
@@ -26,6 +27,7 @@ const Dataset = (props: any) => {
                 console.log("result: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
             setLoading(false);

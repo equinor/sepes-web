@@ -10,6 +10,7 @@ import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { EquinorIcon } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import * as notify from '../common/notify';
 
 const icons = {
     arrow_back,
@@ -73,6 +74,7 @@ const DatasetDetails = (props: any) => {
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
                 }
                 setLoading(false);
@@ -85,6 +87,7 @@ const DatasetDetails = (props: any) => {
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
                 }
                 setLoading(false);

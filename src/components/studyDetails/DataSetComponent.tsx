@@ -8,6 +8,7 @@ import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../servi
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
+import * as notify from '../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -56,6 +57,7 @@ const DataSetComponent = (props: any) => {
                 console.log("result Datasets after delete: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
             setLoading(false);
@@ -82,6 +84,7 @@ const DataSetComponent = (props: any) => {
                 console.log("resultDatasetLists: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
             setLoading(false);
@@ -102,6 +105,7 @@ const DataSetComponent = (props: any) => {
                     console.log("resultDatasets: ", result);
                 }
                 else {
+                    notify.show('danger', '500');
                     console.log("Err");
                 }
                 setLoading(false);
