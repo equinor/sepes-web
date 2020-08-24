@@ -134,7 +134,6 @@ const ParicipantComponent = (props: any) => {
                         arrayList={participants}
                         text={text}
                     />
-                    {text && !isOpen ? <Chip>{text}</Chip> : null }
                 </div>
                 <FormControl style={{marginTop: "-12px"}}>
                     <InputLabel id="demo-simple-select-label">Role</InputLabel>
