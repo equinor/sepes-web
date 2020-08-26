@@ -140,7 +140,7 @@ const DataSetComponent = (props: any) => {
                     />
                 </div>
             </Bar>
-            <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
+            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
             <DatasetsTable
                 datasets={props.study.datasets}
                 removeDataset={removeDataset}
