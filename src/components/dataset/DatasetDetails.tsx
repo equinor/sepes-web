@@ -69,12 +69,12 @@ const DatasetDetails = (props: any) => {
         if (checkUrlIfGeneralDataset()) {
             datasetId = studyId;
             getStandardDataset(datasetId).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     setDataset(result);
                     console.log("result: ", result);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -82,12 +82,12 @@ const DatasetDetails = (props: any) => {
         }
         else {
             getDataset(datasetId, studyId).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     setDataset(result);
                     console.log("result: ", result);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
