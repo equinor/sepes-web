@@ -84,11 +84,11 @@ const StudyDetails = () => {
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
                 <TabList>
-                    <Tab>Overview</Tab>
+                    <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                     <Tab>Data sets</Tab>
                     <Tab>Sandboxes</Tab>
                     <Tab>Participants</Tab>
-                    <Tab>Study defaults</Tab>
+                    <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
                 </TabList>
             </Tabs>
             <div style={{ padding: '16px' }}>

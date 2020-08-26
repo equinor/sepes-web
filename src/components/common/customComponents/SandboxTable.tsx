@@ -10,8 +10,8 @@ const icons = {
 };
 Icon.add(icons);
 
-const studyId = window.location.pathname.split('/')[2];
 const SandboxTable = (props: any) => {
+    const studyId = window.location.pathname.split('/')[2];
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>

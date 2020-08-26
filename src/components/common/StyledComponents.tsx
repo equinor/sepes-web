@@ -3,21 +3,28 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Divider } from '@equinor/eds-core-react';
 import { Icon } from '@equinor/eds-core-react';
-import { cloud_upload, delete_forever, arrow_drop_down, clear } from '@equinor/eds-icons';
+import { cloud_upload,
+    delete_forever,
+    arrow_drop_down,
+    clear,
+    mood_very_happy 
+} from '@equinor/eds-icons';
 
 const icons = {
     cloud_upload,
     delete_forever,
     arrow_drop_down,
-    clear
+    clear,
+    mood_very_happy
 };
 Icon.add(icons);
 
 export const EquinorIcon = (name: string, color: string, size: number, onClick?:any, clickAble?: boolean) => {
-    if (clickAble) {
+    if (clickAble && onClick) {
         return <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} />
     }
-    return <Icon onClick={onClick} color={color} name={name} size={size} />
+
+    return <Icon color={color} name={name} size={size} />
 }
 
 export const EquinorLink = styled(Link)`

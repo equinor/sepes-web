@@ -17,13 +17,40 @@ type StepBarProps = {
     step: number;
 };
 
-const StepBar: React.FC<StepBarProps> = ({ step }) => {
+const StepBar: React.FC<StepBarProps> = ({ step, setStep }) => {
 
+    const returnControlButtons = () => {
+        switch(step) {
+            case 0: {
+                return (
+                    <>
+                        <Button variant="outlined" onClick={() => { setStep(1)}} style={{ width: '300px' }}>Make available</Button>
+                        <Button variant="outlined" color="danger" style={{ width: '300px' }}>Delete sandbox</Button>
+                    </>
+                );
+            }
+            case 1: {
+                return (
+                    <>
+                        <Button variant="outlined" onClick={() => { setStep(0)}} style={{ width: '300px' }}>Re-open config</Button>
+                        <Button variant="outlined" onClick={() => { setStep(2)}} style={{ width: '300px' }}>Close sandbox</Button>
+                    </>
+                );
+            }
+            case 2: {
+                return (
+                    <>
+                        <Button variant="outlined" onClick={() => { setStep(0)}} style={{ width: '300px' }}>Re-open config</Button>
+                        <Button variant="outlined" onClick={() => { setStep(1)}} style={{ width: '300px' }}>Re-open execution sandbox</Button>
+                    </>
+                );
+            }
+        }
+    }
     return (
         <Wrapper>
             Currently on step {step}
-            <Button variant='outlined' >Make available</Button>
-            <Button color="danger" >Delete sandbox</Button>
+            {returnControlButtons()}
         </Wrapper>
     )
 }

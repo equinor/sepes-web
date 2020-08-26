@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Search, Button, TextField} from '@equinor/eds-core-react';
 import StepBar from './StepBar';
-import SandboxConfig from './SandboxConfig'
+import SandboxConfig from './SandboxConfig';
+import Execution from './Execution';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -13,9 +14,6 @@ const Wrapper = styled.div`
 `;
 
 type SandboxProps = {
-    setFilter: (value:any) => void;
-    filter: any;
-    column: string;
 };
 
 const Sandbox: React.FC<SandboxProps> = ({ }) => {
@@ -23,14 +21,12 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
 
     const returnStepComponent = () => {
         switch (step) {
-            case 0:
-                return <SandboxConfig />
             case 1:
-                return <div>step 2</div>
+                return <Execution />
             case 2:
-                return <div>step 3</div>
-            case 3:
-                return <div>step 4</div>
+                return <div></div>
+            default:
+                return <SandboxConfig />
         }
     }
 
