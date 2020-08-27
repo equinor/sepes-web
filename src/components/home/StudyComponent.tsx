@@ -39,9 +39,12 @@ const Wrapper = styled.div`
       min-width:200px;
 
     }
+    &:hover {
+      background-color: ;
+    }
   }
 `;
-
+//D5EAF4
 const LogoTitleWrapper = styled.div`
     display: grid;
     grid-gap: 8px;
@@ -58,18 +61,19 @@ const StudyComponent = (props: any) => {
   const url = '/studies/' + id;
 
   return (
+    <Link to={url} style={{ color: 'black', textDecoration: 'none' }}>
       <Wrapper>
         <LogoTitleWrapper>
           <CustomLogoComponent logoUrl={logoUrl} />
           <div>
-            <Typography variant="h6"><Link to={url} style={{ color: 'black' }}>{name}</Link></Typography>
+            <Typography variant="h6">{name}</Typography>
             <SmallText>{vendor}</SmallText>
             <div><SmallText>{restricted ? 'Restricted' : 'Not restricted'}<Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} /></SmallText></div>
           </div>
         </LogoTitleWrapper>
-
         <div>{description}</div>
       </Wrapper>
+    </Link>
   )
 }
 

@@ -25,11 +25,16 @@ const SandboxTable = (props: any) => {
                 {props.sandboxes && props.sandboxes.map((row) => (
                         <Row key={row.name}>
                         <Cell>
-                        <Link style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }} to={"/studies/" + studyId +"/sandboxes/" + row.id} >
                             {row.name}
-                        </Link>
                         </Cell>
-                        <Cell><Icon name="chevron_right" size={24} /></Cell>
+                        <Cell>
+                            <Link
+                                style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }}
+                                to={"/studies/" + studyId +"/sandboxes/" + row.id}
+                            >
+                                    <Icon name="chevron_right" size={24} />
+                            </Link>
+                        </Cell>
                         </Row>
                     ))}
                 </Body>
