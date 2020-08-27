@@ -56,13 +56,13 @@ const StudySpecificDataset = (props: any) => {
         if (!checkUrlIfGeneralDataset() && datasetId) {
             setLoading(true);
             getDataset(datasetId, studyId).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     setDataset(result);
                     //setEditDataset(true);
                     console.log("result: ", result);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -70,12 +70,13 @@ const StudySpecificDataset = (props: any) => {
         }
         else if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
             getStandardDataset(studyId).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     setDataset(result);
                     //setEditDataset(true);
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -128,12 +129,12 @@ const StudySpecificDataset = (props: any) => {
         }
         else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -141,12 +142,12 @@ const StudySpecificDataset = (props: any) => {
         }
         else if(!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -154,12 +155,12 @@ const StudySpecificDataset = (props: any) => {
         }
         else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
-                if (result) {
+                if (result && result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);

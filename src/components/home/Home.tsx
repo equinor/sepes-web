@@ -47,12 +47,12 @@ const Home = () => {
     const getStudyList = () => {
         setLoading(true);
         api.getStudyList().then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && !result.Message) {
                 setStudyList(result);
                 console.log("result: ", result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);

@@ -52,12 +52,12 @@ const DataSetComponent = (props: any) => {
         //Removing it on clientside, keeping it for now.
         //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
-            if (result) {
+            if (result && !result.Message) {
                 props.setStudy({...props.study, datasets: result.datasets });
                 console.log("result Datasets after delete: ", result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);
@@ -79,12 +79,12 @@ const DataSetComponent = (props: any) => {
     const getDatasets = () => {
         setLoading(true);
         getDatasetList().then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && !result.Message) {
                 setDatasetsList(result);
                 console.log("resultDatasetLists: ", result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);
@@ -100,12 +100,12 @@ const DataSetComponent = (props: any) => {
             //list.push(row);
             //props.setStudy({...props.study, datasets: list});
             addStudyDataset(studyId, row.id).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     props.setStudy({...props.study, datasets: result.datasets });
                     console.log("resultDatasets: ", result);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);

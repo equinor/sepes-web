@@ -84,7 +84,7 @@ export const putStudy = async (study: StudyObj, imageUrl:string) => {
 //Sandbox
 
 export const createSandbox = async (studyId: string, sandbox:SandboxObj) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'PUT', sandbox);
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'POST', sandbox);
 };
 
 /*

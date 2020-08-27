@@ -38,7 +38,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         name: '',
-        location: '',
+        region: '',
         template: '',
         id: ''
     });
@@ -64,13 +64,13 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         setToggle(false);
         const studyId = window.location.pathname.split('/')[2];
         createSandbox(studyId, sandbox).then((result: any) => {
-            if (result) {
+            if (result && !result.Message) {
                 setStudy(result);
                 //setEditDataset(true);
                 console.log("result: ", result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
              }
         });
@@ -92,7 +92,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 options={options}
                 width={width}
                 onChange={handleDropdownChange}
-                name="location"
+                name="region"
             />
             <CoreDevDropdown
                 label="Template"

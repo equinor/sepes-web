@@ -29,12 +29,12 @@ const Overview = (props: any) => {
     const handleSave = () => {
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
-            if (result) {
+            if (result && !result.Message) {
                 console.log("result: ", result);
                 props.setStudy(result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
         });

@@ -40,7 +40,7 @@ export interface DatasetObj {
 
 export interface SandboxObj {
     name:string;
-    location:string;
+    region:string;
     template:string;
     id:string;
 }

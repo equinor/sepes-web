@@ -38,13 +38,13 @@ const StudyDetails = () => {
         }
         setLoading(true);
         api.getStudy(id).then((result: any) => {
-            if (isSubscribed && result) {
+            if (isSubscribed && result && !result.Message) {
                 setStudy(result);
                 setNewStudy(false);
                 console.log("resultStudy: ", result)
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);

@@ -46,27 +46,27 @@ const getIcon = type => {
 }
 
 const CustomContent = (props) => {
-    const { type, message } = props;
+    const { type, code, message, requestId } = props;
     const icon = getIcon(type)
 
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <p>{icon} Code: {message}</p>
+            <p>{icon} Code: {code}</p>
             <span>
                 <p style={{ display: 'inline', fontSize: '14px' }}>
-                    $(errorMessage_here) <br/><br/>
-                    Please contact support. Providing the following Event Id could make it easier to locate the problem: $eventId
+                    {message} <br/><br/>
+                    Please contact support. Providing the following Event Id could make it easier to locate the problem: {requestId}
                 </p>
             </span>
         </Card>
     );
 };
 
-export const show = (type, message) => {
+export const show = (type, code, message, requestId) => {
     store.addNotification({
         title: 'Error',
-        content: <CustomContent type={type} message={message} />,
+        content: <CustomContent type={type} code={code} message={message} requestId={requestId} />,
         type: 'danger',
         insert: 'top',
         container: 'top-center',

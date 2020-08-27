@@ -89,7 +89,7 @@ const StudyComponentFull = (props: any) => {
     props.setLoading(true);
     if (props.newStudy) {
       createStudy(study).then((result: any) => {
-        if (result) {
+        if (result && !result.Message) {
             //window.location.pathname = '/studies/' + result.id;
             history.push('/studies/' + result.id);
             console.log("result: ", result);
@@ -97,11 +97,11 @@ const StudyComponentFull = (props: any) => {
             props.setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
-                if (result) {
+                if (result && ! result.Message) {
                     console.log("result: ", result);
                 }
                 else {
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 props.setLoading(false);
@@ -109,7 +109,7 @@ const StudyComponentFull = (props: any) => {
             }
         }
         else {
-            notify.show('danger', '500');
+            notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
         props.setLoading(false);
@@ -118,12 +118,12 @@ const StudyComponentFull = (props: any) => {
     else {
       study.id = id;
       putStudy(study, imageUrl).then((result: any) => {
-        if (result) {
+        if (result && !result.Message) {
             console.log("result: ", result);
             props.setStudy(result);
         }
         else {
-            notify.show('danger', '500');
+            notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
         props.setLoading(false);
