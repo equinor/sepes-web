@@ -11,6 +11,14 @@ import { Tabs } from '@equinor/eds-core-react';
 import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
+const LoadingWrapper = styled.div`
+    height:196px;
+    background-color: #ffffff;
+    margin: 24px 32px 24px 32px;
+    display:flex;
+    align-items:center;
+  `;
+
 const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
@@ -77,7 +85,12 @@ const StudyDetails = () => {
 
     return (
     <>
-    <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} />
+    {!loading ? <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} /> :
+    <LoadingWrapper>
+
+         <Loading />
+
+    </LoadingWrapper> }
         {!newStudy ?
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>

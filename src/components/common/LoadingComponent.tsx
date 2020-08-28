@@ -6,12 +6,13 @@ const Loading = () => {
   return (
     <div
       style={{
-        margin: '20px auto 100px',
+        margin: '0px auto 100px',
         textAlign: 'center',
-        marginBottom: '100px',
+        marginTop: '100px',
         backgroundColor: '',
         width: '300px',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        display: 'absolute'
       }}
     >
       <CircularProgress />

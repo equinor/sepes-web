@@ -45,7 +45,7 @@ let datasetId = '';
 const DatasetDetails = (props: any) => {
     const history = useHistory();
     const [dataset, setDataset] = useState<DatasetObj>();
-    const [loading, setLoading] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [imageUrl, setImageUrl] = useState('');
     const [files, setFiles] = useState<any>([]);
@@ -116,11 +116,10 @@ const DatasetDetails = (props: any) => {
     }
 
     return (
-        !loading ?
         <Wrapper>
             <div>
                 <div style={{ marginBottom: '16px' }}>
-                    <Typography variant="h1">{dataset?.name}</Typography>
+                <Typography variant="h1">{dataset?.name}</Typography>
                     {!checkUrlIfGeneralDataset() ?<span>This data is only available for this study</span>: null}
                 </div>
                 { !checkUrlIfGeneralDataset() ?
@@ -220,7 +219,6 @@ const DatasetDetails = (props: any) => {
                 </Button>
             </RightWrapper>
         </Wrapper>
-        : <LoadingComponent />
     )
 }
 

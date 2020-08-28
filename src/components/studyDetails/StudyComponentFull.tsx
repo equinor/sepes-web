@@ -60,18 +60,12 @@ display: grid;
 grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
-const hasValue = (value:any):boolean => {
-  if (value === undefined || !value || value === {}) {
-    return false;
-  }
-  return true;
-}
+
 const StudyComponentFull = (props: any) => {
-  const studyId = window.location.pathname.split('/')[2];
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
-  const [editMode, setEditMode] = useState<boolean>(!hasValue(studyId));
+  const [editMode, setEditMode] = useState<boolean>(props.newStudy);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
@@ -96,7 +90,6 @@ const StudyComponentFull = (props: any) => {
     if (props.newStudy) {
       createStudy(study).then((result: any) => {
         if (result && !result.Message) {
-            //window.location.pathname = '/studies/' + result.id;
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
