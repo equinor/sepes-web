@@ -61,14 +61,13 @@ const Home = () => {
 
     return (
         <>
-        {!loading ?
         <Wrapper>
-            <Studies studyList={studyList} />
+            {!loading ? <Studies studyList={studyList} /> : <Loading /> }
             <RightWrapper>
                 <p>{mockText}</p>
                 <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { history.push('/studies'); }}>New study</Button>
             </RightWrapper>
-        </Wrapper> : <Loading />}
+        </Wrapper>
         </>
     )
 }

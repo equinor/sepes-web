@@ -7,10 +7,10 @@ import { dollar, lock, lock_open } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
 const icons = {
@@ -90,7 +90,6 @@ const StudyComponentFull = (props: any) => {
     if (props.newStudy) {
       createStudy(study).then((result: any) => {
         if (result && !result.Message) {
-            //window.location.pathname = '/studies/' + result.id;
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
@@ -160,6 +159,7 @@ const StudyComponentFull = (props: any) => {
 
   return (
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
+      {!props.loading ?
       <Wrapper>
         <TitleWrapper>
             {!editMode ? <Title>{name}</Title> :
@@ -244,7 +244,7 @@ const StudyComponentFull = (props: any) => {
           </>
           : null}
         </div>
-      </Wrapper>
+          </Wrapper> : <Loading /> }
     </div>
   )
 }
