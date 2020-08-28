@@ -23,7 +23,6 @@ const StudyDetails = () => {
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
     const [showOverview, setShowOverview] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(0);
-    const [datasets, setDatasets] = useState<any>([]);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -36,6 +35,7 @@ const StudyDetails = () => {
         if (!id) {
             return;
         }
+        setNewStudy(false);
         setLoading(true);
         api.getStudy(id).then((result: any) => {
             if (isSubscribed && result && !result.Message) {
@@ -77,9 +77,7 @@ const StudyDetails = () => {
 
     return (
     <>
-        {!loading
-        ? <>
-        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} setStudy={setStudy} />
+    <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} />
         {!newStudy ?
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
@@ -98,8 +96,6 @@ const StudyDetails = () => {
         {showOverview ? <Overview study={study} setStudy={setStudy} /> : null}
             </div>
         </div> : null }
-          </>
-    : <Loading /> }
     </>
     );
 };

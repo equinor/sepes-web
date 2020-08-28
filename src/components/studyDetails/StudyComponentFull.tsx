@@ -7,10 +7,10 @@ import { dollar, lock, lock_open } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import { getImage } from '../../services/BlobStorage';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
 const icons = {
@@ -60,12 +60,18 @@ display: grid;
 grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
-
+const hasValue = (value:any):boolean => {
+  if (value === undefined || !value || value === {}) {
+    return false;
+  }
+  return true;
+}
 const StudyComponentFull = (props: any) => {
+  const studyId = window.location.pathname.split('/')[2];
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
-  const [editMode, setEditMode] = useState<boolean>(props.newStudy);
+  const [editMode, setEditMode] = useState<boolean>(!hasValue(studyId));
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
@@ -160,6 +166,7 @@ const StudyComponentFull = (props: any) => {
 
   return (
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
+      {!props.loading ?
       <Wrapper>
         <TitleWrapper>
             {!editMode ? <Title>{name}</Title> :
@@ -244,7 +251,7 @@ const StudyComponentFull = (props: any) => {
           </>
           : null}
         </div>
-      </Wrapper>
+          </Wrapper> : <Loading /> }
     </div>
   )
 }
