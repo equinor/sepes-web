@@ -113,7 +113,6 @@ const StudySpecificDataset = (props: any) => {
     }
 
     const addDataset = () => {
-        console.log('hmm', checkForInputErrors());
         setUserPressedCreate(true);
         if (checkForInputErrors()) {
             return;
@@ -121,7 +120,6 @@ const StudySpecificDataset = (props: any) => {
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                console.log('hmm1');
                 if (result.datasets.length) {
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
@@ -135,7 +133,6 @@ const StudySpecificDataset = (props: any) => {
         }
         else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
-                console.log('hmm2');
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
@@ -148,7 +145,6 @@ const StudySpecificDataset = (props: any) => {
             });
         }
         else if(!editDataset) {
-            console.log('hmm3');
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
@@ -162,7 +158,6 @@ const StudySpecificDataset = (props: any) => {
             });
         }
         else {
-            console.log('hmm4');
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
@@ -185,7 +180,6 @@ const StudySpecificDataset = (props: any) => {
     };
 
     const handleDropdownChange = (value, name:string): void => {
-        console.log(value, name);
         setDataset({
           ...dataset,
           [name]: value
