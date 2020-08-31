@@ -240,10 +240,7 @@ const DatasetsOverviewTable = (props: any) => {
                             onClick={() => handleOnclick(row)}
                             style={{ cursor: 'pointer' }}
                         >
-                            {checkedColums.name && 
-                            <Cell component="th" scope="row">
-                            <div onClick={() => handleOnclick(row)}>{row.name}</div>
-                            </Cell>}
+                            {returnCell(checkedColums.name, row.name)}
                             {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                             {returnCell(checkedColums.areaL2, row.areaL2)}
                             {returnCell(checkedColums.areaL1, row.areaL1)}
