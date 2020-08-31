@@ -36,6 +36,7 @@ export interface DatasetObj {
     description?:string;
     studies?:[];
     id?:string;
+    studyNo?:string;
 }
 
 export interface SandboxObj {
