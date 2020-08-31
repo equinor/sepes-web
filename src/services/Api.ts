@@ -87,6 +87,12 @@ export const createSandbox = async (studyId: string, sandbox:SandboxObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'POST', sandbox);
 };
 
+//Lookup
+
+export const getAzureRegions = async () => {
+    return apiRequestWithToken('api/lookup/regions', 'GET');
+};
+
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');

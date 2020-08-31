@@ -56,8 +56,8 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   let { options, label } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState({
-    id: "",
-    name: "Please select..."
+    key: "",
+    displayValue: "Please select..."
   });
 
   const wrapperRef = useRef(null);
@@ -66,7 +66,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   const handleChange = (option: any) => {
     setSelectedOption(option);
     setIsOpen(!isOpen);
-    props.onChange(option.id, props.name);
+    props.onChange(option.key, props.name);
   };
 
   const renderOptions = (width: string): React.ReactNode => {
@@ -76,7 +76,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
           {options.map((option: any, i: number) => {
             return (
               <li key={i} onClick={() => handleChange(option)}>
-                <DropdownOption>{option.name}</DropdownOption>
+                <DropdownOption>{option.displayValue}</DropdownOption>
               </li>
             );
           })}
@@ -103,7 +103,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
     <div className={"coredev-dropdown"} ref={wrapperRef}>
       <Label>{label}</Label>
       <Dropdown onClick={() => setIsOpen(!isOpen)} {...props} isOpen={isOpen}>
-        <span>{selectedOption.name}</span>
+        <span>{selectedOption.displayValue}</span>
         {isOpen ? arrowUp : arrowDown}
       </Dropdown>
       {isOpen && renderOptions(props.width)}

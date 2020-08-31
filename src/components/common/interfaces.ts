@@ -44,3 +44,8 @@ export interface SandboxObj {
     template:string;
     id:string;
 }
+
+export interface DropdownObj {
+    key:string;
+    displayValue:string;
+}

@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../common/StyledComponents';
-import { SandboxObj } from '../common/interfaces';
+import { SandboxObj, DropdownObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { createSandbox } from '../../services/Api';
+import { getRegions } from '../common/commonApiCalls';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
@@ -35,6 +36,11 @@ type CreateSandboxComponentProps = {
 };
 const width = '268px';
 const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy }) => {
+    const [regions, setRegions] = useState<DropdownObj>();
+
+    useEffect(() => {
+        getRegions(setRegions);
+    }, []);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         name: '',
@@ -89,7 +95,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
             />
             <CoreDevDropdown
                 label="Location"
-                options={options}
+                options={regions}
                 width={width}
                 onChange={handleDropdownChange}
                 name="region"
