@@ -39,9 +39,6 @@ const Wrapper = styled.div`
       min-width:200px;
 
     }
-    &:hover {
-      background-color: #E6FAEC;
-  }
   }
 `;
 //D5EAF4

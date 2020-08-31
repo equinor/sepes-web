@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Table, Icon, Button, Checkbox } from '@equinor/eds-core-react';
+import { Table, Icon, Button, Checkbox, SideSheet } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
-import { DatasetObj } from '../../common/interfaces'
+import { DatasetObj } from '../common/interfaces'
 import { Link, useHistory } from 'react-router-dom';
-import DatasetSearchFilter from './DatasetSearchFilter';
+import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
+import DatasetSidesheetView from './DatasetSidesheetView';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -61,7 +62,9 @@ interface filter {
 
 const DatasetsOverviewTable = (props: any) => {
     const history = useHistory();
+    const [toggle, setToggle] = useState(false);
     const { datasets } = props;
+    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({});
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
         name: true,
         sourceSystem: true,
@@ -153,8 +156,22 @@ const DatasetsOverviewTable = (props: any) => {
         return retDatasets;
     }
 
+    const handleOnclick = (row:DatasetObj):void => {
+        setToggle(true);
+        setSelectedDataset(row);
+    }
+
     return (
         <div style={{ padding: '0 16px 16px 16px' }}>
+            <SideSheet
+                variant="large"
+                title={selectedDataset.name}
+                open={toggle}
+                onClose={() => setToggle(!toggle)}
+                style={{ zIndex: '9999', height: 'auto', paddingBottom: '32px' }}
+            >
+                <DatasetSidesheetView dataset={selectedDataset} />
+            </SideSheet>
             <ButtonWrapper>
             <Button
                 variant="outlined"
@@ -218,10 +235,14 @@ const DatasetsOverviewTable = (props: any) => {
                             {returnFilter('tags', checkedColums.tags)}
                         </Row>
                     {datasets && applyFilter().map((row: DatasetObj, i: number) => (
-                        <Row key={row.id}>
+                        <Row
+                            key={row.id}
+                            onClick={() => handleOnclick(row)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {checkedColums.name && 
                             <Cell component="th" scope="row">
-                            <Link style={{ textDecoration: 'none', color: '#000000' }} to={"/datasets/" + row.id} >{row.name}</Link>
+                            <div onClick={() => handleOnclick(row)}>{row.name}</div>
                             </Cell>}
                             {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                             {returnCell(checkedColums.areaL2, row.areaL2)}

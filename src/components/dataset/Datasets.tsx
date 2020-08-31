@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import { getStandardDatasets } from '../../services/Api';
-import DatasetsOverviewTable from '../common/customComponents/DatasetsOverviewTable';
+import DatasetsOverviewTable from './DatasetsOverviewTable';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
 
