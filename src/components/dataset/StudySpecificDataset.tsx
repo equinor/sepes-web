@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField  } from '@equinor/eds-core-react';
-import { DatasetObj } from '../common/interfaces';
+import { DatasetObj, DropdownObj } from '../common/interfaces';
 import { addStudySpecificDataset,
     getDataset,
     editStudySpecificDataset,
     createStandardDataset,
     getStandardDataset,
-    updateStandardDataset
+    updateStandardDataset,
+    getAzureRegions
 } from '../../services/Api';
+import { getRegions } from '../common/commonApiCalls';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
@@ -27,10 +29,10 @@ const SaveCancelWrapper = styled.div`
     grid-template-columns: 100px 100px;
   `;
 const options = [
-    { name: "1", id:'1' },
-    { name: "2", id:'2' },
-    { name: "3", id:'3' },
-    { name: "4", id:'4' }
+    { displayValue: "1", key:'1' },
+    { displayValue: "2", key:'2' },
+    { displayValue: "3", key:'3' },
+    { displayValue: "4", key:'4' }
   ];
 const width = '400px';
 let studyId = '';
@@ -42,11 +44,13 @@ const StudySpecificDataset = (props: any) => {
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
+    const [regions, setRegions] = useState<DropdownObj>();
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     useEffect(() => {
         checkIfEditMode();
         setIsSubscribed(true);
         getDatasetFromApi();
+        getRegions(setRegions);
         return () => setIsSubscribed(false);
     }, [editDataset]);
 
@@ -94,7 +98,7 @@ const StudySpecificDataset = (props: any) => {
         }
     }
 
-    const checkUrlIfGeneralDataset = () => {
+    const checkUrlIfGeneralDataset = ():boolean => {
         if (window.location.pathname.split('/')[1] === 'datasets') {
             return true;
         }
@@ -155,7 +159,7 @@ const StudySpecificDataset = (props: any) => {
         }
         else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
-                if (result && result.Message) {
+                if (result && !result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -204,7 +208,7 @@ const StudySpecificDataset = (props: any) => {
     };
 
     const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length) {
+        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.storageAccountName) {
             return true;
         }
         return false;
@@ -224,8 +228,8 @@ const StudySpecificDataset = (props: any) => {
         <div style={{ backgroundColor: '#ffffff' }}>
         <Wrapper>
             <div>
-                <Typography variant="h2">{!editDataset ? 'Create study specific dataset' : 'Edit study specific dataset'}</Typography>
-                <span>This data is only available for this study</span>
+                <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
+                {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
             </div>
             <TextField
                 placeholder="Please add data set name..."
@@ -249,7 +253,7 @@ const StudySpecificDataset = (props: any) => {
             {!editDataset ? <CoreDevDropdown
                 width={width}
                 label="Location"
-                options={options}
+                options={regions}
                 onChange={handleDropdownChange}
                 name="location"
             /> : returnField('Location', dataset?.location)}
