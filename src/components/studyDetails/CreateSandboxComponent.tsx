@@ -24,10 +24,10 @@ const Wrapper = styled.div`
 `;
 
 const options = [
-    { name: "1", id:'1' },
-    { name: "2", id:'2' },
-    { name: "3", id:'3' },
-    { name: "4", id:'4' }
+    { displayValue: "1", key:'1' },
+    { displayValue: "2", key:'2' },
+    { displayValue: "3", key:'3' },
+    { displayValue: "4", key:'4' }
   ];
 
 type CreateSandboxComponentProps = {
@@ -61,12 +61,22 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         });
     };
 
+    const checkRequiredFieldsAreNotEmpty = () => {
+        if (!sandbox.name || !sandbox.region) {
+            return false;
+        }
+        return true;
+    }
+
     const handleCancel = ():void => {
         setToggle(false);
     }
 
     const CreateSandbox = () => {
         setUserPressedCreate(true);
+        if (!checkRequiredFieldsAreNotEmpty()) {
+            return;
+        }
         setToggle(false);
         const studyId = window.location.pathname.split('/')[2];
         createSandbox(studyId, sandbox).then((result: any) => {

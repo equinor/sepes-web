@@ -275,8 +275,8 @@ const StudySpecificDataset = (props: any) => {
                 value={dataset?.dataId}
             />
             <SaveCancelWrapper>
-                <Button onClick={addDataset}>Save</Button>
-                <Button onClick={handleCancel} variant="outlined">Cancel</Button>
+                <Button disabled={userPressedCreate} onClick={addDataset}>Save</Button>
+                <Button disabled={userPressedCreate} onClick={handleCancel} variant="outlined">Cancel</Button>
             </SaveCancelWrapper>
         </Wrapper>
         </div>
