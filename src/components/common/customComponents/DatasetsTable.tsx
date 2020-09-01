@@ -15,7 +15,7 @@ const DatasetsTable = (props: any) => {
 
     const returnCell = (row: any) => {
         //This means it is a study specific dataset
-        if (row.studyNo) {
+        if (row.studyId) {
             return (
                 <Cell>
                     <Link
