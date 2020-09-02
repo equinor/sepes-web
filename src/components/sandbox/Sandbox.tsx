@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display:grid;
-  grid-template-rows: 1fr 4fr;
+  grid-template-rows: auto 4fr;
   grid-gap: 32px;
   margin: 8px 32px 32px 32px;
   padding: 16px;

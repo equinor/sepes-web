@@ -10,7 +10,7 @@ import VmConfig from './components/VmConfig';
 
 const Wrapper = styled.div`
   display:grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto auto;
   grid-gap: 32px;
   border-radius: 4px;
 `;
