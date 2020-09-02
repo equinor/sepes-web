@@ -36,19 +36,7 @@ const DescriptionWrapper = styled.div`
 const SmallText = styled.span`
     font-size:10px;
   `;
-/*
-min-height: calc(100vh - 192px);
-    width: 100%;
-    background-color: #F7F7F7;
-    display: inline-flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
 
-    display: grid;
-    grid-template-columns: 1fr minmax(200px,4fr) 150px;
-    width: 100%;
-    grid-gap: 8px;
-    */
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr minmax(300px,4fr) 150px;
