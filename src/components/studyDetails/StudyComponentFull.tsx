@@ -28,6 +28,9 @@ const DescriptionWrapper = styled.div`
     margin: auto;
     margin-left: 0;
     min-width:200px;
+    @media (max-width: 768px) {
+      padding: 8px 0 8px 0;
+  }
   `;
 
 const SmallText = styled.span`
@@ -36,11 +39,11 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr minmax(200px,4fr) 150px;
+    grid-template-columns: 1fr minmax(300px,4fr) 150px;
     width: 100%;
-    grid-gap: 10px;
+    grid-gap: 8px;
     @media (max-width: 768px) {
-      display: block;
+      display:block;
   }
 `;
 
