@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Button, TextField} from '@equinor/eds-core-react';
-import { close } from '@equinor/eds-icons';
-import { Link } from 'react-router-dom';
+import { Button, Typography } from '@equinor/eds-core-react';
+import { deleteSandbox } from '../../services/Api';
+import * as notify from '../common/notify';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -15,9 +16,26 @@ const Wrapper = styled.div`
 type StepBarProps = {
     setStep: (value:any) => void;
     step: number;
+    studyId: string;
+    sandboxId: string;
+    sandbox: any;
 };
 
-const StepBar: React.FC<StepBarProps> = ({ step, setStep }) => {
+const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox }) => {
+    const history = useHistory();
+
+    const deleteThisSandbox = ():void => {
+        deleteSandbox(studyId, sandboxId).then((result: any) => {
+            if (result && !result.Message) {
+                history.push('/studies/' + studyId);
+                console.log("result: ", result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const returnControlButtons = () => {
         switch(step) {
@@ -25,7 +43,7 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep }) => {
                 return (
                     <>
                         <Button variant="outlined" onClick={() => { setStep(1)}} style={{ width: '300px' }}>Make available</Button>
-                        <Button variant="outlined" color="danger" style={{ width: '300px' }}>Delete sandbox</Button>
+                        <Button variant="outlined" onClick={deleteThisSandbox} color="danger" style={{ width: '300px' }}>Delete sandbox</Button>
                     </>
                 );
             }
@@ -49,7 +67,7 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep }) => {
     }
     return (
         <Wrapper>
-            Currently on step {step}
+            <Typography variant="h2">{sandbox && sandbox.name}</Typography>
             {returnControlButtons()}
         </Wrapper>
     )

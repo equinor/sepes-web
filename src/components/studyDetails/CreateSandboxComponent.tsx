@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../common/StyledComponents';
-import { SandboxObj, DropdownObj } from '../common/interfaces';
+import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import { createSandbox } from '../../services/Api';
 import { getRegions } from '../common/commonApiCalls';
 import * as notify from '../common/notify';
@@ -36,13 +37,14 @@ type CreateSandboxComponentProps = {
 };
 const width = '268px';
 const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy }) => {
+    const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
 
     useEffect(() => {
         getRegions(setRegions);
     }, []);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [sandbox, setSandbox] = useState<SandboxObj>({
+    const [sandbox, setSandbox] = useState<SandboxCreateObj>({
         name: '',
         region: '',
         template: '',
@@ -82,6 +84,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
+                history.push(studyId + '/sandboxes/' + result.id);
                 //setEditDataset(true);
                 console.log("result: ", result);
             }

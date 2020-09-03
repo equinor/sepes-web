@@ -39,9 +39,21 @@ export interface DatasetObj {
     studyId?:string;
 }
 
-export interface SandboxObj {
+export interface SandboxCreateObj {
     name:string;
     region:string;
+    template:string;
+    id:string;
+}
+
+export interface SandboxObj {
+    deleted:boolean;
+    region:string;
+    resources: [];
+    studyId: string;
+    technicalContactEmail: string;
+    technicalContactName: string;
+    name:string;
     template:string;
     id:string;
 }

@@ -1,5 +1,5 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj, SandboxObj } from "../components/common/interfaces";
+import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
@@ -83,8 +83,16 @@ export const putStudy = async (study: StudyObj, imageUrl:string) => {
 
 //Sandbox
 
-export const createSandbox = async (studyId: string, sandbox:SandboxObj) => {
+export const getSandbox = async (studyId: string, sandboxId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'GET');
+};
+
+export const createSandbox = async (studyId: string, sandbox:SandboxCreateObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'POST', sandbox);
+};
+
+export const deleteSandbox = async (studyId: string, sandboxId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'DELETE');
 };
 
 //Lookup

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Search, Button, TextField} from '@equinor/eds-core-react';
+import React, { useState, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
+import { getSandbox } from '../../services/Api';
+import { SandboxObj } from '../common/interfaces';
+import * as notify from '../common/notify';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -17,7 +19,30 @@ type SandboxProps = {
 };
 
 const Sandbox: React.FC<SandboxProps> = ({ }) => {
+    const studyId = window.location.pathname.split('/')[2];
+    const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [sandbox, setSandbox] = useState<SandboxObj>();
+
+    useEffect(() => {
+        setIsSubscribed(true);
+        getCurrentSandbox();
+        return () => setIsSubscribed(false);
+    }, []);
+
+    const getCurrentSandbox = ():void => {
+        getSandbox(studyId, sandboxId).then((result: any) => {
+            if (result && !result.Message && isSubscribed) {
+                console.log("result: ", result);
+                setSandbox(result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const returnStepComponent = () => {
         switch (step) {
@@ -32,7 +57,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
 
     return (
         <Wrapper>
-            <StepBar step={step} setStep={setStep} />
+            <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
             {returnStepComponent()}
         </Wrapper>
     )
