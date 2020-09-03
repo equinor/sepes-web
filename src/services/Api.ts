@@ -93,6 +93,11 @@ export const getAzureRegions = async () => {
     return apiRequestWithToken('api/lookup/regions', 'GET');
 };
 
+export const getStudyRoles = async () => {
+    return apiRequestWithToken('api/lookup/studyroles', 'GET');
+};
+
+
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
