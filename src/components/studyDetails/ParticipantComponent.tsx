@@ -43,15 +43,15 @@ const ParicipantComponent = (props: any) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [participants, setParticipants] = useState<any>();
     const [roles, setRoles] = useState<DropdownObj>();
-    const [participantNotSelected, setParticipantNotSelected] =  useState<boolean>(true);
-    const [roleNotSelected, setRoleNotSelected] =  useState<boolean>(true);
+    const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
+    const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<any>();
     const [text, setText] = useState<string>('');
     const [role, setRole] = useState<string>('');
 
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
-        api.removeStudyParticipant(studyId, participant.id).then((result: any) => {
+        api.removeStudyParticipant(studyId, participant.userId).then((result: any) => {
             if (isSubscribed) {
                 props.setStudy({...props.study, participants: result.participants});
                 console.log("participants: ", result);
@@ -90,8 +90,8 @@ const ParicipantComponent = (props: any) => {
 
     const checkIfParticipantIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        props.study.participants.forEach((element) => {
-            if (element.id === id) {
+        props.study.participants && props.study.participants.forEach((element) => {
+            if (element.userId === id) {
                 elementExist = true;
             }
         });

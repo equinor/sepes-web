@@ -201,7 +201,7 @@ const StudyComponentFull = (props: any) => {
             }
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Locked' : 'Unlocked'}</span></>:
+                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Restricted' : 'Not restricted'}</span></>:
                 <FormControlLabel
                   control={<CheckBox style={{ color: '#007079' }}
                   checked={studyOnChange.restricted}
