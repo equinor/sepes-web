@@ -16,6 +16,14 @@ import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 
+const OuterWrapper = styled.div`
+    position: absolute;
+    top: 64px;
+    bottom: 0px;
+    background-color:#ffffff;
+    width: 100%;
+`;
+
 const Wrapper = styled.div`
     display: grid;
     grid-gap:16px;
@@ -225,61 +233,61 @@ const StudySpecificDataset = (props: any) => {
     
 
     return (
-        <div style={{ backgroundColor: '#ffffff' }}>
-        <Wrapper>
-            <div>
-                <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
-                {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
-            </div>
-            <TextField
-                placeholder="Please add data set name..."
-                name="name"
-                label="Dataset name"
-                meta="Required"
-                variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
-                style={{ width }}
-                onChange={handleChange}
-                value={dataset?.name}
-            />
-            {!editDataset ? <TextField
-                placeholder="Please add storage account name..."
-                name="storageAccountName"
-                label="Storage account name"
-                meta="Required"
-                variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
-                style={{ width }}
-                onChange={handleChange}
-            /> : returnField('Storage account name', dataset?.storageAccountName) }
-            {!editDataset ? <CoreDevDropdown
-                width={width}
-                label="Location"
-                options={regions}
-                onChange={handleDropdownChange}
-                name="location"
-            /> : returnField('Location', dataset?.location)}
-            <CoreDevDropdown
-                width={width}
-                label="Data classification"
-                options={options}
-                onChange={handleDropdownChange}
-                name="classification"
-            />
-            <TextField
-                placeholder="Please add Data ID..."
-                name="dataId"
-                label="DataId"
-                meta=""
-                type="number"
-                style={{ width }}
-                onChange={handleChange}
-                value={dataset?.dataId}
-            />
-            <SaveCancelWrapper>
-                <Button disabled={userPressedCreate} onClick={addDataset}>Save</Button>
-                <Button disabled={userPressedCreate} onClick={handleCancel} variant="outlined">Cancel</Button>
-            </SaveCancelWrapper>
-        </Wrapper>
-        </div>
+        <OuterWrapper>
+            <Wrapper>
+                <div>
+                    <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
+                    {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
+                </div>
+                <TextField
+                    placeholder="Please add data set name..."
+                    name="name"
+                    label="Dataset name"
+                    meta="Required"
+                    variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
+                    style={{ width }}
+                    onChange={handleChange}
+                    value={dataset?.name}
+                />
+                {!editDataset ? <TextField
+                    placeholder="Please add storage account name..."
+                    name="storageAccountName"
+                    label="Storage account name"
+                    meta="Required"
+                    variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
+                    style={{ width }}
+                    onChange={handleChange}
+                /> : returnField('Storage account name', dataset?.storageAccountName) }
+                {!editDataset ? <CoreDevDropdown
+                    width={width}
+                    label="Location"
+                    options={regions}
+                    onChange={handleDropdownChange}
+                    name="location"
+                /> : returnField('Location', dataset?.location)}
+                <CoreDevDropdown
+                    width={width}
+                    label="Data classification"
+                    options={options}
+                    onChange={handleDropdownChange}
+                    name="classification"
+                />
+                <TextField
+                    placeholder="Please add Data ID..."
+                    name="dataId"
+                    label="DataId"
+                    meta=""
+                    type="number"
+                    style={{ width }}
+                    onChange={handleChange}
+                    value={dataset?.dataId}
+                />
+                <SaveCancelWrapper>
+                    <Button disabled={userPressedCreate} onClick={addDataset}>Save</Button>
+                    <Button disabled={userPressedCreate} onClick={handleCancel} variant="outlined">Cancel</Button>
+                </SaveCancelWrapper>
+            </Wrapper>
+        </OuterWrapper>
     )
 }
 

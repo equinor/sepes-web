@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import LoadingComponent from '../common/LoadingComponent';
 import FileDropzoneContainer from '../common/upload/FileDropzone';
-import { EquinorIcon } from '../common/StyledComponents';
+import { Label } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
@@ -17,6 +17,14 @@ const icons = {
     delete_forever
   };
   Icon.add(icons);
+
+  const OuterWrapper = styled.div`
+    position: absolute;
+    top: 64px;
+    bottom: 0px;
+    background-color:#ffffff;
+    width: 100%;
+`;
 
 const Wrapper = styled.div`
     display: grid;
@@ -116,109 +124,111 @@ const DatasetDetails = (props: any) => {
     }
 
     return (
-        <Wrapper>
-            <div>
-                <div style={{ marginBottom: '16px' }}>
-                <Typography variant="h1">{dataset?.name}</Typography>
-                    {!checkUrlIfGeneralDataset() ?<span>This data is only available for this study</span>: null}
-                </div>
-                { !checkUrlIfGeneralDataset() ?
-                <Link to={'/studies/' + studyId} 
+        <OuterWrapper>
+            <Wrapper>
+                <div>
+                    <div style={{ marginBottom: '16px' }}>
+                    <Typography variant="h1">{dataset?.name}</Typography>
+                        {!checkUrlIfGeneralDataset() ?<span>This data is only available for this study</span>: null}
+                    </div>
+                    { !checkUrlIfGeneralDataset() ?
+                    <Link to={'/studies/' + studyId} 
+                        style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                            <Icon
+                            color="#007079"
+                            name="arrow_back"
+                            size={24}
+                            style={{marginRight: '16px'}}
+                            />Back to study
+                    </Link> : 
+                    <Link to={'/datasets'} 
                     style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
                         <Icon
                         color="#007079"
                         name="arrow_back"
                         size={24}
                         style={{marginRight: '16px'}}
-                        />Back to study
-                </Link> : 
-                <Link to={'/datasets'} 
-                style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                    <Icon
-                    color="#007079"
-                    name="arrow_back"
-                    size={24}
-                    style={{marginRight: '16px'}}
-                    />Back to datasets
-                </Link> }
-                <FileDropzoneContainer setImageUrl={setImageUrl} setFiles={setFiles} />
-                <AttachmentWrapper>
-                    {files.map((file:File, i:number) => {
-                        return (
-                            <>
-                                <div>{file.name}</div>
-                                <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
-                                <Icon
-                                    onClick={() => RemoveFile(i)}
-                                    color='#007079'
-                                    name='delete_forever'
-                                    size={24}
-                                    style={{ cursor: 'pointer' }}
-                                />
-                            </>
-                        );
-                        }
-                    )}
-                </AttachmentWrapper>
-            </div>
-            <RightWrapper>
-                <div>
-                    <div>Data set name</div>
-                    {returnField(dataset?.name)}
+                        />Back to datasets
+                    </Link> }
+                    <FileDropzoneContainer setImageUrl={setImageUrl} setFiles={setFiles} />
+                    <AttachmentWrapper>
+                        {files.map((file:File, i:number) => {
+                            return (
+                                <>
+                                    <div>{file.name}</div>
+                                    <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
+                                    <Icon
+                                        onClick={() => RemoveFile(i)}
+                                        color='#007079'
+                                        name='delete_forever'
+                                        size={24}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                </>
+                            );
+                            }
+                        )}
+                    </AttachmentWrapper>
                 </div>
-                <div>
-                    <div>location</div>
-                    {returnField(dataset?.location)}
-                </div>
-                <div>
-                    <div>Storage account url</div>
-                    {returnField(dataset?.location)}
-                </div>
-                <div>
-                    <div>Data classification</div>
-                    {returnField(dataset?.classification)}
-                </div>
-                <div>
-                    <div>LRA ID</div>
-                    {returnField(dataset?.lraId)}
-                </div>
-                <div>
-                    <div>Data ID</div>
-                    {returnField(dataset?.dataId)}
-                </div>
-                <div>
-                    <div>Source system</div>
-                    {returnField(dataset?.sourceSystem)}
-                </div>
-                <div>
-                    <div>BA data owner</div>
-                    {returnField(dataset?.baDataOwner)}
-                </div>
-                <div>
-                    <div>Asset</div>
-                    {returnField(dataset?.asset)}
-                </div>
-                <div>
-                    <div>Country of origin</div>
-                    {returnField(dataset?.countryOfOrigin)}
-                </div>
-                <div>
-                    <div>Area L1</div>
-                    {returnField(dataset?.areaL1)}
-                </div>
-                <div>
-                    <div>Area L2</div>
-                    {returnField(dataset?.areaL2)}
-                </div>
-                <Button
-                    style={{ width: '150px' }}
-                    variant="outlined"
-                    onClick={handleEditMetdata}
-                >
-                    Edit metadata
-                </Button>
-            </RightWrapper>
-        </Wrapper>
+                <RightWrapper>
+                    <div>
+                        <Label>Data set name</Label>
+                        {returnField(dataset?.name)}
+                    </div>
+                    <div>
+                        <Label>location</Label>
+                        {returnField(dataset?.location)}
+                    </div>
+                    <div>
+                        <Label>Storage account url</Label>
+                        {returnField(dataset?.location)}
+                    </div>
+                    <div>
+                        <Label>Data classification</Label>
+                        {returnField(dataset?.classification)}
+                    </div>
+                    <div>
+                        <Label>LRA ID</Label>
+                        {returnField(dataset?.lraId)}
+                    </div>
+                    <div>
+                        <Label>Data ID</Label>
+                        {returnField(dataset?.dataId)}
+                    </div>
+                    <div>
+                        <Label>Source system</Label>
+                        {returnField(dataset?.sourceSystem)}
+                    </div>
+                    <div>
+                        <Label>BA data owner</Label>
+                        {returnField(dataset?.baDataOwner)}
+                    </div>
+                    <div>
+                        <Label>Asset</Label>
+                        {returnField(dataset?.asset)}
+                    </div>
+                    <div>
+                        <Label>Country of origin</Label>
+                        {returnField(dataset?.countryOfOrigin)}
+                    </div>
+                    <div>
+                        <Label>Area L1</Label>
+                        {returnField(dataset?.areaL1)}
+                    </div>
+                    <div>
+                        <Label>Area L2</Label>
+                        {returnField(dataset?.areaL2)}
+                    </div>
+                    <Button
+                        style={{ width: '150px' }}
+                        variant="outlined"
+                        onClick={handleEditMetdata}
+                    >
+                        Edit metadata
+                    </Button>
+                </RightWrapper>
+            </Wrapper>
+        </OuterWrapper>
     )
 }
 
