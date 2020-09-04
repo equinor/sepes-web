@@ -9,7 +9,7 @@ import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 9fr minmax(100px,400px);
+    grid-template-columns: 9fr 400px;
     grid-template-rows: 172px;
     width: 100%;
     grid-gap: 48px;
@@ -64,8 +64,10 @@ const Home = () => {
         <Wrapper>
             {!loading ? <Studies studyList={studyList} /> : <Loading /> }
             <RightWrapper>
-                <p>{mockText}</p>
-                <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { history.push('/studies'); }}>New study</Button>
+                <div>{mockText}</div>
+                <div  style={{bottom: '16px'}}>
+                    <Button style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
+                </div>
             </RightWrapper>
         </Wrapper>
         </>
