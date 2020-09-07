@@ -14,6 +14,7 @@ import { addStudySpecificDataset,
 import { getRegions } from '../common/commonApiCalls';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
 const OuterWrapper = styled.div`
@@ -65,7 +66,7 @@ const StudySpecificDataset = (props: any) => {
     const getDatasetFromApi = () => {
         studyId = window.location.pathname.split('/')[2];
         datasetId = window.location.pathname.split('/')[4];
-        if (!checkUrlIfGeneralDataset() && datasetId) {
+        if (!checkUrlIfGeneralDataset() && datasetId && isSubscribed) {
             setLoading(true);
             getDataset(datasetId, studyId).then((result: any) => {
                 if (result && !result.Message) {
@@ -80,7 +81,8 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
-        else if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
+        else if (checkUrlIfGeneralDataset() && !checkUrlNewDataset() && !dataset) {
+            setLoading(true);
             getStandardDataset(studyId).then((result: any) => {
                 if (result && !result.Message) {
                     setDataset(result);
@@ -239,6 +241,8 @@ const StudySpecificDataset = (props: any) => {
                     <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
                     {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                 </div>
+                {!loading ?
+                <>
                 <TextField
                     placeholder="Please add data set name..."
                     name="name"
@@ -261,6 +265,7 @@ const StudySpecificDataset = (props: any) => {
                 {!editDataset ? <CoreDevDropdown
                     width={width}
                     label="Location"
+                    meta="Required"
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
@@ -268,9 +273,11 @@ const StudySpecificDataset = (props: any) => {
                 <CoreDevDropdown
                     width={width}
                     label="Data classification"
+                    meta="Required"
                     options={options}
                     onChange={handleDropdownChange}
                     name="classification"
+                    preSlectedValue={dataset?.classification}
                 />
                 <TextField
                     placeholder="Please add Data ID..."
@@ -282,9 +289,11 @@ const StudySpecificDataset = (props: any) => {
                     onChange={handleChange}
                     value={dataset?.dataId}
                 />
+                </>
+                : <Loading />}
                 <SaveCancelWrapper>
-                    <Button disabled={userPressedCreate} onClick={addDataset}>Save</Button>
-                    <Button disabled={userPressedCreate} onClick={handleCancel} variant="outlined">Cancel</Button>
+                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>Save</Button>
+                    <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>
         </OuterWrapper>

@@ -10,6 +10,7 @@ import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { Label } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
 const icons = {
@@ -170,7 +171,7 @@ const DatasetDetails = (props: any) => {
                         )}
                     </AttachmentWrapper>
                 </div>
-                <RightWrapper>
+                {!loading ? <RightWrapper>
                     <div>
                         <Label>Data set name</Label>
                         {returnField(dataset?.name)}
@@ -226,7 +227,7 @@ const DatasetDetails = (props: any) => {
                     >
                         Edit metadata
                     </Button>
-                </RightWrapper>
+                </RightWrapper>: <Loading /> }
             </Wrapper>
         </OuterWrapper>
     )
