@@ -1,14 +1,9 @@
 import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
-import { close, chevron_right } from '@equinor/eds-icons';
 import { Link } from 'react-router-dom';
+import { EquinorIcon } from '../StyledComponents';
 
 const { Body, Row, Cell, Head } = Table;
-const icons = {
-    close,
-    chevron_right
-};
-Icon.add(icons);
 
 const DatasetsTable = (props: any) => {
     const { editMode, datasets } = props;
@@ -22,19 +17,14 @@ const DatasetsTable = (props: any) => {
                         style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }}
                         to={"/studies/" + props.studyId +"/datasets/" + row.id}
                     >
-                        <Icon style={{ cursor: 'pointer' }} name="chevron_right" size={24} />
+                        {EquinorIcon('chevron_right', '', 24, {}, true)}
                     </Link>
                 </Cell>
                     );
         }
         return (
         <Cell>
-            <Icon
-                style={{ cursor: 'pointer' }}
-                name="close"
-                size={24}
-                onClick={() => props.removeDataset(row)}
-            />
+            {EquinorIcon('close', '', 24, () => props.removeDataset(row), true)}
         </Cell>
         );
     }
