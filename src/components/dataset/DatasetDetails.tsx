@@ -5,12 +5,11 @@ import { DatasetObj } from '../common/interfaces';
 import { getDataset, getStandardDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import LoadingComponent from '../common/LoadingComponent';
 import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { Label } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
-import Loading from '../common/LoadingComponent';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
 
@@ -233,7 +232,7 @@ const DatasetDetails = (props: any) => {
                     >
                         Edit metadata
                     </Button>
-                </RightWrapper>: <Loading /> }
+                </RightWrapper>: <LoadingFull /> }
             </Wrapper>
         </OuterWrapper>
         : <StudySpecificDataset datasetFromDetails={dataset} setDatasetFromDetails={setDataset} setShowEditDataset={setShowEditDataset} editingDataset={true} />

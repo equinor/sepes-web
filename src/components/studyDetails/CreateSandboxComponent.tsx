@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { createSandbox } from '../../services/Api';
 import { getRegions } from '../common/commonApiCalls';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
@@ -39,6 +40,7 @@ const width = '268px';
 const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
+    const [loading, setLoading] = useState<Boolean>(false);
 
     useEffect(() => {
         getRegions(setRegions);
@@ -79,7 +81,8 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         if (!checkRequiredFieldsAreNotEmpty()) {
             return;
         }
-        setToggle(false);
+        setLoading(true);
+        //setToggle(false);
         const studyId = window.location.pathname.split('/')[2];
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
@@ -87,14 +90,17 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 history.push(studyId + '/sandboxes/' + result.id);
                 //setEditDataset(true);
                 console.log("result: ", result);
+                setLoading(false);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
+                setLoading(false);
              }
         });
     }
     return (
+        !loading ? 
         <Wrapper>
             <div>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></div>
             <TextField
@@ -121,7 +127,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 name="template"
             />
             <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()}>Create</Button>
-        </Wrapper>
+        </Wrapper>: <LoadingFull />
     )
 }
 

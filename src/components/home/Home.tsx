@@ -3,7 +3,7 @@ import * as api from '../../services/Api';
 import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import Loading from '../common/LoadingComponent';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 
@@ -62,7 +62,7 @@ const Home = () => {
     return (
         <>
         <Wrapper>
-            {!loading ? <Studies studyList={studyList} /> : <Loading /> }
+            {!loading ? <Studies studyList={studyList} /> : <div><LoadingFull /></div> }
             <RightWrapper>
                 <div>{mockText}</div>
                 <div style={{ bottom: '16px' }}>
