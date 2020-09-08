@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
-import { Button, Typography, TextField  } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, DotProgress  } from '@equinor/eds-core-react';
 import { DatasetObj, DropdownObj } from '../common/interfaces';
 import { addStudySpecificDataset,
-    getDataset,
     editStudySpecificDataset,
     createStandardDataset,
-    getStandardDataset,
     updateStandardDataset,
-    getAzureRegions
 } from '../../services/Api';
 import { getRegions } from '../common/commonApiCalls';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
@@ -43,61 +40,32 @@ const options = [
     { displayValue: "4", key:'4' }
   ];
 const width = '400px';
-let studyId = '';
-let datasetId = '';
 
-const StudySpecificDataset = (props: any) => {
+type StudySpecificDatasetProps = {
+    datasetFromDetails: DatasetObj;
+    setDatasetFromDetails: (value:any) => void;
+    setShowEditDataset: (value:any) => void;
+    editingDataset: boolean;
+};
+
+const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFromDetails, setDatasetFromDetails, setShowEditDataset, editingDataset }) => {
+    let studyId = window.location.pathname.split('/')[2];
+    let datasetId = window.location.pathname.split('/')[4];
     const history = useHistory();
-    const [dataset, setDataset] = useState<DatasetObj>();
+    const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
     const [loading, setLoading] = useState<boolean>();
-    const [editDataset, setEditDataset] = useState<boolean>(false);
+    const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [regions, setRegions] = useState<DropdownObj>();
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     useEffect(() => {
         checkIfEditMode();
         setIsSubscribed(true);
-        getDatasetFromApi();
         getRegions(setRegions);
         return () => setIsSubscribed(false);
     }, [editDataset]);
 
-    const getDatasetFromApi = () => {
-        studyId = window.location.pathname.split('/')[2];
-        datasetId = window.location.pathname.split('/')[4];
-        if (!checkUrlIfGeneralDataset() && datasetId) {
-            setLoading(true);
-            getDataset(datasetId, studyId).then((result: any) => {
-                if (result && !result.Message) {
-                    setDataset(result);
-                    //setEditDataset(true);
-                    console.log("result: ", result);
-                }
-                else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log("Err");
-                }
-                setLoading(false);
-            });
-        }
-        else if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
-            getStandardDataset(studyId).then((result: any) => {
-                if (result && !result.Message) {
-                    setDataset(result);
-                    //setEditDataset(true);
-                    console.log("result: ", result);
-                }
-                else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log("Err");
-                }
-                setLoading(false);
-            });
-        }
-    };
-
     const checkIfEditMode = () => {
-        datasetId = window.location.pathname.split('/')[4];
         if (!checkUrlIfGeneralDataset() && datasetId) {
             setEditDataset(true);
         }
@@ -125,6 +93,7 @@ const StudySpecificDataset = (props: any) => {
         if (checkForInputErrors()) {
             return;
         }
+        setLoading(true);
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
@@ -143,7 +112,8 @@ const StudySpecificDataset = (props: any) => {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
-                    history.push('/studies/' + studyId + '/datasets/' + result.id);
+                    setDatasetFromDetails(result);
+                    setShowEditDataset(false);
                 }
                 else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -152,7 +122,7 @@ const StudySpecificDataset = (props: any) => {
                 setLoading(false);
             });
         }
-        else if(!editDataset) {
+        else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
@@ -170,6 +140,8 @@ const StudySpecificDataset = (props: any) => {
                 if (result && !result.Message) {
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
+                    setDatasetFromDetails(result);
+                    setShowEditDataset(false);
                 }
                 else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -195,24 +167,20 @@ const StudySpecificDataset = (props: any) => {
     };
 
     const handleCancel = evt => {
-        studyId = window.location.pathname.split('/')[2];
-        datasetId = window.location.pathname.split('/')[4];
         let studySpecificDataset = false;
         if (window.location.pathname.split('/')[1] === 'studies') {
             studySpecificDataset = true;
         }
-        if (!editDataset && studySpecificDataset) {
+        if (setShowEditDataset) {
+            setShowEditDataset(false);
+        }
+        else if (!editDataset && studySpecificDataset) {
             history.push('/studies/' + studyId);
-        }
-        else if (studySpecificDataset) {
-            history.push('/studies/' + studyId + '/datasets/' + datasetId);
-        }
-        else if (!checkUrlNewDataset()) {
-            history.push('/datasets/' + studyId);
         }
         else {
             history.push('/datasets');
         }
+
     };
 
     const checkForInputErrors = () => {
@@ -230,7 +198,6 @@ const StudySpecificDataset = (props: any) => {
         </div>
         );
     };
-    
 
     return (
         <OuterWrapper>
@@ -261,6 +228,7 @@ const StudySpecificDataset = (props: any) => {
                 {!editDataset ? <CoreDevDropdown
                     width={width}
                     label="Location"
+                    meta="Required"
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
@@ -268,9 +236,11 @@ const StudySpecificDataset = (props: any) => {
                 <CoreDevDropdown
                     width={width}
                     label="Data classification"
+                    meta="Required"
                     options={options}
                     onChange={handleDropdownChange}
                     name="classification"
+                    preSlectedValue={dataset?.classification}
                 />
                 <TextField
                     placeholder="Please add Data ID..."
@@ -283,8 +253,8 @@ const StudySpecificDataset = (props: any) => {
                     value={dataset?.dataId}
                 />
                 <SaveCancelWrapper>
-                    <Button disabled={userPressedCreate} onClick={addDataset}>Save</Button>
-                    <Button disabled={userPressedCreate} onClick={handleCancel} variant="outlined">Cancel</Button>
+                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>{loading ? <DotProgress /> : 'Save'}</Button>
+                    <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>
         </OuterWrapper>

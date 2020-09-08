@@ -10,6 +10,8 @@ import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { Label } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
+import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
 
 const icons = {
@@ -52,9 +54,10 @@ let studyId = '';
 let datasetId = '';
 const DatasetDetails = (props: any) => {
     const history = useHistory();
-    const [dataset, setDataset] = useState<DatasetObj>();
+    const [dataset, setDataset] = useState<DatasetObj>({});
     const [loading, setLoading] = useState<boolean>(false);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>();
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState('');
     const [files, setFiles] = useState<any>([]);
 
@@ -77,7 +80,7 @@ const DatasetDetails = (props: any) => {
         if (checkUrlIfGeneralDataset()) {
             datasetId = studyId;
             getStandardDataset(datasetId).then((result: any) => {
-                if (result && !result.Message) {
+                if (isSubscribed && result && !result.Message) {
                     setDataset(result);
                     console.log("result: ", result);
                 }
@@ -111,12 +114,15 @@ const DatasetDetails = (props: any) => {
     }
 
     const handleEditMetdata = evt => {
+        setShowEditDataset(true);
+        /*
         if (checkUrlIfGeneralDataset()) {
             history.push('/datasets/' + datasetId + '/edit');
         }
         else {
             history.push('/studies/' + studyId + '/datasets/' + datasetId + '/edit');
         }
+        */
     }
 
     const returnField = (fieldName) => {
@@ -124,6 +130,7 @@ const DatasetDetails = (props: any) => {
     }
 
     return (
+        !showEditDataset ?
         <OuterWrapper>
             <Wrapper>
                 <div>
@@ -133,14 +140,14 @@ const DatasetDetails = (props: any) => {
                     </div>
                     { !checkUrlIfGeneralDataset() ?
                     <Link to={'/studies/' + studyId} 
-                        style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
                             <Icon
                             color="#007079"
                             name="arrow_back"
                             size={24}
                             style={{marginRight: '16px'}}
                             />Back to study
-                    </Link> : 
+                    </Link> :
                     <Link to={'/datasets'} 
                     style={{color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
                         <Icon
@@ -170,7 +177,7 @@ const DatasetDetails = (props: any) => {
                         )}
                     </AttachmentWrapper>
                 </div>
-                <RightWrapper>
+                {!loading ? <RightWrapper>
                     <div>
                         <Label>Data set name</Label>
                         {returnField(dataset?.name)}
@@ -226,9 +233,10 @@ const DatasetDetails = (props: any) => {
                     >
                         Edit metadata
                     </Button>
-                </RightWrapper>
+                </RightWrapper>: <Loading /> }
             </Wrapper>
         </OuterWrapper>
+        : <StudySpecificDataset datasetFromDetails={dataset} setDatasetFromDetails={setDataset} setShowEditDataset={setShowEditDataset} editingDataset={true} />
     )
 }
 
