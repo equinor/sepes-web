@@ -9,6 +9,7 @@ import * as api from '../../services/Api';
 //import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
 import Loading from '../common/LoadingComponent';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 
 const LoadingWrapper = styled.div`
@@ -87,9 +88,7 @@ const StudyDetails = () => {
     <>
     {!loading ? <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} /> :
     <LoadingWrapper>
-
-         <Loading />
-
+         <LoadingFull />
     </LoadingWrapper> }
         {!newStudy ?
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>

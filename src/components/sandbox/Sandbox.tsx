@@ -10,7 +10,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display:grid;
   grid-template-rows: auto 4fr;
-  grid-gap: 32px;
+  grid-gap: 16px;
   margin: 8px 32px 32px 32px;
   padding: 16px;
 `;
