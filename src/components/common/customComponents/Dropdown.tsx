@@ -52,12 +52,26 @@ const Label = styled.p`
   line-height: 1.333em;
 `;
 
+const Meta = styled.div`
+  margin-Left:auto;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  color: #6f6f6f;
+  margin: 0px;
+  font-weight: 400;
+  line-height: 1.333em;
+`;
+
 const CoreDevDropdown = (props: any): JSX.Element => {
-  let { options, label } = props;
+  let { options, label, meta } = props;
   const [isOpen, setIsOpen] = useState(false);
+  let value = "Please select...";
   const [selectedOption, setSelectedOption] = useState({
     key: "",
-    displayValue: "Please select..."
+    displayValue: props.preSlectedValue || "Please select..."
   });
 
   const wrapperRef = useRef(null);
@@ -101,7 +115,10 @@ const CoreDevDropdown = (props: any): JSX.Element => {
 
   return (
     <div className={"coredev-dropdown"} ref={wrapperRef}>
-      <Label>{label}</Label>
+      <div style={{ display: 'flex' }}>
+        <Label>{label}</Label>
+        <div style={{ marginLeft: 'auto' }}><Label>{meta}</Label></div>
+      </div>
       <Dropdown onClick={() => setIsOpen(!isOpen)} {...props} isOpen={isOpen}>
         <span>{selectedOption.displayValue}</span>
         {isOpen ? arrowUp : arrowDown}

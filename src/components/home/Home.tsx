@@ -65,7 +65,7 @@ const Home = () => {
             {!loading ? <Studies studyList={studyList} /> : <div><LoadingFull /></div> }
             <RightWrapper>
                 <div>{mockText}</div>
-                <div  style={{bottom: '16px'}}>
+                <div style={{ bottom: '16px' }}>
                     <Button style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
                 </div>
             </RightWrapper>
