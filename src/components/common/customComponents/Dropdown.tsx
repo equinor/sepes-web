@@ -67,7 +67,7 @@ const Meta = styled.div`
 
 const CoreDevDropdown = (props: any): JSX.Element => {
   let { options, label, meta } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
   let value = "Please select...";
   const [selectedOption, setSelectedOption] = useState({
     key: "",
