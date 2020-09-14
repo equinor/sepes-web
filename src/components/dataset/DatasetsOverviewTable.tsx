@@ -157,6 +157,7 @@ const DatasetsOverviewTable = (props: any) => {
     }
 
     const handleOnclick = (row:DatasetObj):void => {
+        window.scrollTo(0, 0);
         setToggle(true);
         setSelectedDataset(row);
     }
