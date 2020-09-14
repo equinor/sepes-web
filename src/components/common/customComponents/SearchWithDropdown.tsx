@@ -5,6 +5,7 @@ import { Search, Button } from '@equinor/eds-core-react';
 const DatasetItem = styled.div`
     padding: 16px;
     z-index:99;
+    cursor: pointer;
     &:hover {
         background-color: #D5EAF4;
     }
@@ -22,17 +23,16 @@ const Wrapper = styled.div`
 
 const SearchWithDropdown = (props: any) => {
     const [searchValue, setSearchValue] = useState('');
-
     const handleOnSearchValueChange = (event) => {
         const value = event.target.value;
         setSearchValue(value);
     }
     return (
         <div>
-            <Search onChange={handleOnSearchValueChange} value={props.text} />
+            <Search onChange={handleOnSearchValueChange} value={props.text || searchValue} />
                     <Wrapper>
                     {(props.isOpen || searchValue)  && props.arrayList && props.arrayList.map((row: any) => (
-                        row.name.includes(searchValue) && !props.filter(row.id)  ? <DatasetItem key={row.id} onClick={() => { props.handleOnClick(row); }}>{row.name}</DatasetItem> : null
+                        row.name.toLowerCase().includes(searchValue.toLowerCase()) && !props.filter(row.id) ? <DatasetItem key={row.id} onClick={() => { props.handleOnClick(row); }}>{row.name}</DatasetItem> : null
                     ))}
                     </Wrapper>
         </div>

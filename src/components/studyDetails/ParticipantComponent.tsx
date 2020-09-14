@@ -9,7 +9,9 @@ import Select from '@material-ui/core/Select';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
-import { ParticipantObj } from '../common/interfaces';
+import { ParticipantObj, DropdownObj } from '../common/interfaces';
+import CoreDevDropdown from '../common/customComponents/Dropdown';
+import * as notify from '../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -39,22 +41,23 @@ const ParicipantComponent = (props: any) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [participants, setParticipants] =  useState<any>();
-    const [participantNotSelected, setParticipantNotSelected] =  useState<boolean>(true);
-    const [roleNotSelected, setRoleNotSelected] =  useState<boolean>(true);
+    const [participants, setParticipants] = useState<any>();
+    const [roles, setRoles] = useState<DropdownObj>();
+    const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
+    const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<any>();
     const [text, setText] = useState<string>('');
     const [role, setRole] = useState<string>('');
 
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
-        api.removeStudyParticipant(studyId, participant.id).then((result: any) => {
+        api.removeStudyParticipant(studyId, participant.userId).then((result: any) => {
             if (isSubscribed) {
                 props.setStudy({...props.study, participants: result.participants});
                 console.log("participants: ", result);
             }
             else {
-                console.log("Err deleting participants");
+                notify.show('danger', '500');
                 //Show error component
             }
             setLoading(false);
@@ -87,22 +90,23 @@ const ParicipantComponent = (props: any) => {
 
     const checkIfParticipantIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        props.study.participants.forEach((element) => {
-            if (element.id === id) {
+        props.study.participants && props.study.participants.forEach((element) => {
+            if (element.userId === id) {
                 elementExist = true;
             }
         });
         return elementExist;
     }
 
-    const handleChange = (event) => {
-        setRole(event.target.value);
+    const handleChange = (value) => {
+        setRole(value);
         setRoleNotSelected(false);
       };
 
     useEffect(() => {
         setIsSubscribed(true);
         getParticipants();
+        getRoles();
         return () => setIsSubscribed(false);
     }, []);
 
@@ -114,7 +118,21 @@ const ParicipantComponent = (props: any) => {
                 console.log("participants: ", result);
             }
             else {
-                console.log("Err getting perticipants");
+                notify.show('danger', '500');
+            }
+            setLoading(false);
+        })
+    }
+
+    const getRoles = () => {
+        setLoading(true);
+        api.getStudyRoles().then((result: any) => {
+            if (isSubscribed && !result.Message) {
+                setRoles(result);
+                console.log("participants: ", result, result.Message, result.RequestId);
+            }
+            else {
+                notify.show('danger', '500');
             }
             setLoading(false);
         })
@@ -134,24 +152,15 @@ const ParicipantComponent = (props: any) => {
                         arrayList={participants}
                         text={text}
                     />
-                    {text && !isOpen ? <Chip>{text}</Chip> : null }
                 </div>
-                <FormControl style={{marginTop: "-12px"}}>
-                    <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                <div style={{ marginTop: '-16px' }}>
+                    <CoreDevDropdown
+                        label="Role"
+                        options={roles}
                         onChange={handleChange}
-                        value={role}
-                        >
-                        <MenuItem value="admin">
-                            <em>Admin</em>
-                        </MenuItem>
-                        <MenuItem value="sponsor">Sponsor</MenuItem>
-                        <MenuItem value="sponsorRep">Sponsor rep</MenuItem>
-                        <MenuItem value="viewer">Viewer</MenuItem>
-                    </Select>
-                </FormControl>
+                        name="region"
+                    />
+                </div>
                 <Button variant="outlined" disabled={participantNotSelected || roleNotSelected} onClick={addParticipant} >Add participant</Button>
             </SearchWrapper>
             <div>
@@ -165,4 +174,4 @@ const ParicipantComponent = (props: any) => {
     )
 }
 
-export default ParicipantComponent; 
+export default ParicipantComponent;

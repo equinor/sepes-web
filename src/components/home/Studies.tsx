@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import StudyComponent from './StudyComponent';
-
-let mockDescription = "Random Extended Three Letter Acronyms. Løsning for å finne navn til hva som helst. Genererer tilfeldig utvidetet trebokstavforkortelser. Test"
 
 const Studies = (props: any) => {
     return (

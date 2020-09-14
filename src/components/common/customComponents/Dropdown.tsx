@@ -52,12 +52,26 @@ const Label = styled.p`
   line-height: 1.333em;
 `;
 
+const Meta = styled.div`
+  margin-Left:auto;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  color: #6f6f6f;
+  margin: 0px;
+  font-weight: 400;
+  line-height: 1.333em;
+`;
+
 const CoreDevDropdown = (props: any): JSX.Element => {
-  let { options, label } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  let { options, label, meta } = props;
+  const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
+  let value = "Please select...";
   const [selectedOption, setSelectedOption] = useState({
-    id: "",
-    name: "Please select..."
+    key: "",
+    displayValue: props.preSlectedValue || "Please select..."
   });
 
   const wrapperRef = useRef(null);
@@ -66,7 +80,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   const handleChange = (option: any) => {
     setSelectedOption(option);
     setIsOpen(!isOpen);
-    props.onChange(option.id, props.name);
+    props.onChange(option.key, props.name);
   };
 
   const renderOptions = (width: string): React.ReactNode => {
@@ -76,7 +90,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
           {options.map((option: any, i: number) => {
             return (
               <li key={i} onClick={() => handleChange(option)}>
-                <DropdownOption>{option.name}</DropdownOption>
+                <DropdownOption>{option.displayValue}</DropdownOption>
               </li>
             );
           })}
@@ -88,13 +102,6 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   //if (selectedOption.name === 'Loading...' && options !== undefined && options.length) {
   //  setSelectedOption(options[0]);
   //} else {
-    /*
-  options = [
-    { name: "All projects" },
-    { name: "IMR projects" },
-    { name: "IMR projects with SSP" },
-    { name: "SSP projects" }
-  ];*/
   //}
 
   const arrowUp = (
@@ -108,9 +115,12 @@ const CoreDevDropdown = (props: any): JSX.Element => {
 
   return (
     <div className={"coredev-dropdown"} ref={wrapperRef}>
-      <Label>{label}</Label>
+      <div style={{ display: 'flex' }}>
+        <Label>{label}</Label>
+        <div style={{ marginLeft: 'auto' }}><Label>{meta}</Label></div>
+      </div>
       <Dropdown onClick={() => setIsOpen(!isOpen)} {...props} isOpen={isOpen}>
-        <span>{selectedOption.name}</span>
+        <span>{selectedOption.displayValue}</span>
         {isOpen ? arrowUp : arrowDown}
       </Dropdown>
       {isOpen && renderOptions(props.width)}

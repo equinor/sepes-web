@@ -6,9 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, lock, lock_open } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
-import AddImageAndCompressionContainer from '../common/ImageDropzone';
-import { getImage } from '../../services/BlobStorage';
+import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { useHistory } from 'react-router-dom';
+import Loading from '../common/LoadingComponent';
+import * as notify from '../common/notify';
 
 const icons = {
   dollar,
@@ -16,19 +19,6 @@ const icons = {
   lock_open
 };
 Icon.add(icons);
-
-/*
-const Dot = styled.span`
-    height: 100px;
-    width: 100px;
-    background-color: #EAEAEA;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    color: #FFFFFF;
-    line-height: 100px;
-    font-size:3em;
-  `;*/
 
 const Title = styled.span`
    font-size: 28px;
@@ -38,6 +28,9 @@ const DescriptionWrapper = styled.div`
     margin: auto;
     margin-left: 0;
     min-width:200px;
+    @media (max-width: 768px) {
+      padding: 8px 0 8px 0;
+  }
   `;
 
 const SmallText = styled.span`
@@ -46,11 +39,11 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr minmax(200px,4fr) 150px;
+    grid-template-columns: 1fr minmax(300px,4fr) 150px;
     width: 100%;
-    grid-gap: 10px;
+    grid-gap: 8px;
     @media (max-width: 768px) {
-      display: block;
+      display:block;
   }
 `;
 
@@ -71,30 +64,19 @@ grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
 
-/*
-const Logo = styled.img`
-    height: 125px;
-    width: 125px;
-    display: inline-block;
-    @media (max-width: 768px) {
-      display: block;
-      height: 100px;
-      width: 100px;
-  }
-  `;
-*/
-
 const StudyComponentFull = (props: any) => {
+  const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
   const [editMode, setEditMode] = useState<boolean>(props.newStudy);
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [inputError, setInputError] = useState<boolean>(false);
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
+  const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   const handleSave = () => {
-    if (studyOnChange.name === '' || studyOnChange.vendor === '') {
-      setInputError(true);
+    setUserPressedCreate(true);
+    if (checkRequiredFieldsArNotNull()) {
+      return;
     }
     else {
       if (imageUrl) {
@@ -110,17 +92,18 @@ const StudyComponentFull = (props: any) => {
     props.setLoading(true);
     if (props.newStudy) {
       createStudy(study).then((result: any) => {
-        if (result) {
-            window.location.pathname = '/studies/' + result.id;
+        if (result && !result.Message) {
+            history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
             props.setStudy(newStudy);
-            if(imageUrl && newStudy.id){
+            if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
-                if (result) {
+                if (result && ! result.Message) {
                     console.log("result: ", result);
                 }
                 else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 props.setLoading(false);
@@ -128,6 +111,7 @@ const StudyComponentFull = (props: any) => {
             }
         }
         else {
+            notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
         props.setLoading(false);
@@ -136,11 +120,12 @@ const StudyComponentFull = (props: any) => {
     else {
       study.id = id;
       putStudy(study, imageUrl).then((result: any) => {
-        if (result) {
+        if (result && !result.Message) {
             console.log("result: ", result);
             props.setStudy(result);
         }
         else {
+            notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
         props.setLoading(false);
@@ -148,20 +133,23 @@ const StudyComponentFull = (props: any) => {
     }
   }
 
+  const checkRequiredFieldsArNotNull = ():boolean => {
+    if (studyOnChange.name === '' || studyOnChange === undefined || studyOnChange.vendor === '' || studyOnChange.vendor === undefined) {
+      return true;
+    }
+    return false;
+  }
+
   const handleCancel = () => {
-    setInputError(false);
+    if (props.newStudy) {
+      history.push('/')
+      return;
+    }
     setEditMode(false);
     setImageUrl('');
     //Remove line under if we want to keep changes when clicking cancel, but don't send to api
     setStudyOnChange(props.study);
     setShowImagePicker(false);
-  }
-
-  const changeVariantBasedOnInputError = () => {
-    if (inputError) {
-      return 'error';
-    }
-    return 'default';
   }
 
   function handleChange(evt) {
@@ -174,13 +162,14 @@ const StudyComponentFull = (props: any) => {
 
   return (
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
+      {!props.loading ?
       <Wrapper>
         <TitleWrapper>
             {!editMode ? <Title>{name}</Title> :
             <TextField
               name='name'
               placeholder="What is the study name?"
-              variant={changeVariantBasedOnInputError()}
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
               onChange={handleChange}
               label="Study name" meta="Required"
               style={{margin: "auto", marginLeft: "0"}}
@@ -189,7 +178,7 @@ const StudyComponentFull = (props: any) => {
             <TextField
               name='vendor'
               placeholder="Who is the vendor?"
-              variant={changeVariantBasedOnInputError()}
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
               onChange={handleChange}
               value={studyOnChange.vendor}
               label="Vendor"
@@ -212,7 +201,7 @@ const StudyComponentFull = (props: any) => {
             }
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Locked' : 'Unlocked'}</span></>:
+                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Restricted' : 'Not restricted'}</span></>:
                 <FormControlLabel
                   control={<CheckBox style={{ color: '#007079' }}
                   checked={studyOnChange.restricted}
@@ -252,13 +241,13 @@ const StudyComponentFull = (props: any) => {
               {showImagePicker ? 'Hide image picker' : 'Change logo'}
           </Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>{props.newStudy? 'Create Study': 'Save'}</Button>
+            <Button onClick={() => handleSave()}>{props.newStudy ? 'Create Study': 'Save'}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>
           : null}
         </div>
-      </Wrapper>
+          </Wrapper> : <Loading /> }
     </div>
   )
 }

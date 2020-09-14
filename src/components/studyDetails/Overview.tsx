@@ -7,6 +7,7 @@ import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import styled from 'styled-components';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -28,11 +29,12 @@ const Overview = (props: any) => {
     const handleSave = () => {
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
-            if (result) {
+            if (result && !result.Message) {
                 console.log("result: ", result);
                 props.setStudy(result);
             }
             else {
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
         });
@@ -67,6 +69,7 @@ const Overview = (props: any) => {
                     </Button>: null}
                     <Button
                         variant="outlined"
+                        style={{ marginBottom: '16px' }}
                         onClick={() => { setEditMode(!editMode); handleCancel(); }}
                     >
                         {!editMode ? 'Edit results and learnings': 'Cancel'}

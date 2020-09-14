@@ -1,5 +1,5 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj } from "../components/common/interfaces";
+import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
@@ -30,16 +30,35 @@ export const removeStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
 };
 
+//Specific dataset
 export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
 };
+
+export const editStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific/' + dataset?.id, 'PUT', dataset);
+};
+
+export const getDataset = async (datasetId: string, studyId:string) => {
+    return apiCallWithToken('api/studies/' + studyId + '/datasets/' + datasetId);
+};
+
+//Standard dataset
 
 export const getStandardDataset = async (datasetId: string) => {
     return apiCallWithToken('api/datasets/' + datasetId);
 };
 
-export const getDataset = async (datasetId: string, studyId:string) => {
-    return apiCallWithToken('api/studies/' + studyId + '/datasets/' + datasetId);
+export const createStandardDataset = async (dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/datasets/', 'POST', dataset);
+};
+
+export const updateStandardDataset = async (datsetId: string, dataset?:DatasetObj) => {
+    return apiRequestWithToken('api/datasets/' + datsetId, 'PUT', dataset);
+};
+
+export const getStandardDatasets = async () => {
+    return apiCallWithToken('api/datasets/');
 };
 
 export const getParticipantList = async () => {
@@ -61,6 +80,31 @@ export const postStudy = async (study: StudyObj, imageUrl:string) => {
 export const putStudy = async (study: StudyObj, imageUrl:string) => {
   return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
 };
+
+//Sandbox
+
+export const getSandbox = async (studyId: string, sandboxId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'GET');
+};
+
+export const createSandbox = async (studyId: string, sandbox:SandboxCreateObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'POST', sandbox);
+};
+
+export const deleteSandbox = async (studyId: string, sandboxId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'DELETE');
+};
+
+//Lookup
+
+export const getAzureRegions = async () => {
+    return apiRequestWithToken('api/lookup/regions', 'GET');
+};
+
+export const getStudyRoles = async () => {
+    return apiRequestWithToken('api/lookup/studyroles', 'GET');
+};
+
 
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {

@@ -3,11 +3,12 @@ import { Search, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Table, Icon } from '@equinor/eds-core-react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
+import * as notify from '../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -39,6 +40,7 @@ const DatasetItem = styled.div`
 `;
 
 const DataSetComponent = (props: any) => {
+    const history = useHistory();
     const [datasets, setDatasets] = useState<any>(props.study.datasets);
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -50,11 +52,12 @@ const DataSetComponent = (props: any) => {
         //Removing it on clientside, keeping it for now.
         //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
-            if (result) {
+            if (result && !result.Message) {
                 props.setStudy({...props.study, datasets: result.datasets });
                 console.log("result Datasets after delete: ", result);
             }
             else {
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);
@@ -63,7 +66,8 @@ const DataSetComponent = (props: any) => {
 
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
-        window.location.pathname = '/studies/' + studyId + '/datasets';
+        history.push('/studies/' + studyId + '/datasets');
+        //window.location.pathname = '/studies/' + studyId + '/datasets';
     }
 
     useEffect(() => {
@@ -75,11 +79,12 @@ const DataSetComponent = (props: any) => {
     const getDatasets = () => {
         setLoading(true);
         getDatasetList().then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && !result.Message) {
                 setDatasetsList(result);
                 console.log("resultDatasetLists: ", result);
             }
             else {
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);
@@ -95,11 +100,12 @@ const DataSetComponent = (props: any) => {
             //list.push(row);
             //props.setStudy({...props.study, datasets: list});
             addStudyDataset(studyId, row.id).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     props.setStudy({...props.study, datasets: result.datasets });
                     console.log("resultDatasets: ", result);
                 }
                 else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
                 setLoading(false);
@@ -134,7 +140,7 @@ const DataSetComponent = (props: any) => {
                     />
                 </div>
             </Bar>
-            <Link to="/" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
+            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
             <DatasetsTable
                 datasets={props.study.datasets}
                 removeDataset={removeDataset}

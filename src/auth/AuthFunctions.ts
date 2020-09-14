@@ -199,6 +199,6 @@ export function signInRedirect(){
     myMSALObj.logout();
   }
 
-  export const loginRequest = {
-    scopes: [process.env.REACT_APP_SEPES_CLIENTID + ""]
+  export const loginRequest = {  
+    scopes: [process.env.REACT_APP_SEPES_CLIENTID+ "/User.Read"]
   };

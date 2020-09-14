@@ -12,3 +12,15 @@ export const lineBreak = (text: string) => {
         })
         : '';
 };
+
+export const checkIfRequiredFieldsAreNull = (value:any, userPressedCreate?:boolean) => {
+    if ((value === '' || value === undefined) && userPressedCreate) {
+        return 'error';
+    }
+    return 'default';
+
+}
+
+export const bytesToMB = (sizeInBytes: number) => {
+    return (sizeInBytes / (1024*1024)).toFixed(2);
+}

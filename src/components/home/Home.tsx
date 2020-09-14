@@ -3,11 +3,13 @@ import * as api from '../../services/Api';
 import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import Loading from '../common/LoadingComponent';
+import LoadingFull from '../common/LoadingComponentFullscreen';
+import { useHistory } from 'react-router-dom';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 9fr minmax(100px,400px);
+    grid-template-columns: 9fr 400px;
     grid-template-rows: 172px;
     width: 100%;
     grid-gap: 48px;
@@ -31,6 +33,7 @@ const RightWrapper = styled.div`
 let mockText = 'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {
+    const history = useHistory();
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [studyList, setStudyList] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -44,11 +47,12 @@ const Home = () => {
     const getStudyList = () => {
         setLoading(true);
         api.getStudyList().then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && !result.Message) {
                 setStudyList(result);
                 console.log("result: ", result);
             }
             else {
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
             }
             setLoading(false);
@@ -57,14 +61,15 @@ const Home = () => {
 
     return (
         <>
-        {!loading ?
         <Wrapper>
-            <Studies studyList={studyList} />
+            {!loading ? <Studies studyList={studyList} /> : <div><LoadingFull /></div> }
             <RightWrapper>
-                <p>{mockText}</p>
-                <Button style={{ margin: 'auto', width: '80%' }} onClick={() => { window.location.pathname = '/studies'; }}>New study</Button>
+                <div>{mockText}</div>
+                <div style={{ bottom: '16px' }}>
+                    <Button style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
+                </div>
             </RightWrapper>
-        </Wrapper> : <Loading />}
+        </Wrapper>
         </>
     )
 }
