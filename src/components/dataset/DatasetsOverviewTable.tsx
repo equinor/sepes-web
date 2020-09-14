@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Icon, Button, Checkbox, SideSheet } from '@equinor/eds-core-react';
+import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
@@ -7,6 +7,7 @@ import { DatasetObj } from '../common/interfaces'
 import { Link, useHistory } from 'react-router-dom';
 import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
+import DropdownFilter from '../common/customComponents/DropdownFilter';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -53,7 +54,7 @@ interface filter {
     areaL1: string;
     asset: string;
     baDataOwner: string;
-    classification: string;
+    classification: [];
     countryOfOrigin: string;
     dataId: string;
     lraId: string;
@@ -70,9 +71,9 @@ const DatasetsOverviewTable = (props: any) => {
         sourceSystem: true,
         areaL2: true,
         areaL1: true,
-        asset: true,
+        asset: false,
         baDataOwner: false,
-        classification: false,
+        classification: true,
         countryOfOrigin: false,
         dataId: false,
         lraId: false,
@@ -86,7 +87,7 @@ const DatasetsOverviewTable = (props: any) => {
         areaL1: '',
         asset: '',
         baDataOwner: '',
-        classification: '',
+        classification: [],
         countryOfOrigin: '',
         dataId: '',
         lraId: '',
@@ -123,11 +124,17 @@ const DatasetsOverviewTable = (props: any) => {
         }
     }
 
+    const returnDropwdownFilter = (column: string, checker: boolean) => {
+        if (checker) {
+            return <Cell><DropdownFilter setFilter={setFilter} filter={filter} column={column} /></Cell>
+        }
+    }
+
     const redirectToCreateDataset = (): void => {
         history.push('datasets/new');
     }
 
-    const filterList = ( column: string, filterColumn: string, resDataset) => {
+    const filterList = (column: string, filterColumn: any, resDataset): Array<any> => {
         if (filterColumn !== '') {
             return resDataset.filter(dataset => {
                 if (dataset[column]) {
@@ -135,10 +142,28 @@ const DatasetsOverviewTable = (props: any) => {
                 }
             });
         }
-        else {
-            return resDataset;
-        }
+        return resDataset;
     }
+
+    const filterListOptions = (column: string, filterColumn: any, resDataset) => {
+        if (filterColumn.length > 0) {
+            let res = resDataset;
+            return combineArray(filterColumn.map((row:any) => {
+                return filterList(column, row, res);
+            }));
+        }
+        return resDataset;
+    }
+
+      function combineArray(array: any) {
+        let newArray:any = [];
+        array.map((res:any, i: number) => {
+            res.map((dataset:any, j: number) => {
+                newArray.push(dataset);
+            });
+        });
+        return newArray;
+      }
 
     const applyFilter = () => {
         let retDatasets = datasets;
@@ -148,7 +173,7 @@ const DatasetsOverviewTable = (props: any) => {
         retDatasets = filterList('areaL2', filter.areaL2, retDatasets);
         retDatasets = filterList('asset', filter.asset, retDatasets);
         retDatasets = filterList('baDataOwner', filter.baDataOwner, retDatasets);
-        retDatasets = filterList('classification', filter.classification, retDatasets);
+        retDatasets = filterListOptions('classification', filter.classification, retDatasets);
         retDatasets = filterList('countryOfOrigin', filter.countryOfOrigin, retDatasets);
         retDatasets = filterList('dataId', filter.dataId, retDatasets);
         retDatasets = filterList('lraId', filter.lraId, retDatasets);
@@ -228,7 +253,7 @@ const DatasetsOverviewTable = (props: any) => {
                             {returnFilter('areaL1', checkedColums.areaL1)}
                             {returnFilter('asset', checkedColums.asset)}
                             {returnFilter('baDataOwner', checkedColums.baDataOwner)}
-                            {returnFilter('classification', checkedColums.classification)}
+                            {returnDropwdownFilter('classification', checkedColums.classification)}
                             {returnFilter('countryOfOrigin', checkedColums.countryOfOrigin)}
                             {returnFilter('dataId', checkedColums.dataId)}
                             {returnFilter('lraId', checkedColums.lraId)}
