@@ -1,4 +1,4 @@
-import { apiCallWithToken, apiRequestWithToken, postputStudy } from '../auth/AuthFunctions';
+import { apiCallWithToken, apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
 import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj } from "../components/common/interfaces";
 
 
@@ -105,7 +105,15 @@ export const getStudyRoles = async () => {
     return apiRequestWithToken('api/lookup/studyroles', 'GET');
 };
 
+// Files
 
+export const addFiles = async (datasetId: string, formData: any, studyId?: string): Promise<any> => {
+    if (studyId) {
+        return postFile(`datasetfile/addfiles?datasetId=${datasetId}&studyId=${studyId}`, formData);
+    }
+    //Endpoint does not exists yet
+    return postFile(`datasetfile/addfiles?datasetId=${datasetId}`, formData);
+}
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');

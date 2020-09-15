@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { getDataset, getStandardDataset } from '../../services/Api';
+import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import FileDropzoneContainer from '../common/upload/FileDropzone';
@@ -12,6 +12,8 @@ import { useHistory } from 'react-router-dom';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
+import Dropzone from '../common/upload/DropzoneFile';
+import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 
 const icons = {
     arrow_back,
@@ -49,9 +51,10 @@ const RightWrapper = styled.div`
   grid-template-columns: 1fr 196px 16px;
   padding: 8px;
 `;
-let studyId = '';
-let datasetId = '';
+
 const DatasetDetails = (props: any) => {
+    let datasetId = window.location.pathname.split('/')[4];
+    let studyId = window.location.pathname.split('/')[2];
     const history = useHistory();
     const [dataset, setDataset] = useState<DatasetObj>({});
     const [loading, setLoading] = useState<boolean>(false);
@@ -59,23 +62,46 @@ const DatasetDetails = (props: any) => {
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState('');
     const [files, setFiles] = useState<any>([]);
+    const [formData, setFormData] = useState<any>(null);
 
     useEffect(() => {
         setIsSubscribed(true);
         getDatasetFromApi();
         return () => setIsSubscribed(false);
-    }, [files, setFiles]);
+    }, []);
 
-    const RemoveFile = (i: number):void => {
-        setImageUrl('');
-        const filesTemp = files;
-        filesTemp.splice(i, 1);
-        setFiles(filesTemp);
+    const uploadFiles = (): void => {
+        setLoading(true);
+        if (!checkUrlIfGeneralDataset()) {
+            addFiles(datasetId, formData, studyId).then(result => {
+                if (result.Message) {
+                    console.log("err", result);
+                } else {
+                    //removeFiles();
+                }
+                setLoading(false);
+            });
+        }
+        else {
+            datasetId = studyId;
+            addFiles(datasetId, formData).then(result => {
+                if (result.Message) {
+                    console.log("err", result);
+                } else {
+                    //removeFiles();
+                }
+                setLoading(false);
+            });
+        }
+    };
+
+    const removeFiles = () => {
+        setFiles([]);
+        setFormData(null);
     }
+
     const getDatasetFromApi = () => {
         setLoading(true);
-        datasetId = window.location.pathname.split('/')[4];
-        studyId = window.location.pathname.split('/')[2];
         if (checkUrlIfGeneralDataset()) {
             datasetId = studyId;
             getStandardDataset(datasetId).then((result: any) => {
@@ -114,14 +140,32 @@ const DatasetDetails = (props: any) => {
 
     const handleEditMetdata = evt => {
         setShowEditDataset(true);
-        /*
-        if (checkUrlIfGeneralDataset()) {
-            history.push('/datasets/' + datasetId + '/edit');
+    }
+
+    const handleFileDrop = async (_files: File[]): Promise<void> => {
+        setFiles(_files);
+        let _formData = new FormData();
+
+        if (!_files.length) {
+            setFormData(null);
+        } else {
+            _files.forEach(async file => {
+                await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                    .then(blob => {
+                        _formData.append(`files`, blob)
+                    }).then(() => {
+                        setFormData(_formData);
+                    })
+            });
+            uploadFiles();
         }
-        else {
-            history.push('/studies/' + studyId + '/datasets/' + datasetId + '/edit');
-        }
-        */
+    }
+
+    const removeFile = (i: number): void => {
+        const _files = [...files];
+        _files.splice(i, 1);
+        setFiles(_files);
+        handleFileDrop(_files);
     }
 
     const returnField = (fieldName) => {
@@ -156,7 +200,7 @@ const DatasetDetails = (props: any) => {
                         style={{marginRight: '16px'}}
                         />Back to datasets
                     </Link> }
-                    <FileDropzoneContainer setImageUrl={setImageUrl} setFiles={setFiles} />
+                    <Dropzone onDrop={(event: File[]) => handleFileDrop(event)} />
                     <AttachmentWrapper>
                         {files.map((file:File, i:number) => {
                             return (
@@ -164,7 +208,7 @@ const DatasetDetails = (props: any) => {
                                     <div>{file.name}</div>
                                     <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
                                     <Icon
-                                        onClick={() => RemoveFile(i)}
+                                        onClick={() => removeFile(i)}
                                         color='#007079'
                                         name='delete_forever'
                                         size={24}
@@ -175,6 +219,7 @@ const DatasetDetails = (props: any) => {
                             }
                         )}
                     </AttachmentWrapper>
+                        {/*files.length > 0 && <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>Upload</Button> */}
                 </div>
                 {!loading ? <RightWrapper>
                     <div>
