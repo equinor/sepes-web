@@ -78,6 +78,18 @@ import axios from 'axios';
     
   }
 
+  export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
+    const axiosWithBlobUrl = axios.create({
+        baseURL: blobUrl,
+        timeout: 1000,
+    });
+    const response = await axiosWithBlobUrl.get('', {
+        responseType: 'blob',
+    });
+
+    return new File([response.data], fileName);
+};
+
   const makeBlobFromUrl = async (blobUrl: string) => {
     const axiosWithBlobUrl = axios.create({
       baseURL: blobUrl,
@@ -129,6 +141,44 @@ export const postBlob = async (imageUrl: string, studyId: string) => {
     });
   })
 };
+
+
+export const postFile = async (url, files: any) => {
+  return new Promise(function (resolve, reject) {
+      myMSALObj.acquireTokenSilent(loginRequest)
+          .then((tokenResponse: any) => {
+              if (tokenResponse.accessToken) {
+                  const headers = new Headers();
+                  const bearer = `Bearer ${tokenResponse.accessToken}`;
+                  headers.append("Authorization", bearer);
+
+                  const options = {
+                      method: 'POST',
+                      headers: headers,
+                      body: files
+                  };
+
+                  const config = {
+                      headers: {
+                          Authorization: `Bearer ${bearer}`
+                      },
+                  };
+
+                  console.log('request made to Graph API at: ' + new Date().toString());
+
+                  return fetch(`${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`, options)
+                      .then((response) => response.blob())
+                      .then((responseData) => { return resolve(responseData); })
+                      .catch(error => console.log(error))
+              }
+
+              // Callback code here
+          }).catch((error: string) => {
+              console.log(error);
+          });
+  })
+};
+
 
 export const postputStudy = async (study: StudyObj, url:any, method:string, imageUrl:string) => {
   let newStudyWithBlob: StudyObj = {
