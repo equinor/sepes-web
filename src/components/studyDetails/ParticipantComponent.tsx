@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Button, Table, Icon, Typography, Chip } from '@equinor/eds-core-react';
+import { Button, Table, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
@@ -66,6 +62,7 @@ const ParicipantComponent = (props: any) => {
 
     const addParticipant = () => {
         setText('');
+        setLoading(true);
         setParticipantNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
         api.addStudyParticipant(studyId, selectedParticipant, role).then((result: any) => {
@@ -161,7 +158,7 @@ const ParicipantComponent = (props: any) => {
                         name="region"
                     />
                 </div>
-                <Button variant="outlined" disabled={participantNotSelected || roleNotSelected} onClick={addParticipant} >Add participant</Button>
+                <Button variant="outlined" disabled={participantNotSelected || roleNotSelected} onClick={addParticipant} >{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
             </SearchWrapper>
             <div>
                 <ParticipantTable 
