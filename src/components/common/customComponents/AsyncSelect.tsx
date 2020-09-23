@@ -35,14 +35,12 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChang
         getParticipantList(inputValue || "a").then((result: any) => {
             if (!result.Message) {
                 let temp = result.map(user => {
-                    return { label: `${user.displayName} (${user.mail})`, 
-                    value: user.id,
-                    mail: user.mail,
-                    mobilePhone: user.mobilePhone,
+                    return { label: `${user.fullName} (${user.emailAddress})`, 
+                    value: user.objectId,
+                    emailAddress: user.emailAddress,
                     source: user.source,
                     objectId: user.objectId,
-                    id: user.id,
-                    name: user.displayName,
+                    name: user.fullName,
                     databaseId: user.databaseId
                 };
                 })

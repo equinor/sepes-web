@@ -17,7 +17,6 @@ export interface ParticipantObj {
     emailAddress: string;
     role: string;
     id: string;
-    mail: string;
     source?: string;
     databaseId: number;
     objectId: string;
