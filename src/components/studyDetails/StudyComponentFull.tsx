@@ -55,13 +55,9 @@ const TitleWrapper = styled.div`
 `;
 
 const SmallIconWrapper = styled.div`
-
-`;
-/*
-display: grid;
+  display: grid;
   grid-template-columns: 30px 1fr;
-  */
-
+`;
 
 const SaveCancelWrapper = styled.div`
 display: grid;
@@ -204,9 +200,15 @@ const StudyComponentFull = (props: any) => {
               value={studyOnChange.wbsCode}
             />
             }
-            <SmallIconWrapper>
-                {!editMode ? <>
-                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Hidden' : 'Not hidden'}</span></>:
+            <div>
+                {!editMode ?
+                <SmallIconWrapper>
+                  <Icon
+                    color="#007079"
+                    name={restricted ? 'lock': 'lock_open'}
+                    size={24}
+                  /> <span>{restricted ? 'Hidden' : 'Not hidden'}</span>
+                </SmallIconWrapper> :
                 <FormControlLabel
                   control={
                   <CheckBox
@@ -217,7 +219,7 @@ const StudyComponentFull = (props: any) => {
                   label="Hidden study"
                 />
                 }
-            </SmallIconWrapper>
+            </div>
             {editMode && <div><Label style={{ color: '#000000', margin: '-16px 0 16px 32px', letterSpacing: '0.2px' }}>Hidden studies are invisible in the Sepes portal except for invited participants.</Label></div>}
             {!editMode ?
             <Button
