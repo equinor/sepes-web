@@ -48,7 +48,7 @@ const ParicipantComponent = (props: any) => {
 
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
-        api.removeStudyParticipant(studyId, participant.userId).then((result: any) => {
+        api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed) {
                 props.setStudy({...props.study, participants: result.participants});
                 console.log("participants: ", result);

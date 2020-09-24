@@ -69,8 +69,8 @@ export const addStudyParticipant = async (studyId:string, role:string, participa
     return apiRequestWithToken('api/studies/' + studyId + '/participants/' + role, 'PUT', participant);
 };
 
-export const removeStudyParticipant = async (studyId:string, participantId:string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + participantId, 'DELETE');
+export const removeStudyParticipant = async (studyId:string,userId:string, roleName:string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + userId + '/' + roleName, 'DELETE');
 };
 
 export const postStudy = async (study: StudyObj, imageUrl:string) => {
