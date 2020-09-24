@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
-  margin: 32px;
+  margin: 24px 32px 32px 32px;
   background-color:#ffffff;
   border-radius:4px;
   min-width:512px;

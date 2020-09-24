@@ -10,6 +10,7 @@ import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
+import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
@@ -39,7 +40,7 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr minmax(300px,4fr) 150px;
+    grid-template-columns: minmax(196px,368px) minmax(300px,4fr) 150px;
     width: 100%;
     grid-gap: 8px;
     @media (max-width: 768px) {
@@ -54,9 +55,13 @@ const TitleWrapper = styled.div`
 `;
 
 const SmallIconWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 30px 1fr;
+
 `;
+/*
+display: grid;
+  grid-template-columns: 30px 1fr;
+  */
+
 
 const SaveCancelWrapper = styled.div`
 display: grid;
@@ -201,14 +206,19 @@ const StudyComponentFull = (props: any) => {
             }
             <SmallIconWrapper>
                 {!editMode ? <>
-                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Restricted' : 'Not restricted'}</span></>:
+                <Icon color="#007079" name={restricted ? "lock": "lock_open"} size={24} /> <span>{restricted ? 'Hidden' : 'Not hidden'}</span></>:
                 <FormControlLabel
-                  control={<CheckBox style={{ color: '#007079' }}
-                  checked={studyOnChange.restricted}
-                  onChange={() => setStudyOnChange({...studyOnChange, restricted: !studyOnChange.restricted})} />}
-                  label="Restricted"
-                />}
+                  control={
+                  <CheckBox
+                    style={{ color: '#007079' }}
+                    checked={studyOnChange.restricted}
+                    onChange={() => setStudyOnChange({...studyOnChange, restricted: !studyOnChange.restricted})}
+                  />}
+                  label="Hidden study"
+                />
+                }
             </SmallIconWrapper>
+            {editMode && <div><Label style={{ color: '#000000', margin: '-16px 0 16px 32px', letterSpacing: '0.2px' }}>Hidden studies are invisible in the Sepes portal except for invited participants.</Label></div>}
             {!editMode ?
             <Button
               variant="outlined"
@@ -225,7 +235,7 @@ const StudyComponentFull = (props: any) => {
             multiline={true}
             onChange={handleChange}
             label="Description"
-            style={{ margin: 'auto', marginLeft: '0' }}
+            style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
             value={studyOnChange.description} /> }
         <div style={{ margin: 'auto' }}>
           {!showImagePicker ? <CustomLogoComponent logoUrl={logoUrl} />
@@ -236,7 +246,7 @@ const StudyComponentFull = (props: any) => {
           : null}
           <Button
             onClick={() => setShowImagePicker(!showImagePicker)}
-            variant="outlined" 
+            variant="outlined"
             style={{ margin: '5px 0 20px 0' }}>
               {showImagePicker ? 'Hide image picker' : 'Change logo'}
           </Button>
