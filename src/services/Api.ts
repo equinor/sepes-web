@@ -1,5 +1,5 @@
 import { apiCallWithToken, apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj } from "../components/common/interfaces";
+import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
@@ -61,12 +61,12 @@ export const getStandardDatasets = async () => {
     return apiCallWithToken('api/datasets/');
 };
 
-export const getParticipantList = async () => {
-    return apiCallWithToken('api/participants');
+export const getParticipantList = async (search: string) => {
+    return apiCallWithToken('api/participants/?search=' + search);
 };
 
-export const addStudyParticipant = async (studyId:string, participantId:string, role:string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + participantId + '/' + role, 'PUT');
+export const addStudyParticipant = async (studyId:string, role:string, participant?:ParticipantObj) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/participants/' + role, 'PUT', participant);
 };
 
 export const removeStudyParticipant = async (studyId:string, participantId:string) => {
@@ -104,6 +104,7 @@ export const getAzureRegions = async () => {
 export const getStudyRoles = async () => {
     return apiRequestWithToken('api/lookup/studyroles', 'GET');
 };
+
 
 // Files
 

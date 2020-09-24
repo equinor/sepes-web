@@ -7,6 +7,7 @@ import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
 import { ParticipantObj, DropdownObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
+import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
@@ -28,7 +29,7 @@ const SearchWrapper = styled.div`
     grid-template-columns: 2fr 0.5fr 0.5fr;
     grid-gap: 10px;
     margin-left: 50%;
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         margin-left: 0;
     }
 `;
@@ -37,12 +38,12 @@ const ParicipantComponent = (props: any) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [participants, setParticipants] = useState<any>();
+    //const [participants, setParticipants] = useState<any>();
     const [roles, setRoles] = useState<DropdownObj>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
-    const [selectedParticipant, setSelectedParticipant] = useState<any>();
-    const [text, setText] = useState<string>('');
+    const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
+    const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
 
     const removeParticipant = (participant:any) => {
@@ -61,11 +62,11 @@ const ParicipantComponent = (props: any) => {
     }
 
     const addParticipant = () => {
-        setText('');
+        setText('Search or add by e-mail');
         setLoading(true);
         setParticipantNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
-        api.addStudyParticipant(studyId, selectedParticipant, role).then((result: any) => {
+        api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
             if (isSubscribed && result) {
                 props.setStudy({...props.study, participants: result.participants});
                 console.log("participants: ", result);
@@ -78,10 +79,11 @@ const ParicipantComponent = (props: any) => {
         })
     }
 
-    const selectParticipant = (row:ParticipantObj) => {
-        setText(row.name + ' - ' + row.emailAddress);
+    const selectParticipant = (row:any) => {
+        setText(row.label);
         setParticipantNotSelected(false);
-        setSelectedParticipant(row.id);
+        let participant:any = row;
+        setSelectedParticipant(participant);
         setIsOpen(false);
     }
 
@@ -102,14 +104,15 @@ const ParicipantComponent = (props: any) => {
 
     useEffect(() => {
         setIsSubscribed(true);
-        getParticipants();
+        //getParticipants();
         getRoles();
         return () => setIsSubscribed(false);
     }, []);
 
+    /*
     const getParticipants = () => {
         setLoading(true);
-        api.getParticipantList().then((result: any) => {
+        api.getParticipantList("a").then((result: any) => {
             if (isSubscribed) {
                 setParticipants(result);
                 console.log("participants: ", result);
@@ -120,6 +123,7 @@ const ParicipantComponent = (props: any) => {
             setLoading(false);
         })
     }
+    */
 
     const getRoles = () => {
         setLoading(true);
@@ -142,12 +146,18 @@ const ParicipantComponent = (props: any) => {
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    <SearchWithDropdown
+                    {/*<SearchWithDropdown
                         handleOnClick={selectParticipant}
                         isOpen={isOpen}
                         filter={checkIfParticipantIsAlreadyAdded}
                         arrayList={participants}
                         text={text}
+                    />*/}
+                    <AsynchSelect
+                        label={''}
+                        onChange={(option: any) => selectParticipant(option)}
+                        placeholder={''}
+                        selectedOption={{ value: 'Search..', label: text }}
                     />
                 </div>
                 <div style={{ marginTop: '-16px' }}>
