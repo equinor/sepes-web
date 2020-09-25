@@ -7,7 +7,8 @@ import { cloud_upload,
     delete_forever,
     arrow_drop_down,
     clear,
-    mood_very_happy 
+    mood_very_happy ,
+    warning_outlined
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -15,7 +16,8 @@ const icons = {
     delete_forever,
     arrow_drop_down,
     clear,
-    mood_very_happy
+    mood_very_happy,
+    warning_outlined
 };
 Icon.add(icons);
 
@@ -33,7 +35,7 @@ export const EquinorLink = styled(Link)`
     text-decoration-line: underline;
 `;
 
-const StyledTitle = styled.div`
+export const StyledTitle = styled.div`
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.2px;

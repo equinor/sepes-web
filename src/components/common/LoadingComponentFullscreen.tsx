@@ -5,6 +5,7 @@ import './styles.scss';
 
 const LoadingFull = () => {
   return (
+    <>
     <div
     className="container"
       style={{
@@ -22,8 +23,12 @@ const LoadingFull = () => {
         alignItems: 'center'
       }}
     >
-      <CircularProgress style={{ marginLeft: '48%', marginBottom: '25%' }} />
+      
     </div>
+    <div id="spinner">
+    <CircularProgress style={{ marginLeft: '48%', marginBottom: '25%' }} />
+    </div>
+    </>
   );
 };
 
