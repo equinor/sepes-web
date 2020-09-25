@@ -27,11 +27,11 @@ const Overview = (props: any) => {
       }
 
     const handleSave = () => {
+        props.setStudy({ ...props.study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
             if (result && !result.Message) {
                 console.log("result: ", result);
-                props.setStudy(result);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -58,7 +58,7 @@ const Overview = (props: any) => {
                     multiline={true}
                     onChange={handleChange}
                     style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                    value={studyOnChange.resultsAndLearnings}
+                    value={studyOnChange.resultsAndLearnings || props.study.resultsAndLearnings}
                 />}
                 <div style={{ display: 'flex' }}>
                     {editMode ?
