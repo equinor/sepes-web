@@ -58,7 +58,7 @@ const Overview = (props: any) => {
                     multiline={true}
                     onChange={handleChange}
                     style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                    value={studyOnChange.resultsAndLearnings || props.study.resultsAndLearnings}
+                    value={studyOnChange.resultsAndLearnings || resultsAndLearnings}
                 />}
                 <div style={{ display: 'flex' }}>
                     {editMode ?
