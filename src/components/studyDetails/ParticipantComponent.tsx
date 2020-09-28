@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Icon, DotProgress } from '@equinor/eds-core-react';
+import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
@@ -12,7 +12,6 @@ import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
 import { debug } from 'console';
 
-const { Body, Row, Cell, Head } = Table;
 const icons = {
     close
 };
@@ -50,12 +49,12 @@ const ParicipantComponent = (props: any) => {
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (isSubscribed) {
+            if (isSubscribed && !result.Message) {
                 props.setStudy({...props.study, participants: result.participants});
                 console.log("participants: ", result);
             }
             else {
-                notify.show('danger', '500');
+                notify.show('danger', '500', result.Message, result.requestId);
                 //Show error component
             }
             setLoading(false);
@@ -63,9 +62,7 @@ const ParicipantComponent = (props: any) => {
     }
 
     const addParticipant = () => {
-        setText('Search or add by e-mail');
         setLoading(true);
-        setParticipantNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
