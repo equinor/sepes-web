@@ -9,6 +9,7 @@ type AsynchSelectProps = {
     selectedOption: any;
     placeholder: string;
     onChange: any;
+    onInputChange: any;
     style?: any;
     dataType?: string;
     isRequired?: boolean;
@@ -29,7 +30,7 @@ export const equinorTheme = (theme: any) => ({
     },
 })
 
-const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChange, selectedOption, style, dataType, isRequired }) => {
+const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChange, selectedOption, onInputChange, style, dataType, isRequired }) => {
 
     const getParticipants = (inputValue: string, callback: any): void => {
         getParticipantList(inputValue || "a").then((result: any) => {
@@ -64,6 +65,7 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChang
                 value={selectedOption}
                 onChange={onChange}
                 theme={theme => equinorTheme(theme)}
+                onInputChange={onInputChange}
             />
         </span>
     );
