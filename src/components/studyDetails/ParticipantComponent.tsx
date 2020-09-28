@@ -9,6 +9,8 @@ import { ParticipantObj, DropdownObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
+import { ValidateEmail } from '../common/helpers';
+import { debug } from 'console';
 
 const icons = {
     close
@@ -62,18 +64,23 @@ const ParicipantComponent = (props: any) => {
     const addParticipant = () => {
         setLoading(true);
         const studyId = window.location.pathname.split('/')[2];
-        api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                props.setStudy({...props.study, participants: result.participants});
-                console.log("participants: ", result);
-            }
-            else {
-                console.log("Err getting participants");
-                notify.show('danger', '500', result.Message, result.requestId);
-                //Show error component
-            }
-            setLoading(false);
-        })
+        if (!participantNotSelected) {
+            api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
+                if (isSubscribed && result) {
+                    props.setStudy({...props.study, participants: result.participants});
+                    console.log("participants: ", result);
+                }
+                else {
+                    console.log("Err getting participants");
+                    //Show error component
+                }
+                setLoading(false);
+            })
+        }
+        else {
+            // TODO Implement backend to handle email
+            console.log("Send email to backend", text);
+        }
     }
 
     const selectParticipant = (row:any) => {
@@ -83,7 +90,7 @@ const ParicipantComponent = (props: any) => {
         setSelectedParticipant(participant);
         setIsOpen(false);
     }
-
+    /*
     const checkIfParticipantIsAlreadyAdded = (id:string) => {
         let elementExist = false;
         props.study.participants && props.study.participants.forEach((element) => {
@@ -93,6 +100,7 @@ const ParicipantComponent = (props: any) => {
         });
         return elementExist;
     }
+    */
 
     const handleChange = (value) => {
         setRole(value);
@@ -104,9 +112,9 @@ const ParicipantComponent = (props: any) => {
         //getParticipants();
         getRoles();
         return () => setIsSubscribed(false);
-    }, []);
+    }, [text]);
 
-    /*
+    /* Used in old dropdown
     const getParticipants = () => {
         setLoading(true);
         api.getParticipantList("a").then((result: any) => {
@@ -136,6 +144,23 @@ const ParicipantComponent = (props: any) => {
         })
     }
 
+    const handleInputChange = (value: string) => {
+        if (value !== "") {
+            setText(value);
+        } 
+        else if (value === "" && text.length === 1) {
+            setText('');
+            setParticipantNotSelected(true);
+        }
+    }
+
+    const checkIfButtonDisabled = () => {
+        if (ValidateEmail(text)) {
+            return roleNotSelected;
+        }
+        return participantNotSelected || roleNotSelected;
+    }
+
     return (
         <Wrapper>
             <SearchWrapper>
@@ -143,18 +168,12 @@ const ParicipantComponent = (props: any) => {
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
                 >
-                    {/*<SearchWithDropdown
-                        handleOnClick={selectParticipant}
-                        isOpen={isOpen}
-                        filter={checkIfParticipantIsAlreadyAdded}
-                        arrayList={participants}
-                        text={text}
-                    />*/}
                     <AsynchSelect
                         label={''}
                         onChange={(option: any) => selectParticipant(option)}
                         placeholder={''}
                         selectedOption={{ value: 'Search..', label: text }}
+                        onInputChange={handleInputChange}
                     />
                 </div>
                 <div style={{ marginTop: '-16px' }}>
@@ -165,10 +184,10 @@ const ParicipantComponent = (props: any) => {
                         name="region"
                     />
                 </div>
-                <Button variant="outlined" disabled={participantNotSelected || roleNotSelected} onClick={addParticipant} >{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
+                <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
             </SearchWrapper>
             <div>
-                <ParticipantTable 
+                <ParticipantTable
                     participants={props.study.participants && props.study.participants}
                     removeParticipant={removeParticipant}
                     editMode={true}
