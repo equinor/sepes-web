@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { getSandbox } from '../../services/Api';
+import { getSandbox, getResourceStatus } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import styled from 'styled-components';
 
@@ -23,15 +24,39 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxObj>();
+    const [resources, setResources] = useState<any>();
 
     useEffect(() => {
         setIsSubscribed(true);
         getCurrentSandbox();
+        getResources();
+        try {
+            setInterval(async () => {
+            getResources();
+            }, 10000);
+          } catch(e) {
+            console.log(e);
+          }
         return () => setIsSubscribed(false);
     }, []);
 
+    const getResources = () => {
+        getResourceStatus(studyId, sandboxId).then((result: any) => {
+            if (result && !result.Message) {
+                console.log("result: ", result);
+                setResources(result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
+
     const getCurrentSandbox = ():void => {
+        setLoading(true);
         getSandbox(studyId, sandboxId).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
@@ -41,22 +66,24 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
              }
+             setLoading(false);
         });
     }
 
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution />
+                return <Execution resources={resources} />;
             case 2:
-                return <div></div>
+                return <div></div>;
             default:
-                return <SandboxConfig />
+                return <SandboxConfig resources={resources} />;
         }
     }
 
     return (
         <Wrapper>
+            {loading && <LoadingFull /> }
             <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
             {returnStepComponent()}
         </Wrapper>
