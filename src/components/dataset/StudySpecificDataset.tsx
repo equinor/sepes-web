@@ -213,7 +213,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                 </div>
                 {!checkUrlIfGeneralDataset() && <HelperTextWrapper>
-                This data set will only available for this study. We need some meta data before we create the storage., When storage is created you can start uploading files.
+                This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.
                 </HelperTextWrapper> }
                 <TextField
                     placeholder="Please add data set name..."
