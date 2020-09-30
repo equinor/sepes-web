@@ -17,6 +17,9 @@ export interface ParticipantObj {
     emailAddress: string;
     role: string;
     id: string;
+    source?: string;
+    databaseId: number;
+    objectId: string;
 }
 
 export interface DatasetObj {
@@ -36,4 +39,29 @@ export interface DatasetObj {
     description?:string;
     studies?:[];
     id?:string;
+    studyId?:string;
+}
+
+export interface SandboxCreateObj {
+    name:string;
+    region:string;
+    template:string;
+    id:string;
+}
+
+export interface SandboxObj {
+    deleted:boolean;
+    region:string;
+    resources: [];
+    studyId: string;
+    technicalContactEmail: string;
+    technicalContactName: string;
+    name:string;
+    template:string;
+    id:string;
+}
+
+export interface DropdownObj {
+    key:string;
+    displayValue:string;
 }

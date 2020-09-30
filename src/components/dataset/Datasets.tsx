@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@equinor/eds-core-react';
-import { getStandardDataset } from '../../services/Api';
-import DatasetsOverviewTable from '../common/customComponents/DatasetsOverviewTable';
+import { getStandardDatasets } from '../../services/Api';
+import DatasetsOverviewTable from './DatasetsOverviewTable';
 import styled from 'styled-components';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
-  margin: 32px;
+  margin: 24px 32px 32px 32px;
   background-color:#ffffff;
   border-radius:4px;
   min-width:512px;
@@ -20,12 +21,13 @@ const Dataset = (props: any) => {
     }, []);
 
     const getDatasets = () => {
-        getStandardDataset().then((result: any) => {
+        getStandardDatasets().then((result: any) => {
             if (result) {
                 setDatasets(result);
                 console.log("result: ", result);
             }
             else {
+                notify.show('danger', '500');
                 console.log("Err");
             }
             setLoading(false);

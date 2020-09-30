@@ -9,7 +9,16 @@ import * as api from '../../services/Api';
 //import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
 import Loading from '../common/LoadingComponent';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
+
+const LoadingWrapper = styled.div`
+    height:196px;
+    background-color: #ffffff;
+    margin: 24px 32px 24px 32px;
+    display:flex;
+    align-items:center;
+  `;
 
 const { TabList, Tab } = Tabs;
 
@@ -23,7 +32,6 @@ const StudyDetails = () => {
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
     const [showOverview, setShowOverview] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(0);
-    const [datasets, setDatasets] = useState<any>([]);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -36,16 +44,17 @@ const StudyDetails = () => {
         if (!id) {
             return;
         }
+        setNewStudy(false);
         setLoading(true);
         api.getStudy(id).then((result: any) => {
-            if (isSubscribed && result) {
+            if (isSubscribed && result && !result.Message) {
                 setStudy(result);
                 setNewStudy(false);
                 console.log("resultStudy: ", result)
             }
             else {
+                notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
-                notify.show('Error getting study');
             }
             setLoading(false);
         });
@@ -77,29 +86,28 @@ const StudyDetails = () => {
 
     return (
     <>
-        {!loading
-        ? <>
-        <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} setStudy={setStudy} />
+    {!loading ? <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} /> :
+    <LoadingWrapper>
+         <LoadingFull />
+    </LoadingWrapper> }
         {!newStudy ?
         <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
                 <TabList>
-                    <Tab>Overview</Tab>
+                    <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                     <Tab>Data sets</Tab>
                     <Tab>Sandboxes</Tab>
                     <Tab>Participants</Tab>
-                    <Tab>Study defaults</Tab>
+                    <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
                 </TabList>
             </Tabs>
             <div style={{ padding: '16px' }}>
         {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
         {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
-        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} /> : null}
+        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} /> : null}
         {showOverview ? <Overview study={study} setStudy={setStudy} /> : null}
             </div>
         </div> : null }
-          </>
-    : <Loading /> }
     </>
     );
 };

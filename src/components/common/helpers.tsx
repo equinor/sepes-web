@@ -12,3 +12,24 @@ export const lineBreak = (text: string) => {
         })
         : '';
 };
+
+export const checkIfRequiredFieldsAreNull = (value:any, userPressedCreate?:boolean) => {
+    if ((value === '' || value === undefined) && userPressedCreate) {
+        return 'error';
+    }
+    return 'default';
+
+}
+
+export const bytesToMB = (sizeInBytes: number) => {
+    return (sizeInBytes / (1024*1024)).toFixed(2);
+}
+
+export const ValidateEmail = (mail:string) => 
+{
+    if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
+    {
+        return (true);
+     }
+    return (false);
+}
