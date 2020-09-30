@@ -1,13 +1,13 @@
-import { apiCallWithToken, apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile, apiRequest } from '../auth/AuthFunctions';
 import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
-    return apiCallWithToken('api/studies');
+    return apiRequest('api/studies');
 };
 
 export const getStudy = async (id:string) => {
-    return apiCallWithToken('api/studies/' + id);
+    return apiRequest('api/studies/' + id);
 };
 
 export const createStudy = async (study:StudyObj) => {
@@ -19,7 +19,7 @@ export const editStudy = async (study:StudyObj, id?:string) => {
 };
 
 export const getDatasetList = async () => {
-    return apiCallWithToken('api/datasets/');
+    return apiRequest('api/datasets/');
 };
 
 export const addStudyDataset = async (studyId:string, datasetId:string) => {
@@ -40,13 +40,13 @@ export const editStudySpecificDataset = async (studyId: string, dataset?:Dataset
 };
 
 export const getDataset = async (datasetId: string, studyId:string) => {
-    return apiCallWithToken('api/studies/' + studyId + '/datasets/' + datasetId);
+    return apiRequest('api/studies/' + studyId + '/datasets/' + datasetId);
 };
 
 //Standard dataset
 
 export const getStandardDataset = async (datasetId: string) => {
-    return apiCallWithToken('api/datasets/' + datasetId);
+    return apiRequest('api/datasets/' + datasetId);
 };
 
 export const createStandardDataset = async (dataset?:DatasetObj) => {
@@ -58,11 +58,11 @@ export const updateStandardDataset = async (datsetId: string, dataset?:DatasetOb
 };
 
 export const getStandardDatasets = async () => {
-    return apiCallWithToken('api/datasets/');
+    return apiRequest('api/datasets/');
 };
 
 export const getParticipantList = async (search: string) => {
-    return apiCallWithToken('api/participants/?search=' + search);
+    return apiRequest('api/participants/?search=' + search);
 };
 
 export const addStudyParticipant = async (studyId:string, role:string, participant?:ParticipantObj) => {

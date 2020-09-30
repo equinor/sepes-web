@@ -66,7 +66,7 @@ const Home = () => {
             <RightWrapper>
                 <div>{mockText}</div>
                 <div style={{ bottom: '16px' }}>
-                    <Button style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
+                    <Button data-cy="new_study" style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
                 </div>
             </RightWrapper>
         </Wrapper>

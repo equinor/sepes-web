@@ -27,7 +27,7 @@
 const _ = Cypress._;
 
 Cypress.Commands.add('login', (accessType = 'ADMIN') => {
-    const cyToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imh1Tjk1SXZQZmVocTM0R3pCRFoxR1hHaXJuTSJ9';
+    const cyToken = '';
 
     window.localStorage.setItem('cyToken', cyToken);
     //window.localStorage.setItem('cyToken', Cypress.env('scaAccessToken'));

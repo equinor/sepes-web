@@ -174,7 +174,8 @@ const StudyComponentFull = (props: any) => {
               onChange={handleChange}
               label="Study name" meta="Required"
               style={{margin: "auto", marginLeft: "0"}}
-              value={studyOnChange.name} /> }
+              value={studyOnChange.name} 
+              data-cy="study_name"/> }
             {!editMode ? <SmallText>{vendor}</SmallText> :
             <TextField
               name='vendor'
@@ -184,6 +185,7 @@ const StudyComponentFull = (props: any) => {
               value={studyOnChange.vendor}
               label="Vendor"
               meta="Required"
+              data-cy="study_vendor"
             />
               }
             {!editMode ? 
@@ -198,6 +200,7 @@ const StudyComponentFull = (props: any) => {
               onChange={handleChange}
               label="wbs"
               value={studyOnChange.wbsCode}
+              data-cy="study_wbs"
             />
             }
             <div>
@@ -238,7 +241,8 @@ const StudyComponentFull = (props: any) => {
             onChange={handleChange}
             label="Description"
             style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
-            value={studyOnChange.description} /> }
+            value={studyOnChange.description} 
+            data-cy="study_description"/> }
         <div style={{ margin: 'auto' }}>
           {!showImagePicker ? <CustomLogoComponent logoUrl={logoUrl} />
           : null}
@@ -253,7 +257,7 @@ const StudyComponentFull = (props: any) => {
               {showImagePicker ? 'Hide image picker' : 'Change logo'}
           </Button>
           <SaveCancelWrapper>
-            <Button onClick={() => handleSave()}>{props.newStudy ? 'Create Study': 'Save'}</Button>
+            <Button data-cy="create_study" onClick={() => handleSave()}>{props.newStudy ? 'Create Study': 'Save'}</Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>
           </>
