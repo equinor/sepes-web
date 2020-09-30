@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
-import { EquinorIcon } from '../common/StyledComponents';
+import { EquinorIcon, StyledTitle, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
@@ -14,7 +14,7 @@ import * as notify from '../common/notify';
 const Wrapper = styled.div`
   position: absolute;
   display:grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 24px 1fr 1fr;
   grid-gap: 8px;
   background-color: #FFFFFF;
   width: 300px;
@@ -100,9 +100,9 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         });
     }
     return (
-        !loading ? 
+        !loading ?
         <Wrapper>
-            <div>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></div>
+            <StyledTitle style={{ color: '#000000' }}>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></StyledTitle>
             <TextField
                 placeholder="Please add Sandbox name..."
                 name="name"
@@ -112,6 +112,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={handleChange}
                 value={sandbox.name}
             />
+            <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
             <CoreDevDropdown
                 label="Location"
                 options={regions}

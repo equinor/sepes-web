@@ -28,6 +28,12 @@ const Wrapper = styled.div`
     width:400px;
   `;
 
+  const HelperTextWrapper = styled.div`
+    border-radius:4px;
+    background-color: #D5EAF4;
+    padding:16px;
+  `;
+
 const SaveCancelWrapper = styled.div`
     display: grid;
     grid-gap:16px;
@@ -39,7 +45,7 @@ const options = [
     { displayValue: "3", key:'3' },
     { displayValue: "4", key:'4' }
   ];
-const width = '400px';
+const width = '512px';
 
 type StudySpecificDatasetProps = {
     datasetFromDetails: DatasetObj;
@@ -206,6 +212,9 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
                     {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                 </div>
+                {!checkUrlIfGeneralDataset() && <HelperTextWrapper>
+                This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.
+                </HelperTextWrapper> }
                 <TextField
                     placeholder="Please add data set name..."
                     name="name"
@@ -253,7 +262,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     value={dataset?.dataId}
                 />
                 <SaveCancelWrapper>
-                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>{loading ? <DotProgress /> : 'Save'}</Button>
+                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
                     <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>

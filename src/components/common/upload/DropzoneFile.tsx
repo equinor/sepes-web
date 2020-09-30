@@ -26,7 +26,7 @@ const ChooseImgdiv = styled.div`
 `;
 interface props {
   onDrop: any;
-  accept: string;
+  accept?: string;
 }
 const Dropzone = ({ onDrop, accept }: props) => {
   // Initializing useDropzone hooks with options

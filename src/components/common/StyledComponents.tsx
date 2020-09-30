@@ -7,7 +7,8 @@ import { cloud_upload,
     delete_forever,
     arrow_drop_down,
     clear,
-    mood_very_happy 
+    mood_very_happy ,
+    warning_outlined
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -15,7 +16,8 @@ const icons = {
     delete_forever,
     arrow_drop_down,
     clear,
-    mood_very_happy
+    mood_very_happy,
+    warning_outlined
 };
 Icon.add(icons);
 
@@ -33,7 +35,7 @@ export const EquinorLink = styled(Link)`
     text-decoration-line: underline;
 `;
 
-const StyledTitle = styled.div`
+export const StyledTitle = styled.div`
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.2px;
@@ -91,6 +93,12 @@ export const Inline = styled.div`
     grid-gap: 16px;
 `;
 
+const StyledRequiredLabel = styled.span`
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+`;
+
 export const Title = (props: any) => {
     let { title } = props;
 
@@ -121,5 +129,16 @@ export const TextAreaDescription = (props: any) => {
             <Label>{label}</Label>
             <TextDescription style={textStyle}>{text}</TextDescription>
         </StyledTextArea>
+    );
+}
+
+export const RequiredLabel = (props: any) => {
+    let { label } = props;
+
+    return (
+        <StyledRequiredLabel {...props}>
+            <Label>{label}</Label>
+            <Label>*Required</Label>
+        </StyledRequiredLabel>
     );
 }
