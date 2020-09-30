@@ -14,17 +14,17 @@ const Wrapper = styled.div`
 `;
 
 type ExecutionProps = {
-
+    resources:any
 };
 
-const Execution: React.FC<ExecutionProps> = ({  }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources }) => {
 
     return (
         <Wrapper>
             <div style={{backgroundColor: '#FFFFFF', padding: '16px' }}>
                 <span>{EquinorIcon('mood_very_happy', '#007079', 24)} Data is now available in storage account</span>
                 <div style={{float: 'right' , minWidth:'400px'}}>
-                    <ResourcesComponent />
+                    <ResourcesComponent resources={resources} />
                 </div>
             </div>
             <VmConfig showAddNewVm={false} />

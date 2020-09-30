@@ -95,6 +95,10 @@ export const deleteSandbox = async (studyId: string, sandboxId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'DELETE');
 };
 
+export const getResourceStatus = async (studyId: string, sandboxId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {

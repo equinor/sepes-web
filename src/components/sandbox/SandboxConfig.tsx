@@ -28,17 +28,17 @@ const InfoWrapper = styled.div`
 `;
 
 type SandboxConfigProps = {
-
+  resources:any;
 };
 
-const SandboxConfig: React.FC<SandboxConfigProps> = ({  }) => {
+const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources }) => {
 
     return (
         <Wrapper>
             <InfoWrapper>
                 <Dataset />
                 <PolicyComponent />
-                <ResourcesComponent />
+                <ResourcesComponent resources={resources} />
             </InfoWrapper>
             <VmConfig showAddNewVm={true} />
         </Wrapper>
