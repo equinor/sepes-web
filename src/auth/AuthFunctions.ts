@@ -377,6 +377,40 @@ export const postputStudy = async (study: StudyObj, url:any, method:string, imag
   }
 
     return new Promise(function (resolve, reject){
+
+      const _post = async (accessToken) => {
+        console.log('post request made to Graph API at: ' + new Date().toString());
+        try {
+
+            const headers = makeHeaders(accessToken)
+            const options = {
+              method,
+              headers: headers,
+              body: JSON.stringify(newStudyWithBlob)
+      };
+      return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+      .then((response) => response.json())
+      .then((responseData) => { return resolve(responseData); })
+      .catch(error => console.log(error));
+        }
+        catch (error) {
+            return resolve(error);
+        }
+    }
+
+    if (cyToken) {
+        _post(cyToken);
+    } else {
+        myMSALObj.acquireTokenSilent(loginRequest)
+            .then((tokenResponse: any) => {
+                _post(tokenResponse.accessToken);
+            }).catch((error: string) => {
+                console.log(error);
+            });
+    }
+})}
+
+/*
       myMSALObj.acquireTokenSilent(loginRequest)
       .then((tokenResponse:any) => {
   
@@ -406,7 +440,7 @@ export const postputStudy = async (study: StudyObj, url:any, method:string, imag
           console.log(error);
       });
     })
-  };
+  };*/
 
 
   function authCallback(error:any, response:any) {
