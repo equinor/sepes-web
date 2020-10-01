@@ -262,7 +262,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     value={dataset?.dataId}
                 />
                 <SaveCancelWrapper>
-                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
+                    <Button disabled={checkForInputErrors() || loading} onClick={addDataset}>{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
                     <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>
