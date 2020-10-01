@@ -66,11 +66,12 @@ const ParicipantComponent = (props: any) => {
         const studyId = window.location.pathname.split('/')[2];
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
-                if (isSubscribed && result) {
+                if (isSubscribed && !result.Message) {
                     props.setStudy({...props.study, participants: result.participants});
                     console.log("participants: ", result);
                 }
                 else {
+                    notify.show('danger', '500', result.Message, result.requestId);
                     console.log("Err getting participants");
                     //Show error component
                 }
