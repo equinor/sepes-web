@@ -55,6 +55,7 @@ const Overview = (props: any) => {
                 <TextField
                     name='resultsandlearnings'
                     placeholder="Write results and learnings from this study"
+                    data-cy="results_and_learnings"
                     multiline={true}
                     onChange={handleChange}
                     style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
@@ -64,11 +65,13 @@ const Overview = (props: any) => {
                     {editMode ?
                     <Button
                         onClick={handleSave}
+                        data-cy="save_results_and_learnings"
                     >
                         Save
                     </Button>: null}
                     <Button
                         variant="outlined"
+                        data-cy="edit_results_and_learnings"
                         style={{ marginBottom: '16px' }}
                         onClick={() => { setEditMode(!editMode); handleCancel(); }}
                     >

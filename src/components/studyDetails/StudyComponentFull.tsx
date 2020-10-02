@@ -227,6 +227,7 @@ const StudyComponentFull = (props: any) => {
             {!editMode ?
             <Button
               variant="outlined"
+              data-cy="edit_study"
               onClick={() => setEditMode(true)}
               style={{width: "100px"}}>
                 Edit
