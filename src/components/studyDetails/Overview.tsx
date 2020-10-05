@@ -6,6 +6,7 @@ import { Button, TextField, Typography } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
+import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
 
@@ -49,9 +50,9 @@ const Overview = (props: any) => {
     return (
         <Wrapper>
             <div>
-                <Typography variant="h6">Results and learnings</Typography>
+                <Label>Results and learnings</Label>
                 {!editMode ?
-                <div>{lineBreak(resultsAndLearnings)}</div>:
+                <div style={{ marginTop: '8px' }}>{lineBreak(resultsAndLearnings)}</div>:
                 <TextField
                     name='resultsandlearnings'
                     placeholder="Write results and learnings from this study"
@@ -64,12 +65,13 @@ const Overview = (props: any) => {
                     {editMode ?
                     <Button
                         onClick={handleSave}
+                        style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
                     >
                         Save
                     </Button>: null}
                     <Button
                         variant="outlined"
-                        style={{ marginBottom: '16px' }}
+                        style={{ marginBottom: '16px', marginTop: '32px' }}
                         onClick={() => { setEditMode(!editMode); handleCancel(); }}
                     >
                         {!editMode ? 'Edit results and learnings': 'Cancel'}

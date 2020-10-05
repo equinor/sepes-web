@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextField } from '@equinor/eds-core-react';
 
 export const lineBreak = (text: string) => {
     return text
@@ -33,3 +34,28 @@ export const ValidateEmail = (mail:string) =>
      }
     return (false);
 }
+
+export const returnTextField = (
+    name:string, placeholder:string, value:string, label:string, meta:string, datacy:string, handleChange:any, userPressedCreate?: any, style?:any, multiline?:boolean
+    ) => {
+        if (meta !== 'Required') {
+            userPressedCreate = false;
+        }
+        if (meta === 'limit' && value) {
+            meta = value.length + '/500';
+        }
+    return (
+      <TextField
+              name={name}
+              placeholder={placeholder}
+              variant={checkIfRequiredFieldsAreNull(value, userPressedCreate)}
+              onChange={handleChange}
+              label={label}
+              meta={meta}
+              style={style}
+              value={value}
+              data-cy={datacy}
+              multiline={multiline}
+      /> 
+    )
+  }

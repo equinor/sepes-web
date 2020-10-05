@@ -3,12 +3,13 @@ import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const ChooseImgdiv = styled.div`
-  height: 100px;
+  height: 125px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-style: groove;
-  background: #eeeeee;
+  border: 1px dashed #007079;
+  background: #F7F7F7;
   @media (max-width: 700px) {
     width: 95%;
   }

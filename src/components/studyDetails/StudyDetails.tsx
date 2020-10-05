@@ -95,7 +95,7 @@ const StudyDetails = () => {
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
                 <TabList>
                     <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                    <Tab>Data sets</Tab>
+                    <Tab data-cy="datasets_tab">Data sets</Tab>
                     <Tab>Sandboxes</Tab>
                     <Tab>Participants</Tab>
                     <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
