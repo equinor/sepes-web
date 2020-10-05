@@ -18,9 +18,9 @@ const SandboxComponent = (props: any) => {
             <DropdownWrapper>
                 <Button
                     variant="outlined"
-                    style={{ width: '200px' }}
+                    style={{ width: '200px', marginBottom: '16px' }}
                     onClick= {() => setToggle(!toggle)}
-                    >Add resource
+                    >Create sandbox
                 {EquinorIcon("arrow_drop_down","#007079", 24)}
                 </Button>
                 {toggle && <CreateSandboxComponent setToggle={setToggle} setStudy={props.setStudy} /> }
