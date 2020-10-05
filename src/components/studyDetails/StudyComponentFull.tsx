@@ -160,9 +160,20 @@ const StudyComponentFull = (props: any) => {
 
   function handleChange(evt) {
     const value = evt.target.value;
-    if ( evt.target.name === 'description' && value.length > 500) {
+    const columnName = evt.target.name;
+    const inputLength = value.length;
+    if (columnName === 'description' && inputLength > 500) {
       return;
-    } 
+    }
+    if (columnName === 'name' && inputLength > 128) {
+      return;
+    }
+    if (columnName === 'vendor' && inputLength > 128) {
+      return;
+    }
+    if (columnName === 'wbsCode' && inputLength > 64) {
+      return;
+    }
     setStudyOnChange({
       ...studyOnChange,
       [evt.target.name]: value
