@@ -10,3 +10,8 @@ describe('Create study', function () {
     it('visits page', () => {
         cy.visit('/');
     });
+
+    it('clicks create new project not using the wizard', () => {
+        cy.get('[data-cy=new_study]')
+            .click();
+    });

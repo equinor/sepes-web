@@ -126,7 +126,7 @@ const DataSetComponent = (props: any) => {
     return (
         <Wrapper>
             <Bar>
-                <Button variant="outlined" onClick={() => { redirectToStudySpecificDataset(); }}>Add study specific data set</Button>
+                <Button variant="outlined" data-cy="add_study_specific_dataset" onClick={() => { redirectToStudySpecificDataset(); }}>Add study specific data set</Button>
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div
                     onMouseEnter={() => setIsOpen(true)}

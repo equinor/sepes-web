@@ -224,6 +224,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     style={{ width }}
                     onChange={handleChange}
                     value={dataset?.name}
+                    data-cy="dataset_name"
                 />
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
@@ -233,6 +234,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                     style={{ width }}
                     onChange={handleChange}
+                    data-cy="dataset_storage_name"
                 /> : returnField('Storage account name', dataset?.storageAccountName) }
                 {!editDataset ? <CoreDevDropdown
                     width={width}
@@ -241,6 +243,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
+                    data-cy="dataset_location"
                 /> : returnField('Location', dataset?.location)}
                 <CoreDevDropdown
                     width={width}
@@ -250,6 +253,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     onChange={handleDropdownChange}
                     name="classification"
                     preSlectedValue={dataset?.classification}
+                    data-cy="dataset_classification"
                 />
                 <TextField
                     placeholder="Please add Data ID..."
@@ -260,9 +264,10 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     style={{ width }}
                     onChange={handleChange}
                     value={dataset?.dataId}
+                    data-cy="dataset_dataId"
                 />
                 <SaveCancelWrapper>
-                    <Button disabled={checkForInputErrors() || loading} onClick={addDataset}>{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
+                    <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
                     <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>
