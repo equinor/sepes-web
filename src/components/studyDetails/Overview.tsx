@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatasetsTable from '../common/customComponents/DatasetsTable';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
 import SandboxTable from '../common/customComponents/SandboxTable';
@@ -18,17 +18,25 @@ const Wrapper = styled.div`
         display: block;
     }
 `;
+type OverviewProps = {
+    study:StudyObj,
+    setStudy:any
+  };
 
-const Overview = (props: any) => {
-    const { datasets, participants, sandboxes, id, resultsAndLearnings } = props.study;
+const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
+    const { datasets, participants, sandboxes, id, resultsAndLearnings } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
+    const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
+
+    useEffect(() => {
+        setStudyOnChange(study);
+    }, [study.resultsAndLearnings]);
     const handleChange = (evt) => {
-        setStudyOnChange({ ...props.study, resultsAndLearnings: evt.target.value });
+        setStudyOnChange({ ...study, resultsAndLearnings: evt.target.value });
       }
 
     const handleSave = () => {
-        props.setStudy({ ...props.study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
+        setStudy({ ...study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
             if (result && !result.Message) {
@@ -43,7 +51,7 @@ const Overview = (props: any) => {
 
     const handleCancel = () => {
         if (editMode) {
-            setStudyOnChange(props.study);
+            setStudyOnChange(study);
         }
     }
 
@@ -52,15 +60,15 @@ const Overview = (props: any) => {
             <div>
                 <Label>Results and learnings</Label>
                 {!editMode ?
-                <div style={{ marginTop: '8px' }}>{lineBreak(resultsAndLearnings)}</div>:
+                <div style={{ marginTop: '8px' }}>{lineBreak(resultsAndLearnings || '-')}</div>:
                 <TextField
                     name='resultsandlearnings'
                     placeholder="Write results and learnings from this study"
                     data-cy="results_and_learnings"
-                    multiline={true}
+                    multiline
                     onChange={handleChange}
                     style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                    value={studyOnChange.resultsAndLearnings || resultsAndLearnings}
+                    value={studyOnChange.resultsAndLearnings}
                 />}
                 <div style={{ display: 'flex' }}>
                     {editMode ?

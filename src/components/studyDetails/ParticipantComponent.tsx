@@ -10,7 +10,7 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import { debug } from 'console';
+import { StudyObj } from '../common/interfaces';
 
 const icons = {
     close
@@ -35,7 +35,12 @@ const SearchWrapper = styled.div`
     }
 `;
 
-const ParicipantComponent = (props: any) => {
+type ParicipantComponentProps = {
+    study:StudyObj,
+    setStudy:any
+  };
+
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStudy}) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -50,7 +55,7 @@ const ParicipantComponent = (props: any) => {
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
-                props.setStudy({...props.study, participants: result.participants});
+                setStudy({...study, participants: result.participants});
                 console.log("participants: ", result);
             }
             else {
@@ -67,7 +72,7 @@ const ParicipantComponent = (props: any) => {
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (isSubscribed && !result.Message) {
-                    props.setStudy({...props.study, participants: result.participants});
+                    setStudy({...study, participants: result.participants});
                     console.log("participants: ", result);
                 }
                 else {
@@ -189,10 +194,10 @@ const ParicipantComponent = (props: any) => {
             </SearchWrapper>
             <div>
                 <ParticipantTable
-                    participants={props.study.participants && props.study.participants}
+                    participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
-                    editMode={true}
-                    />
+                    editMode
+                />
             </div>
         </Wrapper>
     )
