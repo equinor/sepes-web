@@ -202,6 +202,7 @@ const DatasetsOverviewTable = (props: any) => {
             <Button
                 variant="outlined"
                 onClick={redirectToCreateDataset}
+                data-cy="create_dataset"
             >
                 Create data set
             </Button>
