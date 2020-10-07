@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Typography } from '@equinor/eds-core-react';
-import { deleteSandbox } from '../../services/Api';
-import * as notify from '../common/notify';
+import DeleteSandboxComponent from './components/DeleteSandboxComponent';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -23,19 +22,8 @@ type StepBarProps = {
 
 const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox }) => {
     const history = useHistory();
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
-    const deleteThisSandbox = ():void => {
-        deleteSandbox(studyId, sandboxId).then((result: any) => {
-            if (result && !result.Message) {
-                history.push('/studies/' + studyId);
-                console.log("result: ", result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-        });
-    }
 
     const returnControlButtons = () => {
         switch(step) {
@@ -43,7 +31,7 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
                 return (
                     <>
                         <Button variant="outlined" onClick={() => { setStep(1)}} style={{ width: '300px' }}>Make available</Button>
-                        <Button variant="outlined" onClick={deleteThisSandbox} color="danger" style={{ width: '300px' }}>Delete sandbox</Button>
+                        <Button variant="outlined" onClick={() => setUserClickedDelete(true)} color="danger" style={{ width: '300px' }}>Delete sandbox</Button>
                     </>
                 );
             }
@@ -68,6 +56,12 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
     return (
         <Wrapper>
             <Typography variant="h2">{sandbox && sandbox.name}</Typography>
+            {userClickedDelete &&
+                <DeleteSandboxComponent
+                SandboxName={sandbox.name}
+                studyId={studyId}
+                sandboxId={sandboxId}
+                setUserClickedDelete={setUserClickedDelete} />}
             {returnControlButtons()}
         </Wrapper>
     )
