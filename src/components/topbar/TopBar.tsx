@@ -75,7 +75,7 @@ const Bar = (props:any) => {
         text: '',
         icons: (
             <Icons>
-                <Icon name="account_circle" style={{ cursor: 'pointer' }} onClick={() => setToggle(!toggle)} size={16} color={'#007079'} className='icon' />
+                <Icon name="account_circle" style={{ cursor: 'pointer' }} onClick={() => setToggle(!toggle)} size={24} color={'#007079'} className='icon' />
             </Icons>
         ),
     }
