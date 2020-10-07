@@ -28,7 +28,7 @@ const NavTabs = (props: any) => {
             <Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
                 <TabList>
                     <Tab>Studies</Tab>
-                    <Tab>Datasets</Tab>
+                    <Tab>Data sets</Tab>
                 </TabList>
             </Tabs>
         </Wrapper>

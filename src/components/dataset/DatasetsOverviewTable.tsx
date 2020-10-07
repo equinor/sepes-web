@@ -45,6 +45,7 @@ interface checkedColumns {
     dataId: boolean;
     lraId: boolean;
     tags: boolean;
+    sepesApproved: boolean;
 }
 
 interface filter {
@@ -59,6 +60,7 @@ interface filter {
     dataId: string;
     lraId: string;
     tags: string;
+    sepesApproved: string;
 }
 
 const DatasetsOverviewTable = (props: any) => {
@@ -71,13 +73,14 @@ const DatasetsOverviewTable = (props: any) => {
         sourceSystem: true,
         areaL2: true,
         areaL1: true,
-        asset: false,
+        asset: true,
         baDataOwner: false,
-        classification: true,
+        classification: false,
         countryOfOrigin: false,
         dataId: false,
         lraId: false,
-        tags: false
+        tags: false,
+        sepesApproved: false,
     });
 
     const [filter, setFilter] = useState<filter>({
@@ -91,7 +94,8 @@ const DatasetsOverviewTable = (props: any) => {
         countryOfOrigin: '',
         dataId: '',
         lraId: '',
-        tags: ''
+        tags: '',
+        sepesApproved: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
     const handleColumnsChange = (evt) => {
@@ -227,6 +231,7 @@ const DatasetsOverviewTable = (props: any) => {
                     {returnCheckbox(checkedColums.dataId, 'Data ID', 'dataId')}
                     {returnCheckbox(checkedColums.lraId, 'LRA ID', 'lraId')}
                     {returnCheckbox(checkedColums.tags, 'Tags', 'tags')}
+                    {returnCheckbox(checkedColums.sepesApproved, 'Sepes approved', 'sepesApproved')}
                 </li>
             </UnstyledList>: null }
             </div>
