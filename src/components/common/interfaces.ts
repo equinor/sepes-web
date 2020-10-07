@@ -13,7 +13,7 @@ export interface StudyObj {
 }
 
 export interface ParticipantObj {
-    name: string;
+    fullName: string;
     emailAddress: string;
     role: string;
     id: string;
