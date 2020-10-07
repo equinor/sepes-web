@@ -3,7 +3,6 @@ import { Button} from '@equinor/eds-core-react';
 import SandboxTable from '../common/customComponents/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
 import CreateSandboxComponent from './CreateSandboxComponent';
-import { ParticipantObj } from '../common/interfaces';
 import styled from 'styled-components';
 
 const DropdownWrapper = styled.div`

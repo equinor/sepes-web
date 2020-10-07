@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
+import { ParticipantObj } from '../interfaces';
+import { studyOwner } from '../Roles';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -21,16 +23,24 @@ const DatasetsTable = (props: any) => {
                     </Row>
                     </Head>
                     <Body>
-                    {props.participants && props.participants.map((row) => (
-                        <Row key={row.id}>
-                        <Cell>{row.fullName}</Cell>
-                        <Cell align="right">{row.emailAddress}</Cell>
-                        <Cell align="right">{row.role}</Cell>
-                        {props.editMode ? <Cell align="right"><Icon name="close" style={{ cursor: 'pointer' }} size={24} onClick={() => props.removeParticipant(row)} /></Cell> : null }
+                    {props.participants && props.participants.map((participant: ParticipantObj) => (
+                        <Row key={participant.id}>
+                        <Cell>{participant.fullName}</Cell>
+                        <Cell align="right">{participant.emailAddress}</Cell>
+                        <Cell align="right">{participant.role}</Cell>
+                        {props.editMode && participant.role !== studyOwner &&
+                        <Cell align="right">
+                            <Icon
+                                name="close"
+                                style={{ cursor: 'pointer' }}
+                                size={24}
+                                onClick={() => props.removeParticipant(participant)}
+                            />
+                        </Cell> }
                         </Row>
                     ))}
                     </Body>
-                </Table>
+            </Table>
         </div>
     )
 }
