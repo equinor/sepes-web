@@ -32,14 +32,15 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
         setIsSubscribed(true);
         getCurrentSandbox();
         getResources();
+        let timer:any;
         try {
-            setInterval(async () => {
+            timer = setInterval(async () => {
             getResources();
             }, 10000);
           } catch(e) {
             console.log(e);
           }
-        return () => setIsSubscribed(false);
+        return () => {clearInterval(timer); setIsSubscribed(false)};
     }, []);
 
     const getResources = () => {

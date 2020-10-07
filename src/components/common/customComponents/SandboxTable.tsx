@@ -40,7 +40,6 @@ const SandboxTable = (props: any) => {
                     <Row key={1}>
                             <Cell component="th" scope="row">No sandboxes added</Cell>
                             <Cell component="th" scope="row" />
-                            <Cell />
                     </Row>
                     }
                 </Body>
