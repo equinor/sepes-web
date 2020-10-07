@@ -39,9 +39,13 @@ const DatasetItem = styled.div`
     }
 `;
 
-const DataSetComponent = (props: any) => {
+type StudyComponentFullProps = {
+    study:StudyObj,
+    setStudy:any
+  };
+
+const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }) => {
     const history = useHistory();
-    const [datasets, setDatasets] = useState<any>(props.study.datasets);
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
@@ -53,7 +57,7 @@ const DataSetComponent = (props: any) => {
         //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
-                props.setStudy({...props.study, datasets: result.datasets });
+                setStudy({...study, datasets: result.datasets });
                 console.log("result Datasets after delete: ", result);
             }
             else {
@@ -101,7 +105,7 @@ const DataSetComponent = (props: any) => {
             //props.setStudy({...props.study, datasets: list});
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && !result.Message) {
-                    props.setStudy({...props.study, datasets: result.datasets });
+                    setStudy({...study, datasets: result.datasets });
                     console.log("resultDatasets: ", result);
                 }
                 else {
@@ -115,7 +119,7 @@ const DataSetComponent = (props: any) => {
 
     const checkIfDatasetIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        props.study.datasets.forEach((element) => {
+        study.datasets.forEach((element:any) => {
             if (element.id === id) {
                 elementExist = true;
             }
@@ -142,10 +146,10 @@ const DataSetComponent = (props: any) => {
             </Bar>
             <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
             <DatasetsTable
-                datasets={props.study.datasets}
+                datasets={study.datasets}
                 removeDataset={removeDataset}
-                editMode={true}
-                studyId={props.study.id}
+                editMode
+                studyId={study.id}
                 />
         </Wrapper>
     )

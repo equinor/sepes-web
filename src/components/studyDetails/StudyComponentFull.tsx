@@ -67,11 +67,21 @@ grid-template-columns: 1fr 1fr;
 grid-gap: 5px;
 `;
 
-const StudyComponentFull = (props: any) => {
+type StudyComponentFullProps = {
+  study:StudyObj,
+  newStudy:boolean,
+  setNewStudy:any
+  setLoading:any,
+  loading:boolean,
+  setStudy:any
+};
+
+
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy}) => {
   const history = useHistory();
-  const { id, logoUrl, name, description, wbsCode, vendor, restricted } = props.study;
-  const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
-  const [editMode, setEditMode] = useState<boolean>(props.newStudy);
+  const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
+  const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
+  const [editMode, setEditMode] = useState<boolean>(newStudy);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
@@ -87,21 +97,21 @@ const StudyComponentFull = (props: any) => {
       }
       setEditMode(false);
       sendStudyToApi(studyOnChange);
-      props.setNewStudy(false);
+      setNewStudy(false);
     }
   };
 
   const sendStudyToApi = (study: StudyObj) => {
     if (imageUrl) {
-      props.setLoading(true);
+      setLoading(true);
     }
-    if (props.newStudy) {
+    if (newStudy) {
       createStudy(study).then((result: any) => {
         if (result && !result.Message) {
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
-            props.setStudy(newStudy);
+            setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
                 if (result && ! result.Message) {
@@ -111,7 +121,7 @@ const StudyComponentFull = (props: any) => {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
-                props.setLoading(false);
+                setLoading(false);
             });
             }
         }
@@ -119,22 +129,22 @@ const StudyComponentFull = (props: any) => {
             notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
-        props.setLoading(false);
+        setLoading(false);
     });
     }
     else {
       study.id = id;
-      props.setStudy(studyOnChange);
+      setStudy(studyOnChange);
       putStudy(study, imageUrl).then((result: any) => {
         if (result && !result.Message) {
             console.log("result: ", result);
-            props.setStudy(result);
+            setStudy(result);
         }
         else {
             notify.show('danger', '500', result.Message, result.RequestId);
             console.log("Err");
         }
-        props.setLoading(false);
+        setLoading(false);
     });
     }
   }
@@ -147,14 +157,14 @@ const StudyComponentFull = (props: any) => {
   }
 
   const handleCancel = () => {
-    if (props.newStudy) {
+    if (newStudy) {
       history.push('/')
       return;
     }
     setEditMode(false);
     setImageUrl('');
     //Remove line under if we want to keep changes when clicking cancel, but don't send to api
-    setStudyOnChange(props.study);
+    setStudyOnChange(study);
     setShowImagePicker(false);
   }
 
@@ -182,7 +192,7 @@ const StudyComponentFull = (props: any) => {
 
   return (
     <div style={{ backgroundColor: "white", margin: "24px 32px 0px 32px", display: "flex", borderRadius: "4px", padding: "16px", minWidth: "120px" }}>
-      {!props.loading ?
+      {!loading ?
       <Wrapper>
         <TitleWrapper editMode={editMode}>
             {!editMode ? 
@@ -257,7 +267,7 @@ const StudyComponentFull = (props: any) => {
               data-cy="create_study"
               onClick={() => handleSave()}
             >
-                {props.newStudy ? 'Create Study': 'Save'}
+                {newStudy ? 'Create Study': 'Save'}
             </Button>
             <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
           </SaveCancelWrapper>

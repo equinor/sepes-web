@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React  from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { lock, lock_open } from '@equinor/eds-icons';
-import { getImage } from '../../services/BlobStorage';
-import Loading from '../common/LoadingComponent';
 import CustomLogoComponent from '../common/CustomLogoComponent';
+import { StudyObj } from '../common/interfaces';
 
 const icons = {
   lock,
@@ -53,8 +52,12 @@ const LogoTitleWrapper = styled.div`
   }
 `;
 
-const StudyComponent = (props: any) => {
-  const { name, description, restricted, id, vendor, logoUrl } = props.study;
+type StudyComponentProps = {
+  study:StudyObj
+};
+
+const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
+  const { name, description, restricted, id, vendor, logoUrl } = study;
   const url = '/studies/' + id;
 
   return (
@@ -65,7 +68,12 @@ const StudyComponent = (props: any) => {
           <div>
             <Typography variant="h6">{name}</Typography>
             <SmallText>{vendor}</SmallText>
-            <div><SmallText>{restricted ? 'Restricted' : 'Not restricted'}<Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} /></SmallText></div>
+            <div>
+              <SmallText>
+                {restricted ? 'Restricted' : 'Not restricted'}
+                <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
+              </SmallText>
+            </div>
           </div>
         </LogoTitleWrapper>
         <div>{description}</div>

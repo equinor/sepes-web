@@ -7,7 +7,8 @@ const LoadingFull = () => {
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(function(){ setShowLoading(true); }, 2000);
+    const timer = setTimeout(function(){ setShowLoading(true); }, 2000);
+    return () => clearTimeout(timer);
   },[]);
   return (
     <div>
