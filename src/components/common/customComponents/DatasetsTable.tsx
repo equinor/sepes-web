@@ -23,7 +23,7 @@ const DatasetsTable = (props: any) => {
         }
         return (
         <Cell>
-            {EquinorIcon('close', '', 24, () => props.removeDataset(row), true)}
+            {editMode && EquinorIcon('close', '', 24, () => props.removeDataset(row), true)}
         </Cell>
         );
     }
@@ -35,7 +35,7 @@ const DatasetsTable = (props: any) => {
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
                         <Cell as="th" scope="col">Sandboxes</Cell>
-                        {editMode ? <Cell style={{ width: '10px' }} as="th" scope="col" /> : null}
+                        {<Cell style={{ width: '10px' }} as="th" scope="col" />}
                     </Row>
                     </Head>
                     <Body>
@@ -43,13 +43,12 @@ const DatasetsTable = (props: any) => {
                         <Row key={row.id}>
                             <Cell component="th" scope="row">{row.name}</Cell>
                             <Cell component="th" scope="row" />
-                            {editMode && returnCell(row)}
+                            {returnCell(row)}
                         </Row>
                     )):
                     <Row key={1}>
                             <Cell component="th" scope="row">No datasets added</Cell>
                             <Cell component="th" scope="row" />
-                            <Cell />
                     </Row>
                     }
                     </Body>

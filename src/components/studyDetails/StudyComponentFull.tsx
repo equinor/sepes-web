@@ -8,7 +8,7 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { returnTextField } from '../common/helpers';
+import { returnTextField, checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
@@ -208,9 +208,49 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             </SmallIconWrapper>
             </> :
             <>
-            {returnTextField('name', 'What is the study name?', studyOnChange.name, 'Study name', 'Required', 'study_name', handleChange, userPressedCreate, { margin: 'auto', marginLeft: '0' })}
-            {returnTextField('vendor', 'Who is the vendor?', studyOnChange.vendor, 'Vendor', 'Required', 'study_vendor', handleChange, userPressedCreate)}
-            {returnTextField('wbsCode', 'Wbs for the study', studyOnChange.wbsCode, 'wbs', '', 'study_wbs', handleChange, userPressedCreate)}
+            <TextField
+              name='name'
+              placeholder="What is the study name?"
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
+              onChange={handleChange}
+              label="Study name" 
+              meta="(required)"
+              style={{ margin: 'auto', marginLeft: '0' }}
+              value={studyOnChange.name}
+              data-cy="study_name"
+            />
+            <TextField
+              name='vendor'
+              placeholder="Who is the vendor?"
+              variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
+              onChange={handleChange}
+              value={studyOnChange.vendor}
+              label="Vendor"
+              meta="(required)"
+              data-cy="study_vendor"
+              inputIcon={
+                <div style={{ marginRight: '-80px', backgroundColor: '' }}>
+                  <Icon style={{ position: 'absolute', right: '4px' }} name="business" size={24} />
+                </div>
+              }
+            />
+            <TextField
+              name='wbsCode'
+              helperIcon={icons.dollar}
+              placeholder="Wbs for the study"
+              onChange={handleChange}
+              label="wbs"
+              value={studyOnChange.wbsCode}
+              data-cy="study_wbs"
+              inputIcon={
+                <div style={{ marginRight: '-80px', backgroundColor: '' }}>
+                  <Icon style={{ position: 'absolute', right: '4px', top: '-2px' }} name="dollar" size={24} />
+                </div>
+              }
+            />
+            {/*returnTextField('name', 'What is the study name?', studyOnChange.name, 'Study name', 'Required', 'study_name', handleChange, '', userPressedCreate , { margin: 'auto', marginLeft: '0' })*/}
+            {/*returnTextField('vendor', 'Who is the vendor?', studyOnChange.vendor, 'Vendor', 'Required', 'study_vendor', handleChange, '', userPressedCreate)*/}
+            {/*returnTextField('wbsCode', 'Wbs for the study', studyOnChange.wbsCode, 'wbs', '', 'study_wbs', handleChange, '', userPressedCreate)*/}
             </>}
             <div>
                 {!editMode ?

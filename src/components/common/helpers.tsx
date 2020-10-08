@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextField } from '@equinor/eds-core-react';
+import { EquinorIcon } from '../common/StyledComponents';
 
 export const lineBreak = (text: string) => {
     return text

@@ -90,6 +90,9 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
                 </div>
             </div>
             <div>
+                <SandboxTable
+                    sandboxes={sandboxes}
+                />
                 <DatasetsTable
                     datasets={datasets}
                     editMode={false}
@@ -98,9 +101,6 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
                 <ParticipantTable
                     participants={participants}
                     editMode={false}
-                />
-                <SandboxTable
-                    sandboxes={sandboxes}
                 />
             </div>
         </Wrapper>
