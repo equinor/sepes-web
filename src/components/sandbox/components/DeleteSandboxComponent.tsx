@@ -4,7 +4,6 @@ import * as notify from '../../common/notify';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { deleteSandbox } from '../../../services/Api';
-import * as notify from '../../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
