@@ -70,7 +70,7 @@ const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
             <SmallText>{vendor}</SmallText>
             <div>
               <SmallText>
-                {restricted ? 'Restricted' : 'Not restricted'}
+                {restricted ? 'Hidden' : 'Not hidden'}
                 <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
               </SmallText>
             </div>

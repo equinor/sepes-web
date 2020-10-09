@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import { getStandardDatasets } from '../../services/Api';
 import DatasetsOverviewTable from './DatasetsOverviewTable';
+import LoadingComponentFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
 
@@ -36,6 +37,7 @@ const Dataset = (props: any) => {
 
     return (
         <Wrapper>
+            {loading && <LoadingComponentFull />}
             <DatasetsOverviewTable datasets={datasets} />
         </Wrapper>
     )

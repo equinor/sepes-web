@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Button } from '@equinor/eds-core-react';
+import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
-import { Table, Icon } from '@equinor/eds-core-react';
+import { Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
@@ -10,7 +10,6 @@ import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
 import * as notify from '../common/notify';
 
-const { Body, Row, Cell, Head } = Table;
 const icons = {
     close
 };
@@ -24,18 +23,11 @@ const Wrapper = styled.div`
 
 const Bar = styled.div`
     display: grid;
-    grid-template-columns: 1fr 0.3fr 1fr;
-    margin-left: 50%;
+    grid-template-columns: 256px 0.3fr 1fr;
+    margin-left: 60%;
     z-index:99;
     @media (max-width: 768px) {
         margin-left: 0;
-    }
-`;
-
-const DatasetItem = styled.div`
-    margin-bottom: 10px;
-    &:hover {
-        background-color: #D5EAF4;
     }
 `;
 
@@ -130,7 +122,13 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     return (
         <Wrapper>
             <Bar>
-                <Button variant="outlined" data-cy="add_study_specific_dataset" onClick={() => { redirectToStudySpecificDataset(); }}>Create study specific data set</Button>
+                <Button
+                    variant="outlined"
+                    data-cy="add_study_specific_dataset"
+                    onClick={() => { redirectToStudySpecificDataset(); }}
+                >
+                        Create study specific data set
+                </Button>
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div
                     onMouseEnter={() => setIsOpen(true)}
