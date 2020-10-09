@@ -17,7 +17,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 20px 20px 1fr;
+    grid-template-rows: 20px 20px minmax(256px, 1fr);
     grid-gap: 23px;
 `;
 
@@ -26,6 +26,7 @@ const Bar = styled.div`
     grid-template-columns: 256px 0.3fr 1fr;
     margin-left: 60%;
     z-index:99;
+    margin-top: 32px;
     @media (max-width: 768px) {
         margin-left: 0;
     }
@@ -139,16 +140,19 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
                         arrayList={datasetsList}
                         isOpen={isOpen}
                         filter={checkIfDatasetIsAlreadyAdded}
+                        label="Add data set from catalogue"
                     />
                 </div>
             </Bar>
-            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
-            <DatasetsTable
-                datasets={study.datasets}
-                removeDataset={removeDataset}
-                editMode
-                studyId={study.id}
+            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>Advanced search</Link>
+            <div style={{ marginTop: '32px' }}>
+                <DatasetsTable
+                    datasets={study.datasets}
+                    removeDataset={removeDataset}
+                    editMode
+                    studyId={study.id}
                 />
+            </div>
         </Wrapper>
     )
 }

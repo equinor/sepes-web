@@ -225,6 +225,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     onChange={handleChange}
                     value={dataset?.name}
                     data-cy="dataset_name"
+                    autocomplete="off"
                 />
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
