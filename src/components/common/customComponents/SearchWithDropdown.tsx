@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Search } from '@equinor/eds-core-react';
+import { Label } from '../StyledComponents';
 
 const DatasetItem = styled.div`
     padding: 16px;
@@ -30,6 +31,7 @@ const SearchWithDropdown = (props: any) => {
     }
     return (
         <div>
+            <Label style={{marginTop: '-16px'}}>{props.label}</Label>
             <Search onChange={handleOnSearchValueChange} value={props.text || searchValue} placeholder="Type to search" label="test" />
                     <Wrapper isOpen={props.isOpen}>
                     {(props.isOpen || searchValue)  && props.arrayList && props.arrayList.map((row: any) => (
