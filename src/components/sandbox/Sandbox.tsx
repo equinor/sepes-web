@@ -4,6 +4,7 @@ import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
 import { getSandbox, getResourceStatus } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
+import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import styled from 'styled-components';
@@ -82,11 +83,23 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
         }
     }
 
+    const returnVmDetailsComponent = () => {
+        switch (step) {
+            case 0:
+                return <VmConfig showAddNewVm={false} />;
+            case 1:
+                return <VmConfig showAddNewVm={false} />;
+            default:
+                return <SandboxConfig resources={resources} />;
+        }
+    }
+
     return (
         <Wrapper>
             {loading && <LoadingFull /> }
             <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
             {returnStepComponent()}
+            {(step === 0 || step === 1) && <VmConfig showAddNewVm={step === 0} />}
         </Wrapper>
     )
 }

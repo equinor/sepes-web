@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Checkbox } from '@equinor/eds-core-react';
-import styled from 'styled-components';
+import { EquinorIcon } from '../../common/StyledComponents';
 const { Body, Row, Cell, Head } = Table;
 
 const mockData = [
@@ -10,23 +10,13 @@ const mockData = [
         enabled: true
     },
     {
-        name: 'Abbreviations',
-        status: 'Internal',
-        enabled: false
-    },
-    {
         name: 'Data set #3',
         status: 'Restricted',
         enabled: true
     },
-    {
-        name: 'Output from sandbox #1',
-        status: 'Restricted',
-        enabled: false
-    },
 ]
 
-const Dataset = (props: any) => {
+const DatasetConfirmed = (props: any) => {
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
                     <Head>
@@ -40,13 +30,8 @@ const Dataset = (props: any) => {
                             return(
                                 <Row key={index}>
                                     <Cell component="th" scope="row">
-                                    <div style={{ paddingTop: '6px' }}>
-                                        <Checkbox
-                                            checked={dataset.enabled}
-                                            value={dataset.enabled}
-                                            label={dataset.name}
-                                        />
-                                    </div>
+                                        {EquinorIcon('check', '#007079', 24)}
+                                        <span style={{marginLeft: '32px'}}>{dataset.name}</span>
                                     </Cell>
                                     <Cell style={{ width: '32px' }}>{dataset.status}</Cell>
                                 </Row>
@@ -57,4 +42,4 @@ const Dataset = (props: any) => {
     )
 }
 
-export default Dataset;
+export default DatasetConfirmed;

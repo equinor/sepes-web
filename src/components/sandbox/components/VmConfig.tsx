@@ -25,7 +25,7 @@ const Dataset: React.FC<DatasetProps> = ({ showAddNewVm }) => {
     }
     const returnStepComponent = () => {
         switch (activeTab) {
-            case 0:
+            case mockVms.length:
                 return <AddNewVm />;
             default:
                 return <VmDetails vm={mockVms[activeTab - 1]} />;
@@ -34,12 +34,12 @@ const Dataset: React.FC<DatasetProps> = ({ showAddNewVm }) => {
 
     return (
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
-            <Tabs style={{borderRadius: '4px'}} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
+            <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
                     <TabList>
-                        {showAddNewVm ? <Tab style={{ borderRadius: '4px' }}>Add new vm</Tab>: <Tab style={{display: 'none' }} /> }
                         {mockVms.map((vm: any) => {
-                            return <Tab>{vm.name}</Tab>
+                            return <Tab style={{ borderRadius: '4px' }}>{vm.name}</Tab>;
                         })}
+                        {showAddNewVm ? <Tab style={{ borderRadius: '4px' }}>Add new vm</Tab> : <Tab style={{ display: 'none' }} /> }
                     </TabList>
             </Tabs>
             {returnStepComponent()}
