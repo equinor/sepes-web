@@ -19,7 +19,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px 1fr;
+    grid-template-rows: 45px minmax(256px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
@@ -27,6 +27,7 @@ const Wrapper = styled.div`
 const SearchWrapper = styled.div`
     z-index:99;
     display: grid;
+    margin-top:32px;
     grid-template-columns: 2fr 0.5fr 0.5fr;
     grid-gap: 10px;
     margin-left: 50%;
@@ -192,7 +193,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
                 </div>
                 <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
             </SearchWrapper>
-            <div>
+            <div style={{ marginTop: '32px', paddingBottom: '128px' }}>
                 <ParticipantTable
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}

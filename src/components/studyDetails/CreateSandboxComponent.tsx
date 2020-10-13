@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   width: 300px;
   padding: 16px;
   right: 48px;
-  margin-top: 8px;
+  margin-top: -8px;
   box-shadow: 0 0 4px 4px #E7E7E7;
   border-radius: 4px;
 `;
