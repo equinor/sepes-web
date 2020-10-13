@@ -8,7 +8,7 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { returnTextField, checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { returnTextField, checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
@@ -288,7 +288,18 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         {!editMode ?
           <DescriptionWrapper>{description}</DescriptionWrapper>:
           <div style={{margin: 'auto 0 auto 0'}}>
-          {returnTextField('description', 'Describe the study', studyOnChange.description, 'Description', 'limit', 'study_description', handleChange, userPressedCreate, { margin: 'auto', marginLeft: '0', height: '152px'}, true)}
+            <TextField
+              name='description'
+              placeholder="Describe the study"
+              multiline
+              onChange={handleChange}
+              meta={returnLimitMeta(500, studyOnChange.description)}
+              label="Description"
+              style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
+              value={studyOnChange.description}
+              data-cy="study_description"
+            />
+          {/*returnTextField('description', 'Describe the study', studyOnChange.description, 'Description', 'limit', 'study_description', handleChange, userPressedCreate, { margin: 'auto', marginLeft: '0', height: '152px'}, true)*/}
           </div>}
         <div style={{margin: 'auto 0 auto 0'}}>
           {!showImagePicker && <div style={{ margin: 'auto 0 auto 16px' }}><CustomLogoComponent logoUrl={logoUrl} /></div>}

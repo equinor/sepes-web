@@ -36,14 +36,26 @@ export const ValidateEmail = (mail:string) =>
     return (false);
 }
 
+export const returnLimitMeta = (limit:number, value:string) => {
+    if (value) {
+        return value.length + '/' + limit;
+    }
+    return '0/' + limit;
+}
+
 export const returnTextField = (
     name:string, placeholder:string, value:string, label:string, meta:string, datacy:string, handleChange:any, userPressedCreate?: any, style?:any, multiline?:boolean
     ) => {
         if (meta !== 'Required') {
             userPressedCreate = false;
         }
-        if (meta === 'limit' && value) {
-            meta = value.length + '/500';
+        if (meta === 'limit') {
+            if (!value) {
+                meta = '0/500';
+            }
+            else {
+                meta = value.length + '/500';
+            }
         }
     return (
       <TextField
