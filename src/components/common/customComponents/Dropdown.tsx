@@ -38,6 +38,7 @@ const DropdownOption = styled.p`
   font-size: 16px;
   width: ${(props: any) => (props.width ? props.width : "220px")};
   padding-left: 24px;
+  padding-top: 16px;
 `;
 
 const Label = styled.p`

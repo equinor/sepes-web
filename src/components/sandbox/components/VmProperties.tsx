@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Typography } from '@equinor/eds-core-react';
-import { StyledTitle } from '../../common/StyledComponents';
+import { EquinorIcon } from '../../common/StyledComponents';
+import MoreActions from '../components/MoreActions';
 
 const Wrapper = styled.div`
     margin-Top: 16px;
@@ -15,6 +16,12 @@ type VmPropertiesProps = {
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties }) => {
+    const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
+
+    const handleToggle = () => {
+        setDisplayMoreActions(!displayMoreActions);
+    }
+
     return (
         <div>
             <Typography variant="h2">Properties</Typography>
@@ -40,7 +47,25 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties }) => {
                     <div>128GB</div>
                 </div>
             </Wrapper>
-            <Button variant="outlined" style={{ marginTop: '24px' }}>Password reset</Button>
+            <Button
+                style={{ marginTop: '24px', width: '216px' }}
+            >
+                Open virtual machine
+                <div style={{ marginLeft: 'auto', }}>
+                    {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
+                </div>
+            </Button>
+            <Button
+                variant="outlined"
+                style={{ marginTop: '8px', width: '216px' }}
+                onClick={() => handleToggle()}
+            >
+                More actions
+                <div style={{ marginLeft: 'auto', }}>
+                    {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
+                </div>
+                {displayMoreActions && <MoreActions />}
+            </Button>
         </div>
     )
 }
