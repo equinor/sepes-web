@@ -89,6 +89,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   const handleSave = () => {
+    setHasChanged(false);
     setUserPressedCreate(true);
     if (checkRequiredFieldsArNotNull()) {
       return;
