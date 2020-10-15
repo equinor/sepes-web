@@ -165,11 +165,11 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         }
     }
 
-    const handleChange = evt => {
+    const handleChange = (columName:string, value:string) => {
         setHasChanged(true);
         setDataset({
           ...dataset,
-          [evt.target.name]: evt.target.value
+          [columName]: value
         });
     };
 
@@ -230,24 +230,22 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 </HelperTextWrapper> }
                 <TextField
                     placeholder="Please add data set name..."
-                    name="name"
                     label="Dataset name"
                     meta="Required"
                     variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('name', e.target.value)}
                     value={dataset?.name}
                     data-cy="dataset_name"
                     autocomplete="off"
                 />
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
-                    name="storageAccountName"
                     label="Storage account name"
                     meta="Required"
                     variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                     data-cy="dataset_storage_name"
                 /> : returnField('Storage account name', dataset?.storageAccountName) }
                 {!editDataset ? <CoreDevDropdown
@@ -271,12 +269,11 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 />
                 <TextField
                     placeholder="Please add Data ID..."
-                    name="dataId"
                     label="DataId"
                     meta=""
                     type="number"
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('dataId', e.target.value)}
                     value={dataset?.dataId}
                     data-cy="dataset_dataId"
                 />

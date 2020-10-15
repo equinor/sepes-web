@@ -67,7 +67,7 @@ describe('Create study', function () {
                 cy.get('[data-cy=vm_username]')
                     .type('cy username')
                 cy.get('[data-cy=vm_password]')
-                    .type('cy password')
+                    .type('Cypassword123!!')
 
                 cy.get('[data-cy=create_vm]')
                 .click()
