@@ -1,5 +1,5 @@
 import { apiRequestWithToken, postputStudy, postFile, apiRequest } from '../auth/AuthFunctions';
-import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj } from "../components/common/interfaces";
+import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj, VmObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
@@ -97,6 +97,18 @@ export const deleteSandbox = async (studyId: string, sandboxId: string) => {
 
 export const getResourceStatus = async (studyId: string, sandboxId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
+};
+
+export const createVirtualMachine = async (sandboxId: string, vm:VmObj) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId, 'POST', vm);
+};
+
+export const getVirtualMachineForSandbox = async (sandboxId: string) => {
+    return apiRequestWithToken('api/virtualmachines/forsandbox/' + sandboxId, 'GET');
+};
+
+export const getVmName = async (studyName: any, sandboxname: any, userSuffix:string) => {
+    return apiRequestWithToken('api/virtualmachines/calculateName/' + studyName + '/' + sandboxname + '/' + userSuffix, 'GET');
 };
 
 //Lookup

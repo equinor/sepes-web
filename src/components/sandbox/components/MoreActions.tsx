@@ -2,17 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { EquinorIcon } from '../../common/StyledComponents';
 
-let mockVms = [
-    {
-        id: 1,
-        name: 'VM123'
-    },
-    {
-        id: 2,
-        name: 'VM321'
-    }
-];
-
 const Wrapper = styled.div`
     position: absolute;
     background-color: #ffffff;

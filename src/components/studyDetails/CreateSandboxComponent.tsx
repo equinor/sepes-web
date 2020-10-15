@@ -111,6 +111,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}
                 onChange={handleChange}
                 value={sandbox.name}
+                data-cy="sandbox_name"
             />
             <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
             <CoreDevDropdown
@@ -119,6 +120,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 width={width}
                 onChange={handleDropdownChange}
                 name="region"
+                data-cy="sandbox_region"
             />
             <CoreDevDropdown
                 label="Template"
@@ -126,8 +128,9 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 width={width}
                 onChange={handleDropdownChange}
                 name="template"
+                data-cy="sandbox_template"
             />
-            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()}>Create</Button>
+            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()} data-cy="create_actual_sandbox">Create</Button>
         </Wrapper>: <LoadingFull />
     )
 }
