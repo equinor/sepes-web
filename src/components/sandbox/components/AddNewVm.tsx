@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox } from '@equinor/eds-core-react';
 import { returnLimitMeta } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
@@ -38,8 +38,9 @@ const options = [
 };
 
 const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
+
     const sandboxId = window.location.pathname.split('/')[4];
-    const [checked, updateChecked] = useState('one')
+    const [checked, updateChecked] = useState('one');
     const [vm, setVm] = useState<VmObj>({
         name: '',
         region: 'norwayeast',
@@ -52,6 +53,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
     const [actualVmName, setActualVmName] = useState<string>('');
 
     const width = '400px';
+
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
+        return () => clearTimeout(timeoutId);
+      }, [vm.name]);
+
+
     const handleDropdownChange = (value, name:string): void => {
         setVm({
           ...vm,
@@ -103,7 +112,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
         <Wrapper>
             <TextField
                 placeholder="Name"
-                onChange={(e: any) => { handleChange('name', e.target.value); calculateVmName(e.target.value); }}
+                onChange={(e: any) => {
+                    handleChange('name', e.target.value);
+                    }}
                 value={vm.name}
                 label="Name"
                 meta={returnLimitMeta(20, vm.name)}
