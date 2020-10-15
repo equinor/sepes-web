@@ -102,7 +102,7 @@ const StudyDetails = () => {
                 <TabList>
                     <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                     <Tab data-cy="datasets_tab">Data sets</Tab>
-                    <Tab>Sandboxes</Tab>
+                    <Tab data-cy="sandbox_tab">Sandboxes</Tab>
                     <Tab>Participants</Tab>
                     <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
                 </TabList>

@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     padding: 16px;
     margin-bottom: 128px;
     display:grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 3fr;
     grid-gap: 16px;
   `;
 
@@ -37,7 +37,6 @@ const options = [
   ];
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
-
     const [rules, setRules] = useState<any>(mockRules);
 
     const addRule = () => {
@@ -74,7 +73,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
 
     return (
         <Wrapper>
-            <VmProperties vmProperties="" />
+            <VmProperties vmProperties={vm} />
             <div>
                 <Table style={{ width: '100%' }}>
                         <Head>

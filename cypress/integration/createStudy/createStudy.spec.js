@@ -8,7 +8,7 @@ describe('Create study', function () {
     });
 
     it('visits page', () => {
-        cy.visit('/studies/2038');
+        cy.visit('/');
     });
     
     it('clicks create new project not using the wizard', () => {
