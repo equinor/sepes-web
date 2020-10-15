@@ -7,6 +7,7 @@ import SandBoxComponent from './SandboxComponent';
 import Overview from './Overview';
 import * as api from '../../services/Api';
 import { Tabs } from '@equinor/eds-core-react';
+import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 
@@ -30,6 +31,7 @@ const StudyDetails = () => {
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
     const [showOverview, setShowOverview] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -84,6 +86,7 @@ const StudyDetails = () => {
 
     return (
     <>
+    <Promt hasChanged={hasChanged} />
     {!loading ?
     <StudyComponentFull
         study={study}
@@ -92,6 +95,7 @@ const StudyDetails = () => {
         setLoading={setLoading}
         loading={loading}
         setStudy={setStudy}
+        setHasChanged={setHasChanged}
     /> :
     <LoadingWrapper>
          <LoadingFull />
@@ -108,10 +112,10 @@ const StudyDetails = () => {
                 </TabList>
             </Tabs>
             <div style={{ padding: '16px' }}>
-        {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
-        {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
-        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} /> : null}
-        {showOverview ? <Overview study={study} setStudy={setStudy} /> : null}
+        {showDatasets && <DataSetComponent study={study && study} setStudy={setStudy} />}
+        {showParticipants && <ParticipantComponent study={study && study} setStudy={setStudy} />}
+        {showSandboxes && <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} setHasChanged={setHasChanged} />}
+        {showOverview && <Overview study={study} setStudy={setStudy} setHasChanged={setHasChanged} />}
             </div>
         </div> : null }
     </>

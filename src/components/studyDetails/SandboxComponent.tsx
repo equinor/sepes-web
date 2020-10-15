@@ -20,10 +20,11 @@ const Wrapper = styled.div`
 
 type SandboxComponentProps = {
     sandboxes:any,
-    setStudy:any
+    setStudy:any,
+    setHasChanged:any
   };
 
-const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy }) => {
+const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy, setHasChanged }) => {
     const [toggle, setToggle] = useState<boolean>(false);
     return (
         <Wrapper>
@@ -36,7 +37,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy
                     >Create sandbox
                 {EquinorIcon("arrow_drop_down","#007079", 24)}
                 </Button>
-                {toggle && <CreateSandboxComponent setToggle={setToggle} setStudy={setStudy} /> }
+                {toggle && <CreateSandboxComponent setHasChanged={setHasChanged} setToggle={setToggle} setStudy={setStudy} /> }
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
                 <SandboxTable

@@ -20,10 +20,11 @@ const Wrapper = styled.div`
 `;
 type OverviewProps = {
     study:StudyObj,
-    setStudy:any
+    setStudy:any,
+    setHasChanged:any
   };
 
-const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
+const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) => {
     const { datasets, participants, sandboxes, id, resultsAndLearnings } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -32,6 +33,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
         setStudyOnChange(study);
     }, [study.resultsAndLearnings]);
     const handleChange = (evt) => {
+        setHasChanged(true);
         setStudyOnChange({ ...study, resultsAndLearnings: evt.target.value });
       }
 
@@ -41,6 +43,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
             if (result && !result.Message) {
                 console.log("result: ", result);
+                setHasChanged(false);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -51,6 +54,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy }) => {
 
     const handleCancel = () => {
         if (editMode) {
+            setHasChanged(false);
             setStudyOnChange(study);
         }
     }

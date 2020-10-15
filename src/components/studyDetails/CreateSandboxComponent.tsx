@@ -35,9 +35,10 @@ const options = [
 type CreateSandboxComponentProps = {
     setToggle: (value:any) => void;
     setStudy: (value:any) => void;
+    setHasChanged:any;
 };
 const width = '268px';
-const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy }) => {
+const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     const [loading, setLoading] = useState<Boolean>(false);
@@ -53,12 +54,14 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         id: ''
     });
     const handleChange = evt => {
+        setHasChanged(true);
         setSandbox({
           ...sandbox,
           [evt.target.name]: evt.target.value
         });
     };
     const handleDropdownChange = (value, name:string): void => {
+        setHasChanged(true);
         setSandbox({
           ...sandbox,
           [name]: value

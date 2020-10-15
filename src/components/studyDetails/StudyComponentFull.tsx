@@ -11,6 +11,7 @@ import CustomLogoComponent from '../common/CustomLogoComponent';
 import { returnTextField, checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
+import Promt from '../common/Promt';
 import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
@@ -73,11 +74,12 @@ type StudyComponentFullProps = {
   setNewStudy:any
   setLoading:any,
   loading:boolean,
-  setStudy:any
+  setStudy:any,
+  setHasChanged:any
 };
 
 
-const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy}) => {
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged}) => {
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -115,6 +117,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
                 if (result && ! result.Message) {
+                    setHasChanged(false);
                     console.log("result: ", result);
                 }
                 else {
@@ -137,6 +140,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
       setStudy(studyOnChange);
       putStudy(study, imageUrl).then((result: any) => {
         if (result && !result.Message) {
+            setHasChanged(false);
             console.log("result: ", result);
             setStudy(result);
         }
@@ -157,6 +161,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   }
 
   const handleCancel = () => {
+    setHasChanged(false);
     if (newStudy) {
       history.push('/')
       return;
@@ -169,6 +174,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   }
 
   function handleChange(evt) {
+    setHasChanged(true);
     const value = evt.target.value;
     const columnName = evt.target.name;
     const inputLength = value.length;

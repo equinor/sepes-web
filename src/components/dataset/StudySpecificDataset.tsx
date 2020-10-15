@@ -12,6 +12,7 @@ import { getRegions } from '../common/commonApiCalls';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
+import Promt from '../common/Promt';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -64,6 +65,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [regions, setRegions] = useState<DropdownObj>();
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [fallBackAddress, setFallBackAddress] = useState<string>('/');
     useEffect(() => {
         checkIfEditMode();
         setIsSubscribed(true);
@@ -104,6 +107,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
                 }
@@ -117,6 +121,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -131,6 +136,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -144,6 +150,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);
@@ -159,6 +166,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     }
 
     const handleChange = evt => {
+        setHasChanged(true);
         setDataset({
           ...dataset,
           [evt.target.name]: evt.target.value
@@ -166,6 +174,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     };
 
     const handleDropdownChange = (value, name:string): void => {
+        setHasChanged(true);
         setDataset({
           ...dataset,
           [name]: value
@@ -181,9 +190,11 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             setShowEditDataset(false);
         }
         else if (!editDataset && studySpecificDataset) {
+            setFallBackAddress('/studies/' + studyId);
             history.push('/studies/' + studyId);
         }
         else {
+            setFallBackAddress('/datasets');
             history.push('/datasets');
         }
 
@@ -206,6 +217,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     };
 
     return (
+        <>
+        <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
         <OuterWrapper>
             <Wrapper>
                 <div>
@@ -273,6 +286,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 </SaveCancelWrapper>
             </Wrapper>
         </OuterWrapper>
+        </>
     )
 }
 
