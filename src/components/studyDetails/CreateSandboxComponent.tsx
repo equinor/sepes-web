@@ -80,6 +80,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     }
 
     const CreateSandbox = () => {
+        setHasChanged(false);
         setUserPressedCreate(true);
         if (!checkRequiredFieldsAreNotEmpty()) {
             return;

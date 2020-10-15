@@ -30,14 +30,16 @@ describe('Create study', function () {
     it('clicks create new study', () => {
         cy.get('[data-cy=create_study]')
             .click();
+        cy.wait(2000)
+    });
+    
+
+    it('clicks sandbox tab', () => {
         cy.get('[data-cy=sandbox_tab]')
                 .click();
     });
 
-    describe('Create sandbox', function () {
-        it('clicks sandbox tab', () => {
-            cy.get('[data-cy=sandbox_tab]')
-                .click();
+        it('clicks sandbox', () => {
             cy.get('[data-cy=create_sandbox]')
                 .click();
             
@@ -58,7 +60,6 @@ describe('Create study', function () {
 
         });
 
-        describe('Create vm', function () {
 
             it('fills out sanbox information', () => {
                 cy.get('[data-cy=vm_name]')
