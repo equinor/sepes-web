@@ -43,10 +43,10 @@ type StepBarProps = {
         },
         {
             label: 'Data retention',
-            description: 'Choose which data should be kept and which should be deleted when decomissioning the sandbox.',
+            description: 'Choose which data should be kept and which should be deleted when decommissioning the sandbox.',
         },
         {
-            label: 'Decomission sandbox',
+            label: 'Decommission sandbox',
             description: 'Resources shuts down. Data will be removed according to your data retention  choices.',
         }
     ]
@@ -74,7 +74,7 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
                 return (
                     <BtnWrapper>
                         <Button variant="outlined" onClick={() => { setStep(0)}} >{EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config</Button>
-                        <Button onClick={() => { setStep(2)}}>Decomission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}</Button>
+                        <Button onClick={() => { setStep(2)}}>Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}</Button>
                     </BtnWrapper>
                 );
             }
