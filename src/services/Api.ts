@@ -121,6 +121,12 @@ export const getStudyRoles = async () => {
     return apiRequestWithToken('api/lookup/studyroles', 'GET');
 };
 
+//Permission
+
+export const getPermissions = async () => {
+    return apiRequestWithToken('api/permissions', 'GET');
+};
+
 
 // Files
 
