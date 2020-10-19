@@ -10,10 +10,13 @@ type DatasetSidesheetViewProps = {
 
 const Wrapper = styled.div`
     display: grid;
-    grid-gap:16px;
+    grid-gap:8px;
+    overflow: auto;
+    height: 70vh;
   `;
 
 const BtnWrapper = styled.div`
+    height: 40px;
     margin-top: 16px;
 `;
 
@@ -78,6 +81,7 @@ const DatasetSidesheetView: React.FC<DatasetSidesheetViewProps> = ({ dataset }) 
             <Button variant="outlined" onClick={() => history.push('/datasets/' + dataset.id)}>Edit</Button>
             <Button variant="outlined" style={{ float: 'right' }}>View in Data Catalog</Button>
         </BtnWrapper>
+        
         </div>
     )
 }

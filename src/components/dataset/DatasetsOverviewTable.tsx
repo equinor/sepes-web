@@ -186,7 +186,6 @@ const DatasetsOverviewTable = (props: any) => {
     }
 
     const handleOnclick = (row:DatasetObj):void => {
-        window.scrollTo(0, 0);
         setToggle(true);
         setSelectedDataset(row);
     }
@@ -198,7 +197,7 @@ const DatasetsOverviewTable = (props: any) => {
                 title={selectedDataset.name}
                 open={toggle}
                 onClose={() => setToggle(!toggle)}
-                style={{ zIndex: '9999', height: 'auto', paddingBottom: '32px' }}
+                style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
                 <DatasetSidesheetView dataset={selectedDataset} />
             </SideSheet>
