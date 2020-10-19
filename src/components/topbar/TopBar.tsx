@@ -69,7 +69,6 @@ const Bar = (props:any) => {
     const rightChoice = 'icons';
     const [toggle, setToggle] = useState<boolean>(false);
     const user = useContext(UserConfig);
-
     const RIGHT_CHOICES = {
         none: null,
         text: '',

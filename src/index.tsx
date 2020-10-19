@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -6,20 +6,40 @@ import * as serviceWorker from './serviceWorker';
 import { acquireTokenSilent, signInRedirect } from './auth/AuthFunctions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
+import { getPermissions } from './services/Api';
+import { UserAgentApplication } from 'msal';
 
 
 export const UserConfig = React.createContext(myMSALObj);
 
-const renderApp = user => {
+export const Permissions = React.createContext({
+  admin: false,
+  canAdministerDatasets: false,
+  canCreateStudy: false,
+  datasetAdmin: false,
+  emailAddress: null,
+  fullName: null,
+  sponsor: false,
+  userName: null
+});
+
+const renderApp = (user, test) => {
     return ReactDOM.render(
         <React.StrictMode>
             <UserConfig.Provider value={user}>
+              <Permissions.Provider value={test}>
                 <App />
+              </Permissions.Provider>
             </UserConfig.Provider>
         </React.StrictMode>,
         document.getElementById('root')
     );
 }
+
+getPermissions().then((result: any) => {
+  if (!result.Message) {
+      console.log("result: ", result);
+  
 
 let cyToken = localStorage.getItem("cyToken");
 
@@ -31,7 +51,10 @@ if (cyToken && cyToken.length) {
         }
     };
 
-    renderApp(mockUser);
+    if (result !== undefined) {
+      renderApp(mockUser, result);
+  }
+    //renderApp(mockUser, test);
 
     /*validateAccessToken(cyToken).then(result => {
         if (result.error) {
@@ -51,12 +74,16 @@ if (cyToken && cyToken.length) {
         acquireTokenSilent();
         console.log('Sign in Silent');
     }
-        
+    
     if (myMSALObj.getAccount()) {
-        renderApp(myMSALObj);
+        renderApp(myMSALObj, result);
     }
 }
-
+}
+else {
+    console.log("Err");
+}
+});
 /*
 if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
   signInRedirect();
