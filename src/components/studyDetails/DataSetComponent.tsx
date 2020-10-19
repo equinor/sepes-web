@@ -64,7 +64,6 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
         history.push('/studies/' + studyId + '/datasets');
-        //window.location.pathname = '/studies/' + studyId + '/datasets';
     }
 
     useEffect(() => {
