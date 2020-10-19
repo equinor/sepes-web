@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatasetsTable from '../common/customComponents/DatasetsTable';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
 import SandboxTable from '../common/customComponents/SandboxTable';
-import { Button, TextField, Typography } from '@equinor/eds-core-react';
+import { Button, TextField } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
@@ -83,7 +83,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
                         data-cy="save_results_and_learnings"
                     >
                         Save
-                    </Button>: null}
+                    </Button> : null}
                     <Button
                         variant="outlined"
                         style={{ marginBottom: '16px', marginTop: '32px' }}

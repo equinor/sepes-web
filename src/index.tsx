@@ -23,24 +23,27 @@ export const Permissions = React.createContext({
   userName: null
 });
 
-const renderApp = (user, test) => {
-    return ReactDOM.render(
-        <React.StrictMode>
-            <UserConfig.Provider value={user}>
-              <Permissions.Provider value={test}>
-                <App />
-              </Permissions.Provider>
-            </UserConfig.Provider>
-        </React.StrictMode>,
-        document.getElementById('root')
-    );
-}
+const renderApp = (user) => {
+  getPermissions().then((result: any) => {
+    if (!result.Message) {
+        return ReactDOM.render(
+            <React.StrictMode>
+                <UserConfig.Provider value={user}>
+                  <Permissions.Provider value={result}>
+                    <App />
+                  </Permissions.Provider>
+                </UserConfig.Provider>
+            </React.StrictMode>,
+            document.getElementById('root')
+        );
+    }
+  else {
+    console.log('err: ', result.Message)
+  }})
+  }
 
-getPermissions().then((result: any) => {
-  if (!result.Message) {
-      console.log("result: ", result);
-  
 
+//const result = ""
 let cyToken = localStorage.getItem("cyToken");
 
 if (cyToken && cyToken.length) {
@@ -50,10 +53,7 @@ if (cyToken && cyToken.length) {
             roles: ""
         }
     };
-
-    if (result !== undefined) {
-      renderApp(mockUser, result);
-  }
+    renderApp(mockUser);
     //renderApp(mockUser, test);
 
     /*validateAccessToken(cyToken).then(result => {
@@ -76,14 +76,16 @@ if (cyToken && cyToken.length) {
     }
     
     if (myMSALObj.getAccount()) {
-        renderApp(myMSALObj, result);
+        renderApp(myMSALObj);
     }
 }
+/*
 }
+
 else {
     console.log("Err");
 }
-});
+});*/
 /*
 if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
   signInRedirect();
