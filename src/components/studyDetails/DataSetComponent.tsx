@@ -17,7 +17,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 20px 20px minmax(256px, 1fr);
+    grid-template-rows: 20px 20px minmax(299px, 1fr);
     grid-gap: 23px;
 `;
 
