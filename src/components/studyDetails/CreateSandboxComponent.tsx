@@ -45,6 +45,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
 
     useEffect(() => {
         getRegions(setRegions);
+        return () => setHasChanged(false);
     }, []);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxCreateObj>({
