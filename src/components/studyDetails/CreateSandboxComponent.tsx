@@ -110,7 +110,6 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
             <StyledTitle style={{ color: '#000000' }}>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></StyledTitle>
             <TextField
                 placeholder="Please add Sandbox name..."
-                name="name"
                 label="Sandbox name"
                 meta="Required"
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}

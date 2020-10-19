@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, Button, Checkbox } from '@equinor/eds-core-react';
+import { TextField, Typography, Button, Checkbox, Icon, Tooltip } from '@equinor/eds-core-react';
+import { info_circle } from '@equinor/eds-icons';
 import { returnLimitMeta } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
@@ -9,13 +10,18 @@ import { SandboxObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
 
+const icons = {
+    info_circle
+  };
+  Icon.add(icons);
+
 const Wrapper = styled.div`
     height: auto;
     padding: 16px;
     width: 400px;
     display:grid;
     grid-template-rows: 1fr 1fr 1fr;
-    grid-gap: 16px;
+    grid-gap: 24px;
   `;
 
   const UnstyledList = styled.ul`
@@ -37,6 +43,12 @@ const options = [
     vms:any;
 };
 
+const limits = {
+    name: 20,
+    username: 20,
+    password: 123
+}
+
 const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
 
     const sandboxId = window.location.pathname.split('/')[4];
@@ -57,6 +69,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
 
     useEffect(() => {
         const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
+        console.log(password_validate('aA1!aaaaa'));
         return () => clearTimeout(timeoutId);
       }, [vm.name]);
 
@@ -72,6 +85,15 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
     }
 
     const handleChange = (field:string, value:string) => {
+        if (field === 'name' && value.length > limits.name) {
+            return;
+        }
+        if (field === 'username' && value.length > limits.username) {
+            return;
+        }
+        if (field === 'password' && value.length > limits.password) {
+            return;
+        }
         setVm({
           ...vm,
           [field]: value
@@ -90,6 +112,16 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });
+    }
+
+    const password_validate = (password) => {
+        //Upper case charachter
+        //Between 8-123 long
+        //Atleast one number
+        //Atleast one special character
+        const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,123}$/;
+        return regex.test(password);
+
     }
 
     const calculateVmName = (value:string) => {
@@ -119,6 +151,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
                 label="Name"
                 meta={returnLimitMeta(20, vm.name)}
                 data-cy="vm_name"
+                inputIcon={
+                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                        <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                            <Icon name="info_circle" size={24} />
+                        </Tooltip>
+                    </div>
+                    }
             />
             <div>
                     <Label>Actual VM name</Label>
@@ -131,6 +170,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
                 label="Username"
                 meta="Required"
                 data-cy="vm_username"
+                inputIcon={
+                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                        <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                            <Icon name="info_circle" size={24} />
+                        </Tooltip>
+                    </div>
+                    }
             />
             <TextField
                 placeholder="Password"
@@ -140,6 +186,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
                 label="Password"
                 meta="Required"
                 data-cy="vm_password"
+                inputIcon={
+                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                        <Tooltip title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter" placement={'right'}>
+                            <Icon name="info_circle" size={24} />
+                        </Tooltip>
+                    </div>
+                    }
             />
             <UnstyledList>
                 <li>
@@ -174,6 +227,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
                 style={{width: '100px', marginLeft: 'auto' }}
                 data-cy="create_vm"
                 onClick={createVm}
+                disabled={!password_validate(vm.password)}
             >
                 Create
             </Button>

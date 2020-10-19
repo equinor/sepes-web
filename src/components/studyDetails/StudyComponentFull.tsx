@@ -234,7 +234,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               meta="(required)"
               data-cy="study_vendor"
               inputIcon={
-                <div style={{ marginRight: '-80px', backgroundColor: '' }}>
+                <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px' }} name="business" size={24} />
                 </div>
               }
@@ -247,7 +247,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               value={studyOnChange.wbsCode}
               data-cy="study_wbs"
               inputIcon={
-                <div style={{ marginRight: '-80px', backgroundColor: '' }}>
+                <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px', top: '-2px' }} name="dollar" size={24} />
                 </div>
               }
