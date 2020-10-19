@@ -14,7 +14,7 @@ const DropdownWrapper = styled.div`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px minmax(291px, 1fr);
+    grid-template-rows: 45px minmax(340px, 1fr);
     width: 100%;
 `;
 
