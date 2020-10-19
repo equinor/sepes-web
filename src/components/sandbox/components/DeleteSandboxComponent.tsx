@@ -60,7 +60,6 @@ const DeleteSandboxComponent: React.FC<DeleteSandboxProps> = ({ SandboxName, set
         <Wrapper>
             <Typography variant="h4">Sure you want to delete the sandbox with name "{SandboxName}"?</Typography>
             <TextField
-                name='text'
                 placeholder="Write the name of the sandbox to delete"
                 data-cy="results_and_learnings"
                 onChange={handleChange}

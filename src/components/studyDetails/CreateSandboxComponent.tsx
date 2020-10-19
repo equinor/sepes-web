@@ -54,11 +54,11 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         template: '',
         id: ''
     });
-    const handleChange = evt => {
+    const handleChange = (columnName:string, value:string) => {
         setHasChanged(true);
         setSandbox({
           ...sandbox,
-          [evt.target.name]: evt.target.value
+          [columnName]: value
         });
     };
     const handleDropdownChange = (value, name:string): void => {
@@ -114,7 +114,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 label="Sandbox name"
                 meta="Required"
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}
-                onChange={handleChange}
+                onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
             />

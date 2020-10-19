@@ -174,10 +174,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
     setShowImagePicker(false);
   }
 
-  function handleChange(evt) {
+  function handleChange(columnName:string, value:string) {
     setHasChanged(true);
-    const value = evt.target.value;
-    const columnName = evt.target.name;
+    //const value = evt.target.value;
+    //const columnName = evt.target.name;
     const inputLength = value.length;
     if (columnName === 'description' && inputLength > 500) {
       return;
@@ -193,7 +193,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
     }
     setStudyOnChange({
       ...studyOnChange,
-      [evt.target.name]: value
+      [columnName]: value
     });
   }
 
@@ -202,7 +202,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
       {!loading ?
       <Wrapper>
         <TitleWrapper editMode={editMode}>
-            {!editMode ? 
+            {!editMode ?
             <>
             <Title>{name}</Title>
             <SmallIconWrapper>
@@ -216,21 +216,19 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             </> :
             <>
             <TextField
-              name='name'
               placeholder="What is the study name?"
               variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
-              onChange={handleChange}
-              label="Study name" 
+              onChange={(e: any) => handleChange('name', e.target.value)}
+              label="Study name"
               meta="(required)"
               style={{ margin: 'auto', marginLeft: '0' }}
               value={studyOnChange.name}
               data-cy="study_name"
             />
             <TextField
-              name='vendor'
               placeholder="Who is the vendor?"
               variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
-              onChange={handleChange}
+              onChange={(e: any) => handleChange('vendor', e.target.value)}
               value={studyOnChange.vendor}
               label="Vendor"
               meta="(required)"
@@ -242,10 +240,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               }
             />
             <TextField
-              name='wbsCode'
               helperIcon={icons.dollar}
               placeholder="Wbs for the study"
-              onChange={handleChange}
+              onChange={(e: any) => handleChange('wbsCode', e.target.value)}
               label="wbs"
               value={studyOnChange.wbsCode}
               data-cy="study_wbs"
@@ -296,10 +293,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
           <DescriptionWrapper>{description}</DescriptionWrapper>:
           <div style={{margin: 'auto 0 auto 0'}}>
             <TextField
-              name='description'
               placeholder="Describe the study"
               multiline
-              onChange={handleChange}
+              onChange={(e: any) => handleChange('description', e.target.value)}
               meta={returnLimitMeta(500, studyOnChange.description)}
               label="Description"
               style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
