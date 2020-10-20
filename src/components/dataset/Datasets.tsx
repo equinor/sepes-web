@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import { getStandardDatasets } from '../../services/Api';
 import DatasetsOverviewTable from './DatasetsOverviewTable';
+import LoadingComponentFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
+import { Permissions } from '../../index';
+import NoAccess from '../common/NoAccess';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
@@ -13,6 +16,7 @@ const Wrapper = styled.div`
 `;
 
 const Dataset = (props: any) => {
+    const permissions = useContext(Permissions)
     const [datasets, setDatasets] = useState<any>();
     const [loading, setLoading] = useState<boolean>();
 
@@ -35,9 +39,11 @@ const Dataset = (props: any) => {
     }
 
     return (
+        permissions.canAdministerDatasets ?
         <Wrapper>
+            {loading && <LoadingComponentFull />}
             <DatasetsOverviewTable datasets={datasets} />
-        </Wrapper>
+        </Wrapper> : <NoAccess />
     )
 }
 

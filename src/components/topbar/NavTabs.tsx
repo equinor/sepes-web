@@ -1,7 +1,8 @@
-import React, { useState, useEffect, createRef, useRef } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { Tabs } from '@equinor/eds-core-react';
+import { Permissions } from '../../index';
 
 const { TabList, Tab } = Tabs;
 
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
 
 const NavTabs = (props: any) => {
     const history = useHistory();
-
+    const permissions = useContext(Permissions);
     const getActiveTab = () => {
         const location = window.location.pathname;
         return !location.includes('datasets') ? 0 : 1;
@@ -28,7 +29,7 @@ const NavTabs = (props: any) => {
             <Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
                 <TabList>
                     <Tab>Studies</Tab>
-                    <Tab>Datasets</Tab>
+                    <Tab disabled={!permissions.canAdministerDatasets}>Data sets</Tab>
                 </TabList>
             </Tabs>
         </Wrapper>

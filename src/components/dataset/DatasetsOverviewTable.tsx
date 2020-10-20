@@ -45,6 +45,7 @@ interface checkedColumns {
     dataId: boolean;
     lraId: boolean;
     tags: boolean;
+    sepesApproved: boolean;
 }
 
 interface filter {
@@ -59,6 +60,7 @@ interface filter {
     dataId: string;
     lraId: string;
     tags: string;
+    sepesApproved: string;
 }
 
 const DatasetsOverviewTable = (props: any) => {
@@ -71,13 +73,14 @@ const DatasetsOverviewTable = (props: any) => {
         sourceSystem: true,
         areaL2: true,
         areaL1: true,
-        asset: false,
+        asset: true,
         baDataOwner: false,
-        classification: true,
+        classification: false,
         countryOfOrigin: false,
         dataId: false,
         lraId: false,
-        tags: false
+        tags: false,
+        sepesApproved: false,
     });
 
     const [filter, setFilter] = useState<filter>({
@@ -91,7 +94,8 @@ const DatasetsOverviewTable = (props: any) => {
         countryOfOrigin: '',
         dataId: '',
         lraId: '',
-        tags: ''
+        tags: '',
+        sepesApproved: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
     const handleColumnsChange = (evt) => {
@@ -182,7 +186,6 @@ const DatasetsOverviewTable = (props: any) => {
     }
 
     const handleOnclick = (row:DatasetObj):void => {
-        window.scrollTo(0, 0);
         setToggle(true);
         setSelectedDataset(row);
     }
@@ -194,7 +197,7 @@ const DatasetsOverviewTable = (props: any) => {
                 title={selectedDataset.name}
                 open={toggle}
                 onClose={() => setToggle(!toggle)}
-                style={{ zIndex: '9999', height: 'auto', paddingBottom: '32px' }}
+                style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
                 <DatasetSidesheetView dataset={selectedDataset} />
             </SideSheet>
@@ -202,6 +205,7 @@ const DatasetsOverviewTable = (props: any) => {
             <Button
                 variant="outlined"
                 onClick={redirectToCreateDataset}
+                data-cy="create_dataset"
             >
                 Create data set
             </Button>
@@ -226,6 +230,7 @@ const DatasetsOverviewTable = (props: any) => {
                     {returnCheckbox(checkedColums.dataId, 'Data ID', 'dataId')}
                     {returnCheckbox(checkedColums.lraId, 'LRA ID', 'lraId')}
                     {returnCheckbox(checkedColums.tags, 'Tags', 'tags')}
+                    {returnCheckbox(checkedColums.sepesApproved, 'Sepes approved', 'sepesApproved')}
                 </li>
             </UnstyledList>: null }
             </div>

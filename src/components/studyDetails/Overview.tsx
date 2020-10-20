@@ -1,37 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatasetsTable from '../common/customComponents/DatasetsTable';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
 import SandboxTable from '../common/customComponents/SandboxTable';
-import { Button, TextField, Typography } from '@equinor/eds-core-react';
+import { Button, TextField } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
+import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(384px, 1fr);
     grid-gap: 16px;
     @media (max-width: 768px) {
         display: block;
     }
 `;
+type OverviewProps = {
+    study:StudyObj,
+    setStudy:any,
+    setHasChanged:any
+  };
 
-const Overview = (props: any) => {
-    const { datasets, participants, sandboxes, id, resultsAndLearnings } = props.study;
+const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) => {
+    const { datasets, participants, sandboxes, id, resultsAndLearnings } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [studyOnChange, setStudyOnChange] = useState<StudyObj>(props.study);
+    const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
+
+    useEffect(() => {
+        setStudyOnChange(study);
+    }, [study.resultsAndLearnings]);
     const handleChange = (evt) => {
-        setStudyOnChange({ ...props.study, resultsAndLearnings: evt.target.value });
+        setHasChanged(true);
+        setStudyOnChange({ ...study, resultsAndLearnings: evt.target.value });
       }
 
     const handleSave = () => {
-        props.setStudy({ ...props.study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
+        setStudy({ ...study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
             if (result && !result.Message) {
                 console.log("result: ", result);
+                setHasChanged(false);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -42,34 +55,39 @@ const Overview = (props: any) => {
 
     const handleCancel = () => {
         if (editMode) {
-            setStudyOnChange(props.study);
+            setHasChanged(false);
+            setStudyOnChange(study);
         }
     }
 
     return (
         <Wrapper>
             <div>
-                <Typography variant="h6">Results and learnings</Typography>
+                <Label>Results and learnings</Label>
                 {!editMode ?
-                <div>{lineBreak(resultsAndLearnings)}</div>:
+                <div style={{ marginTop: '8px' }}>{lineBreak(resultsAndLearnings || '-')}</div>:
                 <TextField
                     name='resultsandlearnings'
                     placeholder="Write results and learnings from this study"
-                    multiline={true}
+                    data-cy="results_and_learnings"
+                    multiline
                     onChange={handleChange}
                     style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                    value={studyOnChange.resultsAndLearnings || resultsAndLearnings}
+                    value={studyOnChange.resultsAndLearnings}
                 />}
                 <div style={{ display: 'flex' }}>
                     {editMode ?
                     <Button
                         onClick={handleSave}
+                        style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
+                        data-cy="save_results_and_learnings"
                     >
                         Save
-                    </Button>: null}
+                    </Button> : null}
                     <Button
                         variant="outlined"
-                        style={{ marginBottom: '16px' }}
+                        style={{ marginBottom: '16px', marginTop: '32px' }}
+                        data-cy="edit_results_and_learnings"
                         onClick={() => { setEditMode(!editMode); handleCancel(); }}
                     >
                         {!editMode ? 'Edit results and learnings': 'Cancel'}
@@ -77,6 +95,9 @@ const Overview = (props: any) => {
                 </div>
             </div>
             <div>
+                <SandboxTable
+                    sandboxes={sandboxes}
+                />
                 <DatasetsTable
                     datasets={datasets}
                     editMode={false}
@@ -85,9 +106,6 @@ const Overview = (props: any) => {
                 <ParticipantTable
                     participants={participants}
                     editMode={false}
-                />
-                <SandboxTable
-                    sandboxes={sandboxes}
                 />
             </div>
         </Wrapper>

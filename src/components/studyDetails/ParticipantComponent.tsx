@@ -10,7 +10,7 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import { debug } from 'console';
+import { StudyObj } from '../common/interfaces';
 
 const icons = {
     close
@@ -19,7 +19,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px 1fr;
+    grid-template-rows: 45px minmax(330px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
@@ -27,6 +27,7 @@ const Wrapper = styled.div`
 const SearchWrapper = styled.div`
     z-index:99;
     display: grid;
+    margin-top:32px;
     grid-template-columns: 2fr 0.5fr 0.5fr;
     grid-gap: 10px;
     margin-left: 50%;
@@ -35,7 +36,12 @@ const SearchWrapper = styled.div`
     }
 `;
 
-const ParicipantComponent = (props: any) => {
+type ParicipantComponentProps = {
+    study:StudyObj,
+    setStudy:any
+  };
+
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStudy}) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -50,7 +56,7 @@ const ParicipantComponent = (props: any) => {
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
-                props.setStudy({...props.study, participants: result.participants});
+                setStudy({...study, participants: result.participants});
                 console.log("participants: ", result);
             }
             else {
@@ -66,11 +72,12 @@ const ParicipantComponent = (props: any) => {
         const studyId = window.location.pathname.split('/')[2];
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
-                if (isSubscribed && result) {
-                    props.setStudy({...props.study, participants: result.participants});
+                if (isSubscribed && !result.Message) {
+                    setStudy({...study, participants: result.participants});
                     console.log("participants: ", result);
                 }
                 else {
+                    notify.show('danger', '500', result.Message, result.requestId);
                     console.log("Err getting participants");
                     //Show error component
                 }
@@ -186,12 +193,12 @@ const ParicipantComponent = (props: any) => {
                 </div>
                 <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
             </SearchWrapper>
-            <div>
+            <div style={{ marginTop: '32px' }}>
                 <ParticipantTable
-                    participants={props.study.participants && props.study.participants}
+                    participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
-                    editMode={true}
-                    />
+                    editMode
+                />
             </div>
         </Wrapper>
     )

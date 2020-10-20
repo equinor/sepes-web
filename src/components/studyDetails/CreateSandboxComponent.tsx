@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   width: 300px;
   padding: 16px;
   right: 48px;
-  margin-top: 8px;
+  margin-top: -16px;
   box-shadow: 0 0 4px 4px #E7E7E7;
   border-radius: 4px;
 `;
@@ -35,15 +35,17 @@ const options = [
 type CreateSandboxComponentProps = {
     setToggle: (value:any) => void;
     setStudy: (value:any) => void;
+    setHasChanged:any;
 };
 const width = '268px';
-const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy }) => {
+const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     const [loading, setLoading] = useState<Boolean>(false);
 
     useEffect(() => {
         getRegions(setRegions);
+        return () => setHasChanged(false);
     }, []);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxCreateObj>({
@@ -52,13 +54,15 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         template: '',
         id: ''
     });
-    const handleChange = evt => {
+    const handleChange = (columnName:string, value:string) => {
+        setHasChanged(true);
         setSandbox({
           ...sandbox,
-          [evt.target.name]: evt.target.value
+          [columnName]: value
         });
     };
     const handleDropdownChange = (value, name:string): void => {
+        setHasChanged(true);
         setSandbox({
           ...sandbox,
           [name]: value
@@ -77,6 +81,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     }
 
     const CreateSandbox = () => {
+        setHasChanged(false);
         setUserPressedCreate(true);
         if (!checkRequiredFieldsAreNotEmpty()) {
             return;
@@ -105,12 +110,12 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
             <StyledTitle style={{ color: '#000000' }}>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></StyledTitle>
             <TextField
                 placeholder="Please add Sandbox name..."
-                name="name"
                 label="Sandbox name"
                 meta="Required"
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}
-                onChange={handleChange}
+                onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
+                data-cy="sandbox_name"
             />
             <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
             <CoreDevDropdown
@@ -119,6 +124,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 width={width}
                 onChange={handleDropdownChange}
                 name="region"
+                data-cy="sandbox_region"
             />
             <CoreDevDropdown
                 label="Template"
@@ -126,8 +132,9 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 width={width}
                 onChange={handleDropdownChange}
                 name="template"
+                data-cy="sandbox_template"
             />
-            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()}>Create</Button>
+            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()} data-cy="create_actual_sandbox">Create</Button>
         </Wrapper>: <LoadingFull />
     )
 }

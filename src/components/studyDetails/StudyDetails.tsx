@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
@@ -6,10 +6,11 @@ import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
 import Overview from './Overview';
 import * as api from '../../services/Api';
-//import loadingGif from '../../assets/loading.gif';
 import { Tabs } from '@equinor/eds-core-react';
-import Loading from '../common/LoadingComponent';
+import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
+import { Permissions } from '../../index';
+import NoAccess from '../common/NoAccess';
 import * as notify from '../common/notify';
 
 const LoadingWrapper = styled.div`
@@ -32,6 +33,8 @@ const StudyDetails = () => {
     const [showParticipants, setShowParticipants] = useState<boolean>(false);
     const [showOverview, setShowOverview] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const permissions = useContext(Permissions);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -86,28 +89,41 @@ const StudyDetails = () => {
 
     return (
     <>
-    {!loading ? <StudyComponentFull study={study} newStudy={newStudy} setNewStudy={setNewStudy} setLoading={setLoading} loading={loading} setStudy={setStudy} /> :
-    <LoadingWrapper>
-         <LoadingFull />
-    </LoadingWrapper> }
-        {!newStudy ?
-        <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
-            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
-                <TabList>
-                    <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                    <Tab>Data sets</Tab>
-                    <Tab>Sandboxes</Tab>
-                    <Tab>Participants</Tab>
-                    <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
-                </TabList>
-            </Tabs>
-            <div style={{ padding: '16px' }}>
-        {showDatasets ? <DataSetComponent study={study && study} setStudy={setStudy} /> : null}
-        {showParticipants ? <ParticipantComponent study={study && study} setStudy={setStudy} /> : null}
-        {showSandboxes ? <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} /> : null}
-        {showOverview ? <Overview study={study} setStudy={setStudy} /> : null}
-            </div>
-        </div> : null }
+        {!permissions.canAdministerDatasets && newStudy ? <NoAccess /> :
+        <>
+            <Promt hasChanged={hasChanged} />
+            {!loading ?
+            <StudyComponentFull
+                study={study}
+                newStudy={newStudy}
+                setNewStudy={setNewStudy}
+                setLoading={setLoading}
+                loading={loading}
+                setStudy={setStudy}
+                setHasChanged={setHasChanged}
+            /> :
+            <LoadingWrapper>
+                <LoadingFull />
+            </LoadingWrapper> }
+                {!newStudy &&
+                <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+                    <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
+                        <TabList>
+                            <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
+                            <Tab data-cy="datasets_tab">Data sets</Tab>
+                            <Tab data-cy="sandbox_tab">Sandboxes</Tab>
+                            <Tab>Participants</Tab>
+                            <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
+                        </TabList>
+                    </Tabs>
+                    <div style={{ padding: '16px' }}>
+                {showDatasets && <DataSetComponent study={study && study} setStudy={setStudy} />}
+                {showParticipants && <ParticipantComponent study={study && study} setStudy={setStudy} />}
+                {showSandboxes && <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} setHasChanged={setHasChanged} />}
+                {showOverview && <Overview study={study} setStudy={setStudy} setHasChanged={setHasChanged} />}
+                    </div>
+                </div>}
+        </>}
     </>
     );
 };

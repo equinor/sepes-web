@@ -12,6 +12,7 @@ import { getRegions } from '../common/commonApiCalls';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
+import Promt from '../common/Promt';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -64,6 +65,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [regions, setRegions] = useState<DropdownObj>();
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [fallBackAddress, setFallBackAddress] = useState<string>('/');
     useEffect(() => {
         checkIfEditMode();
         setIsSubscribed(true);
@@ -104,6 +107,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
                 }
@@ -117,6 +121,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -131,6 +136,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -144,6 +150,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
+                    setHasChanged(false);
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);
@@ -158,14 +165,16 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         }
     }
 
-    const handleChange = evt => {
+    const handleChange = (columName:string, value:string) => {
+        setHasChanged(true);
         setDataset({
           ...dataset,
-          [evt.target.name]: evt.target.value
+          [columName]: value
         });
     };
 
     const handleDropdownChange = (value, name:string): void => {
+        setHasChanged(true);
         setDataset({
           ...dataset,
           [name]: value
@@ -181,9 +190,11 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             setShowEditDataset(false);
         }
         else if (!editDataset && studySpecificDataset) {
+            setFallBackAddress('/studies/' + studyId);
             history.push('/studies/' + studyId);
         }
         else {
+            setFallBackAddress('/datasets');
             history.push('/datasets');
         }
 
@@ -206,6 +217,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     };
 
     return (
+        <>
+        <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
         <OuterWrapper>
             <Wrapper>
                 <div>
@@ -217,22 +230,23 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 </HelperTextWrapper> }
                 <TextField
                     placeholder="Please add data set name..."
-                    name="name"
                     label="Dataset name"
                     meta="Required"
                     variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('name', e.target.value)}
                     value={dataset?.name}
+                    data-cy="dataset_name"
+                    autocomplete="off"
                 />
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
-                    name="storageAccountName"
                     label="Storage account name"
                     meta="Required"
                     variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
+                    data-cy="dataset_storage_name"
                 /> : returnField('Storage account name', dataset?.storageAccountName) }
                 {!editDataset ? <CoreDevDropdown
                     width={width}
@@ -241,6 +255,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
+                    data-cy="dataset_location"
                 /> : returnField('Location', dataset?.location)}
                 <CoreDevDropdown
                     width={width}
@@ -250,23 +265,25 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     onChange={handleDropdownChange}
                     name="classification"
                     preSlectedValue={dataset?.classification}
+                    data-cy="dataset_classification"
                 />
                 <TextField
                     placeholder="Please add Data ID..."
-                    name="dataId"
                     label="DataId"
                     meta=""
                     type="number"
                     style={{ width }}
-                    onChange={handleChange}
+                    onChange={(e: any) => handleChange('dataId', e.target.value)}
                     value={dataset?.dataId}
+                    data-cy="dataset_dataId"
                 />
                 <SaveCancelWrapper>
-                    <Button disabled={userPressedCreate || loading} onClick={addDataset}>{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
+                    <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">{loading ? <DotProgress variant="green" /> : 'Save'}</Button>
                     <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">Cancel</Button>
                 </SaveCancelWrapper>
             </Wrapper>
         </OuterWrapper>
+        </>
     )
 }
 

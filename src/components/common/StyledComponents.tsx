@@ -8,7 +8,11 @@ import { cloud_upload,
     arrow_drop_down,
     clear,
     mood_very_happy ,
-    warning_outlined
+    warning_outlined,
+    arrow_forward,
+    external_link,
+    key,
+    check
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -17,7 +21,11 @@ const icons = {
     arrow_drop_down,
     clear,
     mood_very_happy,
-    warning_outlined
+    warning_outlined,
+    arrow_forward,
+    external_link,
+    key,
+    check
 };
 Icon.add(icons);
 

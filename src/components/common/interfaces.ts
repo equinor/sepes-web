@@ -13,7 +13,7 @@ export interface StudyObj {
 }
 
 export interface ParticipantObj {
-    name: string;
+    fullName: string;
     emailAddress: string;
     role: string;
     id: string;
@@ -59,9 +59,20 @@ export interface SandboxObj {
     name:string;
     template:string;
     id:string;
+    studyName:string;
 }
 
 export interface DropdownObj {
     key:string;
     displayValue:string;
+}
+
+export interface VmObj {
+    region: string,
+    name: string,
+    performanceProfile: string,
+    operatingSystem: string,
+    distro: string,
+    username: string,
+    password: string
 }

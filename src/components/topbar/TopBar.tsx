@@ -69,13 +69,12 @@ const Bar = (props:any) => {
     const rightChoice = 'icons';
     const [toggle, setToggle] = useState<boolean>(false);
     const user = useContext(UserConfig);
-
     const RIGHT_CHOICES = {
         none: null,
         text: '',
         icons: (
             <Icons>
-                <Icon name="account_circle" style={{ cursor: 'pointer' }} onClick={() => setToggle(!toggle)} size={16} color={'#007079'} className='icon' />
+                <Icon name="account_circle" style={{ cursor: 'pointer' }} onClick={() => setToggle(!toggle)} size={24} color={'#007079'} className='icon' />
             </Icons>
         ),
     }

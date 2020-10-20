@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -6,7 +6,87 @@ import * as serviceWorker from './serviceWorker';
 import { acquireTokenSilent, signInRedirect } from './auth/AuthFunctions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
+import { getPermissions } from './services/Api';
+import { UserAgentApplication } from 'msal';
 
+
+export const UserConfig = React.createContext(myMSALObj);
+
+export const Permissions = React.createContext({
+  admin: false,
+  canAdministerDatasets: false,
+  canCreateStudy: false,
+  datasetAdmin: false,
+  emailAddress: null,
+  fullName: null,
+  sponsor: false,
+  userName: null
+});
+
+const renderApp = (user) => {
+  getPermissions().then((result: any) => {
+    if (!result.Message) {
+        return ReactDOM.render(
+            <React.StrictMode>
+                <UserConfig.Provider value={user}>
+                  <Permissions.Provider value={result}>
+                    <App />
+                  </Permissions.Provider>
+                </UserConfig.Provider>
+            </React.StrictMode>,
+            document.getElementById('root')
+        );
+    }
+  else {
+    console.log('err: ', result.Message)
+  }})
+  }
+
+
+//const result = ""
+let cyToken = localStorage.getItem("cyToken");
+
+if (cyToken && cyToken.length) {
+    let mockUser = {
+        account: {
+            name: "MockUser",
+            roles: ""
+        }
+    };
+    renderApp(mockUser);
+    //renderApp(mockUser, test);
+
+    /*validateAccessToken(cyToken).then(result => {
+        if (result.error) {
+            console.log('err', result);
+        } else {
+            let isValid = result;
+            if (isValid) {
+                renderApp(mockUser)
+            }
+        }
+    });*/
+} else {
+    if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
+        signInRedirect();
+        console.log('Sign In PopUp');
+    } else {
+        acquireTokenSilent();
+        console.log('Sign in Silent');
+    }
+    
+    if (myMSALObj.getAccount()) {
+        renderApp(myMSALObj);
+    }
+}
+/*
+}
+
+else {
+    console.log("Err");
+}
+});*/
+/*
 if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
   signInRedirect();
   console.log('Sign In PopUp');
@@ -25,7 +105,7 @@ if (myMSALObj.getAccount()) {
     </React.StrictMode>,
     document.getElementById('root')
   );
-}
+}*/
 /*
 else{
   ReactDOM.render(

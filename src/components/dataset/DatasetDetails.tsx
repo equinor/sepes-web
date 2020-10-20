@@ -274,6 +274,7 @@ const DatasetDetails = (props: any) => {
                         style={{ width: '150px' }}
                         variant="outlined"
                         onClick={handleEditMetdata}
+                        data-cy="dataset_edit"
                     >
                         Edit metadata
                     </Button>

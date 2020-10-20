@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import * as api from '../../services/Api';
 import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
+import { Permissions } from '../../index';
 import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
@@ -34,6 +35,7 @@ let mockText = 'Sepes is great! You should use it and everyone else should as we
 
 const Home = () => {
     const history = useHistory();
+    const permissions = useContext(Permissions);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [studyList, setStudyList] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -66,7 +68,7 @@ const Home = () => {
             <RightWrapper>
                 <div>{mockText}</div>
                 <div style={{ bottom: '16px' }}>
-                    <Button style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
+                    <Button disabled={!permissions.canCreateStudy} data-cy="new_study" style={{ width: '100%', marginTop: '9px' }} onClick={() => { history.push('/studies'); }}>New study</Button>
                 </div>
             </RightWrapper>
         </Wrapper>

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
-import { getResourceStatus } from '../../../services/Api';
-import * as notify from '../../common/notify';
 
 const { Body, Row, Cell, Head } = Table;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { EquinorIcon } from '../StyledComponents';
@@ -7,7 +7,6 @@ const { Body, Row, Cell, Head } = Table;
 
 const DatasetsTable = (props: any) => {
     const { editMode, datasets } = props;
-
     const returnCell = (row: any) => {
         //This means it is a study specific dataset
         if (row.studyId) {
@@ -24,7 +23,7 @@ const DatasetsTable = (props: any) => {
         }
         return (
         <Cell>
-            {EquinorIcon('close', '', 24, () => props.removeDataset(row), true)}
+            {editMode && EquinorIcon('close', '', 24, () => props.removeDataset(row), true)}
         </Cell>
         );
     }
@@ -36,17 +35,22 @@ const DatasetsTable = (props: any) => {
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
                         <Cell as="th" scope="col">Sandboxes</Cell>
-                        {editMode ? <Cell style={{ width: '10px' }} as="th" scope="col" /> : null}
+                        {<Cell style={{ width: '10px' }} as="th" scope="col" />}
                     </Row>
                     </Head>
                     <Body>
-                    {datasets && datasets.map((row) => (
+                    {datasets && datasets.length > 0 ? datasets.map((row) => (
                         <Row key={row.id}>
                             <Cell component="th" scope="row">{row.name}</Cell>
                             <Cell component="th" scope="row" />
-                            {editMode && returnCell(row)}
+                            {returnCell(row)}
                         </Row>
-                    ))}
+                    )):
+                    <Row key={1}>
+                            <Cell component="th" scope="row">No datasets added</Cell>
+                            <Cell component="th" scope="row" />
+                    </Row>
+                    }
                     </Body>
             </Table>
         </div>

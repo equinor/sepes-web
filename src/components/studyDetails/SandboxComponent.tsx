@@ -7,28 +7,44 @@ import styled from 'styled-components';
 
 const DropdownWrapper = styled.div`
   float:right;
-  marginBottom: 19px;
+  margin-left:auto;
+  margin-top: 32px;
   z-index:99;
 `;
 
-const SandboxComponent = (props: any) => {
+const Wrapper = styled.div`
+    display: grid;
+    grid-template-rows: 45px minmax(340px, 1fr);
+    width: 100%;
+`;
+
+type SandboxComponentProps = {
+    sandboxes:any,
+    setStudy:any,
+    setHasChanged:any
+  };
+
+const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy, setHasChanged }) => {
     const [toggle, setToggle] = useState<boolean>(false);
     return (
-        <div>
+        <Wrapper>
             <DropdownWrapper>
                 <Button
                     variant="outlined"
-                    style={{ width: '200px' }}
-                    onClick= {() => setToggle(!toggle)}
-                    >Add resource
+                    style={{ width: '200px', marginBottom: '24px' }}
+                    onClick={() => setToggle(!toggle)}
+                    data-cy="create_sandbox"
+                    >Create sandbox
                 {EquinorIcon("arrow_drop_down","#007079", 24)}
                 </Button>
-                {toggle && <CreateSandboxComponent setToggle={setToggle} setStudy={props.setStudy} /> }
+                {toggle && <CreateSandboxComponent setHasChanged={setHasChanged} setToggle={setToggle} setStudy={setStudy} /> }
             </DropdownWrapper>
-            <SandboxTable
-                sandboxes={props.sandboxes}
-            />
-        </div>
+            <div style={{ marginTop: '42px' }}>
+                <SandboxTable
+                    sandboxes={sandboxes}
+                />
+            </div>
+        </Wrapper>
     )
 }
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Button } from '@equinor/eds-core-react';
+import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
-import { Table, Icon } from '@equinor/eds-core-react';
+import { Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
@@ -10,7 +10,6 @@ import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
 import * as notify from '../common/notify';
 
-const { Body, Row, Cell, Head } = Table;
 const icons = {
     close
 };
@@ -18,30 +17,28 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 20px 20px 1fr;
+    grid-template-rows: 20px 20px minmax(299px, 1fr);
     grid-gap: 23px;
 `;
 
 const Bar = styled.div`
     display: grid;
-    grid-template-columns: 1fr 0.3fr 1fr;
-    margin-left: 50%;
+    grid-template-columns: 256px 0.3fr 1fr;
+    margin-left: 60%;
     z-index:99;
+    margin-top: 32px;
     @media (max-width: 768px) {
         margin-left: 0;
     }
 `;
 
-const DatasetItem = styled.div`
-    margin-bottom: 10px;
-    &:hover {
-        background-color: #D5EAF4;
-    }
-`;
+type StudyComponentFullProps = {
+    study:StudyObj,
+    setStudy:any
+  };
 
-const DataSetComponent = (props: any) => {
+const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }) => {
     const history = useHistory();
-    const [datasets, setDatasets] = useState<any>(props.study.datasets);
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
@@ -53,7 +50,7 @@ const DataSetComponent = (props: any) => {
         //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
-                props.setStudy({...props.study, datasets: result.datasets });
+                setStudy({...study, datasets: result.datasets });
                 console.log("result Datasets after delete: ", result);
             }
             else {
@@ -67,7 +64,6 @@ const DataSetComponent = (props: any) => {
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
         history.push('/studies/' + studyId + '/datasets');
-        //window.location.pathname = '/studies/' + studyId + '/datasets';
     }
 
     useEffect(() => {
@@ -101,7 +97,7 @@ const DataSetComponent = (props: any) => {
             //props.setStudy({...props.study, datasets: list});
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && !result.Message) {
-                    props.setStudy({...props.study, datasets: result.datasets });
+                    setStudy({...study, datasets: result.datasets });
                     console.log("resultDatasets: ", result);
                 }
                 else {
@@ -115,7 +111,7 @@ const DataSetComponent = (props: any) => {
 
     const checkIfDatasetIsAlreadyAdded = (id:string) => {
         let elementExist = false;
-        props.study.datasets.forEach((element) => {
+        study.datasets.forEach((element:any) => {
             if (element.id === id) {
                 elementExist = true;
             }
@@ -126,7 +122,13 @@ const DataSetComponent = (props: any) => {
     return (
         <Wrapper>
             <Bar>
-                <Button variant="outlined" onClick={() => { redirectToStudySpecificDataset(); }}>Add study specific data set</Button>
+                <Button
+                    variant="outlined"
+                    data-cy="add_study_specific_dataset"
+                    onClick={() => { redirectToStudySpecificDataset(); }}
+                >
+                        Create study specific data set
+                </Button>
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div
                     onMouseEnter={() => setIsOpen(true)}
@@ -137,16 +139,19 @@ const DataSetComponent = (props: any) => {
                         arrayList={datasetsList}
                         isOpen={isOpen}
                         filter={checkIfDatasetIsAlreadyAdded}
+                        label="Add data set from catalogue"
                     />
                 </div>
             </Bar>
-            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto' }}>Advanced search</Link>
-            <DatasetsTable
-                datasets={props.study.datasets}
-                removeDataset={removeDataset}
-                editMode={true}
-                studyId={props.study.id}
+            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>Advanced search</Link>
+            <div style={{ marginTop: '32px' }}>
+                <DatasetsTable
+                    datasets={study.datasets}
+                    removeDataset={removeDataset}
+                    editMode
+                    studyId={study.id}
                 />
+            </div>
         </Wrapper>
     )
 }

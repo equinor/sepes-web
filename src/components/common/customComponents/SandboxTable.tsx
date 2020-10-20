@@ -22,7 +22,7 @@ const SandboxTable = (props: any) => {
                     </Row>
                 </Head>
                 <Body>
-                {props.sandboxes && props.sandboxes.map((row) => (
+                {props.sandboxes && props.sandboxes.length > 0 ? props.sandboxes.map((row) => (
                         <Row key={row.name}>
                         <Cell>
                             {row.name}
@@ -36,7 +36,12 @@ const SandboxTable = (props: any) => {
                             </Link>
                         </Cell>
                         </Row>
-                    ))}
+                    )):
+                    <Row key={1}>
+                            <Cell component="th" scope="row">No sandboxes added</Cell>
+                            <Cell component="th" scope="row" />
+                    </Row>
+                    }
                 </Body>
             </Table>
         </div>
