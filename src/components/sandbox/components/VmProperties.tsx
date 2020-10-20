@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Typography } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
-import MoreActions from '../components/MoreActions';
 import { VmObj } from '../../common/interfaces';
+import { deleteVirtualMachine } from '../../../services/Api';
+import * as notify from '../../common/notify';
 
 const Wrapper = styled.div`
     margin-Top: 16px;
@@ -16,16 +17,63 @@ const BtnWrapper = styled.div`
     display:block;
   `;
 
+const MoreActionsWrapper = styled.div`
+  position: absolute;
+  background-color: #ffffff;
+  box-shadow: 0 0 4px 4px #E7E7E7;
+  width: 240px;
+  border-radius: 4px;
+  margin-Top: 40px;
+  display:grid;
+  grid-template-rows: 1fr 1fr;
+`;
+
+const Item = styled.div<{color:string}>`
+padding: 24px;
+color: ${(props: any) => (props.color)};
+z-index:99;
+display: grid;
+grid-template-columns: 24px 1fr;
+text-align:left;
+grid-gap: 16px;
+cursor: pointer;
+&:hover {
+    background-color: #D5EAF4;
+}
+`;
+
+const ItemText = styled.div`
+  margin-top: 4px;
+`;
+
 type VmPropertiesProps = {
     vmProperties : any;
+    setVms:any;
+    vms:any;
+    setActiveTab:any;
 };
 
-const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties }) => {
+const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
 
     const handleToggle = () => {
         setDisplayMoreActions(!displayMoreActions);
-    }
+    };
+
+    const deleteVm = ():void => {
+        setActiveTab(0);
+        let currentVms:any = [...vms];
+        currentVms.splice(vmProperties, 1);
+        setVms(currentVms);
+        deleteVirtualMachine(vmProperties.id).then((result: any) => {
+            if (result && !result.Message) {
+                console.log("resultStudy: ", result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            }
+        });
+    };
 
     return (
         <div>
@@ -72,7 +120,15 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties }) => {
                     <div style={{ marginLeft: 'auto', }}>
                         {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
                     </div>
-                    {displayMoreActions && <MoreActions />}
+                    {displayMoreActions &&
+                        <MoreActionsWrapper>
+                            <Item color="#000000">
+                                {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}<ItemText>Reset password</ItemText>
+                            </Item>
+                            <Item color="#EB0000" onClick={() => {deleteVm();}}>
+                                {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}<ItemText>Delete virtual machine</ItemText>
+                            </Item>
+                        </MoreActionsWrapper>}
                 </Button>
             </BtnWrapper>
         </div>

@@ -16,9 +16,10 @@ let mockVms = [
 type DatasetProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
+    setStep: any;
 };
 
-const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
+const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [vms, setVms] = useState<any>([]);
@@ -33,7 +34,6 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
-                console.log(mockVms);
                 setVms(result);
             }
             else {
@@ -51,7 +51,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
             case 0:
                 return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} />;
             default:
-                return <VmDetails vm={vms[activeTab - 1]} />;
+                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />;
         }
     }
 
@@ -66,6 +66,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
                     </TabList>
             </Tabs>
             {returnStepComponent()}
+            {activeTab}
         </div>
     )
 }

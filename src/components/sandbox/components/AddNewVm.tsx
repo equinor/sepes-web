@@ -69,7 +69,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
 
     useEffect(() => {
         const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
-        console.log(password_validate('aA1!aaaaa'));
         return () => clearTimeout(timeoutId);
       }, [vm.name]);
 

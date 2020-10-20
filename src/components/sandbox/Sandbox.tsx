@@ -58,7 +58,6 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const getResources = () => {
         getResourceStatus(studyId, sandboxId).then((result: any) => {
             if (result && !result.Message) {
-                console.log("result: ", result);
                 setResources(result);
             }
             else {
@@ -99,7 +98,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
             {loading && <LoadingFull /> }
             <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
             {returnStepComponent()}
-            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} />}
+            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} setStep={setStep} />}
         </Wrapper>
     )
 }
