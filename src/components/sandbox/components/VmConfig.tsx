@@ -66,7 +66,6 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
                     </TabList>
             </Tabs>
             {returnStepComponent()}
-            {activeTab}
         </div>
     )
 }
