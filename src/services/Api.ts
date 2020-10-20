@@ -111,6 +111,14 @@ export const getVmName = async (studyName: any, sandboxname: any, userSuffix:str
     return apiRequestWithToken('api/virtualmachines/calculateName/' + studyName + '/' + sandboxname + '/' + userSuffix, 'GET');
 };
 
+export const getVirtualMachineSizes = async () => {
+    return apiRequestWithToken('api/virtualmachines/sizes', 'GET');
+};
+
+export const getVirtualMachineDisks = async () => {
+    return apiRequestWithToken('api/virtualmachines/disks', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {

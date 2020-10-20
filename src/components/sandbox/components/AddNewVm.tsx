@@ -6,7 +6,7 @@ import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj } from '../../common/interfaces';
 import { createVirtualMachine, getVmName } from '../../../services/Api';
-import { SandboxObj } from '../../common/interfaces';
+import { SandboxObj, DropdownObj, SizeObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
 
@@ -41,6 +41,8 @@ const options = [
     sandbox: SandboxObj;
     setVms:any;
     vms:any;
+    sizes?:SizeObj;
+    disks?:DropdownObj;
 };
 
 const limits = {
@@ -49,7 +51,7 @@ const limits = {
     password: 123
 }
 
-const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
+const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks }) => {
 
     const sandboxId = window.location.pathname.split('/')[4];
     const [checked, updateChecked] = useState('one');
@@ -207,14 +209,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms }) => {
             </UnstyledList>
             <CoreDevDropdown
                 label="Size"
-                options={options}
+                options={sizes}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
             />
             <CoreDevDropdown
                 label="Storage"
-                options={options}
+                options={disks}
                 width={width}
                 onChange={handleDropdownChange}
                 name="storage"
