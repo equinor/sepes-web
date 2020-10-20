@@ -30,6 +30,7 @@ describe('Create study', function () {
     it('clicks create new study', () => {
         cy.get('[data-cy=create_study]')
             .click();
+        cy.wait(2000)
     });
 
     describe('Create study and edit', function () {
