@@ -56,6 +56,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
     const sandboxId = window.location.pathname.split('/')[4];
     const [checked, updateChecked] = useState('one');
     const [vm, setVm] = useState<VmObj>({
+        id: '',
         name: '',
         region: 'norwayeast',
         performanceProfile: 'cheap',
