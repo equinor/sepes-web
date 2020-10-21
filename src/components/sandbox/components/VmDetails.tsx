@@ -17,6 +17,9 @@ const Wrapper = styled.div`
 
 type VmDetailsProps = {
     vm : any;
+    setVms:any;
+    vms:any;
+    setActiveTab:any;
 };
 
 const mockRules = [
@@ -36,7 +39,7 @@ const options = [
     { displayValue: "4", key:'4' }
   ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab }) => {
     const [rules, setRules] = useState<any>(mockRules);
 
     const addRule = () => {
@@ -73,7 +76,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
 
     return (
         <Wrapper>
-            <VmProperties vmProperties={vm} />
+            <VmProperties vmProperties={vm} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />
             <div>
                 <Table style={{ width: '100%' }}>
                         <Head>

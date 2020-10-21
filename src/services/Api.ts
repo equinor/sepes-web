@@ -99,8 +99,14 @@ export const getResourceStatus = async (studyId: string, sandboxId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
 };
 
+//Virtual machine
+
 export const createVirtualMachine = async (sandboxId: string, vm:VmObj) => {
     return apiRequestWithToken('api/virtualmachines/' + sandboxId, 'POST', vm);
+};
+
+export const deleteVirtualMachine = async (vmId: string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId, 'DELETE');
 };
 
 export const getVirtualMachineForSandbox = async (sandboxId: string) => {
