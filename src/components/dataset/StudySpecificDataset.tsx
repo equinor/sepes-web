@@ -71,8 +71,18 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         checkIfEditMode();
         setIsSubscribed(true);
         getRegions(setRegions);
-        return () => setIsSubscribed(false);
+        document.addEventListener("keydown", listener, false);
+        return () => {
+            setIsSubscribed(false);
+            document.removeEventListener("keydown", listener, false);
+        };
     }, [editDataset]);
+
+    const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            handleCancel(e);
+        }
+      }
 
     const checkIfEditMode = () => {
         if (!checkUrlIfGeneralDataset() && datasetId) {

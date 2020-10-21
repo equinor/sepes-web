@@ -8,10 +8,9 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { returnTextField, checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
-import Promt from '../common/Promt';
 import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
@@ -87,6 +86,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+
+  useEffect(() => {
+    document.addEventListener("keydown", listener, false);
+    return () => {
+      document.removeEventListener("keydown", listener, false);
+  }
+}, [studyOnChange]);
+
+  const listener = (e: any) => {
+    if (e.key === 'Escape') {
+        setEditMode(false);
+    }
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      handleSave();
+    }
+  }
 
   const handleSave = () => {
     setHasChanged(false);

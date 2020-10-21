@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
@@ -98,6 +98,19 @@ const DatasetsOverviewTable = (props: any) => {
         sepesApproved: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
+
+    useEffect(() => {
+        document.addEventListener("keydown", listener, false);
+        return () => {
+          document.removeEventListener("keydown", listener, false);
+      }
+    }, []);
+      const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            setShowColumnsPicker(false);
+        }
+      }
+    
     const handleColumnsChange = (evt) => {
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
     }

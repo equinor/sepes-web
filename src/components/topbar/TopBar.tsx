@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon } from '@equinor/eds-core-react';
 import Logo from '../common/Logo';
@@ -79,6 +79,17 @@ const Bar = (props:any) => {
         ),
     }
 
+    useEffect(() => {
+        document.addEventListener("keydown", listener, false);
+        return () => {
+          document.removeEventListener("keydown", listener, false);
+      }
+    }, []);
+      const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            setToggle(false);
+        }
+      }
     return (
         <Wrapper>
             <TopBar>

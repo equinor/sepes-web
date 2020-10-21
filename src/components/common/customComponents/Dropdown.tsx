@@ -75,6 +75,18 @@ const CoreDevDropdown = (props: any): JSX.Element => {
     displayValue: props.preSlectedValue || "Please select..."
   });
 
+  useEffect(() => {
+    document.addEventListener("keydown", listener, false);
+    return () => {
+      document.removeEventListener("keydown", listener, false);
+  }
+}, []);
+  const listener = (e: any) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  }
+
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, setIsOpen);
 
