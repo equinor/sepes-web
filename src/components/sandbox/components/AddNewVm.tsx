@@ -58,7 +58,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
     const [vm, setVm] = useState<VmObj>({
         name: '',
         region: 'norwayeast',
-        performanceProfile: 'cheap',
+        Size: 'cheap',
         operatingSystem: 'windows',
         distro: 'win2019datacenter',
         username: '',
