@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button} from '@equinor/eds-core-react';
 import SandboxTable from '../common/customComponents/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -26,6 +26,20 @@ type SandboxComponentProps = {
 
 const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy, setHasChanged }) => {
     const [toggle, setToggle] = useState<boolean>(false);
+
+    useEffect(() => {
+        document.addEventListener("keydown", listener, false);
+        return () => {
+          document.removeEventListener("keydown", listener, false);
+      }
+    }, []);
+    
+      const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            setToggle(false);
+        }
+      }
+
     return (
         <Wrapper>
             <DropdownWrapper>

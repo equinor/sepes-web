@@ -12,6 +12,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
 import * as notify from '../common/notify';
+import { StudyObj } from '../common/interfaces';
 
 const LoadingWrapper = styled.div`
     height:196px;
@@ -25,7 +26,19 @@ const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [study, setStudy] = useState<any>({});
+    const [study, setStudy] = useState<StudyObj>({
+        name: '',
+        vendor: '',
+        wbsCode: '',
+        restricted: true,
+        description: '',
+        logoUrl: '',
+        id: '',
+        resultsAndLearnings: '',
+        datasets: [],
+        participants: [],
+        sandboxes: []
+    });
     const [newStudy, setNewStudy] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [showDatasets, setShowDatasets] = useState<boolean>(false);
