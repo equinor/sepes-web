@@ -19,7 +19,6 @@ type ResourceItemComponentProps = {
 };
 
 const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({ type, status, name }) => {
-    console.log(type)
     return (
         <Wrapper>
             <div>
