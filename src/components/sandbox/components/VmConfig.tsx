@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, VmObj } from '../../common/interfaces';
-import { getVirtualMachineForSandbox } from '../../../services/Api';
+import { SandboxObj, VmObj, SizeObj, DropdownObj } from '../../common/interfaces';
+import { getVirtualMachineForSandbox, getVirtualMachineDisks, getVirtualMachineSizes } from '../../../services/Api';
 import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 const { TabList, Tab } = Tabs;
@@ -22,12 +22,42 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [vms, setVms] = useState<any>([]);
+    const [sizes, setSizes] = useState<SizeObj |undefined>(undefined);
+    const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
 
     useEffect(() => {
         setIsSubscribed(true);
         getVms();
-        return () => {setIsSubscribed(false)};
+        getSizes();
+        getDisks();
+        return () => { setIsSubscribed(false); };
     },[]);
+
+    const getSizes = () => {
+        getVirtualMachineSizes().then((result: any) => {
+            if (result && !result.Message && isSubscribed) {
+                console.log("result: ", result);
+                setDisks(result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
+
+    const getDisks = () => {
+        getVirtualMachineDisks().then((result: any) => {
+            if (result && !result.Message && isSubscribed) {
+                console.log("result: ", result);
+                setSizes(result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
@@ -49,7 +79,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox }) => {
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} />;
+                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} />;
             default:
                 return <VmDetails vm={vms[activeTab - 1]} />;
         }

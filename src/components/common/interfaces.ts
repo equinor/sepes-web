@@ -76,3 +76,10 @@ export interface VmObj {
     username: string,
     password: string
 }
+
+export interface SizeObj {
+    description: string,
+    category: string,
+    key: string,
+    displayValue: string
+}
