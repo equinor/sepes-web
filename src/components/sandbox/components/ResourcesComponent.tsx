@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
+import ResourceItemComponent from './ResourceItemComponent';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -10,15 +11,14 @@ const Dataset = (props: any) => {
                     <Head>
                     <Row>
                         <Cell as="th" scope="col">Resources</Cell>
-                        <Cell as="th" scope="col">Status</Cell>
+
                     </Row>
                     </Head>
                     <Body>
                         {resources && resources.map((resource:any, i:number) => {
                             return (
                                 <Row key={i}>
-                                    <Cell component="th" scope="row">{resource.type}</Cell>
-                                    <Cell component="th" scope="row">{resource.status}</Cell>
+                                    <Cell component="th" scope="row"><ResourceItemComponent name={resource.name} type={resource.type} status={resource.status} /></Cell>
                                 </Row>
                         );
                         })}

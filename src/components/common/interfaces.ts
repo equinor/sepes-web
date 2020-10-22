@@ -70,7 +70,7 @@ export interface DropdownObj {
 export interface VmObj {
     region: string,
     name: string,
-    performanceProfile: string,
+    size: string,
     operatingSystem: string,
     distro: string,
     username: string,
