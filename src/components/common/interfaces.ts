@@ -68,6 +68,7 @@ export interface DropdownObj {
 }
 
 export interface VmObj {
+    id:string;
     region: string,
     name: string,
     size: string,

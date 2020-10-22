@@ -4,6 +4,7 @@ import { Button, Typography } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
+import DeleteResourceComponent from './DeleteResourceComponent';
 import * as notify from '../../common/notify';
 
 const Wrapper = styled.div`
@@ -47,7 +48,7 @@ const ItemText = styled.div`
 `;
 
 type VmPropertiesProps = {
-    vmProperties : any;
+    vmProperties : VmObj;
     setVms:any;
     vms:any;
     setActiveTab:any;
@@ -55,6 +56,7 @@ type VmPropertiesProps = {
 
 const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const handleToggle = () => {
         setDisplayMoreActions(!displayMoreActions);
@@ -125,12 +127,19 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                             <Item color="#000000">
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}<ItemText>Reset password</ItemText>
                             </Item>
-                            <Item color="#EB0000" onClick={() => {deleteVm();}}>
+                            <Item color="#EB0000" onClick={() => { setUserClickedDelete(true); }}>
                                 {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}<ItemText>Delete virtual machine</ItemText>
                             </Item>
                         </MoreActionsWrapper>}
                 </Button>
             </BtnWrapper>
+            {userClickedDelete && <DeleteResourceComponent
+                ResourceName={vmProperties.name}
+                setUserClickedDelete={setUserClickedDelete}
+                onClick={deleteVm}
+                type="sandbox"
+                position="middle"
+            />}
         </div>
     )
 }

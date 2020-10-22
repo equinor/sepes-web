@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Typography } from '@equinor/eds-core-react';
-import DeleteSandboxComponent from './components/DeleteSandboxComponent';
+import DeleteResourceComponent from './components/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
+import { deleteSandbox } from '../../services/Api';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
   display:grid;
@@ -58,7 +60,18 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
     const steps = getSteps();
 
     
-
+    const deleteThisSandbox = ():void => {
+        deleteSandbox(studyId, sandboxId).then((result: any) => {
+            if (result && !result.Message) {
+                history.push('/studies/' + studyId);
+                console.log("result: ", result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const returnControlButtons = () => {
         switch(step) {
@@ -113,11 +126,12 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
             })}
       </Stepper>
             {userClickedDelete &&
-                <DeleteSandboxComponent
-                    SandboxName={sandbox.name}
-                    studyId={studyId}
-                    sandboxId={sandboxId}
+                <DeleteResourceComponent
+                    ResourceName={sandbox.name}
                     setUserClickedDelete={setUserClickedDelete}
+                    onClick={deleteThisSandbox}
+                    type="sandbox"
+                    position="top"
                 />}
         </Wrapper>
     )
