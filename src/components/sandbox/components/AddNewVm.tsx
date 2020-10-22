@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, Button, Checkbox, Icon, Tooltip } from '@equinor/eds-core-react';
+import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { returnLimitMeta } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
@@ -41,6 +41,7 @@ const options = [
     sandbox: SandboxObj;
     setVms:any;
     vms:any;
+    setActiveTab: any;
     sizes?:SizeObj;
     disks?:DropdownObj;
 };
@@ -51,7 +52,7 @@ const limits = {
     password: 123
 }
 
-const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks }) => {
+const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab }) => {
 
     const sandboxId = window.location.pathname.split('/')[4];
     const [checked, updateChecked] = useState('one');
@@ -66,14 +67,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
         password: ''
     });
     const [actualVmName, setActualVmName] = useState<string>('');
-
+    const [loading, setLoading] = useState<boolean>(false);
     const width = '400px';
-
 
     useEffect(() => {
         const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
         return () => clearTimeout(timeoutId);
-      }, [vm.name]);
+      }, [vm.name, loading]);
 
 
     const handleDropdownChange = (value, name:string): void => {
@@ -103,16 +103,19 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
     };
 
     const createVm = () => {
+        setLoading(true);
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 let vmsList:any = [...vms];
                 vmsList.push(result);
                 setVms(vmsList);
+                setActiveTab(vmsList.length);
                 console.log("resultStudy: ", result);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
+            setLoading(false);
         });
     }
 
@@ -140,6 +143,16 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });
+    }
+
+    const checkIfButtonDisabled = () => {
+        if (loading) {
+            return true;
+        }
+        if (password_validate(vm.password)) {
+            return false;
+        }
+        return true;
     }
 
     return (
@@ -229,9 +242,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks 
                 style={{width: '100px', marginLeft: 'auto' }}
                 data-cy="create_vm"
                 onClick={createVm}
-                disabled={!password_validate(vm.password)}
+                disabled={checkIfButtonDisabled()}
             >
-                Create
+                {loading ? <DotProgress variant="green" /> : 'Create'}
             </Button>
         </Wrapper>
     )

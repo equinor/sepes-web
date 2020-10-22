@@ -79,7 +79,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} />;
+                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks}setActiveTab={setActiveTab} />;
             default:
                 return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />;
         }
