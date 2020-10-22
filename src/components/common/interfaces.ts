@@ -84,3 +84,9 @@ export interface SizeObj {
     key: string,
     displayValue: string
 }
+
+export interface OperatingSystemObj {
+    category: string,
+    key: string,
+    displayValue: string
+}

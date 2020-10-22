@@ -6,7 +6,7 @@ import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj } from '../../common/interfaces';
 import { createVirtualMachine, getVmName } from '../../../services/Api';
-import { SandboxObj, DropdownObj, SizeObj } from '../../common/interfaces';
+import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
 
@@ -22,6 +22,7 @@ const Wrapper = styled.div`
     display:grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-gap: 24px;
+    padding-bottom:196px;
   `;
 
   const UnstyledList = styled.ul`
@@ -44,6 +45,8 @@ const options = [
     setActiveTab: any;
     sizes?:SizeObj;
     disks?:DropdownObj;
+    os?: OperatingSystemObj;
+    setSizes:any;
 };
 
 const limits = {
@@ -52,7 +55,7 @@ const limits = {
     password: 123
 }
 
-const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab }) => {
+const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab, os, setSizes }) => {
 
     const sandboxId = window.location.pathname.split('/')[4];
     const [checked, updateChecked] = useState('one');
@@ -68,12 +71,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     });
     const [actualVmName, setActualVmName] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [filter, setFilter] = useState<any>(['Memory', 'Gpu', 'Compute']);
     const width = '400px';
 
     useEffect(() => {
         const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
         return () => clearTimeout(timeoutId);
-      }, [vm.name, loading]);
+      }, [vm.name, loading, sizes]);
 
 
     const handleDropdownChange = (value, name:string): void => {
@@ -155,6 +159,33 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         return true;
     }
 
+    /*
+    const filterOperatingSystems = (sizes:any) => {
+        console.log('sizes', sizes);
+        
+        if (!sizes) {
+            return;
+        }
+        console.log(filter);
+        console.log(sizes.filter(size => filter.includes(size.category)))
+        return sizes.filter(size => filter.includes(size.category));
+        //return sizes.filter(size => ["Gpu", "Compute"].includes(size.category));
+        
+
+    }
+
+    const handleCheck = (column: string, checked:any) => {
+        let currentFilter:any = [...filter];
+        if (checked) {
+            currentFilter.push(column);
+        }
+        //console.log();
+        currentFilter.splice(filter.indexOf('memory'), 1);
+        setFilter(currentFilter);
+        //return currentFilter;
+        //setFilter({...filter, memory: 'memory'})
+    }
+*/
     return (
         <Wrapper>
             <TextField
@@ -211,24 +242,31 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <UnstyledList>
                 <li>
-                    <Checkbox label="High memory" />
+                    <Checkbox label="High memory" defaultChecked />
                 </li>
                 <li>
-                    <Checkbox label="High GPU" />
+                    <Checkbox label="High GPU" defaultChecked />
                 </li>
                 <li>
-                    <Checkbox label="High CPU" />
+                    <Checkbox label="High CPU" defaultChecked />
                 </li>
             </UnstyledList>
             <CoreDevDropdown
-                label="Size"
+                label="VM size"
                 options={sizes}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
             />
             <CoreDevDropdown
-                label="Storage"
+                label="Operating system"
+                options={os}
+                width={width}
+                onChange={handleDropdownChange}
+                name="operatingSystem"
+            />
+            <CoreDevDropdown
+                label="Data disk"
                 options={disks}
                 width={width}
                 onChange={handleDropdownChange}
