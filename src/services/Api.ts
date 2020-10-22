@@ -125,6 +125,10 @@ export const getVirtualMachineDisks = async () => {
     return apiRequestWithToken('api/virtualmachines/disks', 'GET');
 };
 
+export const getVirtualMachineOperatingSystems = async () => {
+    return apiRequestWithToken('api/virtualmachines/operatingsystems', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {
