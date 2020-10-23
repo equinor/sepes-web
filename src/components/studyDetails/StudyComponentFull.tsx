@@ -28,12 +28,30 @@ const Title = styled.span`
 
 const DescriptionWrapper = styled.div`
     margin: auto;
-    margin-left: 0;
+    margin-left: 50px;
     min-width:200px;
     @media (max-width: 768px) {
       padding: 8px 0 8px 0;
+      margin-left: 0px;
+      width: 60%;
+      float:right;
   }
   `;
+
+const DescriptioTextfieldnWrapper = styled.div`
+  margin: auto 0 auto 32px;
+  @media (max-width: 768px) {
+    margin-left: 0px;
+    width: 50%;
+    float:right;
+
+}
+@media (max-width: 400px) {
+  margin-left: 0px;
+  width: 100%;
+  float:right;
+}
+`;
 
 const SmallText = styled.span`
     font-size:10px;
@@ -42,18 +60,24 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: minmax(196px,296px) minmax(300px,4fr) 150px;
+    grid-template-columns: minmax(196px,296px) minmax(300px,4fr) 170px;
     width: 100%;
-    grid-gap: 32px;
     @media (max-width: 768px) {
       display:block;
   }
 `;
 
+const RightWrapper = styled.div<{ editMode: any }>`
+  margin-top: ${(props: any) => (props.editMode ? '48px' : "0px")};
+  @media (max-width: 768px) {
+    margin-top: 16px;
+}
+`;
+
 const TitleWrapper = styled.div<{ editMode: any }>`
     display: grid;
     font-size: 10px;
-    grid-gap: ${(props: any) => (props.editMode ? "16px" : "8px")};
+    grid-gap: ${(props: any) => (props.editMode ? "16px" : "0px")};
 `;
 
 const SmallIconWrapper = styled.div`
@@ -62,9 +86,16 @@ const SmallIconWrapper = styled.div`
 `;
 
 const SaveCancelWrapper = styled.div`
-display: grid;
-grid-template-columns: 1fr 1fr;
-grid-gap: 5px;
+  display: grid;
+  grid-template-columns: 80px 80px;
+  grid-gap: 8px;
+`;
+
+const PictureWrapper = styled.div<{ editMode: any }>`
+  margin-left: 44px;
+  @media (max-width: 768px) {
+    margin-left: ${(props: any) => (props.editMode ? "44px" : "0px")};
+  }
 `;
 
 type StudyComponentFullProps = {
@@ -268,9 +299,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
                 </div>
               }
             />
-            {/*returnTextField('name', 'What is the study name?', studyOnChange.name, 'Study name', 'Required', 'study_name', handleChange, '', userPressedCreate , { margin: 'auto', marginLeft: '0' })*/}
-            {/*returnTextField('vendor', 'Who is the vendor?', studyOnChange.vendor, 'Vendor', 'Required', 'study_vendor', handleChange, '', userPressedCreate)*/}
-            {/*returnTextField('wbsCode', 'Wbs for the study', studyOnChange.wbsCode, 'wbs', '', 'study_wbs', handleChange, '', userPressedCreate)*/}
             </>}
             <div>
                 {!editMode ?
@@ -307,7 +335,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         </TitleWrapper>
         {!editMode ?
           <DescriptionWrapper>{description}</DescriptionWrapper>:
-          <div style={{margin: 'auto 0 auto 0'}}>
+          <DescriptioTextfieldnWrapper>
             <TextField
               placeholder="Describe the study"
               multiline
@@ -318,32 +346,34 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               value={studyOnChange.description}
               data-cy="study_description"
             />
-          {/*returnTextField('description', 'Describe the study', studyOnChange.description, 'Description', 'limit', 'study_description', handleChange, userPressedCreate, { margin: 'auto', marginLeft: '0', height: '152px'}, true)*/}
-          </div>}
-        <div style={{margin: 'auto 0 auto 0'}}>
-          {!showImagePicker && <div style={{ margin: 'auto 0 auto 16px' }}><CustomLogoComponent logoUrl={logoUrl} /></div>}
-          {editMode &&
-          <>
-          {showImagePicker && <AddImageAndCompressionContainer setImageUrl={setImageUrl} imageUrl={imageUrl} />}
-          <Button
-            onClick={() => setShowImagePicker(!showImagePicker)}
-            variant="outlined"
-            style={{ margin: '16px 0 20px 34px' }}
-          >
-              {showImagePicker ? 'Hide image picker' : 'Change logo'}
-          </Button>
-          <SaveCancelWrapper>
-            <Button
-              data-cy="create_study"
-              onClick={() => handleSave()}
-            >
-                {newStudy ? 'Create Study': 'Save'}
-            </Button>
-            <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
-          </SaveCancelWrapper>
-          </>}
-        </div>
-          </Wrapper> : <Loading /> }
+          </DescriptioTextfieldnWrapper>}
+          <RightWrapper editMode={editMode}>
+            {!showImagePicker && <PictureWrapper editMode={editMode}> <CustomLogoComponent logoUrl={logoUrl} /> </PictureWrapper>}
+            {editMode &&
+            <>
+            <div>
+              {showImagePicker && <PictureWrapper editMode={editMode}><AddImageAndCompressionContainer setImageUrl={setImageUrl} imageUrl={imageUrl} /></PictureWrapper>}
+              <Button
+                onClick={() => setShowImagePicker(!showImagePicker)}
+                variant="outlined"
+                style={{ margin: '16px 0 20px 56px' }}
+              >
+                Change logo
+              </Button>
+              <SaveCancelWrapper>
+                <Button
+                  data-cy="create_study"
+                  onClick={() => handleSave()}
+                >
+                    {newStudy ? 'Create': 'Save'}
+                </Button>
+                <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
+              </SaveCancelWrapper>
+            </div>
+
+            </>}
+          </RightWrapper>
+      </Wrapper> : <Loading /> }
     </div>
   )
 }
