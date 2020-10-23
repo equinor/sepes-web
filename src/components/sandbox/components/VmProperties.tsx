@@ -137,8 +137,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                 ResourceName={vmProperties.name}
                 setUserClickedDelete={setUserClickedDelete}
                 onClick={deleteVm}
-                type="sandbox"
-                position="middle"
+                type="virtul machine"
             />}
         </div>
     )
