@@ -125,11 +125,17 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
 
     const password_validate = (password) => {
         //Upper case charachter
-        //Between 8-123 long
+        const upper = /(?=.*[A-Z])/;
         //Atleast one number
+        const number = /(?=.*[0-9])/;
         //Atleast one special character
-        const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,123}$/;
-        return regex.test(password);
+        const special = /(?=.*[!@#$%^&*])/;
+        //Between 8-123 long
+        const limit = /(?=.{8,123})/;
+        return upper.test(password)
+            && number.test(password)
+            && special.test(password)
+            && limit.test(password);
 
     }
 
