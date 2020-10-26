@@ -28,15 +28,19 @@ const Title = styled.span`
 
 const DescriptionWrapper = styled.div`
     margin: auto;
-    margin-left: 50px;
+    margin-left: 0px;
     min-width:200px;
     @media (max-width: 768px) {
       padding: 8px 0 8px 0;
       margin-left: 0px;
-      width: 60%;
-      float:right;
+      width:500px;
+      order: 3;
+      min-width:200px;
+      
   }
   `;
+
+  //
 
 const DescriptioTextfieldnWrapper = styled.div`
   margin: auto 0 auto 32px;
@@ -46,7 +50,7 @@ const DescriptioTextfieldnWrapper = styled.div`
     float:right;
 
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   margin-left: 0px;
   width: 100%;
   float:right;
@@ -58,19 +62,42 @@ const SmallText = styled.span`
     margin-Top:4px;
   `;
 
+const Wrapper2 = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: space-between;
+`;
+
+
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: minmax(196px,296px) minmax(300px,4fr) 170px;
     width: 100%;
     @media (max-width: 768px) {
-      display:block;
+      display: inline-flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-content: center;
+      gap: 16px;
   }
 `;
 
 const RightWrapper = styled.div<{ editMode: any }>`
   margin-top: ${(props: any) => (props.editMode ? '48px' : "0px")};
   @media (max-width: 768px) {
-    margin-top: 16px;
+    margin-top: 0px;
+    margin-left:auto;
+}
+@media (max-width: 768px) {
+  margin-top: 0px;
+  margin-left:auto;
+}
+
+@media (max-width: 468px) {
+  margin-left: ${(props: any) => (props.editMode ? 'auto' : "0px")};
 }
 `;
 
@@ -97,6 +124,7 @@ const PictureWrapper = styled.div<{ editMode: any }>`
     margin-left: ${(props: any) => (props.editMode ? "44px" : "0px")};
   }
 `;
+
 
 type StudyComponentFullProps = {
   study:StudyObj,
