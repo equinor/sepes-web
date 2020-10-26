@@ -127,7 +127,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
 
   const listener = (e: any) => {
     if (e.key === 'Escape') {
-        setEditMode(false);
+        if (!newStudy) {
+          setEditMode(false);
+        }
+        else {
+          history.push('/');
+        }
     }
     if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
       e.preventDefault();
