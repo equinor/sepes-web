@@ -5,6 +5,7 @@ import Logo from '../common/Logo';
 import NavTabs from './NavTabs';
 import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
+import { Link } from 'react-router-dom';
 
 import {
     account_circle
@@ -47,8 +48,9 @@ const LEFT_CHOICES = {
     text: 'Sepes',
     'text+icon': (
         <Fragment>
-            <Logo />
-            Sepes
+            <Link to={'/'} style={{textDecoration: 'none', color: '#000000', marginLeft: '16px'}} >  
+                Sepes
+            </Link>
         </Fragment>
     ),
 }
