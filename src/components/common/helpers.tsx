@@ -72,3 +72,10 @@ export const returnTextField = (
       /> 
     )
   }
+
+export const truncate = (input: string, allowedLength: number) => {
+    if (input.length > allowedLength) {
+       return input.substring(0, allowedLength) + '...';
+    }
+    return input;
+ };

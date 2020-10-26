@@ -46,7 +46,6 @@ const options = [
     sizes?:SizeObj;
     disks?:DropdownObj;
     os?: OperatingSystemObj;
-    setSizes:any;
 };
 
 const limits = {
@@ -56,15 +55,13 @@ const limits = {
 }
 
 const sizeType = {
-    memory: 'Memory',
-    gpu: 'Gpu',
-    compute: 'Compute'
+    memory: 'memory',
+    gpu: 'gpu',
+    compute: 'compute'
 }
 
-const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab, os, setSizes }) => {
-
+const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab, os }) => {
     const sandboxId = window.location.pathname.split('/')[4];
-    const [checked, updateChecked] = useState('one');
     const [vm, setVm] = useState<VmObj>({
         id: '',
         name: '',
@@ -92,9 +89,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
           [name]: value
         });
     };
-    const onChange = (event) => {
-        updateChecked(event.target.value)
-    }
 
     const handleChange = (field:string, value:string) => {
         if (field === 'name' && value.length > limits.name) {
@@ -171,13 +165,11 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         return true;
     }
 
-    
-    const filterOperatingSystems = (sizes:any) => { 
+    const filterSizes = (sizes:any) => { 
         if (!sizes) {
             return;
         }
-        return sizes.filter(size => filter.includes(size.category));  
-
+        return sizes.filter(size => filter.includes(size.category));
     }
 
     const handleCheck = (column: string, checked:any) => {
@@ -259,7 +251,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             </UnstyledList>
             <CoreDevDropdown
                 label="VM size"
-                options={filterOperatingSystems(sizes)}
+                options={filterSizes(sizes)}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
