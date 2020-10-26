@@ -42,7 +42,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
     },[]);
 
     const getSizes = () => {
-        getVirtualMachineSizes().then((result: any) => {
+        getVirtualMachineSizes(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
                 setSizes(result);
@@ -99,7 +99,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} setSizes={setSizes} />;
+                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} />;
             default:
                 return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />;
         }
