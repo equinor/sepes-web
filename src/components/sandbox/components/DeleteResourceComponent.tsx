@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button, Typography, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
-const Wrapper = styled.div<{ position: string }>`
+const Wrapper = styled.div`
     display: grid;
     grid-gap:16px;
     max-width:400px;
-    position: absolute;
+    position: fixed;
     margin-left: auto;
     margin-right: auto;
     border-radius: 4px;
@@ -14,11 +14,22 @@ const Wrapper = styled.div<{ position: string }>`
     box-shadow: 0 0 4px 4px #E7E7E7;
     left: 0;
     right: 0;
-    top: ${(props: any) => (props.position === 'top' ? '10%' : '50%')};
+    top: 30%;
     text-align: center;
     background-color: #ffffff;
     z-index:9999;
     opacity: 1;
+`;
+
+const WhiteWrapper = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #ffffff;
+
+    opacity: 0.5;
 `;
 
 type DeleteResourceComponentProps = {
@@ -26,10 +37,9 @@ type DeleteResourceComponentProps = {
     setUserClickedDelete:any;
     type: string;
     onClick: any;
-    position: 'top' | 'middle';
 };
 
-const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ ResourceName, setUserClickedDelete, type, onClick, position }) => {
+const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ ResourceName, setUserClickedDelete, type, onClick }) => {
     const [text, setText] = useState<string>('');
 
     const checkSandboxNameToText = ():boolean => {
@@ -44,7 +54,9 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
       }
 
     return (
-            <Wrapper position={position}>
+        <>
+        <WhiteWrapper />
+            <Wrapper>
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
                     placeholder="Write the name of the sandbox to delete"
@@ -65,6 +77,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
                     <Button onClick={() => setUserClickedDelete((false))} variant="outlined">Cancel</Button>
                 </div>
             </Wrapper>
+        </>
     )
 }
 

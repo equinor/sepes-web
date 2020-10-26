@@ -131,7 +131,6 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
                     setUserClickedDelete={setUserClickedDelete}
                     onClick={deleteThisSandbox}
                     type="sandbox"
-                    position="top"
                 />}
         </Wrapper>
     )
