@@ -55,6 +55,12 @@ const limits = {
     password: 123
 }
 
+const sizeType = {
+    memory: 'Memory',
+    gpu: 'Gpu',
+    compute: 'Compute'
+}
+
 const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab, os, setSizes }) => {
 
     const sandboxId = window.location.pathname.split('/')[4];
@@ -71,7 +77,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     });
     const [actualVmName, setActualVmName] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const [filter, setFilter] = useState<any>(['Memory', 'Gpu', 'Compute']);
+    const [filter, setFilter] = useState<any>([sizeType.memory, sizeType.gpu, sizeType.compute]);
     const width = '400px';
 
     useEffect(() => {
@@ -165,33 +171,27 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         return true;
     }
 
-    /*
-    const filterOperatingSystems = (sizes:any) => {
-        console.log('sizes', sizes);
-        
+    
+    const filterOperatingSystems = (sizes:any) => { 
         if (!sizes) {
             return;
         }
-        console.log(filter);
-        console.log(sizes.filter(size => filter.includes(size.category)))
-        return sizes.filter(size => filter.includes(size.category));
-        //return sizes.filter(size => ["Gpu", "Compute"].includes(size.category));
-        
+        return sizes.filter(size => filter.includes(size.category));  
 
     }
 
     const handleCheck = (column: string, checked:any) => {
         let currentFilter:any = [...filter];
         if (checked) {
+
             currentFilter.push(column);
         }
-        //console.log();
-        currentFilter.splice(filter.indexOf('memory'), 1);
+        else {
+            currentFilter.splice(filter.indexOf(column), 1);
+        }
         setFilter(currentFilter);
-        //return currentFilter;
-        //setFilter({...filter, memory: 'memory'})
     }
-*/
+
     return (
         <Wrapper>
             <TextField
@@ -248,18 +248,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <UnstyledList>
                 <li>
-                    <Checkbox label="High memory" defaultChecked />
+                    <Checkbox label="High memory" defaultChecked onChange={(e:any) => handleCheck(sizeType.memory, e.target.checked)} />
                 </li>
                 <li>
-                    <Checkbox label="High GPU" defaultChecked />
+                    <Checkbox label="High GPU" defaultChecked onChange={(e:any) => handleCheck(sizeType.gpu, e.target.checked)} />
                 </li>
                 <li>
-                    <Checkbox label="High CPU" defaultChecked />
+                    <Checkbox label="High CPU" defaultChecked onChange={(e:any) => handleCheck(sizeType.compute, e.target.checked)} />
                 </li>
             </UnstyledList>
             <CoreDevDropdown
                 label="VM size"
-                options={sizes}
+                options={filterOperatingSystems(sizes)}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
