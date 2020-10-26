@@ -87,13 +87,11 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
             return;
         }
         setLoading(true);
-        //setToggle(false);
         const studyId = window.location.pathname.split('/')[2];
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
                 history.push(studyId + '/sandboxes/' + result.id);
-                //setEditDataset(true);
                 console.log("result: ", result);
                 setLoading(false);
             }
@@ -107,7 +105,15 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     return (
         !loading ?
         <Wrapper>
-            <StyledTitle style={{ color: '#000000' }}>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></StyledTitle>
+            <StyledTitle
+                style={{ color: '#000000' }}
+            >
+                Title
+                <div style={{ float: 'right' }}>
+                    {EquinorIcon('clear', '#007079', 24, handleCancel, true)}
+                </div>
+                <Divider />
+            </StyledTitle>
             <TextField
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
@@ -117,7 +123,11 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 value={sandbox.name}
                 data-cy="sandbox_name"
             />
-            <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
+            <Label>
+                <span style={{ marginRight: '8px' }}>
+                    {EquinorIcon('warning_outlined', '#6F6F6F', 24)}
+                </span>Name cannot be changed later
+            </Label>
             <CoreDevDropdown
                 label="Location"
                 options={regions}
@@ -126,6 +136,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 name="region"
                 data-cy="sandbox_region"
             />
+            {/*
             <CoreDevDropdown
                 label="Template"
                 options={options}
@@ -134,8 +145,15 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 name="template"
                 data-cy="sandbox_template"
             />
-            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()} data-cy="create_actual_sandbox">Create</Button>
-        </Wrapper>: <LoadingFull />
+            */}
+            <Button
+                style={{ width: '96px', marginLeft: 'auto', marginTop: 'auto' }}
+                onClick={() => CreateSandbox()}
+                data-cy="create_actual_sandbox"
+            >
+                    Create
+            </Button>
+        </Wrapper> : <LoadingFull />
     )
 }
 
