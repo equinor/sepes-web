@@ -21,14 +21,27 @@ const Wrapper = styled.div`
     grid-gap: 23px;
 `;
 
+const TableWrapper = styled.div`
+    margin-top: 32px;
+    @media (max-width: 500px) {
+        margin-top: 64px;
+    }
+`;
+
 const Bar = styled.div`
     display: grid;
-    grid-template-columns: 256px 0.3fr 1fr;
-    margin-left: 60%;
+    grid-template-columns: 1fr 0.3fr 220px;
+    margin-left: auto;
     z-index:99;
     margin-top: 32px;
     @media (max-width: 768px) {
         margin-left: 0;
+        grid-template-columns: 1fr 0.3fr 1fr;
+    }
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 0.3fr 1fr;
+        grid-gap: 8px;
     }
 `;
 
@@ -144,14 +157,14 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
                 </div>
             </Bar>
             <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>Advanced search</Link>
-            <div style={{ marginTop: '32px' }}>
+            <TableWrapper>
                 <DatasetsTable
                     datasets={study.datasets}
                     removeDataset={removeDataset}
                     editMode
                     studyId={study.id}
                 />
-            </div>
+            </TableWrapper>
         </Wrapper>
     )
 }

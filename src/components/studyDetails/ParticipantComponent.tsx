@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
-import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
-import { ParticipantObj, DropdownObj } from '../common/interfaces';
+import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import { StudyObj } from '../common/interfaces';
 
 const icons = {
     close
@@ -19,21 +17,23 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px minmax(330px, 1fr);
+    grid-template-rows: 0.1fr minmax(330px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
 
 const SearchWrapper = styled.div`
     z-index:99;
-    display: grid;
+    margin-left: auto;
     margin-top:32px;
-    grid-template-columns: 2fr 0.5fr 0.5fr;
-    grid-gap: 10px;
-    margin-left: 50%;
-    @media (max-width: 1024px) {
-        margin-left: 0;
-    }
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+`;
+
+const TableWrapper = styled.div`
+    margin-top: 8px;
 `;
 
 type ParicipantComponentProps = {
@@ -174,6 +174,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
                 <div
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
+                    style={{width: '300px'}}
                 >
                     <AsynchSelect
                         label={''}
@@ -191,15 +192,22 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
                         name="region"
                     />
                 </div>
-                <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
+                <Button
+                    variant="outlined"
+                    disabled={checkIfButtonDisabled()}
+                    onClick={addParticipant}
+                    style={{width: '220px'}}
+                >
+                        {loading ? <DotProgress variant="green" /> : 'Add participant'}
+                </Button>
             </SearchWrapper>
-            <div style={{ marginTop: '32px' }}>
+            <TableWrapper>
                 <ParticipantTable
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
                 />
-            </div>
+            </TableWrapper>
         </Wrapper>
     )
 }
