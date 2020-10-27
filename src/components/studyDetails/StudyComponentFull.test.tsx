@@ -68,6 +68,6 @@ test('renders StudyComponent full component with new study', () => {
           newStudy={true}
   />
   </Router>);
-    let linkElement = getByText('Create Study');
+    let linkElement = getByText('Create');
     expect(linkElement).toBeInTheDocument();
   });
