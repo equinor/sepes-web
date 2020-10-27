@@ -18,7 +18,7 @@ const SandboxTable = (props: any) => {
                 <Head style={{ backgroundColor: '#F7F7F7' }}>
                     <Row>
                         <Cell as="th" scope="col">Sandbox</Cell>
-                        <Cell style={{ width: '10px' }} as="th" scope="col"></Cell>
+                        <Cell style={{ width: '10px' }} as="th" scope="col" >{""}</Cell>
                     </Row>
                 </Head>
                 <Body>
@@ -39,7 +39,7 @@ const SandboxTable = (props: any) => {
                     )):
                     <Row key={1}>
                             <Cell component="th" scope="row">No sandboxes added</Cell>
-                            <Cell component="th" scope="row" />
+                            <Cell component="th" scope="row" >{""}</Cell>
                     </Row>
                     }
                 </Body>

@@ -117,9 +117,9 @@ const DatasetsOverviewTable = (props: any) => {
 
     const returnCell = (checker: any, fieldName?:string | number, header?:boolean) => {
         if (header) {
-            return checker ? <Cell as="th" scope="col">{fieldName}</Cell> : null;
+            return checker ? <Cell as="th" scope="col">{fieldName || ''}</Cell> : null;
         }
-        return checker ? <Cell>{fieldName}</Cell> : null;
+        return checker ? <Cell>{fieldName || ''}</Cell> : null;
     }
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {

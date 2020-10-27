@@ -100,7 +100,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   const renderOptions = (width: string): React.ReactNode => {
     if (options !== undefined && options.length) {
       return (
-        <ul style={{ width: width ? width : "220px", height: '500px', overflow: 'auto' }}>
+        <ul style={{ width: width ? width : "220px", maxHeight: '500px', overflow: 'auto' }}>
           {options.map((option: any, i: number) => {
             return (
               <li key={i} onClick={() => handleChange(option)}>

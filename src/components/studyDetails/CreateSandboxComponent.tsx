@@ -116,6 +116,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
+                id="sandbox_name"
             />
             <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
             <CoreDevDropdown
@@ -125,6 +126,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={handleDropdownChange}
                 name="region"
                 data-cy="sandbox_region"
+                tabIndex={0}
             />
             <CoreDevDropdown
                 label="Template"

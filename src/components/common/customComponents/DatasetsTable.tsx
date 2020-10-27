@@ -16,7 +16,7 @@ const DatasetsTable = (props: any) => {
                         style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }}
                         to={"/studies/" + props.studyId +"/datasets/" + row.id}
                     >
-                        {EquinorIcon('chevron_right', '', 24, {}, true)}
+                        {EquinorIcon('chevron_right', '', 24, () => {}, true)}
                     </Link>
                 </Cell>
                     );
@@ -35,20 +35,20 @@ const DatasetsTable = (props: any) => {
                     <Row>
                         <Cell as="th" scope="col">Dataset</Cell>
                         <Cell as="th" scope="col">Sandboxes</Cell>
-                        {<Cell style={{ width: '10px' }} as="th" scope="col" />}
+                        <Cell style={{ width: '10px' }} as="th" scope="col">{""}</Cell>
                     </Row>
                     </Head>
                     <Body>
                     {datasets && datasets.length > 0 ? datasets.map((row) => (
                         <Row key={row.id}>
                             <Cell component="th" scope="row">{row.name}</Cell>
-                            <Cell component="th" scope="row" />
+                            <Cell component="th" scope="row">{""}</Cell>
                             {returnCell(row)}
                         </Row>
                     )):
                     <Row key={1}>
                             <Cell component="th" scope="row">No datasets added</Cell>
-                            <Cell component="th" scope="row" />
+                            <Cell component="th" scope="row">{""}</Cell>
                     </Row>
                     }
                     </Body>

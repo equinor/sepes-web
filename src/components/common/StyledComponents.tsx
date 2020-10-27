@@ -31,10 +31,10 @@ Icon.add(icons);
 
 export const EquinorIcon = (name: string, color: string, size: number, onClick?:any, clickAble?: boolean) => {
     if (clickAble && onClick) {
-        return <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} />
+        return <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} title={name} />
     }
 
-    return <Icon color={color} name={name} size={size} />
+    return <Icon color={color} name={name} size={size} title={name} />
 }
 
 export const EquinorLink = styled(Link)`
