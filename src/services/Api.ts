@@ -129,6 +129,10 @@ export const getVirtualMachineOperatingSystems = async () => {
     return apiRequestWithToken('api/virtualmachines/operatingsystems', 'GET');
 };
 
+export const getVirtualMachineExtended = async (vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/extended', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {

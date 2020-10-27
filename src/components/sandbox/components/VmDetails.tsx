@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
+import { getVirtualMachineExtended } from '../../../services/Api';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -41,6 +42,27 @@ const options = [
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab }) => {
     const [rules, setRules] = useState<any>(mockRules);
+
+    useEffect(() => {
+        getVmExtendedInfo();
+    }, []);
+
+    const getVmExtendedInfo = () => {
+        getVirtualMachineExtended(vm.id).then((result: any) => {
+            if (result && !result.Message) {
+                /*
+                let tempsVms:any =[...vms];
+                tempsVms[0]
+                setVms({ ...vms, });
+                */
+                console.log('result', result)
+            }
+            else {
+                //notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const addRule = () => {
         let currentRules:any = [...rules];
