@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react';
+import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon } from '@equinor/eds-core-react';
 import Logo from '../common/Logo';
@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import {
     account_circle
 } from '@equinor/eds-icons'
+import useClickOutside from '../common/customComponents/useClickOutside';
 
 const { Actions, Header } = TopBar;
 
@@ -70,6 +71,8 @@ const Bar = (props:any) => {
     const centerChoice = 'tabs';
     const rightChoice = 'icons';
     const [toggle, setToggle] = useState<boolean>(false);
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setToggle);
     const user = useContext(UserConfig);
     const RIGHT_CHOICES = {
         none: null,
@@ -100,7 +103,7 @@ const Bar = (props:any) => {
                 <Actions>{RIGHT_CHOICES[rightChoice]}</Actions>
             </TopBar>
             {toggle &&
-            <LogoutWrapper>
+            <LogoutWrapper ref={wrapperRef}>
                 <div style={{ marginBottom: '8px' }}>{user.getAccount().name}</div>
                 <EquinorLink style={{ marginLeft: '48px' }} to="/" onClick={() => user.logout()}>Log Out</EquinorLink>
             </LogoutWrapper>}

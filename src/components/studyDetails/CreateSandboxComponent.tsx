@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
 import { EquinorIcon, StyledTitle, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
@@ -10,6 +10,7 @@ import { createSandbox } from '../../services/Api';
 import { getRegions } from '../common/commonApiCalls';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
+import useClickOutside from '../common/customComponents/useClickOutside';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -42,6 +43,8 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     const [loading, setLoading] = useState<Boolean>(false);
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setToggle);
 
     useEffect(() => {
         getRegions(setRegions);
@@ -104,7 +107,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     }
     return (
         !loading ?
-        <Wrapper>
+        <Wrapper ref={wrapperRef}>
             <StyledTitle
                 style={{ color: '#000000' }}
             >

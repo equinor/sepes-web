@@ -212,7 +212,7 @@ const DatasetsOverviewTable = (props: any) => {
                 onClose={() => setToggle(!toggle)}
                 style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
-                <DatasetSidesheetView dataset={selectedDataset} />
+                <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
             <Button
