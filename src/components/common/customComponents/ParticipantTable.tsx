@@ -16,7 +16,7 @@ type DatasetsTableProps = {
     editMode:boolean;
 };
 
-const DatasetsTable: React.FC<DatasetsTableProps> = ({participants, removeParticipant, editMode}) => {
+const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParticipant, editMode }) => {
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
@@ -25,12 +25,12 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({participants, removePartic
                         <Cell as="th" scope="col">Name</Cell>
                         {editMode && <Cell as="th" scope="col">E-mail</Cell>}
                         <Cell as="th" scope="col">Role</Cell>
-                        {editMode && <Cell style={{ width: '10px' }} as="th" scope="col" />}
+                        {editMode && <Cell style={{ width: '10px' }} as="th" scope="col" >{""}</Cell>}
                     </Row>
                     </Head>
                     <Body>
                     {participants && participants.map((participant: ParticipantObj) => (
-                        <Row key={participant.id}>
+                        <Row key={participant.userId + participant.role}>
                             <Cell>{participant.fullName}</Cell>
                             {editMode && <Cell align="right">{participant.emailAddress}</Cell>}
                             <Cell align="right">{participant.role}</Cell>
@@ -42,7 +42,7 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({participants, removePartic
                                     size={24}
                                     onClick={() => removeParticipant(participant)}
                                 />
-                            </Cell>: editMode && <Cell /> }
+                            </Cell>: editMode && <Cell>{""}</Cell> }
                         </Row>
                     ))}
                     </Body>

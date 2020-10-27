@@ -41,7 +41,7 @@ type ParicipantComponentProps = {
     setStudy:any
   };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStudy}) => {
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy }) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);

@@ -122,6 +122,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
+                id="sandbox_name"
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>
@@ -135,6 +136,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={handleDropdownChange}
                 name="region"
                 data-cy="sandbox_region"
+                tabIndex={0}
             />
             {/*
             <CoreDevDropdown

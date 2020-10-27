@@ -304,6 +304,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               style={{ margin: 'auto', marginLeft: '0' }}
               value={studyOnChange.name}
               data-cy="study_name"
+              id="study_name"
             />
             <TextField
               placeholder="Who is the vendor?"
@@ -313,6 +314,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               label="Vendor"
               meta="(required)"
               data-cy="study_vendor"
+              id="study_vendor"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px' }} name="business" size={24} />
@@ -320,12 +322,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               }
             />
             <TextField
-              helperIcon={icons.dollar}
               placeholder="Wbs for the study"
               onChange={(e: any) => handleChange('wbsCode', e.target.value)}
               label="wbs"
               value={studyOnChange.wbsCode}
               data-cy="study_wbs"
+              id="study_wbs"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px', top: '-2px' }} name="dollar" size={24} />
@@ -378,6 +380,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
               value={studyOnChange.description}
               data-cy="study_description"
+              id="study_description"
             />
           </DescriptioTextfieldnWrapper>}
           <RightWrapper editMode={editMode}>

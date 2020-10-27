@@ -48,7 +48,8 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy
                     style={{ width: '200px', marginBottom: '24px' }}
                     onClick={() => setToggle(!toggle)}
                     data-cy="create_sandbox"
-                    >Create sandbox
+                >
+                        Create sandbox
                 {EquinorIcon("arrow_drop_down","#007079", 24)}
                 </Button>
                 {toggle && <CreateSandboxComponent setHasChanged={setHasChanged} setToggle={setToggle} setStudy={setStudy} /> }
