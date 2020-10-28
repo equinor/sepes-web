@@ -103,28 +103,28 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
     return (
         <Wrapper>
             <div>
-            <Link to={'/studies/' + studyId} 
-                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                            {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
-                    </Link>
+                <Link to={'/studies/' + studyId} 
+                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                        {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
+                </Link>
                 <Typography style={{ display: 'inline-block', marginLeft: '16px' }} variant="h2">{sandbox && sandbox.name}</Typography>
                 <div style={{ float: 'right' }}>
                     {returnControlButtons()}
                 </div>
             </div>
             <Stepper activeStep={step} alternativeLabel nonLinear>
-            {steps.map((stepL:any, index) => {
-            const stepProps = {};
-            const labelProps:any = {};
-            labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
+                {steps.map((stepL:any, index) => {
+                    const stepProps = {};
+                    const labelProps:any = {};
+                    labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 
-            return (
-                <Step key={index}>
-                <StepLabel {...labelProps}>{stepL.label}</StepLabel>
-                </Step>
-            );
-            })}
-      </Stepper>
+                    return (
+                        <Step key={index}>
+                            <StepLabel {...labelProps}>{stepL.label}</StepLabel>
+                        </Step>
+                    );
+                })}
+            </Stepper>
             {userClickedDelete &&
                 <DeleteResourceComponent
                     ResourceName={sandbox.name}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { returnLimitMeta } from '../../common/helpers';
+import { passwordValidate, returnLimitMeta } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj } from '../../common/interfaces';
@@ -30,13 +30,6 @@ const Wrapper = styled.div`
   padding: 0;
   list-style-type: none;
 `;
-
-const options = [
-    { displayValue: "1", key:'1' },
-    { displayValue: "2", key:'2' },
-    { displayValue: "3", key:'3' },
-    { displayValue: "4", key:'4' }
-  ];
 
   type AddNewVmProps = {
     sandbox: SandboxObj;
@@ -124,21 +117,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         });
     };
 
-    const password_validate = (password) => {
-        //Upper case charachter
-        const upper = /(?=.*[A-Z])/;
-        //Atleast one number
-        const number = /(?=.*[0-9])/;
-        //Atleast one special character
-        const special = /(?=.*[!@#$%^&*])/;
-        //Between 8-123 long
-        const limit = /(?=.{8,123})/;
-        return upper.test(password)
-            && number.test(password)
-            && special.test(password)
-            && limit.test(password);
-    };
-
     const calculateVmName = (value:string) => {
         if (value === '') {
             setActualVmName('');
@@ -159,7 +137,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         if (loading) {
             return true;
         }
-        if (password_validate(vm.password)) {
+        if (passwordValidate(vm.password)) {
             return false;
         }
         return true;
