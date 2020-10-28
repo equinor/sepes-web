@@ -81,7 +81,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
     }
 
     const getOSs = () => {
-        getVirtualMachineOperatingSystems().then((result: any) => {
+        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
                 setOs(result);
@@ -101,7 +101,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
             case 0:
                 return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} />;
             default:
-                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />;
+                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} index={activeTab - 1} />;
         }
     }
 
@@ -109,10 +109,10 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
                     <TabList>
-                        {showAddNewVm ? <Tab style={{ borderRadius: '4px' }}>Add new vm</Tab> : <Tab style={{ display: 'none' }} /> }
+                        {showAddNewVm ? <Tab key={1} style={{ borderRadius: '4px' }}>Add new vm</Tab> : <Tab style={{ display: 'none' }} /> }
                         {vms.length > 0 ? vms.map((vm: any) => {
-                            return <Tab style={{ borderRadius: '4px' }}>{vm.name}</Tab>;
-                        }): <Tab disabled>Vms will be here</Tab>}
+                            return <Tab key={vm.id} style={{ borderRadius: '4px' }}>{vm.name}</Tab>;
+                        }): <Tab key={2} disabled>Vms will be here</Tab>}
                     </TabList>
             </Tabs>
             {returnStepComponent()}

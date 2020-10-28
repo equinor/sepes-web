@@ -11,9 +11,9 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
         <>
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
                         <Head>
-                        <Row>
-                            <Cell as="th" scope="col">Data set restrictions</Cell>
-                        </Row>
+                            <Row>
+                                <Cell as="th" scope="col">Data set restrictions</Cell>
+                            </Row>
                         </Head>
                         <Body>
                             <Row key={1}>

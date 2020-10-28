@@ -32,7 +32,7 @@ const Dataset = (props: any) => {
                     <Head>
                     <Row>
                         <Cell as="th" scope="col">Data sets in sandbox</Cell>
-                        <Cell as="th" scope="col"/>
+                        <Cell as="th" scope="col">{""}</Cell>
                     </Row>
                     </Head>
                     <Body>

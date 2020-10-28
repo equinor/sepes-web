@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
+import { getVirtualMachineExtended } from '../../../services/Api';
+import * as notify from '../../common/notify';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -13,6 +15,9 @@ const Wrapper = styled.div`
     display:grid;
     grid-template-columns: 1fr 3fr;
     grid-gap: 16px;
+    @media (max-width: 700px) {
+        display: block;
+      }
   `;
 
 type VmDetailsProps = {
@@ -20,6 +25,7 @@ type VmDetailsProps = {
     setVms:any;
     vms:any;
     setActiveTab:any;
+    index:number;
 };
 
 const mockRules = [
@@ -39,8 +45,30 @@ const options = [
     { displayValue: "4", key:'4' }
   ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index }) => {
     const [rules, setRules] = useState<any>(mockRules);
+    //tempsVms[index].extendedInfo = {}
+
+    useEffect(() => {
+        getVmExtendedInfo();
+    }, [index]);
+
+    const getVmExtendedInfo = () => {
+        if (!vm.extendedInfo) {
+            getVirtualMachineExtended(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].extendedInfo = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log("Err");
+                }
+            });
+        }
+    }
 
     const addRule = () => {
         let currentRules:any = [...rules];

@@ -125,8 +125,12 @@ export const getVirtualMachineDisks = async () => {
     return apiRequestWithToken('api/virtualmachines/disks', 'GET');
 };
 
-export const getVirtualMachineOperatingSystems = async () => {
-    return apiRequestWithToken('api/virtualmachines/operatingsystems', 'GET');
+export const getVirtualMachineOperatingSystems = async (sandboxId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET');
+};
+
+export const getVirtualMachineExtended = async (vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/extended', 'GET');
 };
 
 //Lookup
