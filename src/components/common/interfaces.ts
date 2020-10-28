@@ -76,7 +76,8 @@ export interface VmObj {
     operatingSystem: string,
     distro: string,
     username: string,
-    password: string
+    password: string,
+    extendedInfo?: any
 }
 
 export interface SizeObj {

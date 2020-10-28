@@ -81,7 +81,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
     }
 
     const getOSs = () => {
-        getVirtualMachineOperatingSystems().then((result: any) => {
+        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
                 setOs(result);
@@ -101,7 +101,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
             case 0:
                 return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} />;
             default:
-                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />;
+                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} index={activeTab - 1} />;
         }
     }
 
