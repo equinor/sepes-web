@@ -55,7 +55,7 @@ type VmPropertiesProps = {
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
-    const { disks, nics, osType, powerState, size, sizeName } = vmProperties.extendedInfo || {};
+    const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { maxDataDiskCount, memoryInMB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
@@ -87,7 +87,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                     <div>OS</div>
                     <div>Public IP</div>
                     <div>Private IP</div>
-                    <div>DNS name</div>
+                    {/*<div>DNS name</div>*/}
                     <div>Location</div>
                     <div style={{ marginTop: '16px' }}>Size</div>
                     <div>vCPUs</div>
@@ -95,9 +95,9 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                 </div>
                 <div>
                     <div>{osType || '-'}</div>
-                    <div>127</div>
-                    <div>255.255.255.255</div>
-                    <div>sb.env04-asdasdaas</div>
+                    <div>{publicIp || '-'}</div>
+                    <div>{privateIp || '-'}</div>
+                    {/*<div>sb.env04-asdasdaas</div>*/}
                     <div>{vmProperties.region}</div>
                     <div style={{ marginTop: '16px' }}>{sizeName || '-'}</div>
                     <div>{numberOfCores || '-'}</div>
