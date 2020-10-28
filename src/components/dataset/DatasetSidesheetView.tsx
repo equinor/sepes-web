@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { DatasetObj } from '../common/interfaces'
 import { Typography, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import useClickOutside from '../common/customComponents/useClickOutside';
 
 type DatasetSidesheetViewProps = {
     dataset: DatasetObj;
+    setToggle: any;
 };
 
 const Wrapper = styled.div`
@@ -20,8 +22,10 @@ const BtnWrapper = styled.div`
     margin-top: 16px;
 `;
 
-const DatasetSidesheetView: React.FC<DatasetSidesheetViewProps> = ({ dataset }) => {
+const DatasetSidesheetView: React.FC<DatasetSidesheetViewProps> = ({ dataset, setToggle }) => {
     const history = useHistory();
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setToggle);
     const returnField = (fieldName) => {
         if (fieldName === null) {
             fieldName = '';
@@ -29,7 +33,7 @@ const DatasetSidesheetView: React.FC<DatasetSidesheetViewProps> = ({ dataset }) 
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
     }
     return (
-        <div>
+        <div ref={wrapperRef}>
         <Wrapper>
                 <div>
                     <div>Area L1/L2</div>

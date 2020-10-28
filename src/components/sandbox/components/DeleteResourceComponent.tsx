@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Typography, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+import useClickOutside from '../../common/customComponents/useClickOutside';
 
 const Wrapper = styled.div`
     display: grid;
@@ -41,6 +42,8 @@ type DeleteResourceComponentProps = {
 
 const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ ResourceName, setUserClickedDelete, type, onClick }) => {
     const [text, setText] = useState<string>('');
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setUserClickedDelete);
 
     const checkSandboxNameToText = ():boolean => {
         if (text === ResourceName) {
@@ -56,7 +59,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
     return (
         <>
         <WhiteWrapper />
-            <Wrapper>
+            <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
                     placeholder="Write the name of the sandbox to delete"
