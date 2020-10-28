@@ -22,9 +22,10 @@ type DatasetProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
     setStep: any;
+    resources: any;
 };
 
-const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) => {
+const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep, resources }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [vms, setVms] = useState<any>([]);
@@ -101,7 +102,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep }) =>
             case 0:
                 return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} />;
             default:
-                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} index={activeTab - 1} />;
+                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} index={activeTab - 1} resources={resources} getVms={getVms} />;
         }
     }
 

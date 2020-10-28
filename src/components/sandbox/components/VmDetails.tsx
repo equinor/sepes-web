@@ -26,6 +26,8 @@ type VmDetailsProps = {
     vms:any;
     setActiveTab:any;
     index:number;
+    resources:any;
+    getVms:any;
 };
 
 const mockRules = [
@@ -45,16 +47,17 @@ const options = [
     { displayValue: "4", key:'4' }
   ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
     const [rules, setRules] = useState<any>(mockRules);
     //tempsVms[index].extendedInfo = {}
 
     useEffect(() => {
         getVmExtendedInfo();
-    }, [index]);
+        //isVmReady();
+    }, [index, vm, resources]);
 
     const getVmExtendedInfo = () => {
-        if (!vm.extendedInfo) {
+        if (!vm.extendedInfo && isVmCreatingOrReady()) {
             getVirtualMachineExtended(vm.id).then((result: any) => {
                 if (result && !result.Message) {
                     let tempsVms:any = [...vms];
@@ -68,7 +71,23 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 }
             });
         }
-    }
+    };
+
+    const isVmCreatingOrReady = ():boolean => {
+        let res = false;
+        if (!resources) {
+            return res;
+        }
+        resources.map((resource:any, i:number) => {
+            if (resource.type === "Virtual Machine" && resource.status === "Ok" && resource.name === vm.name) {
+                res = true;
+                if (!vm.linkToExternalSystem) {
+                    getVms();
+                }
+            };
+        });
+        return res;
+    };
 
     const addRule = () => {
         let currentRules:any = [...rules];
@@ -82,19 +101,19 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             }
         )
         setRules(currentRules);
-    }
+    };
 
     const updateRule = (i:number, value:string, key:string) => {
         let currentRules:any = [...rules];
         currentRules[i][key] = value;
         setRules(currentRules);
-    }
+    };
 
     const removeRule = (i:number) => {
         let currentRules:any = [...rules];
         currentRules.splice(i, 1);
         setRules(currentRules);
-    }
+    };
 
     const handleDropdownChange = ( key:string, i:number, value?,): void => {
         let currentRules:any = [...rules];

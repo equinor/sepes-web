@@ -98,7 +98,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
             {loading && <LoadingFull /> }
             <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
             {returnStepComponent()}
-            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} setStep={setStep} />}
+            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} setStep={setStep} resources={resources} />}
         </Wrapper>
     )
 }

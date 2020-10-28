@@ -63,7 +63,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         operatingSystem: 'windows',
         distro: 'win2019datacenter',
         username: '',
-        password: ''
+        password: '',
+        linkToExternalSystem: ''
     });
     const [actualVmName, setActualVmName] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -72,7 +73,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
 
     useEffect(() => {
         const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
-        return () => clearTimeout(timeoutId);
+        return () => { clearTimeout(timeoutId); };
       }, [vm.name, loading, sizes]);
 
 
@@ -114,7 +115,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             }
             setLoading(false);
         });
-    }
+    };
 
     const calculateVmName = (value:string) => {
         if (value === '') {
@@ -130,7 +131,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });
-    }
+    };
 
     const checkIfButtonDisabled = () => {
         if (loading) {
