@@ -17,7 +17,14 @@ const Dataset = (props: any) => {
                         {resources ? resources.map((resource:any, i:number) => {
                             return (
                                 <Row key={i}>
-                                    <Cell component="th" scope="row"><ResourceItemComponent name={resource.name} type={resource.type} status={resource.status} /></Cell>
+                                    <Cell component="th" scope="row">
+                                        <ResourceItemComponent
+                                            name={resource.name}
+                                            type={resource.type}
+                                            status={resource.status}
+                                            linkToResource={resource.linkToExternalSystem}
+                                        />
+                                    </Cell>
                                 </Row>
                         );
                         }) :
