@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, Typography } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -6,6 +6,7 @@ import { VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from './DeleteResourceComponent';
 import * as notify from '../../common/notify';
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
     margin-Top: 16px;
@@ -55,14 +56,19 @@ type VmPropertiesProps = {
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
+    console.log(vmProperties.extendedInfo);
     const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { maxDataDiskCount, memoryInMB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const history = useHistory();
 
     const handleToggle = () => {
         setDisplayMoreActions(!displayMoreActions);
     };
+    useEffect(() => {
+
+    }, [vmProperties.linkToExternalSystem]);
 
     const deleteVm = ():void => {
         setActiveTab(0);
@@ -94,7 +100,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                     <div>RAM</div>
                 </div>
                 <div>
-                    <div>{osType || '-'}</div>
+                    <div>{vmProperties.operatingSystem || '-'}</div>
                     <div>{publicIp || '-'}</div>
                     <div>{privateIp || '-'}</div>
                     {/*<div>sb.env04-asdasdaas</div>*/}
@@ -106,14 +112,17 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
             </Wrapper>
             <BtnWrapper>
                 <div>
+                    <a href={vmProperties.linkToExternalSystem} target="_blank" rel="noopener noreferrer">
                     <Button
                         style={{ marginTop: '24px', width: '216px' }}
+                        disabled={!vmProperties.linkToExternalSystem}
                     >
                         Open virtual machine
                         <div style={{ marginLeft: 'auto', display: 'block' }}>
                             {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
                         </div>
                     </Button>
+                    </a>
                 </div>
                 <Button
                     variant="outlined"
