@@ -49,7 +49,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep, reso
                 setSizes(result);
             }
             else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                //notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
              }
         });
