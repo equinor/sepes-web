@@ -79,3 +79,19 @@ export const truncate = (input: string, allowedLength: number) => {
     }
     return input;
  };
+
+export const passwordValidate = (password:string):boolean => {
+    //Upper case charachter
+    const upper = /(?=.*[A-Z])/;
+    //Atleast one number
+    const number = /(?=.*[0-9])/;
+    //Atleast one special character
+    const special = /(?=.*[!@#$%^&*])/;
+    //Between 8-123 long
+    const limit = /(?=.{8,123})/;
+    return upper.test(password)
+        && number.test(password)
+        && special.test(password)
+        && limit.test(password);
+
+}
