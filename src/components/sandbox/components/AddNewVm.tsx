@@ -74,7 +74,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     const width = '400px';
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {calculateVmName(vm.name); calculateVmPrice(); }, 1000);
+        const timeoutId = setTimeout(() => {calculateVmName(vm.name); calculateVmPrice(); }, 500);
         return () => { clearTimeout(timeoutId); };
       }, [vm.name, loading, sizes]);
       
@@ -287,7 +287,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <div>
                 <Label>Estimated total</Label>
-                <Typography variant="h6"> {vmEstimatedCost}</Typography>
+                <Typography variant="h6"> {vmEstimatedCost ? vmEstimatedCost + ' $' : '-'}</Typography>
             </div>
             <Button
                 style={{width: '100px', marginLeft: 'auto' }}
