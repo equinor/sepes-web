@@ -128,7 +128,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     };
 
     const calculateVmPrice = () => {
-        if(vm.operatingSystem !== "" && vm.size !== "" && vm.dataDisks.length > 0) {
+        if (vm.operatingSystem !== "" && vm.size !== "" && vm.dataDisks.length > 0) {
             const vmPrice = {
                 size: vm.size,
                 dataDisks: vm.dataDisks,
@@ -166,7 +166,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         if (loading) {
             return true;
         }
-        if (passwordValidate(vm.password)) {
+        if (
+            passwordValidate(vm.password) &&
+            vm.name !== '' &&
+            vm.operatingSystem !== '' &&
+            vm.size !== '' &&
+            vm.dataDisks.length > 0) {
             return false;
         }
         return true;
