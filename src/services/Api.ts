@@ -133,6 +133,10 @@ export const getVirtualMachineExtended = async (vmId:string) => {
     return apiRequestWithToken('api/virtualmachines/' + vmId + '/extended', 'GET');
 };
 
+export const getVirtualMachineCost = async (sandboxId:string, vm:any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {

@@ -5,7 +5,7 @@ import { passwordValidate, returnLimitMeta } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj } from '../../common/interfaces';
-import { createVirtualMachine, getVmName } from '../../../services/Api';
+import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
 import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
@@ -59,25 +59,35 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         id: '',
         name: '',
         region: 'norwayeast',
-        size: 'cheap',
-        operatingSystem: 'windows',
+        size: '',
+        operatingSystem: '',
         distro: 'win2019datacenter',
         username: '',
         password: '',
-        linkToExternalSystem: ''
+        linkToExternalSystem: '',
+        dataDisks: []
     });
     const [actualVmName, setActualVmName] = useState<string>('');
+    const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<any>([sizeType.memory, sizeType.gpu, sizeType.compute]);
     const width = '400px';
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => calculateVmName(vm.name), 1000);
+        const timeoutId = setTimeout(() => {calculateVmName(vm.name); calculateVmPrice(); }, 1000);
         return () => { clearTimeout(timeoutId); };
       }, [vm.name, loading, sizes]);
-
+      
+    useEffect(() => {
+        calculateVmPrice();
+        //const timeoutId = setTimeout(() => { calculateVmPrice(); }, 200);
+        //return () => { clearTimeout(timeoutId); };
+      }, [vm.dataDisks, vm.operatingSystem, vm.size]);
 
     const handleDropdownChange = (value, name:string): void => {
+        if (name === 'dataDisks') {
+            value = [value];
+        }
         setVm({
           ...vm,
           [name]: value
@@ -117,13 +127,32 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         });
     };
 
+    const calculateVmPrice = () => {
+        if(vm.operatingSystem !== "" && vm.size !== "" && vm.dataDisks.length > 0) {
+            const vmPrice = {
+                size: vm.size,
+                dataDisks: vm.dataDisks,
+                operatingSystem: vm.operatingSystem
+            }
+            getVirtualMachineCost(sandbox?.id, vmPrice).then((result: any) => {
+                if (result && !result.Message) {
+                    setVmEstimatedCost(result);
+                    console.log("resultStudy: ", result);
+                }
+                else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                }
+            });
+        }
+    };
+
     const calculateVmName = (value:string) => {
         if (value === '') {
             setActualVmName('');
             return;
         }
         getVmName(sandbox?.studyName, sandbox?.name, value).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.errors) {
                 setActualVmName(result);
                 console.log("resultStudy: ", result);
             }
@@ -249,11 +278,11 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 options={disks}
                 width={width}
                 onChange={handleDropdownChange}
-                name="storage"
+                name="dataDisks"
             />
             <div>
                 <Label>Estimated total</Label>
-                <Typography variant="h6">kr 23456,42/month</Typography>
+                <Typography variant="h6"> {vmEstimatedCost}</Typography>
             </div>
             <Button
                 style={{width: '100px', marginLeft: 'auto' }}
