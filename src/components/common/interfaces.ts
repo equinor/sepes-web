@@ -78,7 +78,8 @@ export interface VmObj {
     username: string,
     password: string,
     extendedInfo?: any,
-    linkToExternalSystem:string
+    linkToExternalSystem:string,
+    dataDisks:string[]
 }
 
 export interface SizeObj {

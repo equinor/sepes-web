@@ -56,7 +56,6 @@ type VmPropertiesProps = {
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
-    console.log(vmProperties.extendedInfo);
     const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { maxDataDiskCount, memoryInMB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
@@ -73,7 +72,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
     const deleteVm = ():void => {
         setActiveTab(0);
         let currentVms:any = [...vms];
-        currentVms.splice(vmProperties, 1);
+        currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.Message) {
