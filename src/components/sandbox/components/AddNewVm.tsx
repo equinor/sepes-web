@@ -270,6 +270,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
+                data-cy="vm_size"
             />
             <CoreDevDropdown
                 label="Operating system"
@@ -277,6 +278,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 width={width}
                 onChange={handleDropdownChange}
                 name="operatingSystem"
+                data-cy="vm_operatingSystem"
             />
             <CoreDevDropdown
                 label="Data disk"
@@ -284,6 +286,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 width={width}
                 onChange={handleDropdownChange}
                 name="dataDisks"
+                data-cy="vm_dataDisks"
             />
             <div>
                 <Label>Estimated total</Label>
