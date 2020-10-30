@@ -67,6 +67,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
                     onChange={handleChange}
                     style={{ width: '100%' }}
                     value={text}
+                    id="1"
                 />
                 <div>
                     <Button

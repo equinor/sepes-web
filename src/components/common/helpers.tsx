@@ -95,3 +95,8 @@ export const passwordValidate = (password:string):boolean => {
         && limit.test(password);
 
 }
+
+export const roundUp = (num:number, precision:number):string => {
+    if (!precision) return num.toLocaleString();
+    return (Math.ceil(num / precision) * precision).toLocaleString();
+};

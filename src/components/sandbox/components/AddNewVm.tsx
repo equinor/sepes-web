@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { passwordValidate, returnLimitMeta } from '../../common/helpers';
+import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj } from '../../common/interfaces';
@@ -70,7 +70,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     const [actualVmName, setActualVmName] = useState<string>('');
     const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [filter, setFilter] = useState<any>([sizeType.memory, sizeType.gpu, sizeType.compute]);
+    const [filter, setFilter] = useState<any>([]);
     const width = '400px';
 
     useEffect(() => {
@@ -179,7 +179,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
 
     const filterSizes = (sizes:any) => { 
         if (!sizes) {
-            return;
+            return [];
+        }
+        if (filter.length === 0) {
+            return sizes;
         }
         return sizes.filter(size => filter.includes(size.category));
     }
@@ -207,7 +210,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Name"
                 meta={returnLimitMeta(20, vm.name)}
                 data-cy="vm_name"
-                id="vm_name"
+                id="1"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
@@ -227,7 +230,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Username"
                 meta="Required"
                 data-cy="vm_username"
-                id="vm_username"
+                id="2"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
@@ -244,7 +247,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Password"
                 meta="Required"
                 data-cy="vm_password"
-                id="vm_password"
+                id="3"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter" placement={'right'}>
@@ -255,13 +258,22 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <UnstyledList>
                 <li>
-                    <Checkbox label="High memory" defaultChecked onChange={(e:any) => handleCheck(sizeType.memory, e.target.checked)} />
+                    <Checkbox
+                        label="High memory"
+                        onChange={(e:any) => handleCheck(sizeType.memory, e.target.checked)}
+                    />
                 </li>
                 <li>
-                    <Checkbox label="High GPU" defaultChecked onChange={(e:any) => handleCheck(sizeType.gpu, e.target.checked)} />
+                    <Checkbox
+                        label="High GPU"
+                        onChange={(e:any) => handleCheck(sizeType.gpu, e.target.checked)}
+                    />
                 </li>
                 <li>
-                    <Checkbox label="High CPU" defaultChecked onChange={(e:any) => handleCheck(sizeType.compute, e.target.checked)} />
+                    <Checkbox
+                        label="High CPU"
+                        onChange={(e:any) => handleCheck(sizeType.compute, e.target.checked)}
+                />
                 </li>
             </UnstyledList>
             <CoreDevDropdown
@@ -287,7 +299,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <div>
                 <Label>Estimated total</Label>
-                <Typography variant="h6"> {vmEstimatedCost ? vmEstimatedCost + ' $' : '-'}</Typography>
+                <Typography variant="h6"> {vmEstimatedCost ? roundUp(vmEstimatedCost, 10) + ' $' : '-'}</Typography>
             </div>
             <Button
                 style={{width: '100px', marginLeft: 'auto' }}
