@@ -47,13 +47,13 @@ describe('Create study', function () {
 
         it('fills out sanbox information', () => {
             cy.get('[data-cy=sandbox_name]')
-                .type('cy Title')
+                .type(Cypress._.random(0, 1e6))
             cy.get('[data-cy=sandbox_region]')
                 .click()
             cy.contains('Norway East').click();
-            cy.get('[data-cy=sandbox_template]')
-                .click()
-            cy.contains(1).click();
+           // cy.get('[data-cy=sandbox_template]')
+           //     .click()
+           // cy.contains(1).click();
             cy.get('[data-cy=create_actual_sandbox]')
             .click()
             
@@ -69,7 +69,19 @@ describe('Create study', function () {
                 cy.get('[data-cy=vm_password]')
                     .type('Cypassword123!!')
 
-                cy.get('[data-cy=create_vm]')
+                cy.get('[data-cy=vm_size]')
+                    .click()
+                cy.contains("Standard_F1 (1 cores, 2048 MB Memory, os disk: 1047552, max data disks: 4)").click();
+
+                cy.get('[data-cy=vm_operatingSystem]')
+                    .click()
+                cy.contains("Windows Server 2019 Datacenter").click();
+
+                cy.get('[data-cy=vm_dataDisks]')
+                    .click()
+                cy.contains("64 GB").click();    
+
+                    cy.get('[data-cy=create_vm]')
                 .click()
                 
                 cy.scrollTo('top')
