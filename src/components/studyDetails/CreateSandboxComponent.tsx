@@ -125,7 +125,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
-                id="sandbox_name"
+                id="1"
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>
