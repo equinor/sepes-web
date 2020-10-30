@@ -190,13 +190,14 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         options={roles}
                         onChange={handleChange}
                         name="region"
+                        width="224px"
                     />
                 </div>
                 <Button
                     variant="outlined"
                     disabled={checkIfButtonDisabled()}
                     onClick={addParticipant}
-                    style={{width: '220px'}}
+                    style={{width: '224px'}}
                 >
                         {loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
