@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress  } from '@equinor/eds-core-react';
@@ -13,6 +13,7 @@ import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
+import { UpdateCache } from '../../App';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -59,6 +60,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
     let studyId = window.location.pathname.split('/')[2];
     let datasetId = window.location.pathname.split('/')[4];
     const history = useHistory();
+    const {updateCache, setUpdateCache} = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
@@ -118,6 +120,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, ['study' + studyId]: true});
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
                 }
@@ -132,6 +135,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, ['study' + studyId]: true});
                     console.log("resultStudy: ", result);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -147,6 +151,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, datasets: true});
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -161,6 +166,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, datasets: true});
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);

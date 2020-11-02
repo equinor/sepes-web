@@ -8,6 +8,7 @@ import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import styled from 'styled-components';
+import useFetch from '../common/hooks/useFetch';
 
 const Wrapper = styled.div`
   display:grid;

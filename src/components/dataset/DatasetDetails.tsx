@@ -14,6 +14,7 @@ import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     arrow_back,
@@ -52,11 +53,21 @@ const RightWrapper = styled.div`
   padding: 8px;
 `;
 
+
+const checkUrlIfGeneralDataset = () => {
+    if (window.location.pathname.split('/')[1] === 'datasets') {
+        return true;
+    }
+    return false;
+}
+
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     let studyId = window.location.pathname.split('/')[2];
     const history = useHistory();
+    const isStandard = checkUrlIfGeneralDataset();
     const [dataset, setDataset] = useState<DatasetObj>({});
+    //const { loading, setLoading } = useFetch(isStandard ? getStandardDataset : getDataset, setDataset, 'dataset' + studyId, isStandard ? studyId : [datasetId, studyId]);
     const [loading, setLoading] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
@@ -131,12 +142,6 @@ const DatasetDetails = (props: any) => {
     }
     };
 
-    const checkUrlIfGeneralDataset = () => {
-        if (window.location.pathname.split('/')[1] === 'datasets') {
-            return true;
-        }
-        return false;
-    }
 
     const handleEditMetdata = evt => {
         setShowEditDataset(true);

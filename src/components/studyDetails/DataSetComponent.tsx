@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
@@ -9,6 +9,7 @@ import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
 import * as notify from '../common/notify';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     close
@@ -55,7 +56,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { loading, setLoading } = useFetch(getDatasetList, setDatasetsList);
 
     const removeDataset = (row:any) => {
         const studyId = window.location.pathname.split('/')[2];
@@ -78,27 +79,6 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
         const studyId = window.location.pathname.split('/')[2];
         history.push('/studies/' + studyId + '/datasets');
     }
-
-    useEffect(() => {
-        setIsSubscribed(true);
-        getDatasets();
-        return () => setIsSubscribed(false);
-    }, []);
-
-    const getDatasets = () => {
-        setLoading(true);
-        getDatasetList().then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                setDatasetsList(result);
-                console.log("resultDatasetLists: ", result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-            }
-            setLoading(false);
-        });
-    };
 
     const addDatasetToStudy = (row:any) => {
         setIsOpen(false);

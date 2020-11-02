@@ -133,11 +133,14 @@ type StudyComponentFullProps = {
   setLoading:any,
   loading:boolean,
   setStudy:any,
-  setHasChanged:any
+  setHasChanged:any,
+  cache:any,
+  setUpdateCache:any,
+  updateCache:any
 };
 
 
-const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged}) => {
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged, cache, setUpdateCache, updateCache }) => {
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -147,11 +150,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!studyOnChange.name) {
+      setStudyOnChange(study);
+    }
     document.addEventListener("keydown", listener, false);
     return () => {
       document.removeEventListener("keydown", listener, false);
   }
-}, [studyOnChange]);
+}, [studyOnChange, study]);
 
   const listener = (e: any) => {
     if (e.key === 'Escape') {
@@ -194,6 +200,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
+            cache['study' + study.id] = result;
+            setUpdateCache({ ...updateCache, studies: true});
             setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
@@ -223,6 +231,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         if (result && !result.Message) {
             setHasChanged(false);
             console.log("result: ", result);
+            setUpdateCache({...updateCache, studies: true});
+            cache['study' + study.id] = result;
             setStudy(result);
         }
         else {
