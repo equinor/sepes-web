@@ -9,15 +9,7 @@ import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { UserAgentApplication } from 'msal';
 
-
 export const UserConfig = React.createContext(myMSALObj);
-//export const UpdateCache2 = React.createContext({UpdateCache: true, setUpdateCache: () => {}});
-//export const UpdateCache = React.createContext();
-/*
-<UpdateCache.Provider value={{updateCache, setUpdateCache}}>
- </UpdateCache.Provider>
-
-*/
 export const Permissions = React.createContext({
   admin: false,
   canAdministerDatasets: false,
@@ -36,9 +28,7 @@ const renderApp = (user) => {
             <React.StrictMode>
                 <UserConfig.Provider value={user}>
                   <Permissions.Provider value={result}>
-                  
                     <App />
-                 
                   </Permissions.Provider>
                 </UserConfig.Provider>
             </React.StrictMode>,
@@ -50,8 +40,6 @@ const renderApp = (user) => {
   }})
   }
 
-
-//const result = ""
 let cyToken = localStorage.getItem("cyToken");
 
 if (cyToken && cyToken.length) {
