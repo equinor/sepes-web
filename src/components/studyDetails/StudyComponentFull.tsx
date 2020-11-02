@@ -40,8 +40,6 @@ const DescriptionWrapper = styled.div`
   }
   `;
 
-  //
-
 const DescriptioTextfieldnWrapper = styled.div`
   margin: auto 0 auto 32px;
   @media (max-width: 768px) {
@@ -61,16 +59,6 @@ const SmallText = styled.span`
     font-size:10px;
     margin-Top:4px;
   `;
-
-const Wrapper2 = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex-direction: row;
-  gap: 16px;
-  justify-content: space-between;
-`;
-
 
 const Wrapper = styled.div`
     display: grid;
