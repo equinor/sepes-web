@@ -14,7 +14,6 @@ import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
-import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     arrow_back,

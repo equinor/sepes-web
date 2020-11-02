@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { getStudyList } from '../../services/Api';
+import { getStudyList, getResourceStatus } from '../../services/Api';
 import Studies from "./Studies";
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';

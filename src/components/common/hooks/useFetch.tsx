@@ -4,10 +4,17 @@ import * as notify from '../../common/notify';
 
 const cache = {};
 
-const useFetch = (fetchFunction, setter, cacheId?, parameters?) => {
+const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
+/*
+    const setParamets = () => {
+        if (parameters && parameters.length > 0) {
+            parameters.foreach(parameter =>)
+        }
+    }*/
+
     const getData = () => {
         if (!fetchFunction) return;
 
@@ -18,7 +25,7 @@ const useFetch = (fetchFunction, setter, cacheId?, parameters?) => {
         }
         else {
             setLoading(true);
-            fetchFunction(parameters && parameters).then((result: any) => {
+            fetchFunction(para1 || null, para2 || null, para3 || null).then((result: any) => {
                 if (isSubscribed && !result.Message) {
                     if (cacheId) {
                         cache[cacheId] = result;

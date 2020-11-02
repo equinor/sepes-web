@@ -26,7 +26,6 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(false);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -40,10 +39,10 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
         studyName: ''
     });
     const [resources, setResources] = useState<any>();
+    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
 
     useEffect(() => {
         setIsSubscribed(true);
-        getCurrentSandbox();
         getResources();
         let timer:any;
         try {
@@ -67,7 +66,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
              }
         });
     }
-
+/*
     const getCurrentSandbox = ():void => {
         setLoading(true);
         getSandbox(studyId, sandboxId).then((result: any) => {
@@ -81,7 +80,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
              }
              setLoading(false);
         });
-    }
+    }*/
 
     const returnStepComponent = () => {
         switch (step) {
