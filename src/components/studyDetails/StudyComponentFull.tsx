@@ -163,6 +163,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   }
 
   const handleSave = () => {
+    setUpdateCache({ ...updateCache, studies: true});
     setHasChanged(false);
     setUserPressedCreate(true);
     if (checkRequiredFieldsArNotNull()) {
@@ -189,7 +190,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             console.log("result: ", result);
             let newStudy = result;
             cache['study' + study.id] = result;
-            setUpdateCache({ ...updateCache, studies: true});
             setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
@@ -219,7 +219,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         if (result && !result.Message) {
             setHasChanged(false);
             console.log("result: ", result);
-            setUpdateCache({...updateCache, studies: true});
             cache['study' + study.id] = result;
             setStudy(result);
         }
