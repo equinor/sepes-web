@@ -9,6 +9,7 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     close
@@ -44,13 +45,14 @@ type ParicipantComponentProps = {
 const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy }) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    //const [loading, setLoading] = useState<boolean>(false);
     const [roles, setRoles] = useState<DropdownObj>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
+    const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
 
     const removeParticipant = (participant:any) => {
         const studyId = window.location.pathname.split('/')[2];
@@ -97,59 +99,11 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setSelectedParticipant(participant);
         setIsOpen(false);
     }
-    /*
-    const checkIfParticipantIsAlreadyAdded = (id:string) => {
-        let elementExist = false;
-        props.study.participants && props.study.participants.forEach((element) => {
-            if (element.userId === id) {
-                elementExist = true;
-            }
-        });
-        return elementExist;
-    }
-    */
 
     const handleChange = (value) => {
         setRole(value);
         setRoleNotSelected(false);
       };
-
-    useEffect(() => {
-        setIsSubscribed(true);
-        //getParticipants();
-        getRoles();
-        return () => setIsSubscribed(false);
-    }, [text]);
-
-    /* Used in old dropdown
-    const getParticipants = () => {
-        setLoading(true);
-        api.getParticipantList("a").then((result: any) => {
-            if (isSubscribed) {
-                setParticipants(result);
-                console.log("participants: ", result);
-            }
-            else {
-                notify.show('danger', '500');
-            }
-            setLoading(false);
-        })
-    }
-    */
-
-    const getRoles = () => {
-        setLoading(true);
-        api.getStudyRoles().then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                setRoles(result);
-                console.log("participants: ", result, result.Message, result.RequestId);
-            }
-            else {
-                notify.show('danger', '500');
-            }
-            setLoading(false);
-        })
-    }
 
     const handleInputChange = (value: string) => {
         if (value !== "") {

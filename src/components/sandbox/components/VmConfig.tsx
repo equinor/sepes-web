@@ -10,6 +10,7 @@ import {
 } from '../../../services/Api';
 import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
+import useFetch from '../../common/hooks/useFetch';
 const { TabList, Tab } = Tabs;
 
 let mockVms = [
@@ -32,60 +33,16 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep, reso
     const [sizes, setSizes] = useState<SizeObj |undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
-
-    useEffect(() => {
-        setIsSubscribed(true);
-        getVms();
-        getSizes();
-        getDisks();
-        getOSs();
-        return () => { setIsSubscribed(false); };
-    },[]);
-
-    const getSizes = () => {
-        getVirtualMachineSizes(sandbox.id).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
-                setSizes(result);
-            }
-            else {
-                //notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-        });
-    }
-
-    const getDisks = () => {
-        getVirtualMachineDisks().then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
-                setDisks(result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-        });
-    }
+    const { } = useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id);
+    const { } = useFetch(getVirtualMachineDisks, setDisks);
+    const { } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    const { } = useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
 
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
                 console.log("result: ", result);
                 setVms(result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-        });
-    }
-
-    const getOSs = () => {
-        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
-                setOs(result);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);

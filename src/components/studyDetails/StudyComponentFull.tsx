@@ -40,8 +40,6 @@ const DescriptionWrapper = styled.div`
   }
   `;
 
-  //
-
 const DescriptioTextfieldnWrapper = styled.div`
   margin: auto 0 auto 32px;
   @media (max-width: 768px) {
@@ -61,16 +59,6 @@ const SmallText = styled.span`
     font-size:10px;
     margin-Top:4px;
   `;
-
-const Wrapper2 = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex-direction: row;
-  gap: 16px;
-  justify-content: space-between;
-`;
-
 
 const Wrapper = styled.div`
     display: grid;
@@ -133,11 +121,14 @@ type StudyComponentFullProps = {
   setLoading:any,
   loading:boolean,
   setStudy:any,
-  setHasChanged:any
+  setHasChanged:any,
+  cache:any,
+  setUpdateCache:any,
+  updateCache:any
 };
 
 
-const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged}) => {
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged, cache, setUpdateCache, updateCache }) => {
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -147,11 +138,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!studyOnChange.name) {
+      setStudyOnChange(study);
+    }
     document.addEventListener("keydown", listener, false);
     return () => {
       document.removeEventListener("keydown", listener, false);
   }
-}, [studyOnChange]);
+}, [studyOnChange, study]);
 
   const listener = (e: any) => {
     if (e.key === 'Escape') {
@@ -169,6 +163,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   }
 
   const handleSave = () => {
+    setUpdateCache({ ...updateCache, studies: true});
     setHasChanged(false);
     setUserPressedCreate(true);
     if (checkRequiredFieldsArNotNull()) {
@@ -194,6 +189,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
+            cache['study' + study.id] = result;
             setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
@@ -223,6 +219,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         if (result && !result.Message) {
             setHasChanged(false);
             console.log("result: ", result);
+            cache['study' + study.id] = result;
             setStudy(result);
         }
         else {

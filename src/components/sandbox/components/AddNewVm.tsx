@@ -80,8 +80,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
       
     useEffect(() => {
         calculateVmPrice();
-        //const timeoutId = setTimeout(() => { calculateVmPrice(); }, 200);
-        //return () => { clearTimeout(timeoutId); };
       }, [vm.dataDisks, vm.operatingSystem, vm.size]);
 
     const handleDropdownChange = (value, name:string): void => {
