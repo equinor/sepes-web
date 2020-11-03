@@ -5,15 +5,14 @@ import { DatasetObj } from '../common/interfaces';
 import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import FileDropzoneContainer from '../common/upload/FileDropzone';
 import { Label } from '../common/StyledComponents';
 import { bytesToMB } from '../common/helpers';
-import { useHistory } from 'react-router-dom';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import StudySpecificDataset from './StudySpecificDataset';
 import * as notify from '../common/notify';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     arrow_back,
@@ -63,22 +62,16 @@ const checkUrlIfGeneralDataset = () => {
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     let studyId = window.location.pathname.split('/')[2];
-    const history = useHistory();
     const isStandard = checkUrlIfGeneralDataset();
     const [dataset, setDataset] = useState<DatasetObj>({});
-    //const { loading, setLoading } = useFetch(isStandard ? getStandardDataset : getDataset, setDataset, 'dataset' + studyId, isStandard ? studyId : [datasetId, studyId]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const { loading, setLoading, cache } = useFetch(isStandard ? getStandardDataset : getDataset, setDataset,
+        isStandard ? 'dataset' + studyId : 'dataset' + studyId + datasetId,
+        isStandard ? studyId : datasetId, !isStandard && studyId
+    );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState('');
     const [files, setFiles] = useState<any>([]);
     const [formData, setFormData] = useState<any>(null);
 
-    useEffect(() => {
-        setIsSubscribed(true);
-        getDatasetFromApi();
-        return () => setIsSubscribed(false);
-    }, []);
 
     const uploadFiles = (): void => {
         setLoading(true);
@@ -109,38 +102,6 @@ const DatasetDetails = (props: any) => {
         setFiles([]);
         setFormData(null);
     }
-
-    const getDatasetFromApi = () => {
-        setLoading(true);
-        if (checkUrlIfGeneralDataset()) {
-            datasetId = studyId;
-            getStandardDataset(datasetId).then((result: any) => {
-                if (isSubscribed && result && !result.Message) {
-                    setDataset(result);
-                    console.log("result: ", result);
-                }
-                else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log("Err");
-                }
-                setLoading(false);
-            });
-        }
-        else {
-            getDataset(datasetId, studyId).then((result: any) => {
-                if (result && !result.Message) {
-                    setDataset(result);
-                    console.log("result: ", result);
-                }
-                else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log("Err");
-                }
-                setLoading(false);
-            });
-    }
-    };
-
 
     const handleEditMetdata = evt => {
         setShowEditDataset(true);
@@ -285,7 +246,7 @@ const DatasetDetails = (props: any) => {
                 </RightWrapper>: <LoadingFull /> }
             </Wrapper>
         </OuterWrapper>
-        : <StudySpecificDataset datasetFromDetails={dataset} setDatasetFromDetails={setDataset} setShowEditDataset={setShowEditDataset} editingDataset={true} />
+        : <StudySpecificDataset datasetFromDetails={dataset} setDatasetFromDetails={setDataset} setShowEditDataset={setShowEditDataset} editingDataset cache={cache} />
     )
 }
 
