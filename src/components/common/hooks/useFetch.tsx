@@ -8,7 +8,6 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
-
     const getData = () => {
         if (!fetchFunction) return;
 

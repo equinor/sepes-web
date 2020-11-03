@@ -54,13 +54,14 @@ type StudySpecificDatasetProps = {
     setDatasetFromDetails: (value:any) => void;
     setShowEditDataset: (value:any) => void;
     editingDataset: boolean;
+    cache:any;
 };
 
-const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFromDetails, setDatasetFromDetails, setShowEditDataset, editingDataset }) => {
+const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFromDetails, setDatasetFromDetails, setShowEditDataset, editingDataset, cache }) => {
     let studyId = window.location.pathname.split('/')[2];
     let datasetId = window.location.pathname.split('/')[4];
     const history = useHistory();
-    const {updateCache, setUpdateCache} = useContext(UpdateCache);
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
@@ -115,6 +116,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             return;
         }
         setLoading(true);
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
@@ -135,7 +137,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({...updateCache, ['study' + studyId]: true});
+                    const datasetCache = 'dataset' + studyId + result.id;
+                    setUpdateCache({...updateCache, ['study' + studyId]: true, [datasetCache]: true});
                     console.log("resultStudy: ", result);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -151,7 +154,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({...updateCache, datasets: true});
+                    setUpdateCache({...updateCache, datasets: true, ['dataset' + studyId]: true});
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -167,6 +170,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({...updateCache, datasets: true});
+                    cache['dataset' + studyId] = result;
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);

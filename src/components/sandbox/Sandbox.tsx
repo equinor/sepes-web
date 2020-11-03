@@ -52,7 +52,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
           } catch(e) {
             console.log(e);
           }
-        return () => {clearInterval(timer); setIsSubscribed(false)};
+        return () => { clearInterval(timer); setIsSubscribed(false); };
     }, []);
 
     const getResources = () => {
@@ -66,21 +66,6 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
              }
         });
     }
-/*
-    const getCurrentSandbox = ():void => {
-        setLoading(true);
-        getSandbox(studyId, sandboxId).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
-                setSandbox(result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-             setLoading(false);
-        });
-    }*/
 
     const returnStepComponent = () => {
         switch (step) {
