@@ -55,10 +55,13 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
 
     const removeParticipant = (participant:any) => {
+        let participantList:any = [...study.participants];
+        participantList.splice(participantList.indexOf(participant), 1);
+        setStudy({...study, participants: participantList});
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
-                setStudy({...study, participants: result.participants});
+                
                 console.log("participants: ", result);
             }
             else {
@@ -75,7 +78,9 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (isSubscribed && !result.Message) {
-                    setStudy({...study, participants: result.participants});
+                    let participantList:any = [...study.participants];
+                    participantList.push(result);
+                    setStudy({...study, participants: participantList});
                     console.log("participants: ", result);
                 }
                 else {
