@@ -226,7 +226,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 onChange={(e: any) => handleChange('username', e.target.value)}
                 value={vm.username}
                 label="Username"
-                meta="Required"
+                meta="(required)"
                 data-cy="vm_username"
                 id="2"
                 inputIcon={
@@ -243,7 +243,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 onChange={(e: any) => handleChange('password', e.target.value)}
                 value={vm.password}
                 label="Password"
-                meta="Required"
+                meta="(required)"
                 data-cy="vm_password"
                 id="3"
                 inputIcon={

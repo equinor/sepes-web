@@ -120,7 +120,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
             <TextField
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
-                meta="Required"
+                meta="(required)"
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
@@ -140,6 +140,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 name="region"
                 data-cy="sandbox_region"
                 tabIndex={0}
+                meta="(required)"
             />
             {/*
             <CoreDevDropdown
@@ -155,6 +156,7 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 style={{ width: '96px', marginLeft: 'auto', marginTop: 'auto' }}
                 onClick={() => CreateSandbox()}
                 data-cy="create_actual_sandbox"
+                disabled={!checkRequiredFieldsAreNotEmpty()}
             >
                     Create
             </Button>
