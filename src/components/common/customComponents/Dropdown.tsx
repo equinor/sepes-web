@@ -77,11 +77,17 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   });
 
   useEffect(() => {
+    if (props.resetState) {
+      setSelectedOption({
+        key: "",
+        displayValue: "Please select..."
+      })
+    }
     document.addEventListener("keydown", listener, false);
     return () => {
       document.removeEventListener("keydown", listener, false);
   }
-}, []);
+}, [props.resetState]);
   const listener = (e: any) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
