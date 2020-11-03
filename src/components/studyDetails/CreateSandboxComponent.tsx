@@ -37,9 +37,11 @@ type CreateSandboxComponentProps = {
     setToggle: (value:any) => void;
     setStudy: (value:any) => void;
     setHasChanged:any;
+    setUpdateCache:any;
+    updateCache:any;
 };
 const width = '268px';
-const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged }) => {
+const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged, setUpdateCache, updateCache }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     const [loading, setLoading] = useState<Boolean>(false);
@@ -89,8 +91,9 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         if (!checkRequiredFieldsAreNotEmpty()) {
             return;
         }
-        setLoading(true);
         const studyId = window.location.pathname.split('/')[2];
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
+        setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
