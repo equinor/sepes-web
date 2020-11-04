@@ -113,6 +113,13 @@ const PictureWrapper = styled.div<{ editMode: any }>`
   }
 `;
 
+const limits = {
+  description: 500,
+  name: 128,
+  vendor: 128,
+  wbsCode: 64,
+}
+
 
 type StudyComponentFullProps = {
   study:StudyObj,
@@ -128,7 +135,7 @@ type StudyComponentFullProps = {
 };
 
 
-const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged, cache, setUpdateCache, updateCache }) => {
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({ study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged, cache, setUpdateCache, updateCache }) => {
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -138,7 +145,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!studyOnChange.name) {
+    if (!studyOnChange.id) {
       setStudyOnChange(study);
     }
     document.addEventListener("keydown", listener, false);
@@ -246,7 +253,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
     }
     setEditMode(false);
     setImageUrl('');
-    //Remove line under if we want to keep changes when clicking cancel, but don't send to api
     setStudyOnChange(study);
     setShowImagePicker(false);
   }
@@ -256,18 +262,19 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
     //const value = evt.target.value;
     //const columnName = evt.target.name;
     const inputLength = value.length;
-    if (columnName === 'description' && inputLength > 500) {
+    if (columnName === 'description' && inputLength > limits.description) {
       return;
     }
-    if (columnName === 'name' && inputLength > 128) {
+    if (columnName === 'name' && inputLength > limits.name) {
       return;
     }
-    if (columnName === 'vendor' && inputLength > 128) {
+    if (columnName === 'vendor' && inputLength > limits.vendor) {
       return;
     }
-    if (columnName === 'wbsCode' && inputLength > 64) {
+    if (columnName === 'wbsCode' && inputLength > limits.wbsCode) {
       return;
     }
+    console.log(columnName, value, studyOnChange.vendor);
     setStudyOnChange({
       ...studyOnChange,
       [columnName]: value
@@ -288,7 +295,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             </SmallIconWrapper>
             <SmallIconWrapper>
               <Icon color="#007079" name="dollar" size={24} />
-              <SmallText>{wbsCode}</SmallText>
+              <SmallText>{wbsCode || '-'}</SmallText>
             </SmallIconWrapper>
             </> :
             <>
@@ -301,7 +308,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               style={{ margin: 'auto', marginLeft: '0' }}
               value={studyOnChange.name}
               data-cy="study_name"
-              id="study_name"
             />
             <TextField
               placeholder="Who is the vendor?"
@@ -311,7 +317,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               label="Vendor"
               meta="(required)"
               data-cy="study_vendor"
-              id="study_vendor"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px' }} name="business" size={24} />
@@ -324,7 +329,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               label="wbs"
               value={studyOnChange.wbsCode}
               data-cy="study_wbs"
-              id="study_wbs"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px', top: '-2px' }} name="dollar" size={24} />

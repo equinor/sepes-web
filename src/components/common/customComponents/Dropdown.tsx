@@ -77,11 +77,17 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   });
 
   useEffect(() => {
+    if (props.resetState) {
+      setSelectedOption({
+        key: "",
+        displayValue: "Please select..."
+      })
+    }
     document.addEventListener("keydown", listener, false);
     return () => {
       document.removeEventListener("keydown", listener, false);
   }
-}, []);
+}, [props.resetState]);
   const listener = (e: any) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
@@ -128,7 +134,12 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   //setSelectedOption(options[0].name);
 
   return (
-    <div className={"coredev-dropdown"} ref={wrapperRef}>
+    <div
+      style={{
+        opacity: props.disabled ? 0.5 : 1,
+        pointerEvents: props.disabled ? 'none' : 'initial'
+      }}
+      className={"coredev-dropdown"} ref={wrapperRef}>
       <div style={{ display: 'flex' }}>
         <Label>{label}</Label>
         <div style={{ marginLeft: 'auto' }}><Label>{meta}</Label></div>

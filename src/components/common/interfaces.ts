@@ -20,7 +20,7 @@ export interface ParticipantObj {
     source?: string;
     databaseId: number;
     objectId: string;
-    userId: string;
+    userId: number;
 }
 
 export interface DatasetObj {

@@ -144,7 +144,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                         <TextField
                                             value={rule.name}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'name')}
-                                            id={index + rule.name}
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
@@ -162,7 +161,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                         <TextField
                                             value={rule.ip}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'ip')}
-                                            id={index + rule.name}
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
@@ -180,7 +178,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                         <TextField
                                             value={rule.port}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'port')}
-                                            id={index + rule.port}
                                         />
                                     </Cell>
                                     <Cell>{EquinorIcon('clear', '', 24, () => removeRule(index), true)}</Cell>
