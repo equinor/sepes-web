@@ -31,7 +31,7 @@ const TableWrapper = styled.div`
 
 const Bar = styled.div`
     display: grid;
-    grid-template-columns: 1fr 0.3fr 220px;
+    grid-template-columns: 1fr 0.3fr 296px;
     margin-left: auto;
     z-index:99;
     margin-top: 32px;
@@ -55,17 +55,14 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const { loading, setLoading } = useFetch(getDatasetList, setDatasetsList);
+    const { setLoading } = useFetch(getDatasetList, setDatasetsList);
 
     const removeDataset = (row:any) => {
         const studyId = window.location.pathname.split('/')[2];
-        //Removing it on clientside, keeping it for now.
-        //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
+        setStudy({ ...study, datasets: study.datasets.filter((dataset:any) => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
-                setStudy({...study, datasets: result.datasets });
-                console.log("result Datasets after delete: ", result);
+                //setStudy({...study, datasets: result.datasets });
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -84,14 +81,12 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];
-            //Removing it on clientside. Keep it here for now.
-            //let list = props.study.datasets;
-            //list.push(row);
-            //props.setStudy({...props.study, datasets: list});
+            const datasetList:any = [...study.datasets];
+            datasetList.push(row);
+            setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && !result.Message) {
-                    setStudy({...study, datasets: result.datasets });
-                    console.log("resultDatasets: ", result);
+                    //setStudy({...study, datasets: result.datasets });
                 }
                 else {
                     notify.show('danger', '500', result.Message, result.RequestId);

@@ -251,7 +251,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 <TextField
                     placeholder="Please add data set name..."
                     label="Dataset name"
-                    meta="Required"
+                    meta="(required)"
                     variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
                     style={{ width }}
                     onChange={(e: any) => handleChange('name', e.target.value)}
@@ -262,7 +262,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
                     label="Storage account name"
-                    meta="Required"
+                    meta="(required)"
                     variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                     style={{ width }}
                     onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
@@ -272,7 +272,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 {!editDataset ? <CoreDevDropdown
                     width={width}
                     label="Location"
-                    meta="Required"
+                    meta="(required)"
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
@@ -281,7 +281,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 <CoreDevDropdown
                     width={width}
                     label="Data classification"
-                    meta="Required"
+                    meta="(required)"
                     options={options}
                     onChange={handleDropdownChange}
                     name="classification"
