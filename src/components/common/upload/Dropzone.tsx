@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const ChooseImgdiv = styled.div`
   height: 125px;
+  width: 125px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -99,8 +99,14 @@ export const getResourceStatus = async (studyId: string, sandboxId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
 };
 
+//Virtual machine
+
 export const createVirtualMachine = async (sandboxId: string, vm:VmObj) => {
     return apiRequestWithToken('api/virtualmachines/' + sandboxId, 'POST', vm);
+};
+
+export const deleteVirtualMachine = async (vmId: string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId, 'DELETE');
 };
 
 export const getVirtualMachineForSandbox = async (sandboxId: string) => {
@@ -109,6 +115,26 @@ export const getVirtualMachineForSandbox = async (sandboxId: string) => {
 
 export const getVmName = async (studyName: any, sandboxname: any, userSuffix:string) => {
     return apiRequestWithToken('api/virtualmachines/calculateName/' + studyName + '/' + sandboxname + '/' + userSuffix, 'GET');
+};
+
+export const getVirtualMachineSizes = async (sandboxId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/sizes', 'GET');
+};
+
+export const getVirtualMachineDisks = async () => {
+    return apiRequestWithToken('api/virtualmachines/disks', 'GET');
+};
+
+export const getVirtualMachineOperatingSystems = async (sandboxId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET');
+};
+
+export const getVirtualMachineExtended = async (vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/extended', 'GET');
+};
+
+export const getVirtualMachineCost = async (sandboxId:string, vm:any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
 };
 
 //Lookup

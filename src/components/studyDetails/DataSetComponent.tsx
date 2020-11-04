@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
@@ -9,6 +9,7 @@ import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from '../common//customComponents/DatasetsTable';
 import * as notify from '../common/notify';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     close
@@ -21,14 +22,27 @@ const Wrapper = styled.div`
     grid-gap: 23px;
 `;
 
+const TableWrapper = styled.div`
+    margin-top: 32px;
+    @media (max-width: 500px) {
+        margin-top: 64px;
+    }
+`;
+
 const Bar = styled.div`
     display: grid;
-    grid-template-columns: 256px 0.3fr 1fr;
-    margin-left: 60%;
+    grid-template-columns: 1fr 0.3fr 296px;
+    margin-left: auto;
     z-index:99;
     margin-top: 32px;
     @media (max-width: 768px) {
         margin-left: 0;
+        grid-template-columns: 1fr 0.3fr 1fr;
+    }
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 0.3fr 1fr;
+        grid-gap: 8px;
     }
 `;
 
@@ -41,17 +55,14 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { setLoading } = useFetch(getDatasetList, setDatasetsList);
 
     const removeDataset = (row:any) => {
         const studyId = window.location.pathname.split('/')[2];
-        //Removing it on clientside, keeping it for now.
-        //props.setStudy({...props.study, datasets: props.study.datasets.filter(dataset => dataset.id !== row.id) });
+        setStudy({ ...study, datasets: study.datasets.filter((dataset:any) => dataset.id !== row.id) });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
-                setStudy({...study, datasets: result.datasets });
-                console.log("result Datasets after delete: ", result);
+                //setStudy({...study, datasets: result.datasets });
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -66,39 +77,16 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
         history.push('/studies/' + studyId + '/datasets');
     }
 
-    useEffect(() => {
-        setIsSubscribed(true);
-        getDatasets();
-        return () => setIsSubscribed(false);
-    }, []);
-
-    const getDatasets = () => {
-        setLoading(true);
-        getDatasetList().then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                setDatasetsList(result);
-                console.log("resultDatasetLists: ", result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-            }
-            setLoading(false);
-        });
-    };
-
     const addDatasetToStudy = (row:any) => {
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];
-            //Removing it on clientside. Keep it here for now.
-            //let list = props.study.datasets;
-            //list.push(row);
-            //props.setStudy({...props.study, datasets: list});
+            const datasetList:any = [...study.datasets];
+            datasetList.push(row);
+            setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && !result.Message) {
-                    setStudy({...study, datasets: result.datasets });
-                    console.log("resultDatasets: ", result);
+                    //setStudy({...study, datasets: result.datasets });
                 }
                 else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -144,14 +132,14 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
                 </div>
             </Bar>
             <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>Advanced search</Link>
-            <div style={{ marginTop: '32px' }}>
+            <TableWrapper>
                 <DatasetsTable
                     datasets={study.datasets}
                     removeDataset={removeDataset}
                     editMode
                     studyId={study.id}
                 />
-            </div>
+            </TableWrapper>
         </Wrapper>
     )
 }

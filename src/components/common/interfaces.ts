@@ -20,6 +20,7 @@ export interface ParticipantObj {
     source?: string;
     databaseId: number;
     objectId: string;
+    userId: string;
 }
 
 export interface DatasetObj {
@@ -68,11 +69,28 @@ export interface DropdownObj {
 }
 
 export interface VmObj {
+    id:string;
     region: string,
     name: string,
-    performanceProfile: string,
+    size: string,
     operatingSystem: string,
     distro: string,
     username: string,
-    password: string
+    password: string,
+    extendedInfo?: any,
+    linkToExternalSystem:string,
+    dataDisks:string[]
+}
+
+export interface SizeObj {
+    description: string,
+    category: string,
+    key: string,
+    displayValue: string
+}
+
+export interface OperatingSystemObj {
+    category: string,
+    key: string,
+    displayValue: string
 }

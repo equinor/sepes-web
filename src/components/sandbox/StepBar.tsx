@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Typography } from '@equinor/eds-core-react';
-import DeleteSandboxComponent from './components/DeleteSandboxComponent';
+import DeleteResourceComponent from './components/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
+import { deleteSandbox } from '../../services/Api';
+import * as notify from '../common/notify';
 
 const Wrapper = styled.div`
   display:grid;
@@ -29,6 +31,8 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     sandbox: any;
+    updateCache:any;
+    setUpdateCache:any;
 };
 
   const getSteps = () => {
@@ -52,13 +56,25 @@ type StepBarProps = {
     ]
   };
 
-const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox }) => {
+const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox, updateCache, setUpdateCache }) => {
     const history = useHistory();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const steps = getSteps();
 
     
-
+    const deleteThisSandbox = ():void => {
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
+        deleteSandbox(studyId, sandboxId).then((result: any) => {
+            if (result && !result.Message) {
+                history.push('/studies/' + studyId);
+                console.log("result: ", result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+             }
+        });
+    }
 
     const returnControlButtons = () => {
         switch(step) {
@@ -90,34 +106,34 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
     return (
         <Wrapper>
             <div>
-            <Link to={'/studies/' + studyId} 
-                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                            {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
-                    </Link>
+                <Link to={'/studies/' + studyId} 
+                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                        {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
+                </Link>
                 <Typography style={{ display: 'inline-block', marginLeft: '16px' }} variant="h2">{sandbox && sandbox.name}</Typography>
                 <div style={{ float: 'right' }}>
                     {returnControlButtons()}
                 </div>
             </div>
             <Stepper activeStep={step} alternativeLabel nonLinear>
-            {steps.map((stepL:any, index) => {
-            const stepProps = {};
-            const labelProps:any = {};
-            labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
+                {steps.map((stepL:any, index) => {
+                    const stepProps = {};
+                    const labelProps:any = {};
+                    labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 
-            return (
-                <Step key={index}>
-                <StepLabel {...labelProps}>{stepL.label}</StepLabel>
-                </Step>
-            );
-            })}
-      </Stepper>
+                    return (
+                        <Step key={index}>
+                            <StepLabel {...labelProps}>{stepL.label}</StepLabel>
+                        </Step>
+                    );
+                })}
+            </Stepper>
             {userClickedDelete &&
-                <DeleteSandboxComponent
-                    SandboxName={sandbox.name}
-                    studyId={studyId}
-                    sandboxId={sandboxId}
+                <DeleteResourceComponent
+                    ResourceName={sandbox.name}
                     setUserClickedDelete={setUserClickedDelete}
+                    onClick={deleteThisSandbox}
+                    type="sandbox"
                 />}
         </Wrapper>
     )

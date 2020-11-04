@@ -9,9 +9,7 @@ import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { UserAgentApplication } from 'msal';
 
-
 export const UserConfig = React.createContext(myMSALObj);
-
 export const Permissions = React.createContext({
   admin: false,
   canAdministerDatasets: false,
@@ -42,8 +40,6 @@ const renderApp = (user) => {
   }})
   }
 
-
-//const result = ""
 let cyToken = localStorage.getItem("cyToken");
 
 if (cyToken && cyToken.length) {

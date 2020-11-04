@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button} from '@equinor/eds-core-react';
 import SandboxTable from '../common/customComponents/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -21,11 +21,27 @@ const Wrapper = styled.div`
 type SandboxComponentProps = {
     sandboxes:any,
     setStudy:any,
-    setHasChanged:any
+    setHasChanged:any,
+    setUpdateCache:any,
+    updateCache:any
   };
 
-const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy, setHasChanged }) => {
+const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy, setHasChanged, setUpdateCache, updateCache }) => {
     const [toggle, setToggle] = useState<boolean>(false);
+
+    useEffect(() => {
+        document.addEventListener("keydown", listener, false);
+        return () => {
+          document.removeEventListener("keydown", listener, false);
+      }
+    }, []);
+    
+      const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            setToggle(false);
+        }
+      }
+
     return (
         <Wrapper>
             <DropdownWrapper>
@@ -34,10 +50,20 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({ sandboxes, setStudy
                     style={{ width: '200px', marginBottom: '24px' }}
                     onClick={() => setToggle(!toggle)}
                     data-cy="create_sandbox"
-                    >Create sandbox
+                >
+                        Create sandbox
                 {EquinorIcon("arrow_drop_down","#007079", 24)}
                 </Button>
-                {toggle && <CreateSandboxComponent setHasChanged={setHasChanged} setToggle={setToggle} setStudy={setStudy} /> }
+                {
+                toggle &&
+                <CreateSandboxComponent
+                        setHasChanged={setHasChanged}
+                        setToggle={setToggle}
+                        setStudy={setStudy}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                />
+                }
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
                 <SandboxTable

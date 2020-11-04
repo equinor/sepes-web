@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Divider } from '@equinor/eds-core-react';
 import { EquinorIcon, StyledTitle, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
@@ -10,6 +10,7 @@ import { createSandbox } from '../../services/Api';
 import { getRegions } from '../common/commonApiCalls';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
+import useClickOutside from '../common/customComponents/useClickOutside';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -36,12 +37,16 @@ type CreateSandboxComponentProps = {
     setToggle: (value:any) => void;
     setStudy: (value:any) => void;
     setHasChanged:any;
+    setUpdateCache:any;
+    updateCache:any;
 };
 const width = '268px';
-const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged }) => {
+const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggle, setStudy, setHasChanged, setUpdateCache, updateCache }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     const [loading, setLoading] = useState<Boolean>(false);
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setToggle);
 
     useEffect(() => {
         getRegions(setRegions);
@@ -86,14 +91,13 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
         if (!checkRequiredFieldsAreNotEmpty()) {
             return;
         }
-        setLoading(true);
-        //setToggle(false);
         const studyId = window.location.pathname.split('/')[2];
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
+        setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
                 history.push(studyId + '/sandboxes/' + result.id);
-                //setEditDataset(true);
                 console.log("result: ", result);
                 setLoading(false);
             }
@@ -106,18 +110,31 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
     }
     return (
         !loading ?
-        <Wrapper>
-            <StyledTitle style={{ color: '#000000' }}>Title<div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div> <Divider /></StyledTitle>
+        <Wrapper ref={wrapperRef}>
+            <StyledTitle
+                style={{ color: '#000000' }}
+            >
+                Title
+                <div style={{ float: 'right' }}>
+                    {EquinorIcon('clear', '#007079', 24, handleCancel, true)}
+                </div>
+                <Divider />
+            </StyledTitle>
             <TextField
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
-                meta="Required"
+                meta="(required)"
                 variant={checkIfRequiredFieldsAreNull(sandbox.name, userPressedCreate)}
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
+                id="1"
             />
-            <Label><span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot be changed later</Label>
+            <Label>
+                <span style={{ marginRight: '8px' }}>
+                    {EquinorIcon('warning_outlined', '#6F6F6F', 24)}
+                </span>Name cannot be changed later
+            </Label>
             <CoreDevDropdown
                 label="Location"
                 options={regions}
@@ -125,7 +142,10 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 onChange={handleDropdownChange}
                 name="region"
                 data-cy="sandbox_region"
+                tabIndex={0}
+                meta="(required)"
             />
+            {/*
             <CoreDevDropdown
                 label="Template"
                 options={options}
@@ -134,8 +154,16 @@ const CreateSandboxComponent:React.FC<CreateSandboxComponentProps> = ({ setToggl
                 name="template"
                 data-cy="sandbox_template"
             />
-            <Button style={{ width: '96px', marginLeft: 'auto' }} onClick={() => CreateSandbox()} data-cy="create_actual_sandbox">Create</Button>
-        </Wrapper>: <LoadingFull />
+            */}
+            <Button
+                style={{ width: '96px', marginLeft: 'auto', marginTop: 'auto' }}
+                onClick={() => CreateSandbox()}
+                data-cy="create_actual_sandbox"
+                disabled={!checkRequiredFieldsAreNotEmpty()}
+            >
+                    Create
+            </Button>
+        </Wrapper> : <LoadingFull />
     )
 }
 

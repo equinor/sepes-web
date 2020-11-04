@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress  } from '@equinor/eds-core-react';
@@ -13,6 +13,7 @@ import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
+import { UpdateCache } from '../../App';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -53,12 +54,14 @@ type StudySpecificDatasetProps = {
     setDatasetFromDetails: (value:any) => void;
     setShowEditDataset: (value:any) => void;
     editingDataset: boolean;
+    cache:any;
 };
 
-const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFromDetails, setDatasetFromDetails, setShowEditDataset, editingDataset }) => {
+const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFromDetails, setDatasetFromDetails, setShowEditDataset, editingDataset, cache }) => {
     let studyId = window.location.pathname.split('/')[2];
     let datasetId = window.location.pathname.split('/')[4];
     const history = useHistory();
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
@@ -71,8 +74,18 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
         checkIfEditMode();
         setIsSubscribed(true);
         getRegions(setRegions);
-        return () => setIsSubscribed(false);
+        document.addEventListener("keydown", listener, false);
+        return () => {
+            setIsSubscribed(false);
+            document.removeEventListener("keydown", listener, false);
+        };
     }, [editDataset]);
+
+    const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            handleCancel(e);
+        }
+      }
 
     const checkIfEditMode = () => {
         if (!checkUrlIfGeneralDataset() && datasetId) {
@@ -103,11 +116,13 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             return;
         }
         setLoading(true);
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result.datasets.length) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, ['study' + studyId]: true});
                     console.log("resultStudy: ", result);
                     history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
                 }
@@ -122,6 +137,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    const datasetCache = 'dataset' + studyId + result.id;
+                    setUpdateCache({...updateCache, ['study' + studyId]: true, [datasetCache]: true});
                     console.log("resultStudy: ", result);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -137,6 +154,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, datasets: true, ['dataset' + studyId]: true});
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                 }
@@ -151,6 +169,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
+                    setUpdateCache({...updateCache, datasets: true});
+                    cache['dataset' + studyId] = result;
                     console.log("resultStudy: ", result);
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);
@@ -231,27 +251,28 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 <TextField
                     placeholder="Please add data set name..."
                     label="Dataset name"
-                    meta="Required"
+                    meta="(required)"
                     variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
                     style={{ width }}
                     onChange={(e: any) => handleChange('name', e.target.value)}
                     value={dataset?.name}
                     data-cy="dataset_name"
-                    autocomplete="off"
+                    id="1"
                 />
                 {!editDataset ? <TextField
                     placeholder="Please add storage account name..."
                     label="Storage account name"
-                    meta="Required"
+                    meta="(required)"
                     variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
                     style={{ width }}
                     onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                     data-cy="dataset_storage_name"
+                    id="2"
                 /> : returnField('Storage account name', dataset?.storageAccountName) }
                 {!editDataset ? <CoreDevDropdown
                     width={width}
                     label="Location"
-                    meta="Required"
+                    meta="(required)"
                     options={regions}
                     onChange={handleDropdownChange}
                     name="location"
@@ -260,7 +281,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                 <CoreDevDropdown
                     width={width}
                     label="Data classification"
-                    meta="Required"
+                    meta="(required)"
                     options={options}
                     onChange={handleDropdownChange}
                     name="classification"
@@ -276,6 +297,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     onChange={(e: any) => handleChange('dataId', e.target.value)}
                     value={dataset?.dataId}
                     data-cy="dataset_dataId"
+                    id="3"
                 />
                 <SaveCancelWrapper>
                     <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">{loading ? <DotProgress variant="green" /> : 'Save'}</Button>

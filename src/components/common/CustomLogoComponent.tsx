@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { getImage } from '../../services/BlobStorage';
 
 const Logo = styled.img`
-height: 125px;
-width: 125px;
-display: inline-block;
-@media (max-width: 768px) {
-  display: block;
-  height: 100px;
-  width: 100px;
-}
+  height: 125px;
+  width: 125px;
 `;
 
 const Dot = styled.span`
@@ -26,26 +19,6 @@ const Dot = styled.span`
   `;
 
 const CustomLogoComponent = (props: any) => {
-    //const [logoUrl, setLogoUrl] = useState<string>('');
-    /*
-    useEffect(() => {
-        getStudyImage();
-      }, [logoUrl]);
-
-    const getStudyImage = () => {
-        //props.setLoading(true);
-        if (props.logoUrl) {
-        getImage(props.logoUrl).then((res) => {
-          if (res) {
-            setLogoUrl(res);
-          }
-          else {
-            console.log('Error getting logo');
-          }
-          //props.setLoading(false);
-        });
-      }
-      }*/
     return (
         props.logoUrl ? <Logo src={props.logoUrl} alt='studyLogo' /> : <Dot>SP</Dot>
     )

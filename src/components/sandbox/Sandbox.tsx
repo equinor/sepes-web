@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { getSandbox, getResourceStatus, getVirtualMachineForSandbox } from '../../services/Api';
+import { getSandbox, getResourceStatus } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import styled from 'styled-components';
+import useFetch from '../common/hooks/useFetch';
+import { UpdateCache } from '../../App';
 
 const Wrapper = styled.div`
   display:grid;
@@ -25,7 +27,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -39,10 +41,10 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
         studyName: ''
     });
     const [resources, setResources] = useState<any>();
+    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
 
     useEffect(() => {
         setIsSubscribed(true);
-        getCurrentSandbox();
         getResources();
         let timer:any;
         try {
@@ -52,34 +54,18 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
           } catch(e) {
             console.log(e);
           }
-        return () => {clearInterval(timer); setIsSubscribed(false)};
+        return () => { clearInterval(timer); setIsSubscribed(false); };
     }, []);
 
     const getResources = () => {
         getResourceStatus(studyId, sandboxId).then((result: any) => {
             if (result && !result.Message) {
-                console.log("result: ", result);
                 setResources(result);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log("Err");
              }
-        });
-    }
-
-    const getCurrentSandbox = ():void => {
-        setLoading(true);
-        getSandbox(studyId, sandboxId).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
-                setSandbox(result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
-             setLoading(false);
         });
     }
 
@@ -97,9 +83,17 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     return (
         <Wrapper>
             {loading && <LoadingFull /> }
-            <StepBar sandbox={sandbox && sandbox} step={step} setStep={setStep} studyId={studyId} sandboxId={sandboxId} />
+            <StepBar
+                sandbox={sandbox && sandbox}
+                step={step}
+                setStep={setStep}
+                studyId={studyId}
+                sandboxId={sandboxId}
+                setUpdateCache={setUpdateCache}
+                updateCache={updateCache}
+            />
             {returnStepComponent()}
-            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} />}
+            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} setStep={setStep} resources={resources} />}
         </Wrapper>
     )
 }

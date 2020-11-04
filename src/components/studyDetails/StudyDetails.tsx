@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
@@ -11,7 +11,9 @@ import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
-import * as notify from '../common/notify';
+import { StudyObj } from '../common/interfaces';
+import useFetch from '../common/hooks/useFetch';
+import { UpdateCache } from '../../App';
 
 const LoadingWrapper = styled.div`
     height:196px;
@@ -24,90 +26,79 @@ const LoadingWrapper = styled.div`
 const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const [study, setStudy] = useState<any>({});
-    const [newStudy, setNewStudy] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [showDatasets, setShowDatasets] = useState<boolean>(false);
-    const [showSandboxes, setShowSandboxes] = useState<boolean>(false);
-    const [showParticipants, setShowParticipants] = useState<boolean>(false);
-    const [showOverview, setShowOverview] = useState<boolean>(true);
+    const id = window.location.pathname.split('/')[2];
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
+    const [study, setStudy] = useState<StudyObj>({
+        name: '',
+        vendor: '',
+        wbsCode: '',
+        restricted: true,
+        description: '',
+        logoUrl: '',
+        id: '',
+        resultsAndLearnings: '',
+        datasets: [],
+        participants: [],
+        sandboxes: []
+    });
+    const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const { loading, setLoading, cache } = useFetch(
+        api.getStudy,
+        setStudy,
+        'study' + window.location.pathname.split('/')[2],
+        window.location.pathname.split('/')[2]
+    );
     const permissions = useContext(Permissions);
 
-    useEffect(() => {
-        setIsSubscribed(true);
-        getStudy();
-        return () => setIsSubscribed(false);
-    }, []);
-
-    const getStudy = () => {
-        const id = window.location.pathname.split('/')[2];
-        if (!id) {
-            return;
+    const changeComponent = () => {
+        switch (activeTab) {
+            case 1:
+                return <DataSetComponent study={study && study} setStudy={setStudy} />;
+            case 2:
+                return (
+                    <SandBoxComponent
+                        sandboxes={study.sandboxes}
+                        setStudy={setStudy}
+                        setHasChanged={setHasChanged}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                );
+            case 3:
+                return <ParticipantComponent study={study && study} setStudy={setStudy} />;
+            case 4:
+                return <div>Missing spec</div>;
+            default:
+                return <Overview study={study} setStudy={setStudy} setHasChanged={setHasChanged} />;
         }
-        setNewStudy(false);
-        setLoading(true);
-        api.getStudy(id).then((result: any) => {
-            if (isSubscribed && result && !result.Message) {
-                setStudy(result);
-                setNewStudy(false);
-                console.log("resultStudy: ", result)
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-            }
-            setLoading(false);
-        });
-    }
-
-    const changeComponent = (e:any) => {
-        hideComponents();
-        setActiveTab(e);
-        if (e === 0) {
-            setShowOverview(true);
-        }
-        if (e === 1) {
-            setShowDatasets(true);
-        }
-        if (e === 2) {
-            setShowSandboxes(true);
-        }
-        if (e === 3) {
-            setShowParticipants(true);
-        }
-    }
-
-    const hideComponents = () => {
-        setShowDatasets(false);
-        setShowParticipants(false);
-        setShowSandboxes(false);
-        setShowOverview(false);
-    }
+    };
 
     return (
     <>
         {!permissions.canAdministerDatasets && newStudy ? <NoAccess /> :
         <>
             <Promt hasChanged={hasChanged} />
-            {!loading ?
+            {!loading && study ?
             <StudyComponentFull
-                study={study}
+                study={study && study}
                 newStudy={newStudy}
                 setNewStudy={setNewStudy}
                 setLoading={setLoading}
                 loading={loading}
                 setStudy={setStudy}
                 setHasChanged={setHasChanged}
+                cache={cache}
+                setUpdateCache={setUpdateCache}
+                updateCache={updateCache}
             /> :
             <LoadingWrapper>
                 <LoadingFull />
             </LoadingWrapper> }
                 {!newStudy &&
                 <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
-                    <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => changeComponent(e)}>
+                    <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
                         <TabList>
                             <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                             <Tab data-cy="datasets_tab">Data sets</Tab>
@@ -117,10 +108,7 @@ const StudyDetails = () => {
                         </TabList>
                     </Tabs>
                     <div style={{ padding: '16px' }}>
-                {showDatasets && <DataSetComponent study={study && study} setStudy={setStudy} />}
-                {showParticipants && <ParticipantComponent study={study && study} setStudy={setStudy} />}
-                {showSandboxes && <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} setHasChanged={setHasChanged} />}
-                {showOverview && <Overview study={study} setStudy={setStudy} setHasChanged={setHasChanged} />}
+                        {changeComponent()}
                     </div>
                 </div>}
         </>}

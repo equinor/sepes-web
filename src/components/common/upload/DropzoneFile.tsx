@@ -45,12 +45,15 @@ const Dropzone = ({ onDrop, accept }: props) => {
       <input className="dropzone-input" {...getInputProps()} />
       <div className="text-center">
         {isDragActive ? (
-          <p className="dropzone-content">Drop here</p>
+          <div className="dropzone-content">
+            {EquinorIcon('cloud_upload', '#007079', 32)}
+            <div>Drop here</div>
+          </div>
         ) : (
-          <p className="dropzone-content">
+          <div className="dropzone-content">
             {EquinorIcon('cloud_upload', '#007079', 32)}
             <div>Drop files or <span style={{color: '#007079'}}>browse</span> to upload</div>
-          </p>
+          </div>
         )}
       </div>
     </ChooseImgdiv>

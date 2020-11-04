@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
-import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import * as api from '../../services/Api';
 import ParticipantTable from '../common/customComponents/ParticipantTable';
-import { ParticipantObj, DropdownObj } from '../common/interfaces';
+import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import { StudyObj } from '../common/interfaces';
+import useFetch from '../common/hooks/useFetch';
 
 const icons = {
     close
@@ -19,21 +18,23 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px minmax(330px, 1fr);
+    grid-template-rows: 0.1fr minmax(330px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
 
 const SearchWrapper = styled.div`
     z-index:99;
-    display: grid;
+    margin-left: auto;
     margin-top:32px;
-    grid-template-columns: 2fr 0.5fr 0.5fr;
-    grid-gap: 10px;
-    margin-left: 50%;
-    @media (max-width: 1024px) {
-        margin-left: 0;
-    }
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+`;
+
+const TableWrapper = styled.div`
+    margin-top: 8px;
 `;
 
 type ParicipantComponentProps = {
@@ -41,22 +42,26 @@ type ParicipantComponentProps = {
     setStudy:any
   };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStudy}) => {
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy }) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    //const [loading, setLoading] = useState<boolean>(false);
     const [roles, setRoles] = useState<DropdownObj>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
+    const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
 
     const removeParticipant = (participant:any) => {
+        let participantList:any = [...study.participants];
+        participantList.splice(participantList.indexOf(participant), 1);
+        setStudy({...study, participants: participantList});
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
-                setStudy({...study, participants: result.participants});
+                
                 console.log("participants: ", result);
             }
             else {
@@ -73,7 +78,9 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (isSubscribed && !result.Message) {
-                    setStudy({...study, participants: result.participants});
+                    let participantList:any = [...study.participants];
+                    participantList.push(result);
+                    setStudy({...study, participants: participantList});
                     console.log("participants: ", result);
                 }
                 else {
@@ -97,59 +104,11 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
         setSelectedParticipant(participant);
         setIsOpen(false);
     }
-    /*
-    const checkIfParticipantIsAlreadyAdded = (id:string) => {
-        let elementExist = false;
-        props.study.participants && props.study.participants.forEach((element) => {
-            if (element.userId === id) {
-                elementExist = true;
-            }
-        });
-        return elementExist;
-    }
-    */
 
     const handleChange = (value) => {
         setRole(value);
         setRoleNotSelected(false);
       };
-
-    useEffect(() => {
-        setIsSubscribed(true);
-        //getParticipants();
-        getRoles();
-        return () => setIsSubscribed(false);
-    }, [text]);
-
-    /* Used in old dropdown
-    const getParticipants = () => {
-        setLoading(true);
-        api.getParticipantList("a").then((result: any) => {
-            if (isSubscribed) {
-                setParticipants(result);
-                console.log("participants: ", result);
-            }
-            else {
-                notify.show('danger', '500');
-            }
-            setLoading(false);
-        })
-    }
-    */
-
-    const getRoles = () => {
-        setLoading(true);
-        api.getStudyRoles().then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                setRoles(result);
-                console.log("participants: ", result, result.Message, result.RequestId);
-            }
-            else {
-                notify.show('danger', '500');
-            }
-            setLoading(false);
-        })
-    }
 
     const handleInputChange = (value: string) => {
         if (value !== "") {
@@ -174,6 +133,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
                 <div
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
+                    style={{width: '300px'}}
                 >
                     <AsynchSelect
                         label={''}
@@ -189,17 +149,25 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({study, setStud
                         options={roles}
                         onChange={handleChange}
                         name="region"
+                        width="224px"
                     />
                 </div>
-                <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>{loading ? <DotProgress variant="green" /> : 'Add participant'}</Button>
+                <Button
+                    variant="outlined"
+                    disabled={checkIfButtonDisabled()}
+                    onClick={addParticipant}
+                    style={{width: '224px'}}
+                >
+                        {loading ? <DotProgress variant="green" /> : 'Add participant'}
+                </Button>
             </SearchWrapper>
-            <div style={{ marginTop: '32px' }}>
+            <TableWrapper>
                 <ParticipantTable
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
                 />
-            </div>
+            </TableWrapper>
         </Wrapper>
     )
 }

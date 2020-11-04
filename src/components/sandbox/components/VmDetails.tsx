@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
+import { getVirtualMachineExtended } from '../../../services/Api';
+import * as notify from '../../common/notify';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -13,10 +15,19 @@ const Wrapper = styled.div`
     display:grid;
     grid-template-columns: 1fr 3fr;
     grid-gap: 16px;
+    @media (max-width: 700px) {
+        display: block;
+      }
   `;
 
 type VmDetailsProps = {
     vm : any;
+    setVms:any;
+    vms:any;
+    setActiveTab:any;
+    index:number;
+    resources:any;
+    getVms:any;
 };
 
 const mockRules = [
@@ -36,8 +47,47 @@ const options = [
     { displayValue: "4", key:'4' }
   ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
     const [rules, setRules] = useState<any>(mockRules);
+    //tempsVms[index].extendedInfo = {}
+
+    useEffect(() => {
+        getVmExtendedInfo();
+        //isVmReady();
+    }, [index, vm, resources]);
+
+    const getVmExtendedInfo = () => {
+        if (!vm.extendedInfo && isVmCreatingOrReady()) {
+            getVirtualMachineExtended(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].extendedInfo = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log("Err");
+                }
+            });
+        }
+    };
+
+    const isVmCreatingOrReady = ():boolean => {
+        let res = false;
+        if (!resources) {
+            return res;
+        }
+        resources.map((resource:any, i:number) => {
+            if (resource.type === "Virtual Machine" && resource.status === "Ok" && resource.name === vm.name) {
+                res = true;
+                if (!vm.linkToExternalSystem) {
+                    getVms();
+                }
+            };
+        });
+        return res;
+    };
 
     const addRule = () => {
         let currentRules:any = [...rules];
@@ -51,19 +101,19 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
             }
         )
         setRules(currentRules);
-    }
+    };
 
     const updateRule = (i:number, value:string, key:string) => {
         let currentRules:any = [...rules];
         currentRules[i][key] = value;
         setRules(currentRules);
-    }
+    };
 
     const removeRule = (i:number) => {
         let currentRules:any = [...rules];
         currentRules.splice(i, 1);
         setRules(currentRules);
-    }
+    };
 
     const handleDropdownChange = ( key:string, i:number, value?,): void => {
         let currentRules:any = [...rules];
@@ -73,12 +123,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
 
     return (
         <Wrapper>
-            <VmProperties vmProperties={vm} />
+            <VmProperties vmProperties={vm} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />
             <div>
                 <Table style={{ width: '100%' }}>
                         <Head>
                         <Row>
-                            <Cell as="th" scope="col">Inbound rules</Cell>
+                            <Cell as="th" scope="col">Inbound rules (Frontend only)</Cell>
                             <Cell style={{ width: '220px' }} as="th" scope="col" />
                             <Cell as="th" scope="col" />
                             <Cell style={{ width: '220px' }} as="th" scope="col" />
@@ -94,6 +144,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
                                         <TextField
                                             value={rule.name}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'name')}
+                                            id={index + rule.name}
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
@@ -111,6 +162,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
                                         <TextField
                                             value={rule.ip}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'ip')}
+                                            id={index + rule.name}
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
@@ -128,6 +180,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm }) => {
                                         <TextField
                                             value={rule.port}
                                             onChange={(e:any) => updateRule(index, e.target.value, 'port')}
+                                            id={index + rule.port}
                                         />
                                     </Cell>
                                     <Cell>{EquinorIcon('clear', '', 24, () => removeRule(index), true)}</Cell>

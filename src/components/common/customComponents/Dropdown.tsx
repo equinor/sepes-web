@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Icon } from "@equinor/eds-core-react";
 import { arrow_drop_up, arrow_drop_down } from "@equinor/eds-icons";
 import "./styles.scss";
+import { truncate } from '../../common/helpers';
 
 const icons = {
   arrow_drop_up,
@@ -27,7 +28,7 @@ const Dropdown = styled.div<{ isOpen: any }>`
   border-top: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-right: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-left: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
-
+  overflow:auto;
   &:hover {
     cursor: pointer;
   }
@@ -75,6 +76,18 @@ const CoreDevDropdown = (props: any): JSX.Element => {
     displayValue: props.preSlectedValue || "Please select..."
   });
 
+  useEffect(() => {
+    document.addEventListener("keydown", listener, false);
+    return () => {
+      document.removeEventListener("keydown", listener, false);
+  }
+}, []);
+  const listener = (e: any) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  }
+
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, setIsOpen);
 
@@ -87,7 +100,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   const renderOptions = (width: string): React.ReactNode => {
     if (options !== undefined && options.length) {
       return (
-        <ul style={{ width: width ? width : "220px" }}>
+        <ul style={{ width: width ? width : "220px", maxHeight: '500px', overflow: 'auto' }}>
           {options.map((option: any, i: number) => {
             return (
               <li key={i} onClick={() => handleChange(option)}>
@@ -121,7 +134,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
         <div style={{ marginLeft: 'auto' }}><Label>{meta}</Label></div>
       </div>
       <Dropdown onClick={() => setIsOpen(!isOpen)} {...props} isOpen={isOpen}>
-        <span>{selectedOption.displayValue}</span>
+        <span>{truncate(selectedOption.displayValue, 40)}</span>
         {isOpen ? arrowUp : arrowDown}
       </Dropdown>
       {isOpen && renderOptions(props.width)}

@@ -8,10 +8,9 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { returnTextField, checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
-import Promt from '../common/Promt';
 import Loading from '../common/LoadingComponent';
 import * as notify from '../common/notify';
 
@@ -29,12 +28,32 @@ const Title = styled.span`
 
 const DescriptionWrapper = styled.div`
     margin: auto;
-    margin-left: 0;
+    margin-left: 0px;
     min-width:200px;
     @media (max-width: 768px) {
       padding: 8px 0 8px 0;
+      margin-left: 0px;
+      width:500px;
+      order: 3;
+      min-width:200px;
+      
   }
   `;
+
+const DescriptioTextfieldnWrapper = styled.div`
+  margin: auto 0 auto 32px;
+  @media (max-width: 768px) {
+    margin-left: 0px;
+    width: 50%;
+    float:right;
+
+}
+@media (max-width: 480px) {
+  margin-left: 0px;
+  width: 100%;
+  float:right;
+}
+`;
 
 const SmallText = styled.span`
     font-size:10px;
@@ -43,18 +62,37 @@ const SmallText = styled.span`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: minmax(196px,296px) minmax(300px,4fr) 150px;
+    grid-template-columns: minmax(196px,296px) minmax(300px,4fr) 170px;
     width: 100%;
-    grid-gap: 32px;
     @media (max-width: 768px) {
-      display:block;
+      display: inline-flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-content: center;
+      gap: 16px;
   }
+`;
+
+const RightWrapper = styled.div<{ editMode: any }>`
+  margin-top: ${(props: any) => (props.editMode ? '48px' : "0px")};
+  @media (max-width: 768px) {
+    margin-top: 0px;
+    margin-left:auto;
+}
+@media (max-width: 768px) {
+  margin-top: 0px;
+  margin-left:auto;
+}
+
+@media (max-width: 468px) {
+  margin-left: ${(props: any) => (props.editMode ? 'auto' : "0px")};
+}
 `;
 
 const TitleWrapper = styled.div<{ editMode: any }>`
     display: grid;
     font-size: 10px;
-    grid-gap: ${(props: any) => (props.editMode ? "16px" : "8px")};
+    grid-gap: ${(props: any) => (props.editMode ? "16px" : "0px")};
 `;
 
 const SmallIconWrapper = styled.div`
@@ -63,10 +101,18 @@ const SmallIconWrapper = styled.div`
 `;
 
 const SaveCancelWrapper = styled.div`
-display: grid;
-grid-template-columns: 1fr 1fr;
-grid-gap: 5px;
+  display: grid;
+  grid-template-columns: 80px 80px;
+  grid-gap: 8px;
 `;
+
+const PictureWrapper = styled.div<{ editMode: any }>`
+  margin-left: 44px;
+  @media (max-width: 768px) {
+    margin-left: ${(props: any) => (props.editMode ? "44px" : "0px")};
+  }
+`;
+
 
 type StudyComponentFullProps = {
   study:StudyObj,
@@ -75,11 +121,14 @@ type StudyComponentFullProps = {
   setLoading:any,
   loading:boolean,
   setStudy:any,
-  setHasChanged:any
+  setHasChanged:any,
+  cache:any,
+  setUpdateCache:any,
+  updateCache:any
 };
 
 
-const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged}) => {
+const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy, setNewStudy, setLoading, loading, setStudy, setHasChanged, cache, setUpdateCache, updateCache }) => {
   const history = useHistory();
   const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
   const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -88,7 +137,33 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
   const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!studyOnChange.name) {
+      setStudyOnChange(study);
+    }
+    document.addEventListener("keydown", listener, false);
+    return () => {
+      document.removeEventListener("keydown", listener, false);
+  }
+}, [studyOnChange, study]);
+
+  const listener = (e: any) => {
+    if (e.key === 'Escape') {
+        if (!newStudy) {
+          setEditMode(false);
+        }
+        else {
+          history.push('/');
+        }
+    }
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      handleSave();
+    }
+  }
+
   const handleSave = () => {
+    setUpdateCache({ ...updateCache, studies: true});
     setHasChanged(false);
     setUserPressedCreate(true);
     if (checkRequiredFieldsArNotNull()) {
@@ -114,6 +189,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
             history.push('/studies/' + result.id);
             console.log("result: ", result);
             let newStudy = result;
+            cache['study' + study.id] = result;
             setStudy(newStudy);
             if (imageUrl && newStudy.id) {
               putStudy(newStudy, imageUrl).then((result: any) => {
@@ -143,6 +219,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         if (result && !result.Message) {
             setHasChanged(false);
             console.log("result: ", result);
+            cache['study' + study.id] = result;
             setStudy(result);
         }
         else {
@@ -224,6 +301,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               style={{ margin: 'auto', marginLeft: '0' }}
               value={studyOnChange.name}
               data-cy="study_name"
+              id="study_name"
             />
             <TextField
               placeholder="Who is the vendor?"
@@ -233,6 +311,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               label="Vendor"
               meta="(required)"
               data-cy="study_vendor"
+              id="study_vendor"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px' }} name="business" size={24} />
@@ -240,21 +319,18 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               }
             />
             <TextField
-              helperIcon={icons.dollar}
               placeholder="Wbs for the study"
               onChange={(e: any) => handleChange('wbsCode', e.target.value)}
               label="wbs"
               value={studyOnChange.wbsCode}
               data-cy="study_wbs"
+              id="study_wbs"
               inputIcon={
                 <div style={{ marginRight: '-80px' }}>
                   <Icon style={{ position: 'absolute', right: '4px', top: '-2px' }} name="dollar" size={24} />
                 </div>
               }
             />
-            {/*returnTextField('name', 'What is the study name?', studyOnChange.name, 'Study name', 'Required', 'study_name', handleChange, '', userPressedCreate , { margin: 'auto', marginLeft: '0' })*/}
-            {/*returnTextField('vendor', 'Who is the vendor?', studyOnChange.vendor, 'Vendor', 'Required', 'study_vendor', handleChange, '', userPressedCreate)*/}
-            {/*returnTextField('wbsCode', 'Wbs for the study', studyOnChange.wbsCode, 'wbs', '', 'study_wbs', handleChange, '', userPressedCreate)*/}
             </>}
             <div>
                 {!editMode ?
@@ -291,7 +367,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
         </TitleWrapper>
         {!editMode ?
           <DescriptionWrapper>{description}</DescriptionWrapper>:
-          <div style={{margin: 'auto 0 auto 0'}}>
+          <DescriptioTextfieldnWrapper>
             <TextField
               placeholder="Describe the study"
               multiline
@@ -301,33 +377,36 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({study, newStudy,
               style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
               value={studyOnChange.description}
               data-cy="study_description"
+              id="study_description"
             />
-          {/*returnTextField('description', 'Describe the study', studyOnChange.description, 'Description', 'limit', 'study_description', handleChange, userPressedCreate, { margin: 'auto', marginLeft: '0', height: '152px'}, true)*/}
-          </div>}
-        <div style={{margin: 'auto 0 auto 0'}}>
-          {!showImagePicker && <div style={{ margin: 'auto 0 auto 16px' }}><CustomLogoComponent logoUrl={logoUrl} /></div>}
-          {editMode &&
-          <>
-          {showImagePicker && <AddImageAndCompressionContainer setImageUrl={setImageUrl} imageUrl={imageUrl} />}
-          <Button
-            onClick={() => setShowImagePicker(!showImagePicker)}
-            variant="outlined"
-            style={{ margin: '16px 0 20px 34px' }}
-          >
-              {showImagePicker ? 'Hide image picker' : 'Change logo'}
-          </Button>
-          <SaveCancelWrapper>
-            <Button
-              data-cy="create_study"
-              onClick={() => handleSave()}
-            >
-                {newStudy ? 'Create Study': 'Save'}
-            </Button>
-            <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
-          </SaveCancelWrapper>
-          </>}
-        </div>
-          </Wrapper> : <Loading /> }
+          </DescriptioTextfieldnWrapper>}
+          <RightWrapper editMode={editMode}>
+            {!showImagePicker && <PictureWrapper editMode={editMode}> <CustomLogoComponent logoUrl={logoUrl} /> </PictureWrapper>}
+            {editMode &&
+            <>
+            <div>
+              {showImagePicker && <PictureWrapper editMode={editMode}><AddImageAndCompressionContainer setImageUrl={setImageUrl} imageUrl={imageUrl} /></PictureWrapper>}
+              <Button
+                onClick={() => setShowImagePicker(!showImagePicker)}
+                variant="outlined"
+                style={{ margin: '16px 0 20px 56px' }}
+              >
+                Change logo
+              </Button>
+              <SaveCancelWrapper>
+                <Button
+                  data-cy="create_study"
+                  onClick={() => handleSave()}
+                >
+                    {newStudy ? 'Create': 'Save'}
+                </Button>
+                <Button variant="outlined" onClick={() => handleCancel()}>Cancel</Button>
+              </SaveCancelWrapper>
+            </div>
+
+            </>}
+          </RightWrapper>
+      </Wrapper> : <Loading /> }
     </div>
   )
 }

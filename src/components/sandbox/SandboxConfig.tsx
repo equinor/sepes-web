@@ -51,7 +51,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources }) => {
                 </PolictyComponentWrapper>
                 <ResourcesComponent resources={resources} />
             </InfoWrapper>
-            
         </Wrapper>
     )
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AsyncSelect from 'react-select/async';
 import { Label, RequiredLabel } from '../StyledComponents';
 import { getParticipantList } from '../../../services/Api';
@@ -31,7 +31,6 @@ export const equinorTheme = (theme: any) => ({
 })
 
 const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChange, selectedOption, onInputChange, style, dataType, isRequired }) => {
-
     const getParticipants = (inputValue: string, callback: any): void => {
         getParticipantList(inputValue || "a").then((result: any) => {
             if (!result.Message) {

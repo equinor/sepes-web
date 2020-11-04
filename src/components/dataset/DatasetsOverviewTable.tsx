@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
@@ -98,15 +98,28 @@ const DatasetsOverviewTable = (props: any) => {
         sepesApproved: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
+
+    useEffect(() => {
+        document.addEventListener("keydown", listener, false);
+        return () => {
+          document.removeEventListener("keydown", listener, false);
+      }
+    }, []);
+      const listener = (e: any) => {
+        if (e.key === 'Escape') {
+            setShowColumnsPicker(false);
+        }
+      }
+    
     const handleColumnsChange = (evt) => {
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
     }
 
     const returnCell = (checker: any, fieldName?:string | number, header?:boolean) => {
         if (header) {
-            return checker ? <Cell as="th" scope="col">{fieldName}</Cell> : null;
+            return checker ? <Cell as="th" scope="col">{fieldName || ''}</Cell> : null;
         }
-        return checker ? <Cell>{fieldName}</Cell> : null;
+        return checker ? <Cell>{fieldName || ''}</Cell> : null;
     }
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {
@@ -199,7 +212,7 @@ const DatasetsOverviewTable = (props: any) => {
                 onClose={() => setToggle(!toggle)}
                 style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
-                <DatasetSidesheetView dataset={selectedDataset} />
+                <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
             <Button
