@@ -55,8 +55,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
 
     useEffect(() => {
-
-    },[role]);
+    },[participantNotSelected])
 
     const removeParticipant = (participant:any) => {
         let participantList:any = [...study.participants];
@@ -106,8 +105,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         if (!selectedParticipant) {
             return roles;
         }
-        console.log(selectedParticipant);
-        console.log(study.participants);
         let partAsSelected:any;
         partAsSelected = study.participants.filter((participant:ParticipantObj) => (
             participant.userId === selectedParticipant?.databaseId ||
@@ -139,6 +136,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
       };
 
     const handleInputChange = (value: string) => {
+        setRole('');
+        setRoleNotSelected(true);
         if (value !== "") {
             setText(value);
         } 
@@ -179,6 +178,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         name="region"
                         width="224px"
                         resetState={roleNotSelected}
+                        disabled={participantNotSelected}
                     />
                 </div>
                 <Button
