@@ -13,7 +13,7 @@ import _ from 'lodash';
   }
 
   const cyToken = localStorage.getItem("cyToken");
-
+/*
   const queryFromArray = params => {
     let query = '';
     params = params || [];
@@ -28,7 +28,8 @@ import _ from 'lodash';
     }
     return query;
 };
-
+*/
+/*
 const queryFromObject = (o: any) => {
   let query = '';
   let props = Object.getOwnPropertyNames(o);
@@ -43,7 +44,8 @@ const queryFromObject = (o: any) => {
   }
   return query;
 };
-
+*/
+/*
 const encodeValue = (value: any) => {
   if (
       value &&
@@ -60,7 +62,8 @@ const encodeValue = (value: any) => {
   }
   return encodeURIComponent(value);
 };
-
+*/
+  /*
   export const apiRequest = async (url: string, params?: any, acceptHeader?: string, fileName?: string) => {
     let query = '';
     params = params || [];
@@ -123,13 +126,15 @@ const encodeValue = (value: any) => {
                 .then((tokenResponse: any) => {
                     _apiRequest(tokenResponse.accessToken);
                 }).catch((error: string) => {
-                    console.log("acquireToken err", error);
+                  console.log("acquireToken err", error);
+                  myMSALObj.acquireTokenRedirect(loginRequest);
                 });
         }
     }).catch((error: string) => {
         console.log("apiRequest err", error);
     });
 }
+*/
 /*
   export const apiCallWithToken = async (url:any) => {
     return new Promise(function (resolve, reject){
@@ -251,7 +256,8 @@ const encodeValue = (value: any) => {
                 .then((tokenResponse: any) => {
                     _post(tokenResponse.accessToken);
                 }).catch((error: string) => {
-                    console.log(error);
+                  myMSALObj.acquireTokenRedirect(loginRequest);
+                  console.log(error);
                 });
         }
     })
