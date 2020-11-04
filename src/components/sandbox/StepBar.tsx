@@ -31,6 +31,8 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     sandbox: any;
+    updateCache:any;
+    setUpdateCache:any;
 };
 
   const getSteps = () => {
@@ -54,13 +56,14 @@ type StepBarProps = {
     ]
   };
 
-const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox }) => {
+const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sandbox, updateCache, setUpdateCache }) => {
     const history = useHistory();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const steps = getSteps();
 
     
     const deleteThisSandbox = ():void => {
+        setUpdateCache({...updateCache, ['study' + studyId]: true});
         deleteSandbox(studyId, sandboxId).then((result: any) => {
             if (result && !result.Message) {
                 history.push('/studies/' + studyId);

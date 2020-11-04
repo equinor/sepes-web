@@ -27,7 +27,7 @@ const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
     const id = window.location.pathname.split('/')[2];
-    const {updateCache, setUpdateCache} = useContext(UpdateCache);
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [study, setStudy] = useState<StudyObj>({
         name: '',
         vendor: '',
@@ -57,7 +57,15 @@ const StudyDetails = () => {
             case 1:
                 return <DataSetComponent study={study && study} setStudy={setStudy} />;
             case 2:
-                return <SandBoxComponent sandboxes={study.sandboxes} setStudy={setStudy} setHasChanged={setHasChanged} />;
+                return (
+                    <SandBoxComponent
+                        sandboxes={study.sandboxes}
+                        setStudy={setStudy}
+                        setHasChanged={setHasChanged}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                );
             case 3:
                 return <ParticipantComponent study={study && study} setStudy={setStudy} />;
             case 4:
