@@ -137,6 +137,14 @@ export const getVirtualMachineCost = async (sandboxId:string, vm:any) => {
     return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
 };
 
+export const createVirtualMachineRule = async (rule:any, vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/rules', 'POST', rule);
+};
+
+export const getVirtualMachineRule = async (vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/rules', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {
@@ -168,3 +176,5 @@ export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
 };
 */
+
+

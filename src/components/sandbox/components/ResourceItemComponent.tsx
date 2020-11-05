@@ -4,8 +4,8 @@ import { Label } from '../../common/StyledComponents';
 import { resourceType } from '../../common/types';
 
 const Wrapper = styled.div`
-    display:flex;
-    gap: 8px;
+    display:grid;
+    grid-template-columns: 1fr 128px;
   `;
 
 const SatusWrapper = styled.div<{ isVm: boolean }>`

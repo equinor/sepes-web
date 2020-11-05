@@ -13,7 +13,7 @@ const icons = {
 
 Icon.add(icons);
 
-const Dropdown = styled.div<{ isOpen: any }>`
+const Dropdown = styled.div<{ isOpen: any}>`
   height: 37px;
   width: ${(props: any) => (props.width ? props.width : "220px")};
   font-size: 16px;
@@ -28,7 +28,7 @@ const Dropdown = styled.div<{ isOpen: any }>`
   border-top: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-right: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-left: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
-  overflow:auto;
+
   &:hover {
     cursor: pointer;
   }
@@ -70,6 +70,7 @@ const Meta = styled.div`
 const CoreDevDropdown = (props: any): JSX.Element => {
   let { options, label, meta } = props;
   const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
+  const useOverflow = props.useOverflow || false;
   let value = "Please select...";
   const [selectedOption, setSelectedOption] = useState({
     key: "",
@@ -106,7 +107,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
   const renderOptions = (width: string): React.ReactNode => {
     if (options !== undefined && options.length) {
       return (
-        <ul style={{ width: width ? width : "220px", maxHeight: '500px', overflow: 'auto' }}>
+        <ul style={{ width: width ? width : "220px", maxHeight: '500px', overflow: useOverflow ? 'auto' : 'visible' }}>
           {options.map((option: any, i: number) => {
             return (
               <li key={i} onClick={() => handleChange(option)}>
