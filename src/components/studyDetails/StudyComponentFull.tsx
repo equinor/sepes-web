@@ -145,7 +145,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({ study, newStudy
   const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!studyOnChange.id) {
+    if (!newStudy && !studyOnChange.id) {
       setStudyOnChange(study);
     }
     document.addEventListener("keydown", listener, false);
