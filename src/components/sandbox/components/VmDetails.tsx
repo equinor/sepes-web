@@ -42,8 +42,6 @@ const ipMethod = [
   ];
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
-    const [rules, setRules] = useState<any>([]);
-    //const { intialValue } = useFetch(getVirtualMachineRule, setRules, 'vmrules' + vm.id, vm.id);
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
 
@@ -109,23 +107,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     const addRule = () => {
         setHasChanged(true);
         let currentRules:any = [];
-        if (vm.ru && vm.rules.length) {
+        if (vm.rules && vm.rules.length) {
             currentRules = [...vm.rules];
         }
-        
         currentRules.push(
             {
                 description: '',
                 ip: '',
-                protocol: "",
-                port: "",
+                protocol: '',
+                port: '',
                 useClientIp: false
             }
         )
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
-        //setRules(currentRules);
     };
 
     const saveRule = () => {
@@ -142,21 +138,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         });
 
     };
-/*
-    const saveRule = () => {
-        setHasChanged(false);
-        createVirtualMachineRule(rules, vm.id).then((result: any) => {
-            if (result && !result.Message) {
-
-                console.log('result', result);
-            }
-            else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-            }
-        });
-
-    };*/
 
     const updateRule = (i:number, value:string, key:string) => {
         setHasChanged(true);
@@ -165,7 +146,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
-        //setRules(currentRules);
     };
 
     const removeRule = (i:number) => {
@@ -175,7 +155,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
-        //setRules(currentRules);
     };
 
     const handleDropdownChange = (key:string, i:number, value?): void => {
@@ -185,7 +164,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
-        //setRules(currentRules);
     };
 
     const handleDropdownChangeClientIp = (value:any, name:string, ruleIndex): void => {
@@ -201,22 +179,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
-        //setRules(currentRules);
     };
-    /*
-    const handleDropdownChangeClientIp = (value:any, name:string, ruleIndex): void => {
-        setHasChanged(true);
-        let currentRules:any = [...rules];
-        if (value === "1") {
-            currentRules[ruleIndex][name] = true;
-            currentRules[ruleIndex].ip = clientIp;
-        }
-        else {
-            currentRules[ruleIndex][name] = false;
-        }
-        setRules(currentRules);
-    };
-*/
+
     const getMyIp = () => {
         fetch('https://api.ipify.org?format=json').then(response => {
           return response.json();
