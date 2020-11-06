@@ -50,9 +50,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     useEffect(() => {
         getMyIp();
         getVmRules();
-        if (!test2.current) {
-            test2.current = vms;
-        }
     }, [index]);
 
     const getVmExtendedInfo = () => {
