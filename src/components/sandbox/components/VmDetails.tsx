@@ -6,7 +6,7 @@ import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
 import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
-import useFetch from '../../common/hooks/useFetch';
+
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -44,13 +44,15 @@ const ipMethod = [
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-
     useEffect(() => {
         getVmExtendedInfo();
     }, [index, vm, resources]);
     useEffect(() => {
         getMyIp();
         getVmRules();
+        if (!test2.current) {
+            test2.current = vms;
+        }
     }, [index]);
 
     const getVmExtendedInfo = () => {
@@ -77,7 +79,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     let tempsVms:any = [...vms];
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
-                    //setRules(result);
                     console.log('result', result);
                 }
                 else {
@@ -86,6 +87,20 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 }
             });
         }
+    };
+
+    const resetRules = () => {
+            getVirtualMachineRule(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].rules = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    console.log("Err");
+                }
+            });
     };
 
     const isVmCreatingOrReady = ():boolean => {
@@ -180,6 +195,19 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
+
+    const checkIfSaveIsEnabled = ():boolean => {
+        if (!vm.rules || !hasChanged) {
+            return false;
+        }
+        let enabled = true;
+        vm.rules.forEach(rule => {
+            if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
+                enabled = false;
+            }
+        });
+        return enabled;
+    }
 
     const getMyIp = () => {
         fetch('https://api.ipify.org?format=json').then(response => {
@@ -277,19 +305,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 </Table>
                 <Button
                     style={{ float: 'right', margin: '24px 24px 24px 16px' }}
-                    onClick={() => { saveRule()}}
-                    disabled={!hasChanged}
+                    onClick={() => { saveRule() }}
+                    disabled={!checkIfSaveIsEnabled()}
                 >
                         Save
                 </Button>
-                {/*<Button
+                <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 16px' }}
-                    onClick={() => { console.log(intialValue); setRules(intialValue)}}
+                    onClick={() => {
+                        resetRules();
+                    }}
                     disabled={!hasChanged}
                 >
                         Cancel
-                </Button>*/}
+                </Button>
                 <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 0' }}
