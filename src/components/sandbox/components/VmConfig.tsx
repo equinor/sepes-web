@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
 import { SandboxObj, VmObj, SizeObj, DropdownObj, OperatingSystemObj } from '../../common/interfaces';
@@ -13,20 +13,13 @@ import * as notify from '../../common/notify';
 import useFetch from '../../common/hooks/useFetch';
 const { TabList, Tab } = Tabs;
 
-let mockVms = [
-    {
-        id: 1,
-        name: 'VM123'
-    }
-]
 type DatasetProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
-    setStep: any;
     resources: any;
 };
 
-const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep, resources }) => {
+const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, resources }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [vms, setVms] = useState<any>([]);
@@ -37,6 +30,7 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, setStep, reso
     const { } = useFetch(getVirtualMachineDisks, setDisks);
     const { } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
     const { } = useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
+
 
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {

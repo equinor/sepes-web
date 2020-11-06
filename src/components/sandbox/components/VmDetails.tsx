@@ -6,7 +6,7 @@ import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
 import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
-import useFetch from '../../common/hooks/useFetch';
+
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -42,15 +42,15 @@ const ipMethod = [
   ];
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
-    const [rules, setRules] = useState<any>([]);
-    const { intialValue } = useFetch(getVirtualMachineRule, setRules, 'vmrules' + vm.id, vm.id);
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-
     useEffect(() => {
         getVmExtendedInfo();
+    }, [index, vm, resources]);
+    useEffect(() => {
         getMyIp();
-    }, [index, vm, resources, clientIp]);
+        getVmRules();
+    }, [index]);
 
     const getVmExtendedInfo = () => {
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
@@ -67,6 +67,37 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 }
             });
         }
+    };
+
+    const getVmRules = () => {
+        if (!vm.rules) {
+            getVirtualMachineRule(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].rules = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    //notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log("Err");
+                }
+            });
+        }
+    };
+
+    const resetRules = () => {
+            getVirtualMachineRule(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].rules = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    console.log("Err");
+                }
+            });
     };
 
     const isVmCreatingOrReady = ():boolean => {
@@ -87,22 +118,27 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
 
     const addRule = () => {
         setHasChanged(true);
-        let currentRules:any = [...rules];
+        let currentRules:any = [];
+        if (vm.rules && vm.rules.length) {
+            currentRules = [...vm.rules];
+        }
         currentRules.push(
             {
                 description: '',
                 ip: '',
-                protocol: "",
-                port: "",
+                protocol: '',
+                port: '',
                 useClientIp: false
             }
         )
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
     const saveRule = () => {
         setHasChanged(false);
-        createVirtualMachineRule(rules, vm.id).then((result: any) => {
+        createVirtualMachineRule(vm.rules, vm.id).then((result: any) => {
             if (result && !result.Message) {
 
                 console.log('result', result);
@@ -117,28 +153,34 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
 
     const updateRule = (i:number, value:string, key:string) => {
         setHasChanged(true);
-        let currentRules:any = [...rules];
+        let currentRules:any = [...vm.rules];
         currentRules[i][key] = value;
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
     const removeRule = (i:number) => {
         setHasChanged(true);
-        let currentRules:any = [...rules];
+        let currentRules:any = [...vm.rules];
         currentRules.splice(i, 1);
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
     const handleDropdownChange = (key:string, i:number, value?): void => {
         setHasChanged(true);
-        let currentRules:any = [...rules];
+        let currentRules:any = [...vm.rules];
         currentRules[i][key] = portsOptions[value-1].displayValue;
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
     const handleDropdownChangeClientIp = (value:any, name:string, ruleIndex): void => {
         setHasChanged(true);
-        let currentRules:any = [...rules];
+        let currentRules:any = [...vm.rules];
         if (value === "1") {
             currentRules[ruleIndex][name] = true;
             currentRules[ruleIndex].ip = clientIp;
@@ -146,8 +188,23 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         else {
             currentRules[ruleIndex][name] = false;
         }
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
+
+    const checkIfSaveIsEnabled = ():boolean => {
+        if (!vm.rules || !hasChanged) {
+            return false;
+        }
+        let enabled = true;
+        vm.rules.forEach(rule => {
+            if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
+                enabled = false;
+            }
+        });
+        return enabled;
+    }
 
     const getMyIp = () => {
         fetch('https://api.ipify.org?format=json').then(response => {
@@ -178,7 +235,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         </Row>
                         </Head>
                         <Body>
-                            {rules.length > 0 ? rules.map((rule:any, ruleNumber:number) => {
+                            {vm.rules && vm.rules.length > 0 ? vm.rules.map((rule:any, ruleNumber:number) => {
                                 return (
                                 <Row>
                                     <Cell component="th" scope="row">
@@ -245,19 +302,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 </Table>
                 <Button
                     style={{ float: 'right', margin: '24px 24px 24px 16px' }}
-                    onClick={() => { saveRule()}}
-                    disabled={!hasChanged}
+                    onClick={() => { saveRule() }}
+                    disabled={!checkIfSaveIsEnabled()}
                 >
                         Save
                 </Button>
-                {/*<Button
+                <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 16px' }}
-                    onClick={() => { console.log(intialValue); setRules(intialValue)}}
+                    onClick={() => {
+                        resetRules();
+                    }}
                     disabled={!hasChanged}
                 >
                         Cancel
-                </Button>*/}
+                </Button>
                 <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 0' }}
