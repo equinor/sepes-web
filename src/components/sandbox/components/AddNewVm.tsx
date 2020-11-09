@@ -251,7 +251,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     </div>
                     }
             />
+            
             <UnstyledList>
+            
                 <li>
                     <Checkbox
                         label="High memory"
@@ -268,8 +270,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     <Checkbox
                         label="High CPU"
                         onChange={(e:any) => handleCheck(sizeType.compute, e.target.checked)}
-                />
+                    />
                 </li>
+                <Label>Filters the VM size dropdown list</Label>
             </UnstyledList>
             <CoreDevDropdown
                 label="VM size"
