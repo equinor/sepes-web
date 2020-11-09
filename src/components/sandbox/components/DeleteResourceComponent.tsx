@@ -60,10 +60,10 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
                     placeholder="Write the name of the sandbox to delete"
-                    data-cy="results_and_learnings"
                     onChange={handleChange}
                     style={{ width: '100%' }}
                     value={text}
+                    data-cy="delete_resource"
                 />
                 <div>
                     <Button
@@ -71,6 +71,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
                         style={{ marginRight: '8px' }}
                         disabled={!checkSandboxNameToText()}
                         onClick={onClick}
+                        data-cy="delete_resource_delete"
                     >
                             Delete
                     </Button>

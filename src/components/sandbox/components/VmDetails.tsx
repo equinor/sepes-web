@@ -128,7 +128,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 ip: '',
                 protocol: '',
                 port: '',
-                useClientIp: false
+                useClientIp: false,
+                ruleDirection: 0
             }
         )
         let tempsVms:any = [...vms];
@@ -243,6 +244,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                             value={rule.description}
                                             onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'description')}
                                             placeholder="Description"
+                                            data-cy="vm_rule_description"
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
@@ -252,7 +254,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 onChange={(e:any) => handleDropdownChangeClientIp(e, 'useClientIp', ruleNumber)}
                                                 name="useClientIp"
                                                 preSlectedValue={"Custom"}
-                                                data-cy="dataset_classification"
+                                                data-cy="vm_rule_useClientIp"
                                             />
                                         </div>
                                     </Cell>
@@ -263,6 +265,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                             value={rule.ip}
                                             onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'ip')}
                                             placeholder="IP"
+                                            data-cy="vm_rule_ip"
                                         />
                                     }
                                     </Cell>
@@ -273,7 +276,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 onChange={(e:any) => { handleDropdownChange('protocol', ruleNumber, e)}}
                                                 name="protocol"
                                                 preSlectedValue={rule.protocol}
-                                                data-cy="dataset_classification"
+                                                data-cy="vm_rule_protocol"
                                             />
                                         </div>
                                     </Cell>
@@ -283,6 +286,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                             onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'port')}
                                             type="number"
                                             placeholder="Port"
+                                            data-cy="vm_rule_port"
                                         />
                                     </Cell>
 
@@ -304,6 +308,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     style={{ float: 'right', margin: '24px 24px 24px 16px' }}
                     onClick={() => { saveRule() }}
                     disabled={!checkIfSaveIsEnabled()}
+                    data-cy="vm_rule_save"
                 >
                         Save
                 </Button>
@@ -314,6 +319,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         resetRules();
                     }}
                     disabled={!hasChanged}
+                    data-cy="vm_rule_cancel"
                 >
                         Cancel
                 </Button>
@@ -321,6 +327,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 0' }}
                     onClick={() => { addRule()}}
+                    data-cy="vm_add_rule"
                 >
                         Add rule
                 </Button>
