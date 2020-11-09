@@ -81,23 +81,49 @@ const StepBar: React.FC<StepBarProps> = ({ step, setStep, studyId, sandboxId, sa
             case 0: {
                 return (
                     <BtnWrapper>
-                        <Button variant="outlined" onClick={() => setUserClickedDelete(true)} color="danger">Delete sandbox</Button>
-                        <Button onClick={() => { setStep(1)}}>Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}</Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setUserClickedDelete(true)}
+                            color="danger"
+                            data-cy="delete_sandbox"
+                        >
+                            Delete sandbox
+                        </Button>
+                        <Button
+                            onClick={() => { setStep(1)}}
+                        >
+                            Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                        </Button>
                     </BtnWrapper>
                 );
             }
             case 1: {
                 return (
                     <BtnWrapper>
-                        <Button variant="outlined" onClick={() => { setStep(0)}} >{EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config</Button>
-                        <Button onClick={() => { setStep(2)}}>Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}</Button>
+                        <Button
+                            variant="outlined" 
+                            onClick={() => { setStep(0)}} 
+                        >
+                            {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
+                        </Button>
+                        <Button
+                            onClick={() => { setStep(2)}}
+                        >
+                            Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                        </Button>
                     </BtnWrapper>
                 );
             }
-            case 2: {
+            default: {
                 return (
                     <>
-                        <Button variant="outlined" onClick={() => { setStep(0)}} style={{ width: '200px', marginRight: '216px' }}>{EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available</Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => { setStep(0)}}
+                            style={{ width: '200px', marginRight: '216px' }}
+                        >
+                            {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available
+                        </Button>
                     </>
                 );
             }
