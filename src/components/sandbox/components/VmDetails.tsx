@@ -6,7 +6,6 @@ import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
 import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
-
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -227,7 +226,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 <Table style={{ width: '100%' }}>
                         <Head>
                         <Row>
-                            <Cell as="th" scope="col">Inbound rules</Cell>
+                            <Cell as="th" scope="col">Inbound rules (Frontend only)</Cell>
                             <Cell style={{ width: '220px' }} as="th" scope="col" />
                             <Cell as="th" scope="col" />
                             <Cell style={{ width: '220px' }} as="th" scope="col" />

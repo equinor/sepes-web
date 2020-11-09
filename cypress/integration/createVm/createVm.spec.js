@@ -87,6 +87,20 @@ describe('Create vm', function () {
 
         it('creates VM rules', () => {
             cy.get('[data-cy=vm_add_rule]')
+
+                cy.get('[data-cy=vm_size]')
+                    .click()
+                cy.contains("Standard_F1 (1 cores, 2048 MB Memory, os disk: 1047552, max data disks: 4)").click();
+
+                cy.get('[data-cy=vm_operatingSystem]')
+                    .click()
+                cy.contains("Windows Server 2019 Datacenter").click();
+
+                cy.get('[data-cy=vm_dataDisks]')
+                    .click()
+                cy.contains("64 GB").click();    
+
+                    cy.get('[data-cy=create_vm]')
                 .click()
             cy.get('[data-cy=vm_rule_description]')
                 .type('cy rule description')

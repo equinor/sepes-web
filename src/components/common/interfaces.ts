@@ -21,6 +21,7 @@ export interface ParticipantObj {
     databaseId: number;
     objectId: string;
     userId: number;
+    userId: string;
 }
 
 export interface DatasetObj {
