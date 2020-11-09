@@ -78,7 +78,6 @@ describe('Create vm', function () {
             cy.get('[data-cy=vm_dataDisks]')
                 .click()
             cy.contains("64 GB").click();    
-
                 cy.get('[data-cy=create_vm]')
             .click()
             cy.wait(3000)

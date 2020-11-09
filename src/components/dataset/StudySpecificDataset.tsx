@@ -266,6 +266,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     style={{ width }}
                     onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                     data-cy="dataset_storage_name"
+                    id="2"
                 /> : returnField('Storage account name', dataset?.storageAccountName) }
                 {!editDataset ? <CoreDevDropdown
                     width={width}
@@ -295,6 +296,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     onChange={(e: any) => handleChange('dataId', e.target.value)}
                     value={dataset?.dataId}
                     data-cy="dataset_dataId"
+                    id="3"
                 />
                 <SaveCancelWrapper>
                     <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">{loading ? <DotProgress variant="green" /> : 'Save'}</Button>

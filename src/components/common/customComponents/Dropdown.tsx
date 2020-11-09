@@ -88,7 +88,6 @@ const CoreDevDropdown = (props: any): JSX.Element => {
       document.removeEventListener("keydown", listener, false);
   }
 }, [props.resetState]);
-
   const listener = (e: any) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
