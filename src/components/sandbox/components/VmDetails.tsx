@@ -6,7 +6,6 @@ import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
 import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
-
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`

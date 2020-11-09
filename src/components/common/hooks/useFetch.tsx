@@ -10,6 +10,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [intialValue, setIntialValue] = useState([]);
+
     const getData = () => {
         if (!fetchFunction) return;
 
@@ -35,6 +36,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
                     setLoading(false);
                 }
                 else if (result && result.Message && result.RequestId) {
+
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log("Err");
                 }
@@ -49,6 +51,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
     }, [fetchFunction]);
 
     return { loading, setLoading, cache, intialValue };
+
 };
 
 export default useFetch;

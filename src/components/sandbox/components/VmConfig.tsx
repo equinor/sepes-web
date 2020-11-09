@@ -31,7 +31,6 @@ const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, resources }) 
     const { } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
     const { } = useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
 
-
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
             if (result && !result.Message && isSubscribed) {

@@ -282,6 +282,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 name="size"
                 data-cy="vm_size"
                 useOverflow
+
             />
             <CoreDevDropdown
                 label="Operating system"
