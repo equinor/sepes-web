@@ -87,6 +87,7 @@ describe('Create vm', function () {
 
         it('creates VM rules', () => {
             cy.get('[data-cy=vm_add_rule]')
+                .click()
             cy.get('[data-cy=vm_rule_description]')
                 .type('cy rule description')
             cy.get('[data-cy=vm_rule_ip]')
