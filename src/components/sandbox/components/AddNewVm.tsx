@@ -208,7 +208,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Name"
                 meta={returnLimitMeta(20, vm.name)}
                 data-cy="vm_name"
-                id="1"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
@@ -228,7 +227,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Username"
                 meta="(required)"
                 data-cy="vm_username"
-                id="2"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
@@ -245,7 +243,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 label="Password"
                 meta="(required)"
                 data-cy="vm_password"
-                id="3"
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter" placement={'right'}>

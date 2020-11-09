@@ -28,7 +28,6 @@ const Dropdown = styled.div<{ isOpen: any}>`
   border-top: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-right: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
   border-left: ${(props: any) => (props.isOpen ? "2px solid #007079" : "0px")};
-  overflow:auto;
   &:hover {
     cursor: pointer;
   }
@@ -89,8 +88,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
       document.removeEventListener("keydown", listener, false);
   }
 }, [props.resetState]);
-=======
-}, []);
+
   const listener = (e: any) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
