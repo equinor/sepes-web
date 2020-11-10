@@ -127,6 +127,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                     variant="outlined"
                     style={{ marginTop: '8px', width: '216px' }}
                     onClick={() => handleToggle()}
+                    data-cy="vm_more_actions"
                 >
                     More actions
                     <div style={{ marginLeft: 'auto', }}>
@@ -137,7 +138,11 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                             <Item color="#000000">
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}<ItemText>Reset password</ItemText>
                             </Item>
-                            <Item color="#EB0000" onClick={() => { setUserClickedDelete(true); }}>
+                            <Item
+                                color="#EB0000"
+                                onClick={() => { setUserClickedDelete(true); }}
+                                data-cy="vm_delete"
+                            >
                                 {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}<ItemText>Delete virtual machine</ItemText>
                             </Item>
                         </MoreActionsWrapper>}

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Typography, TextField } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import useClickOutside from '../../common/customComponents/useClickOutside';
 
@@ -12,14 +12,12 @@ const Wrapper = styled.div`
     margin-right: auto;
     border-radius: 4px;
     padding:16px;
-    box-shadow: 0 0 4px 4px #E7E7E7;
     left: 0;
     right: 0;
     top: 30%;
     text-align: center;
     background-color: #ffffff;
     z-index:9999;
-    opacity: 1;
 `;
 
 const WhiteWrapper = styled.div`
@@ -57,17 +55,15 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
       }
 
     return (
-        <>
-        <WhiteWrapper />
+        <Scrim>
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
                     placeholder="Write the name of the sandbox to delete"
-                    data-cy="results_and_learnings"
                     onChange={handleChange}
                     style={{ width: '100%' }}
                     value={text}
-                    id="1"
+                    data-cy="delete_resource"
                 />
                 <div>
                     <Button
@@ -75,13 +71,14 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
                         style={{ marginRight: '8px' }}
                         disabled={!checkSandboxNameToText()}
                         onClick={onClick}
+                        data-cy="delete_resource_delete"
                     >
                             Delete
                     </Button>
                     <Button onClick={() => setUserClickedDelete((false))} variant="outlined">Cancel</Button>
                 </div>
             </Wrapper>
-        </>
+        </Scrim>
     )
 }
 

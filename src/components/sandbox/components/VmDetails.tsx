@@ -4,12 +4,12 @@ import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown'
-import { getVirtualMachineExtended } from '../../../services/Api';
+import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
-    height: 400px;
+    min-height: 400px;
     padding: 16px;
     margin-bottom: 128px;
     display:grid;
@@ -30,31 +30,26 @@ type VmDetailsProps = {
     getVms:any;
 };
 
-const mockRules = [
-    {
-        name: 'Roger sitt hjemmekontor',
-        ipType: 'Current personal ip',
-        ip: '123.117.1.0',
-        protocol: "http",
-        port: "443"
-    }
-];
+const ipMethod = [
+    { displayValue: "current personal IP", key:'1' },
+    { displayValue: "Custom", key:'2' }
+  ];
 
-const options = [
-    { displayValue: "test1", key:'1' },
-    { displayValue: "2", key:'2' },
-    { displayValue: "3", key:'3' },
-    { displayValue: "4", key:'4' }
+  const portsOptions = [
+    { displayValue: "HTTP", key:'1' },
+    { displayValue: "Custom", key:'2' }
   ];
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
-    const [rules, setRules] = useState<any>(mockRules);
-    //tempsVms[index].extendedInfo = {}
-
+    const [clientIp, setClientIp] = useState<string>('');
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
     useEffect(() => {
         getVmExtendedInfo();
-        //isVmReady();
     }, [index, vm, resources]);
+    useEffect(() => {
+        getMyIp();
+        getVmRules();
+    }, [index]);
 
     const getVmExtendedInfo = () => {
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
@@ -71,6 +66,38 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 }
             });
         }
+    };
+
+
+    const getVmRules = () => {
+        if (!vm.rules) {
+            getVirtualMachineRule(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].rules = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    //notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log("Err");
+                }
+            });
+        }
+    };
+
+    const resetRules = () => {
+            getVirtualMachineRule(vm.id).then((result: any) => {
+                if (result && !result.Message) {
+                    let tempsVms:any = [...vms];
+                    tempsVms[index].rules = result;
+                    setVms(tempsVms);
+                    console.log('result', result);
+                }
+                else {
+                    console.log("Err");
+                }
+            });
     };
 
     const isVmCreatingOrReady = ():boolean => {
@@ -90,40 +117,112 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     };
 
     const addRule = () => {
-        let currentRules:any = [...rules];
+        setHasChanged(true);
+        let currentRules:any = [];
+        if (vm.rules && vm.rules.length) {
+            currentRules = [...vm.rules];
+        }
         currentRules.push(
             {
-                name: '',
-                ipType: '',
+                description: '',
                 ip: '',
-                protocol: "",
-                port: ""
+                protocol: '',
+                port: '',
+                useClientIp: false,
+                ruleDirection: 0
             }
         )
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
+    };
+
+    const saveRule = () => {
+        setHasChanged(false);
+        createVirtualMachineRule(vm.rules, vm.id).then((result: any) => {
+            if (result && !result.Message) {
+
+                console.log('result', result);
+            }
+            else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log("Err");
+            }
+        });
+
     };
 
     const updateRule = (i:number, value:string, key:string) => {
-        let currentRules:any = [...rules];
+        setHasChanged(true);
+        let currentRules:any = [...vm.rules];
         currentRules[i][key] = value;
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
     const removeRule = (i:number) => {
-        let currentRules:any = [...rules];
+        setHasChanged(true);
+        let currentRules:any = [...vm.rules];
         currentRules.splice(i, 1);
-        setRules(currentRules);
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
 
-    const handleDropdownChange = ( key:string, i:number, value?,): void => {
-        let currentRules:any = [...rules];
-        currentRules[i][key] = value;
-        setRules(currentRules);
+    const handleDropdownChange = (key:string, i:number, value?): void => {
+        setHasChanged(true);
+        let currentRules:any = [...vm.rules];
+        currentRules[i][key] = portsOptions[value-1].displayValue;
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
     };
+
+    const handleDropdownChangeClientIp = (value:any, name:string, ruleIndex): void => {
+        setHasChanged(true);
+        let currentRules:any = [...vm.rules];
+        if (value === "1") {
+            currentRules[ruleIndex][name] = true;
+            currentRules[ruleIndex].ip = clientIp;
+        }
+        else {
+            currentRules[ruleIndex][name] = false;
+        }
+        let tempsVms:any = [...vms];
+        tempsVms[index].rules = currentRules;
+        setVms(tempsVms);
+    };
+
+    const checkIfSaveIsEnabled = ():boolean => {
+        if (!vm.rules || !hasChanged) {
+            return false;
+        }
+        let enabled = true;
+        vm.rules.forEach(rule => {
+            if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
+                enabled = false;
+            }
+        });
+        return enabled;
+    }
+
+    const getMyIp = () => {
+        fetch('https://api.ipify.org?format=json').then(response => {
+          return response.json();
+        }).then((res: any) => {
+            setClientIp(res.ip);
+        }).catch((err: any) => console.error('Problem fetching my IP', err))
+      }
 
     return (
         <Wrapper>
-            <VmProperties vmProperties={vm} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />
+            <VmProperties
+                vmProperties={vm}
+                setVms={setVms}
+                vms={vms}
+                setActiveTab={setActiveTab}
+            />
             <div>
                 <Table style={{ width: '100%' }}>
                         <Head>
@@ -137,69 +236,105 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         </Row>
                         </Head>
                         <Body>
-                            {rules.map((rule:any, index:number) => {
+                            {vm.rules && vm.rules.length > 0 ? vm.rules.map((rule:any, ruleNumber:number) => {
                                 return (
                                 <Row>
                                     <Cell component="th" scope="row">
                                         <TextField
-                                            value={rule.name}
-                                            onChange={(e:any) => updateRule(index, e.target.value, 'name')}
-                                            id={index + rule.name}
+                                            value={rule.description}
+                                            onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'description')}
+                                            placeholder="Description"
+                                            data-cy="vm_rule_description"
                                         />
                                     </Cell>
                                     <Cell component="th" scope="row">
                                         <div style={{ paddingBottom: '16px' }}>
                                             <CoreDevDropdown
-                                                options={options}
-                                                onChange={(e:any) => handleDropdownChange( 'protocol', index)}
-                                                name="classification"
-                                                preSlectedValue={rule.protocol}
-                                                data-cy="dataset_classification"
+                                                options={ipMethod}
+                                                onChange={(e:any) => handleDropdownChangeClientIp(e, 'useClientIp', ruleNumber)}
+                                                name="useClientIp"
+                                                preSlectedValue={"Custom"}
+                                                data-cy="vm_rule_useClientIp"
                                             />
                                         </div>
                                     </Cell>
                                     <Cell component="th" scope="row">
+                                        {rule.useClientIp ? 
+                                        <span>{rule.ip || 'loading ip..'}</span>:
                                         <TextField
                                             value={rule.ip}
-                                            onChange={(e:any) => updateRule(index, e.target.value, 'ip')}
-                                            id={index + rule.name}
+                                            onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'ip')}
+                                            placeholder="IP"
+                                            data-cy="vm_rule_ip"
                                         />
+                                    }
                                     </Cell>
                                     <Cell component="th" scope="row">
                                         <div style={{ paddingBottom: '16px'}}>
                                             <CoreDevDropdown
-                                                options={options}
-                                                onChange={(e:any) => handleDropdownChange('protocol', index)}
-                                                name="classification"
+                                                options={portsOptions}
+                                                onChange={(e:any) => { handleDropdownChange('protocol', ruleNumber, e)}}
+                                                name="protocol"
                                                 preSlectedValue={rule.protocol}
-                                                data-cy="dataset_classification"
+                                                data-cy="vm_rule_protocol"
                                             />
                                         </div>
                                     </Cell>
                                     <Cell component="th" scope="row">
                                         <TextField
                                             value={rule.port}
-                                            onChange={(e:any) => updateRule(index, e.target.value, 'port')}
-                                            id={index + rule.port}
+                                            onChange={(e:any) => updateRule(ruleNumber, e.target.value, 'port')}
+                                            type="number"
+                                            placeholder="Port"
+                                            data-cy="vm_rule_port"
                                         />
                                     </Cell>
-                                    <Cell>{EquinorIcon('clear', '', 24, () => removeRule(index), true)}</Cell>
+
+                                    <Cell>{EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}</Cell>
                                 </Row>
                                 )
-                            })}
+                            }) :
+                            <Row>
+                                <Cell style={{ width: '220px' }}>No inbound rules added</Cell>
+                                <Cell />
+                                <Cell />
+                                <Cell />
+                                <Cell />
+                                <Cell />
+                            </Row>}
                         </Body>
                 </Table>
                 <Button
+                    style={{ float: 'right', margin: '24px 24px 24px 16px' }}
+                    onClick={() => { saveRule() }}
+                    disabled={!checkIfSaveIsEnabled()}
+                    data-cy="vm_rule_save"
+                >
+                        Save
+                </Button>
+                <Button
                     variant="outlined"
-                    style={{ float: 'right', margin: '24px' }}
-                    onClick={() => addRule()}
+                    style={{ float: 'right', margin: '24px 0 0 16px' }}
+                    onClick={() => {
+                        resetRules();
+                    }}
+                    disabled={!hasChanged}
+                    data-cy="vm_rule_cancel"
+                >
+                        Cancel
+                </Button>
+                <Button
+                    variant="outlined"
+                    style={{ float: 'right', margin: '24px 0 0 0' }}
+                    onClick={() => { addRule()}}
+                    data-cy="vm_add_rule"
                 >
                         Add rule
                 </Button>
                 <Table style={{ width: '100%', marginTop: '24px' }}>
                         <Head>
                         <Row>
-                            <Cell as="th" scope="col">Outbound rules</Cell>
+                            <Cell as="th" scope="col">Outbound rules (Frontend Only)</Cell>
                             <Cell as="th" scope="col" />
                         </Row>
                         </Head>

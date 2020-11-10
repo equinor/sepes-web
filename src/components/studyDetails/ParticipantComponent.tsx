@@ -46,13 +46,16 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     //const [loading, setLoading] = useState<boolean>(false);
-    const [roles, setRoles] = useState<DropdownObj>();
+    const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
     const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
+
+    useEffect(() => {
+    },[participantNotSelected])
 
     const removeParticipant = (participant:any) => {
         let participantList:any = [...study.participants];
@@ -61,7 +64,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         const studyId = window.location.pathname.split('/')[2];
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
-                
                 console.log("participants: ", result);
             }
             else {
@@ -74,6 +76,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
 
     const addParticipant = () => {
         setLoading(true);
+        setRole('');
+        setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
@@ -97,6 +101,27 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         }
     }
 
+    const filterRoleList = () => {
+        if (!selectedParticipant) {
+            return roles;
+        }
+        let partAsSelected:any;
+        partAsSelected = study.participants.filter((participant:ParticipantObj) => (
+            participant.userId === selectedParticipant?.databaseId ||
+            participant.emailAddress === selectedParticipant?.emailAddress
+        ));
+        let tempRoles:any = [...roles];
+        roles.forEach((element:DropdownObj, key:number) => {
+            for (let i = 0; i < partAsSelected.length; i++) {
+                if (element.displayValue === partAsSelected[i].role) {
+                    console.log('delete');
+                    tempRoles.splice(tempRoles.indexOf(element), 1);
+                }
+              }
+        });
+        return tempRoles;
+    }
+
     const selectParticipant = (row:any) => {
         setText(row.label);
         setParticipantNotSelected(false);
@@ -111,6 +136,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
       };
 
     const handleInputChange = (value: string) => {
+        setRole('');
+        setRoleNotSelected(true);
         if (value !== "") {
             setText(value);
         } 
@@ -146,10 +173,12 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 <div style={{ marginTop: '-16px' }}>
                     <CoreDevDropdown
                         label="Role"
-                        options={roles}
+                        options={filterRoleList()}
                         onChange={handleChange}
                         name="region"
                         width="224px"
+                        resetState={roleNotSelected}
+                        disabled={participantNotSelected}
                     />
                 </div>
                 <Button

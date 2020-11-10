@@ -1,13 +1,13 @@
-import { apiRequestWithToken, postputStudy, postFile, apiRequest } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
 import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj, VmObj } from "../components/common/interfaces";
 
 
 export const getStudyList = async () => {
-    return apiRequest('api/studies');
+    return apiRequestWithToken('api/studies', 'GET');
 };
 
 export const getStudy = async (id:string) => {
-    return apiRequest('api/studies/' + id);
+    return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
 export const createStudy = async (study:StudyObj) => {
@@ -19,7 +19,7 @@ export const editStudy = async (study:StudyObj, id?:string) => {
 };
 
 export const getDatasetList = async () => {
-    return apiRequest('api/datasets/');
+    return apiRequestWithToken('api/datasets/', 'GET');
 };
 
 export const addStudyDataset = async (studyId:string, datasetId:string) => {
@@ -40,13 +40,13 @@ export const editStudySpecificDataset = async (studyId: string, dataset?:Dataset
 };
 
 export const getDataset = async (datasetId: string, studyId:string) => {
-    return apiRequest('api/studies/' + studyId + '/datasets/' + datasetId);
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET');
 };
 
 //Standard dataset
 
 export const getStandardDataset = async (datasetId: string) => {
-    return apiRequest('api/datasets/' + datasetId);
+    return apiRequestWithToken('api/datasets/' + datasetId, 'GET');
 };
 
 export const createStandardDataset = async (dataset?:DatasetObj) => {
@@ -58,11 +58,11 @@ export const updateStandardDataset = async (datsetId: string, dataset?:DatasetOb
 };
 
 export const getStandardDatasets = async () => {
-    return apiRequest('api/datasets/');
+    return apiRequestWithToken('api/datasets/', 'GET');
 };
 
 export const getParticipantList = async (search: string) => {
-    return apiRequest('api/participants/?search=' + search);
+    return apiRequestWithToken('api/participants/?search=' + search, 'GET');
 };
 
 export const addStudyParticipant = async (studyId:string, role:string, participant?:ParticipantObj) => {
@@ -137,6 +137,14 @@ export const getVirtualMachineCost = async (sandboxId:string, vm:any) => {
     return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
 };
 
+export const createVirtualMachineRule = async (rule:any, vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/rules', 'POST', rule);
+};
+
+export const getVirtualMachineRule = async (vmId:string) => {
+    return apiRequestWithToken('api/virtualmachines/' + vmId + '/rules', 'GET');
+};
+
 //Lookup
 
 export const getAzureRegions = async () => {
@@ -168,3 +176,5 @@ export const postOnlyBlobimage = async (imageUrl: string) => {
   return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
 };
 */
+
+

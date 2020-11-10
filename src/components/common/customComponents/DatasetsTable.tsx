@@ -49,6 +49,9 @@ const DatasetsTable = (props: any) => {
                     <Row key={1}>
                             <Cell component="th" scope="row">No datasets added</Cell>
                             <Cell component="th" scope="row">{''}</Cell>
+                            <Cell component="th" scope="row">{''}</Cell>
+
+
                     </Row>
                     }
                     </Body>

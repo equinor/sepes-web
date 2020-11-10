@@ -254,7 +254,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     </div>
                     }
             />
+            
             <UnstyledList>
+            
                 <li>
                     <Checkbox
                         label="High memory"
@@ -271,8 +273,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     <Checkbox
                         label="High CPU"
                         onChange={(e:any) => handleCheck(sizeType.compute, e.target.checked)}
-                />
+                    />
                 </li>
+                <Label>Filters the VM size dropdown list</Label>
             </UnstyledList>
             <CoreDevDropdown
                 label="VM size"
@@ -281,6 +284,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 onChange={handleDropdownChange}
                 name="size"
                 data-cy="vm_size"
+                useOverflow
+
             />
             <CoreDevDropdown
                 label="Operating system"
@@ -289,6 +294,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 onChange={handleDropdownChange}
                 name="operatingSystem"
                 data-cy="vm_operatingSystem"
+                useOverflow
             />
             <CoreDevDropdown
                 label="Data disk"
@@ -297,6 +303,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 onChange={handleDropdownChange}
                 name="dataDisks"
                 data-cy="vm_dataDisks"
+                useOverflow
             />
             <div>
                 <Label>Estimated total</Label>

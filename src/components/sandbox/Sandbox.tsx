@@ -93,7 +93,7 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
                 updateCache={updateCache}
             />
             {returnStepComponent()}
-            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} setStep={setStep} resources={resources} />}
+            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} resources={resources} />}
         </Wrapper>
     )
 }

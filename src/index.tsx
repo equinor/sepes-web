@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { acquireTokenSilent, signInRedirect } from './auth/AuthFunctions';
+import { acquireTokenSilent, loginRequest, signInRedirect } from './auth/AuthFunctions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
@@ -67,7 +67,10 @@ if (cyToken && cyToken.length) {
         signInRedirect();
         console.log('Sign In PopUp');
     } else {
-        acquireTokenSilent();
+        acquireTokenSilent().catch((error: string) => {
+          myMSALObj.acquireTokenRedirect(loginRequest);
+          console.log(error);
+        });
         console.log('Sign in Silent');
     }
     
