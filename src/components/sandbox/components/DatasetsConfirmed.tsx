@@ -24,7 +24,7 @@ type SandboxConfirmedProps = {
 
 const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({sandboxId}) => {
     const [datasetsConfirmed, setDatasetsConfirmed] = useState([]);
-    useFetch(getDatasetForSandbox, setDatasetsConfirmed, null, sandboxId);
+    const { loading } = useFetch(getDatasetForSandbox, setDatasetsConfirmed, null, sandboxId);
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
                     <Head>
@@ -34,7 +34,7 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({sandboxId}) => {
                     </Row>
                     </Head>
                     <Body>
-                        {datasetsConfirmed.map((dataset:any, index:number) => {
+                        {datasetsConfirmed.length > 0 ? datasetsConfirmed.map((dataset:any, index:number) => {
                             return(
                                 <Row key={index}>
                                     <Cell component="th" scope="row">
@@ -44,7 +44,13 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({sandboxId}) => {
                                     <Cell style={{ width: '32px' }}>{dataset.status}</Cell>
                                 </Row>
                             )
-                        })}
+                        }):
+                        <Row key={1}>
+                            <Cell component="th" scope="row">
+                                {loading ? 'loading...' : 'No data sets in sandbox'}
+                            </Cell>
+                            <Cell style={{ width: '32px' }}>{''}</Cell>
+                        </Row>}
                     </Body>
         </Table>
     )

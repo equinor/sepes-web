@@ -96,7 +96,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId }) => {
                             )
                         }):
                         <Row key="1">
-                            <Cell component="th" scope="row">No datasets in study</Cell>
+                            <Cell component="th" scope="row">{loading ? 'loading data sets..' : 'No data sets in study'}</Cell>
                             <Cell component="th" scope="row">{""}</Cell>
                         </Row>}
                     </Body>
