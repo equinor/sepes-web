@@ -29,9 +29,11 @@ const Title = styled.span`
 const DescriptionWrapper = styled.div`
     margin: auto;
     margin-left: 0px;
+    margin-right: 48px;
     min-width:200px;
     @media (max-width: 768px) {
       padding: 8px 0 8px 0;
+      margin-right: 0px;
       margin-left: 0px;
       width:500px;
       order: 3;
