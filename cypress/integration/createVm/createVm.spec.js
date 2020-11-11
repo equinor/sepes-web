@@ -32,8 +32,35 @@ describe('Create vm', function () {
             .click();
         cy.wait(2000)
     });
-    
 
+    it('clicks on data sets tab', () => {
+        cy.get('[data-cy=datasets_tab]')
+            .click();
+    });
+
+    it('clicks add study specific dataset', () => {
+        cy.get('[data-cy=add_study_specific_dataset]')
+            .click();
+    });
+
+    it('fills out dataset information', () => {
+        cy.get('[data-cy=dataset_name]')
+            .type('cy name')
+        cy.get('[data-cy=dataset_storage_name]')
+            .type('cy storage')
+        cy.get('[data-cy=dataset_location]')
+            .click()
+        cy.contains("Norway East").click();
+        cy.get('[data-cy=dataset_classification]')
+            .click()
+        cy.contains('Open').click();
+        cy.get('[data-cy=dataset_dataId]')
+            .type(1)
+        cy.get('[data-cy=dataset_save]')
+            .click();
+        cy.get('[data-cy=dataset_back_to_study]')
+            .click();
+    });
     it('clicks sandbox tab', () => {
         cy.get('[data-cy=sandbox_tab]')
                 .click();
@@ -66,7 +93,6 @@ describe('Create vm', function () {
                 .type('cy username')
             cy.get('[data-cy=vm_password]')
                 .type('Cypassword123!!')
-
             cy.get('[data-cy=vm_size]')
                 .click()
             cy.contains("Standard_F1 (1 cores, 2048 MB Memory, os disk: 1047552, max data disks: 4)").click();
@@ -104,6 +130,12 @@ describe('Create vm', function () {
                 
         });
 
+        it('add data set to sandbox', () => {
+            cy.get('[data-cy=add_dataset_to_sandbox]')
+                .click()
+            cy.wait(1000)
+        });
+
         it('delete vm', () => {
             cy.get('[data-cy=vm_more_actions]')
                 .click()
@@ -118,7 +150,7 @@ describe('Create vm', function () {
                 
         });
 
-        it('delete vm', () => {
+        it('delete sandbox', () => {
             cy.get('[data-cy=delete_sandbox]')
                 .click()
             cy.get('[data-cy="delete_resource"]')

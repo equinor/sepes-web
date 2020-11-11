@@ -71,7 +71,7 @@ describe('Create study', function () {
                 .click();
         });
 
-        it('clicks edit study', () => {
+        it('clicks on data sets tab', () => {
             cy.get('[data-cy=datasets_tab]')
                 .click();
         });
@@ -93,7 +93,7 @@ describe('Create study', function () {
             cy.contains("Norway East").click();
             cy.get('[data-cy=dataset_classification]')
                 .click()
-            cy.contains(1).click();
+            cy.contains('Open').click();
             cy.get('[data-cy=dataset_dataId]')
                 .type(1)
             cy.get('[data-cy=dataset_save]')
@@ -109,7 +109,7 @@ describe('Create study', function () {
                     .type('cy name edit')          
                 cy.get('[data-cy=dataset_classification]')
                     .click()
-                cy.contains(2).click();
+                cy.contains('Internal').click();
                 cy.get('[data-cy=dataset_dataId]')
                     .type(2)
                 cy.get('[data-cy=dataset_save]')
