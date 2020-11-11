@@ -251,13 +251,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     </div>
                     }
             />
-            
             <UnstyledList>
-            
                 <li>
                     <Checkbox
                         label="High memory"
                         onChange={(e:any) => handleCheck(sizeType.memory, e.target.checked)}
+                        data-cy="just_a_test"
                     />
                 </li>
                 <li>

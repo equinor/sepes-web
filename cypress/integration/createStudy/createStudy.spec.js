@@ -71,7 +71,7 @@ describe('Create study', function () {
                 .click();
         });
 
-        it('clicks edit study', () => {
+        it('clicks on data sets tab', () => {
             cy.get('[data-cy=datasets_tab]')
                 .click();
         });

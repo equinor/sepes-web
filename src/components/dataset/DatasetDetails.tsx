@@ -148,7 +148,9 @@ const DatasetDetails = (props: any) => {
                     </div>
                     { !checkUrlIfGeneralDataset() ?
                     <Link to={'/studies/' + studyId} 
-                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
+                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
+                        data-cy="dataset_back_to_study"
+                    >
                             <Icon
                             color="#007079"
                             name="arrow_back"

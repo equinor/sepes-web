@@ -83,12 +83,14 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId }) => {
                             return(
                                 <Row key={dataset.id}>
                                     <Cell component="th" scope="row">
-                                    <div style={{ paddingTop: '6px' }}>
+                                    <div style={{ paddingTop: '6px' }} >
+                                        <span data-cy="add_dataset_to_sandbox">
                                         <Checkbox
                                             checked={dataset.added}
                                             label={dataset.name}
                                             onChange={(e:any) => { handleCheck(e, dataset)}}
                                         />
+                                        </span>
                                     </div>
                                     </Cell>
                                     <Cell style={{ width: '32px' }}>{dataset.classification}</Cell>
