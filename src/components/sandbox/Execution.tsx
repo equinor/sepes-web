@@ -27,10 +27,11 @@ const ResourceWrapper = styled.div`
 `;
 
 type ExecutionProps = {
-    resources:any
+    resources:any,
+    sandboxId
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources, sandboxId }) => {
 
     return (
         <Wrapper>
@@ -38,7 +39,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources }) => {
                 <div>
                     <span>{EquinorIcon('mood_very_happy', '#007079', 24)} Data is now available in storage account</span>
                     <div style={{ marginTop: '8px' }}>
-                        <DatasetConfirmed />
+                        <DatasetConfirmed sandboxId={sandboxId} />
                     </div>
                 </div>
                 <div style={{marginTop: '32px'}}>

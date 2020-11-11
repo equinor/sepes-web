@@ -55,7 +55,14 @@ const StudyDetails = () => {
     const changeComponent = () => {
         switch (activeTab) {
             case 1:
-                return <DataSetComponent study={study && study} setStudy={setStudy} />;
+                return (
+                    <DataSetComponent
+                        study={study && study}
+                        setStudy={setStudy}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                );
             case 2:
                 return (
                     <SandBoxComponent
@@ -67,7 +74,14 @@ const StudyDetails = () => {
                     />
                 );
             case 3:
-                return <ParticipantComponent study={study && study} setStudy={setStudy} />;
+                return (
+                    <ParticipantComponent
+                        study={study && study}
+                        setStudy={setStudy}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />)
+                    ;
             case 4:
                 return <div>Missing spec</div>;
             default:

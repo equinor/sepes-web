@@ -1,4 +1,3 @@
-import { useScrollTrigger } from '@material-ui/core';
 import React, { useState, useEffect, useContext } from 'react';
 import { UpdateCache } from '../../../App';
 import * as notify from '../../common/notify';
