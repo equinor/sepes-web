@@ -41,11 +41,11 @@ const SaveCancelWrapper = styled.div`
     grid-gap:16px;
     grid-template-columns: 100px 100px;
   `;
-const options = [
-    { displayValue: "1", key:'1' },
-    { displayValue: "2", key:'2' },
-    { displayValue: "3", key:'3' },
-    { displayValue: "4", key:'4' }
+
+  const dataClassificationsList = [
+    { displayValue: 'Open', key:'Open' },
+    { displayValue: 'Internal', key:'Internal' },
+    { displayValue: 'Restricted', key:'Restricted' }
   ];
 const width = '512px';
 
@@ -280,7 +280,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({ datasetFrom
                     width={width}
                     label="Data classification"
                     meta="(required)"
-                    options={options}
+                    options={dataClassificationsList}
                     onChange={handleDropdownChange}
                     name="classification"
                     preSlectedValue={dataset?.classification}
