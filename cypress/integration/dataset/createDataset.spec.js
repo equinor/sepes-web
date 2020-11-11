@@ -26,7 +26,7 @@ describe('Create dataset', function () {
         cy.contains("Norway East").click();
         cy.get('[data-cy=dataset_classification]')
             .click()
-        cy.contains(1).click();
+        cy.contains('Open').click();
         cy.get('[data-cy=dataset_dataId]')
             .type(1)
         cy.get('[data-cy=dataset_save]')

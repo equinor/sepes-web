@@ -39,10 +39,12 @@ const TableWrapper = styled.div`
 
 type ParicipantComponentProps = {
     study:StudyObj,
-    setStudy:any
+    setStudy:any,
+    setUpdateCache:any,
+    updateCache:any
   };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy }) => {
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     //const [loading, setLoading] = useState<boolean>(false);
@@ -62,6 +64,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({...study, participants: participantList});
         const studyId = window.location.pathname.split('/')[2];
+        setUpdateCache({...updateCache, ['study' + studyId]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (isSubscribed && !result.Message) {
                 console.log("participants: ", result);
@@ -79,6 +82,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setRole('');
         setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
+        setUpdateCache({...updateCache, ['study' + studyId]: true });
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (isSubscribed && !result.Message) {

@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
-import { Search, Button, TextField} from '@equinor/eds-core-react';
-import { close } from '@equinor/eds-icons';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
 import Dataset from './components/Dataset';
 import PolicyComponent from './components/PolicyComponent';
 import ResourcesComponent from './components/ResourcesComponent';
-import VmConfig from './components/VmConfig';
 
 const Wrapper = styled.div`
   display:grid;
@@ -38,14 +34,19 @@ const PolictyComponentWrapper = styled.div`
 
 type SandboxConfigProps = {
   resources:any;
+  datasets:any;
+  sandboxId:string;
 };
 
-const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources }) => {
+const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources, datasets, sandboxId }) => {
 
     return (
         <Wrapper>
             <InfoWrapper>
-                <Dataset />
+                <Dataset
+                  datasets={datasets}
+                  sandboxId={sandboxId}
+                />
                 <PolictyComponentWrapper>
                   <PolicyComponent displayCheckbox />
                 </PolictyComponentWrapper>
