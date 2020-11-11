@@ -30,6 +30,10 @@ export const removeStudyDataset = async (studyId:string, datasetId:string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
 };
 
+export const getDatasetsForStudy = async (studyId:string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets', 'GET');
+};
+
 //Specific dataset
 export const addStudySpecificDataset = async (studyId: string, dataset?:DatasetObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific', 'POST', dataset);
@@ -97,6 +101,20 @@ export const deleteSandbox = async (studyId: string, sandboxId: string) => {
 
 export const getResourceStatus = async (studyId: string, sandboxId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
+};
+
+//Sandbox dataset
+
+export const getDatasetForSandbox = async (sandboxId:string) => {
+    return apiRequestWithToken('api/sandbox/' + sandboxId + '/datasets', 'GET');
+};
+
+export const putDatasetForSandbox = async (sandboxId:string, datasetId:string) => {
+    return apiRequestWithToken('api/sandbox/' + sandboxId + '/datasets/' + datasetId, 'PUT');
+};
+
+export const deleteDatasetForSandbox = async (sandboxId:string, datasetId:string) => {
+    return apiRequestWithToken('api/sandbox/' + sandboxId + '/datasets/' + datasetId, 'DELETE');
 };
 
 //Virtual machine

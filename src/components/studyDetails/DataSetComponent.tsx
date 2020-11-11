@@ -48,10 +48,12 @@ const Bar = styled.div`
 
 type StudyComponentFullProps = {
     study:StudyObj,
-    setStudy:any
+    setStudy:any,
+    setUpdateCache:any,
+    updateCache:any
   };
 
-const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }) => {
+const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -60,6 +62,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     const removeDataset = (row:any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset:any) => dataset.id !== row.id) });
+        setUpdateCache({...updateCache, ['study' + studyId]: true });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
                 //setStudy({...study, datasets: result.datasets });
@@ -78,6 +81,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy }
     }
 
     const addDatasetToStudy = (row:any) => {
+        setUpdateCache({...updateCache, ['study' + study.id]: true });
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];

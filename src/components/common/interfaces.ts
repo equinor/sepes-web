@@ -40,6 +40,7 @@ export interface DatasetObj {
     description?:string;
     studies?:[];
     id?:string;
+    added?:boolean;
     studyId?:string;
 }
 

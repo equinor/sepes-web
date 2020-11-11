@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { getSandbox, getResourceStatus } from '../../services/Api';
+import { getSandbox, getResourceStatus, getDatasetsForStudy, getDatasetForSandbox } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
@@ -28,6 +28,8 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const [step, setStep] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
+    const [datasets, setDatasets] = useState([]);
+    const [datasetsInSandbox, setDatasetsInSandbox] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -42,6 +44,8 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     });
     const [resources, setResources] = useState<any>();
     const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
+    useFetch(getDatasetsForStudy, setDatasets, null, studyId);
+    useFetch(getDatasetForSandbox, setDatasetsInSandbox, null, sandboxId);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -72,11 +76,11 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} />;
+                return <Execution resources={resources} sandboxId={sandboxId} />;
             case 2:
                 return <div></div>;
             default:
-                return <SandboxConfig resources={resources} />;
+                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} />;
         }
     }
 

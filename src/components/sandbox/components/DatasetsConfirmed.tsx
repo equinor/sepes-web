@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Table, Checkbox } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
+import { getDatasetForSandbox } from '../../../services/Api';
+import useFetch from '../../common/hooks/useFetch';
 const { Body, Row, Cell, Head } = Table;
 
 const mockData = [
@@ -16,7 +18,13 @@ const mockData = [
     },
 ]
 
-const DatasetConfirmed = (props: any) => {
+type SandboxConfirmedProps = {
+    sandboxId
+  };
+
+const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({sandboxId}) => {
+    const [datasetsConfirmed, setDatasetsConfirmed] = useState([]);
+    useFetch(getDatasetForSandbox, setDatasetsConfirmed, null, sandboxId);
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
                     <Head>
@@ -26,7 +34,7 @@ const DatasetConfirmed = (props: any) => {
                     </Row>
                     </Head>
                     <Body>
-                        {mockData.map((dataset:any, index:number) => {
+                        {datasetsConfirmed.map((dataset:any, index:number) => {
                             return(
                                 <Row key={index}>
                                     <Cell component="th" scope="row">
