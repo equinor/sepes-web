@@ -129,7 +129,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 protocol: '',
                 port: '',
                 useClientIp: false,
-                direction: 0
+                direction: 0,
+                name: ''
             }
         )
         let tempsVms:any = [...vms];
@@ -153,8 +154,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         setHasChanged(false);
         createVirtualMachineRule(rules, vm.id).then((result: any) => {
             if (result && !result.Message) {
-
+                const tempsVms:any = [...vms];
                 console.log('result', result);
+                tempsVms[index].rules = result;
+                setVms(tempsVms);
             }
             else {
                 notify.show('danger', '500', result.Message, result.RequestId);
