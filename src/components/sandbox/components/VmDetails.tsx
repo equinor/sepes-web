@@ -87,17 +87,18 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     };
 
     const resetRules = () => {
-            getVirtualMachineRule(vm.id).then((result: any) => {
-                if (result && !result.Message) {
-                    let tempsVms:any = [...vms];
-                    tempsVms[index].rules = result;
-                    setVms(tempsVms);
-                    console.log('result', result);
-                }
-                else {
-                    console.log("Err");
-                }
-            });
+        setHasChanged(false);
+        getVirtualMachineRule(vm.id).then((result: any) => {
+            if (result && !result.Message) {
+                let tempsVms:any = [...vms];
+                tempsVms[index].rules = result;
+                setVms(tempsVms);
+                console.log('result', result);
+            }
+            else {
+                console.log("Err");
+            }
+        });
     };
 
     const isVmCreatingOrReady = ():boolean => {
@@ -405,7 +406,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 >
                         Cancel
                 </Button>
-                
             </div>
         </Wrapper>
     )
