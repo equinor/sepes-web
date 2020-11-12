@@ -129,7 +129,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 protocol: '',
                 port: '',
                 useClientIp: false,
-                ruleDirection: 0
+                direction: 0
             }
         )
         let tempsVms:any = [...vms];
@@ -137,9 +137,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         setVms(tempsVms);
     };
 
-    const saveRule = () => {
+    const addOutBoundRule = () => {
+        setHasChanged(true);
+        const newRules:any = [...vm.rules];
+        const tempsVms:any = [...vms];
+        const outboundRule = newRules.find((rule:any) => rule.direction === 1);
+        const indexRule = newRules.indexOf(outboundRule);
+        outboundRule.action = outboundRule.action === 1 ? 0 : 1;
+        newRules[indexRule] = outboundRule;
+        tempsVms[index].rules = newRules;
+        setVms(tempsVms);
+    };
+
+    const saveRule = (rules:any) => {
         setHasChanged(false);
-        createVirtualMachineRule(vm.rules, vm.id).then((result: any) => {
+        createVirtualMachineRule(rules, vm.id).then((result: any) => {
             if (result && !result.Message) {
 
                 console.log('result', result);
@@ -158,6 +170,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         currentRules[i][key] = value;
         let tempsVms:any = [...vms];
         tempsVms[index].rules = currentRules;
+        console.log(vms[index].rules);
         setVms(tempsVms);
     };
 
@@ -236,8 +249,9 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         </Row>
                         </Head>
                         <Body>
-                            {vm.rules && vm.rules.length > 0 ? vm.rules.map((rule:any, ruleNumber:number) => {
+                            {vm.rules && vm.rules.length > 1 ? vm.rules.map((rule:any, ruleNumber:number) => {
                                 return (
+                                rule.direction === 0 &&
                                 <Row>
                                     <Cell component="th" scope="row">
                                         <TextField
@@ -304,9 +318,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                             </Row>}
                         </Body>
                 </Table>
+                {/* 
                 <Button
                     style={{ float: 'right', margin: '24px 24px 24px 16px' }}
-                    onClick={() => { saveRule() }}
+                    onClick={() => { saveRule(vm.rules)}}
                     disabled={!checkIfSaveIsEnabled()}
                     data-cy="vm_rule_save"
                 >
@@ -323,9 +338,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 >
                         Cancel
                 </Button>
+                */}
                 <Button
                     variant="outlined"
-                    style={{ float: 'right', margin: '24px 0 0 0' }}
+                    style={{ float: 'right', margin: '24px 16px 24px 16px' }}
                     onClick={() => { addRule()}}
                     data-cy="vm_add_rule"
                 >
@@ -334,17 +350,24 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 <Table style={{ width: '100%', marginTop: '24px' }}>
                         <Head>
                         <Row>
-                            <Cell as="th" scope="col">Outbound rules (Frontend Only)</Cell>
+                            <Cell as="th" scope="col">Outbound rules</Cell>
                             <Cell as="th" scope="col" />
                         </Row>
                         </Head>
                         <Body>
                             <Row key={1}>
-                                <Cell component="th" scope="row">Outbound internet traffic is currently closed</Cell>
+                                <Cell component="th" scope="row">Outbound internet traffic is currently {vm.rules && vm.rules.find((rule:any) => rule.direction === 1).action === 0 ? 'open' : 'closed'}</Cell>
                                 <Cell component="th" scope="row">
-                                    <Button variant="outlined" style={{ float: 'right' }}>Open for 12 hours</Button>
+                                    <Button
+                                        variant="outlined"
+                                        style={{ float: 'right' }}
+                                        onClick={() => { addOutBoundRule(); }}
+                                    >
+                                        {vm.rules && vm.rules.find((rule:any) => rule.direction === 1).action === 0 ? 'Close internet' : 'Open internet'}
+                                    </Button>
                                 </Cell>
                             </Row>
+                            {/*
                             <Row key={2}>
                                 <Cell component="th" scope="row">Outbound internet traffic is open intil XXXX</Cell>
                                 <Cell component="th" scope="row">
@@ -360,8 +383,29 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                     <Button variant="outlined" style={{ float: 'right' }}>Ask sponsor (rep) for permission to open</Button>
                                 </Cell>
                             </Row>
+                             */}
                         </Body>
                 </Table>
+                <Button
+                    style={{ float: 'right', margin: '24px 16px 24px 16px' }}
+                    onClick={() => { saveRule(vm.rules)}}
+                    disabled={!checkIfSaveIsEnabled()}
+                    data-cy="vm_rule_save"
+                >
+                        Save
+                </Button>
+                <Button
+                    variant="outlined"
+                    style={{ float: 'right', margin: '24px 0 0 0' }}
+                    onClick={() => {
+                        resetRules();
+                    }}
+                    disabled={!hasChanged}
+                    data-cy="vm_rule_cancel"
+                >
+                        Cancel
+                </Button>
+                
             </div>
         </Wrapper>
     )
