@@ -29,7 +29,6 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [datasets, setDatasets] = useState([]);
-    const [datasetsInSandbox, setDatasetsInSandbox] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -45,7 +44,6 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
     const [resources, setResources] = useState<any>();
     const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
     useFetch(getDatasetsForStudy, setDatasets, null, studyId);
-    useFetch(getDatasetForSandbox, setDatasetsInSandbox, null, sandboxId);
 
     useEffect(() => {
         setIsSubscribed(true);
