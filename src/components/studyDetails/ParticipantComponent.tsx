@@ -18,15 +18,15 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 0.1fr minmax(330px, 1fr);
+    grid-template-rows: 0.1fr minmax(305px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
 
 const SearchWrapper = styled.div`
-    z-index:99;
+    z-index: 99;
     margin-left: auto;
-    margin-top:32px;
+    margin-top: 32px;
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
@@ -38,16 +38,14 @@ const TableWrapper = styled.div`
 `;
 
 type ParicipantComponentProps = {
-    study:StudyObj,
-    setStudy:any,
-    setUpdateCache:any,
-    updateCache:any
-  };
+    study: StudyObj;
+    setStudy: any;
+    setUpdateCache: any;
+    updateCache: any;
+};
 
 const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    //const [loading, setLoading] = useState<boolean>(false);
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
@@ -56,107 +54,101 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [role, setRole] = useState<string>('');
     const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
 
-    useEffect(() => {
-    },[participantNotSelected])
+    useEffect(() => {}, [participantNotSelected]);
 
-    const removeParticipant = (participant:any) => {
-        let participantList:any = [...study.participants];
+    const removeParticipant = (participant: any) => {
+        let participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
-        setStudy({...study, participants: participantList});
+        setStudy({ ...study, participants: participantList });
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (isSubscribed && !result.Message) {
-                console.log("participants: ", result);
-            }
-            else {
+            if (!result.Message) {
+                console.log('participants: ', result);
+            } else {
                 notify.show('danger', '500', result.Message, result.requestId);
-                //Show error component
             }
             setLoading(false);
-        })
-    }
+        });
+    };
 
     const addParticipant = () => {
         setLoading(true);
         setRole('');
         setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
-                if (isSubscribed && !result.Message) {
-                    let participantList:any = [...study.participants];
+                if (!result.Message) {
+                    let participantList: any = [...study.participants];
                     participantList.push(result);
-                    setStudy({...study, participants: participantList});
-                    console.log("participants: ", result);
-                }
-                else {
+                    setStudy({ ...study, participants: participantList });
+                    console.log('participants: ', result);
+                } else {
                     notify.show('danger', '500', result.Message, result.requestId);
-                    console.log("Err getting participants");
-                    //Show error component
+                    console.log('Err getting participants');
                 }
                 setLoading(false);
-            })
-        }
-        else {
+            });
+        } else {
             // TODO Implement backend to handle email
-            console.log("Send email to backend", text);
+            console.log('Send email to backend', text);
         }
-    }
+    };
 
     const filterRoleList = () => {
         if (!selectedParticipant) {
             return roles;
         }
-        let partAsSelected:any;
-        partAsSelected = study.participants.filter((participant:ParticipantObj) => (
-            participant.userId === selectedParticipant?.databaseId ||
-            participant.emailAddress === selectedParticipant?.emailAddress
-        ));
-        let tempRoles:any = [...roles];
-        roles.forEach((element:DropdownObj, key:number) => {
+        let partAsSelected: any = [];
+        partAsSelected = study.participants.filter(
+            (participant: ParticipantObj) =>
+                participant.userId === selectedParticipant?.databaseId ||
+                participant.emailAddress === selectedParticipant?.emailAddress
+        );
+        const tempRoles: any = [...roles];
+        roles.forEach((element: DropdownObj, key: number) => {
             for (let i = 0; i < partAsSelected.length; i++) {
                 if (element.displayValue === partAsSelected[i].role) {
                     console.log('delete');
                     tempRoles.splice(tempRoles.indexOf(element), 1);
                 }
-              }
+            }
         });
         return tempRoles;
-    }
+    };
 
-    const selectParticipant = (row:any) => {
+    const selectParticipant = (row: any) => {
         setText(row.label);
         setParticipantNotSelected(false);
-        let participant:any = row;
+        let participant: any = row;
         setSelectedParticipant(participant);
         setIsOpen(false);
-    }
+    };
 
     const handleChange = (value) => {
         setRole(value);
         setRoleNotSelected(false);
-      };
+    };
 
     const handleInputChange = (value: string) => {
         setRole('');
         setRoleNotSelected(true);
-        if (value !== "") {
+        if (value !== '') {
             setText(value);
-        } 
-        else if (value === "" && text.length === 1) {
+        } else if (value === '' && text.length === 1) {
             setText('');
             setParticipantNotSelected(true);
         }
-    }
+    };
 
     const checkIfButtonDisabled = () => {
         if (ValidateEmail(text)) {
             return roleNotSelected;
         }
         return participantNotSelected || roleNotSelected;
-    }
+    };
 
     return (
         <Wrapper>
@@ -164,7 +156,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 <div
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
-                    style={{width: '300px'}}
+                    style={{ width: '300px' }}
                 >
                     <AsynchSelect
                         label={''}
@@ -189,9 +181,9 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     variant="outlined"
                     disabled={checkIfButtonDisabled()}
                     onClick={addParticipant}
-                    style={{width: '224px'}}
+                    style={{ width: '224px' }}
                 >
-                        {loading ? <DotProgress variant="green" /> : 'Add participant'}
+                    {loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>
             <TableWrapper>
@@ -202,7 +194,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 />
             </TableWrapper>
         </Wrapper>
-    )
-}
+    );
+};
 
 export default ParicipantComponent;
