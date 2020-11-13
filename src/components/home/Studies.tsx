@@ -2,14 +2,20 @@ import React from 'react';
 import StudyComponent from './StudyComponent';
 import { StudyObj } from '../common/interfaces';
 
-const Studies = (props: any) => {
+type StudiesProps = {
+    studyList: any;
+};
+
+const Studies: React.FC<StudiesProps> = ({ studyList }) => {
     return (
         <div>
-            {props.studyList ? props.studyList.map((study:StudyObj) => {
-                return (<StudyComponent study={study} key={study.id} />);
-            }) : 'No studies yet'}
+            {studyList
+                ? studyList.map((study: StudyObj) => {
+                      return <StudyComponent study={study} key={study.id} />;
+                  })
+                : 'No studies yet'}
         </div>
-    )
-}
+    );
+};
 
 export default Studies;
