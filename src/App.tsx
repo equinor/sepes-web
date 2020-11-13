@@ -19,7 +19,6 @@ export const UpdateCache = React.createContext({} as IContextProps);
 
 const App = () => {
     const [updateCache, setUpdateCache] = useState();
-    //UpdateCache = React.createContext({cache, setCache});
     const appInsights = new ApplicationInsights({ config: {
         instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
       } });

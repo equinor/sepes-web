@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -7,7 +7,6 @@ import { acquireTokenSilent, loginRequest, signInRedirect } from './auth/AuthFun
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
-import { UserAgentApplication } from 'msal';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext({
@@ -50,18 +49,6 @@ if (cyToken && cyToken.length) {
         }
     };
     renderApp(mockUser);
-    //renderApp(mockUser, test);
-
-    /*validateAccessToken(cyToken).then(result => {
-        if (result.error) {
-            console.log('err', result);
-        } else {
-            let isValid = result;
-            if (isValid) {
-                renderApp(mockUser)
-            }
-        }
-    });*/
 } else {
     if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
         signInRedirect();
@@ -78,40 +65,7 @@ if (cyToken && cyToken.length) {
         renderApp(myMSALObj);
     }
 }
-/*
-}
 
-else {
-    console.log("Err");
-}
-});*/
-/*
-if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
-  signInRedirect();
-  console.log('Sign In PopUp');
-}
-else {
-  acquireTokenSilent();
-  console.log('Sign in Silent');
-}
-export const UserConfig = React.createContext(myMSALObj);
-if (myMSALObj.getAccount()) {
-  ReactDOM.render(
-    <React.StrictMode>
-      <UserConfig.Provider value={myMSALObj}>
-        <App />
-      </UserConfig.Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
-}*/
-/*
-else{
-  ReactDOM.render(
-    <NoAccess />, document.getElementById('root')
-  )
-}
-*/
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

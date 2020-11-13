@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon } from '@equinor/eds-core-react';
-import Logo from '../common/Logo';
 import NavTabs from './NavTabs';
 import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
@@ -45,7 +44,6 @@ const LogoutWrapper = styled.div`
 
 const LEFT_CHOICES = {
     none: null,
-    icon: <Logo />,
     text: 'Sepes',
     'text+icon': (
         <Fragment>
