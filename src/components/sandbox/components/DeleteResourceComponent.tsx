@@ -20,17 +20,6 @@ const Wrapper = styled.div`
     z-index:9999;
 `;
 
-const WhiteWrapper = styled.div`
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: #ffffff;
-
-    opacity: 0.5;
-`;
-
 type DeleteResourceComponentProps = {
     ResourceName:string;
     setUserClickedDelete:any;
