@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { getStudyList, getResourceStatus } from '../../services/Api';
-import Studies from "./Studies";
+import Studies from './Studies';
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import LoadingFull from '../common/LoadingComponentFullscreen';
@@ -14,24 +14,25 @@ const Wrapper = styled.div`
     grid-template-rows: 172px;
     width: 100%;
     grid-gap: 16px;
-    margin-Top: 24px;
+    margin-top: 24px;
     @media (max-width: 768px) {
         display: block;
     }
 `;
 
 const RightWrapper = styled.div`
-    background-color: #D5EAF4;
+    background-color: #d5eaf4;
     padding: 16px;
-    border-Radius: 4px;
-    margin-Right: 32px;
+    border-radius: 4px;
+    margin-right: 32px;
     @media (max-width: 768px) {
         display: block;
         margin: 0 32px 32px 32px;
     }
 `;
 
-let mockText = 'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
+let mockText =
+    'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {
     const history = useHistory();
@@ -41,24 +42,32 @@ const Home = () => {
 
     return (
         <>
-        <Wrapper>
-            {!loading ? <Studies studyList={studyList} /> : <div><LoadingFull /></div> }
-            <RightWrapper>
-                <div>{mockText}</div>
-                <div style={{ bottom: '16px' }}>
-                    <Button
-                        disabled={!permissions.canCreateStudy}
-                        data-cy="new_study"
-                        style={{ width: '100%', marginTop: '9px' }}
-                        onClick={() => { history.push('/studies'); }}
-                    >
-                        New study
-                    </Button>
-                </div>
-            </RightWrapper>
-        </Wrapper>
+            <Wrapper>
+                {!loading ? (
+                    <Studies studyList={studyList} />
+                ) : (
+                    <div>
+                        <LoadingFull />
+                    </div>
+                )}
+                <RightWrapper>
+                    <div>{mockText}</div>
+                    <div style={{ bottom: '16px' }}>
+                        <Button
+                            disabled={!permissions.canCreateStudy}
+                            data-cy="new_study"
+                            style={{ width: '100%', marginTop: '9px' }}
+                            onClick={() => {
+                                history.push('/studies');
+                            }}
+                        >
+                            New study
+                        </Button>
+                    </div>
+                </RightWrapper>
+            </Wrapper>
         </>
-    )
-}
+    );
+};
 
 export default Home;
