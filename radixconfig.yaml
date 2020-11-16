@@ -47,3 +47,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "200m"
+  - alias: sepes.equinor.com
+    environment: prod
+    component: frontend
