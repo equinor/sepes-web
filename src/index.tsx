@@ -10,57 +10,55 @@ import { getPermissions } from './services/Api';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext({
-  admin: false,
-  canAdministerDatasets: false,
-  canCreateStudy: false,
-  datasetAdmin: false,
-  emailAddress: null,
-  fullName: null,
-  sponsor: false,
-  userName: null
+    admin: false,
+    canAdministerDatasets: false,
+    canCreateStudy: false,
+    datasetAdmin: false,
+    emailAddress: null,
+    fullName: null,
+    sponsor: false,
+    userName: null
 });
 
 const renderApp = (user) => {
-  getPermissions().then((result: any) => {
-    if (!result.Message) {
-        return ReactDOM.render(
-            <React.StrictMode>
-                <UserConfig.Provider value={user}>
-                  <Permissions.Provider value={result}>
-                    <App />
-                  </Permissions.Provider>
-                </UserConfig.Provider>
-            </React.StrictMode>,
-            document.getElementById('root')
-        );
-    }
-  else {
-    console.log('err: ', result.Message)
-  }})
-  }
+    getPermissions().then((result: any) => {
+        if (!result.Message) {
+            return ReactDOM.render(
+                <React.StrictMode>
+                    <UserConfig.Provider value={user}>
+                        <Permissions.Provider value={result}>
+                            <App />
+                        </Permissions.Provider>
+                    </UserConfig.Provider>
+                </React.StrictMode>,
+                document.getElementById('root')
+            );
+        } else {
+            console.log('err: ', result.Message);
+        }
+    });
+};
 
-let cyToken = localStorage.getItem("cyToken");
+let cyToken = localStorage.getItem('cyToken');
 
 if (cyToken && cyToken.length) {
     let mockUser = {
         account: {
-            name: "MockUser",
-            roles: ""
+            name: 'MockUser',
+            roles: ''
         }
     };
     renderApp(mockUser);
 } else {
     if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
         signInRedirect();
-        console.log('Sign In PopUp');
     } else {
         acquireTokenSilent().catch((error: string) => {
-          myMSALObj.acquireTokenRedirect(loginRequest);
-          console.log(error);
+            myMSALObj.acquireTokenRedirect(loginRequest);
+            console.log(error);
         });
-        console.log('Sign in Silent');
     }
-    
+
     if (myMSALObj.getAccount()) {
         renderApp(myMSALObj);
     }

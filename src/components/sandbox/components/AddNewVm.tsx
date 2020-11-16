@@ -121,7 +121,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 vmsList.push(result);
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
-                console.log('resultStudy: ', result);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
@@ -139,7 +138,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             getVirtualMachineCost(sandbox?.id, vmPrice).then((result: any) => {
                 if (result && !result.Message) {
                     setVmEstimatedCost(result);
-                    console.log('resultStudy: ', result);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
                 }
@@ -155,7 +153,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
         getVmName(sandbox?.studyName, sandbox?.name, value).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
-                console.log('resultStudy: ', result);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
@@ -303,7 +300,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <div>
                 <Label>Estimated total</Label>
-                <Typography variant="h6"> {vmEstimatedCost ? roundUp(vmEstimatedCost, 10) + ' $' : '-'}</Typography>
+                <Typography variant="h6">
+                    {' '}
+                    {vmEstimatedCost ? roundUp(vmEstimatedCost, 10) + '$ / month' : '-'}
+                </Typography>
             </div>
             <Button
                 style={{ width: '100px', marginLeft: 'auto' }}

@@ -6,11 +6,11 @@ import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { createSandbox } from '../../services/Api';
-import { getRegions } from '../common/commonApiCalls';
+import { createSandbox, getAzureRegions } from '../../services/Api';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
+import useFetch from '../common/hooks/useFetch';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -39,16 +39,16 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setStudy,
     setHasChanged,
     setUpdateCache,
-    updateCache,
+    updateCache
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
+    useFetch(getAzureRegions, setRegions, 'regions');
     const [loading, setLoading] = useState<Boolean>(false);
     const wrapperRef = useRef(null);
     useClickOutside(wrapperRef, setToggle);
 
     useEffect(() => {
-        getRegions(setRegions);
         return () => setHasChanged(false);
     }, []);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
@@ -56,20 +56,20 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         name: '',
         region: '',
         template: '',
-        id: '',
+        id: ''
     });
     const handleChange = (columnName: string, value: string) => {
         setHasChanged(true);
         setSandbox({
             ...sandbox,
-            [columnName]: value,
+            [columnName]: value
         });
     };
     const handleDropdownChange = (value, name: string): void => {
         setHasChanged(true);
         setSandbox({
             ...sandbox,
-            [name]: value,
+            [name]: value
         });
     };
 
@@ -97,7 +97,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             if (result && !result.Message) {
                 setStudy(result);
                 history.push(studyId + '/sandboxes/' + result.id);
-                console.log('result: ', result);
                 setLoading(false);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);

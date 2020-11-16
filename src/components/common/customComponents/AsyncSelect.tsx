@@ -27,32 +27,40 @@ export const equinorTheme = (theme: any) => ({
         primary: '#007079',
         primary50: '#E6FAEC',
         neutral0: '#F7F7F7'
-    },
-})
+    }
+});
 
-const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChange, selectedOption, onInputChange, style, dataType, isRequired }) => {
+const AsynchSelect: React.FC<AsynchSelectProps> = ({
+    label,
+    placeholder,
+    onChange,
+    selectedOption,
+    onInputChange,
+    style,
+    dataType,
+    isRequired
+}) => {
     const getParticipants = (inputValue: string, callback: any): void => {
-        getParticipantList(inputValue || "a").then((result: any) => {
+        getParticipantList(inputValue || 'a').then((result: any) => {
             if (!result.Message) {
-                let temp = result.map(user => {
-                    return { label: `${user.fullName} (${user.emailAddress})`, 
-                    value: user.objectId,
-                    emailAddress: user.emailAddress,
-                    source: user.source,
-                    objectId: user.objectId,
-                    name: user.fullName,
-                    databaseId: user.databaseId
-                };
-                })
+                let temp = result.map((user) => {
+                    return {
+                        label: `${user.fullName} (${user.emailAddress})`,
+                        value: user.objectId,
+                        emailAddress: user.emailAddress,
+                        source: user.source,
+                        objectId: user.objectId,
+                        name: user.fullName,
+                        databaseId: user.databaseId
+                    };
+                });
                 callback(temp);
-                console.log("participants: ", result);
-            }
-            else {
-                console.log("err");
+            } else {
+                console.log('err');
                 //notify.show('danger', '500');
             }
-        })
-    }
+        });
+    };
 
     return (
         <span style={style}>
@@ -63,11 +71,11 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({ label, placeholder, onChang
                 placeholder={placeholder}
                 value={selectedOption}
                 onChange={onChange}
-                theme={theme => equinorTheme(theme)}
+                theme={(theme) => equinorTheme(theme)}
                 onInputChange={onInputChange}
             />
         </span>
     );
-}
+};
 
 export default AsynchSelect;

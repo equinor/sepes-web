@@ -21,54 +21,87 @@ type DatasetProps = {
 
 const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, resources }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [vms, setVms] = useState<any>([]);
-    const [sizes, setSizes] = useState<SizeObj |undefined>(undefined);
+    const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
-    const { } = useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id);
-    const { } = useFetch(getVirtualMachineDisks, setDisks);
-    const { } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
-    const { } = useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
+    useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id);
+    useFetch(getVirtualMachineDisks, setDisks);
+    useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
 
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
-                console.log("result: ", result);
+            if (result && !result.Message) {
                 setVms(result);
-            }
-            else {
+            } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
+                console.log('Err');
+            }
         });
-    }
+    };
 
-    const onChange = (e:any) => {
+    const onChange = (e: any) => {
         setActiveTab(e);
-    }
+    };
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return <AddNewVm sandbox={sandbox} setVms={setVms} vms={vms} sizes={sizes} disks={disks} setActiveTab={setActiveTab} os={os} />;
+                return (
+                    <AddNewVm
+                        sandbox={sandbox}
+                        setVms={setVms}
+                        vms={vms}
+                        sizes={sizes}
+                        disks={disks}
+                        setActiveTab={setActiveTab}
+                        os={os}
+                    />
+                );
             default:
-                return <VmDetails vm={vms[activeTab - 1]} setVms={setVms} vms={vms} setActiveTab={setActiveTab} index={activeTab - 1} resources={resources} getVms={getVms} />;
+                return (
+                    <VmDetails
+                        vm={vms[activeTab - 1]}
+                        setVms={setVms}
+                        vms={vms}
+                        setActiveTab={setActiveTab}
+                        index={activeTab - 1}
+                        resources={resources}
+                        getVms={getVms}
+                    />
+                );
         }
-    }
+    };
 
     return (
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
-                    <TabList>
-                        {showAddNewVm ? <Tab key={1} style={{ borderRadius: '4px' }}>Add new vm</Tab> : <Tab style={{ display: 'none' }} /> }
-                        {vms.length > 0 ? vms.map((vm: any) => {
-                            return <Tab key={vm.id} style={{ borderRadius: '4px' }}>{vm.name}</Tab>;
-                        }): <Tab key={2} disabled>Vms will be here</Tab>}
-                    </TabList>
+                <TabList>
+                    {showAddNewVm ? (
+                        <Tab key={1} style={{ borderRadius: '4px' }}>
+                            Add new vm
+                        </Tab>
+                    ) : (
+                        <Tab style={{ display: 'none' }} />
+                    )}
+                    {vms.length > 0 ? (
+                        vms.map((vm: any) => {
+                            return (
+                                <Tab key={vm.id} style={{ borderRadius: '4px' }}>
+                                    {vm.name}
+                                </Tab>
+                            );
+                        })
+                    ) : (
+                        <Tab key={2} disabled>
+                            Vms will be here
+                        </Tab>
+                    )}
+                </TabList>
             </Tabs>
             {returnStepComponent()}
         </div>
-    )
-}
+    );
+};
 
 export default VmConfig;
