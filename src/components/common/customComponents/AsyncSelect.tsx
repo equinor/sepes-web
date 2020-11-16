@@ -64,7 +64,7 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
 
     return (
         <span style={style}>
-            {/*isRequired ? <RequiredLabel label={label} /> : <Label>{label}</Label>*/}
+            {isRequired ? <RequiredLabel label={label} /> : <Label>{label}</Label>}
             <AsyncSelect
                 defaultOptions
                 loadOptions={getParticipants}

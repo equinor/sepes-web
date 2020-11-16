@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
-import { Button, Typography, TextField, DotProgress } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj, DropdownObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
@@ -16,6 +16,7 @@ import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import useFetch from '../common/hooks/useFetch';
+import { EquinorIcon, EquinorLink } from '../common/StyledComponents';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -39,6 +40,7 @@ const HelperTextWrapper = styled.div`
 `;
 
 const SaveCancelWrapper = styled.div`
+    margin-top: 16px;
     display: grid;
     grid-gap: 16px;
     grid-template-columns: 100px 100px;
@@ -236,18 +238,17 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
                         {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                     </div>
-                    {!checkUrlIfGeneralDataset() && (
-                        <HelperTextWrapper>
-                            This data set will only available for this study. We need some meta data before we create
-                            the storage. When storage is created you can start uploading files.
-                        </HelperTextWrapper>
-                    )}
+                    <HelperTextWrapper>
+                        {!checkUrlIfGeneralDataset()
+                            ? 'This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.'
+                            : 'This data set will be available for all studies in Sepes. We need some meta data before we create the storage. When storage is created you can start uploading files.'}
+                    </HelperTextWrapper>
                     <TextField
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
                         variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
-                        style={{ width }}
+                        style={{ width, backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('name', e.target.value)}
                         value={dataset?.name}
                         data-cy="dataset_name"
@@ -258,9 +259,16 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                             label="Storage account name"
                             meta="(required)"
                             variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
-                            style={{ width }}
+                            style={{ width, backgroundColor: '#FFFFFF' }}
                             onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                             data-cy="dataset_storage_name"
+                            inputIcon={
+                                <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                                    <Tooltip title="This cannot be changed later" placement={'right'}>
+                                        {EquinorIcon('error_outlined', '#6F6F6F', 24)}
+                                    </Tooltip>
+                                </div>
+                            }
                         />
                     ) : (
                         returnField('Storage account name', dataset?.storageAccountName)
@@ -274,6 +282,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                             onChange={handleDropdownChange}
                             name="location"
                             data-cy="dataset_location"
+                            color="#FFFFFF"
                         />
                     ) : (
                         returnField('Location', dataset?.location)
@@ -287,17 +296,26 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         name="classification"
                         preSlectedValue={dataset?.classification}
                         data-cy="dataset_classification"
+                        color="#FFFFFF"
                     />
+                    <EquinorLink to="/" style={{ marginTop: '-8px' }}>
+                        {EquinorIcon('external_link', '#007079', 24)}
+                        <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
+                    </EquinorLink>
                     <TextField
-                        placeholder="Please add Data ID..."
+                        placeholder="Please add Data ID"
                         label="DataId"
                         meta=""
                         type="number"
-                        style={{ width }}
+                        style={{ width: '312px', backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('dataId', e.target.value)}
                         value={dataset?.dataId}
                         data-cy="dataset_dataId"
                     />
+                    <EquinorLink to="/" style={{ marginTop: '-8px' }}>
+                        {EquinorIcon('external_link', '#007079', 24)}
+                        <span style={{ marginLeft: '8px' }}>Data inventory</span>
+                    </EquinorLink>
                     <SaveCancelWrapper>
                         <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
                             {loading ? <DotProgress variant="green" /> : 'Save'}
