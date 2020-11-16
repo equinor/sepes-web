@@ -200,7 +200,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             createStudy(study).then((result: any) => {
                 if (result && !result.Message) {
                     history.push('/studies/' + result.id);
-                    console.log('result: ', result);
                     let newStudy = result;
                     cache['study' + study.id] = result;
                     setStudy(newStudy);
@@ -208,7 +207,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         putStudy(newStudy, imageUrl).then((result: any) => {
                             if (result && !result.Message) {
                                 setHasChanged(false);
-                                console.log('result: ', result);
                             } else {
                                 notify.show('danger', '500', result.Message, result.RequestId);
                                 console.log('Err');
@@ -228,7 +226,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             putStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    console.log('result: ', result);
                     cache['study' + study.id] = result;
                     setStudy(result);
                 } else {

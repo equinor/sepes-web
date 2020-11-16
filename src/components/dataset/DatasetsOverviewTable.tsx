@@ -18,6 +18,7 @@ Icon.add(icons);
 
 const UnstyledList = styled.ul`
     margin-top: 8px;
+    right: 48px;
     padding: 0 24px 0 24px;
     z-index: 99;
     position: absolute;
@@ -27,11 +28,10 @@ const UnstyledList = styled.ul`
 `;
 
 const ButtonWrapper = styled.div`
-    display: grid;
-    grid-template-columns: 200px 200px;
+    display: inline-block;
+    margin-left: auto;
+    padding: 24px 0px 16px 0;
     float: right;
-    grid-gap: 32px;
-    padding: 24px;
 `;
 
 interface checkedColumns {
@@ -130,16 +130,7 @@ const DatasetsOverviewTable = (props: any) => {
     };
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {
-        return (
-            <Checkbox
-                checked={checked}
-                label={label}
-                name={name}
-                value={checked}
-                onChange={handleColumnsChange}
-                defaultChecked
-            />
-        );
+        return <Checkbox checked={checked} label={label} name={name} value={checked} onChange={handleColumnsChange} />;
     };
 
     const returnFilter = (column: string, checker: boolean) => {
@@ -221,7 +212,7 @@ const DatasetsOverviewTable = (props: any) => {
     };
 
     return (
-        <div style={{ padding: '0 16px 16px 16px' }}>
+        <div style={{ padding: '0 16px 16px 16px', backgroundColor: '#ffffff' }}>
             <SideSheet
                 variant="large"
                 title={selectedDataset.name}
@@ -232,10 +223,15 @@ const DatasetsOverviewTable = (props: any) => {
                 <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
-                <Button variant="outlined" onClick={redirectToCreateDataset} data-cy="create_dataset">
+                <Button
+                    variant="outlined"
+                    style={{ display: 'inline-block', marginRight: '24px' }}
+                    onClick={redirectToCreateDataset}
+                    data-cy="create_dataset"
+                >
                     Create data set
                 </Button>
-                <div>
+                <div style={{ display: 'inline-block' }}>
                     <Button variant="outlined" onClick={() => setShowColumnsPicker(!showColumnsPicker)}>
                         Add / remove columns
                     </Button>

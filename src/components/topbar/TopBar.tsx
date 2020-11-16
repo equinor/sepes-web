@@ -79,6 +79,7 @@ const Bar = (props: any) => {
                             size={24}
                             color={'#007079'}
                             className="icon"
+                            title="account"
                         />
                     </Button>
                 </Tooltip>
