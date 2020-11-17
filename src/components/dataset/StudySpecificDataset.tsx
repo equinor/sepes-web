@@ -46,6 +46,12 @@ const SaveCancelWrapper = styled.div`
     grid-template-columns: 100px 100px;
 `;
 
+const StyledLink = styled.a`
+    font-size: 14px;
+    color: #007079;
+    text-decoration-line: underline;
+`;
+
 const dataClassificationsList = [
     { displayValue: 'Open', key: 'Open' },
     { displayValue: 'Internal', key: 'Internal' },
@@ -298,10 +304,15 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         data-cy="dataset_classification"
                         color="#FFFFFF"
                     />
-                    <EquinorLink to="/" style={{ marginTop: '-8px' }}>
+                    <StyledLink
+                        href="https://docmap.equinor.com/Docmap/page/doc/dmDocIndex.html?DOCID=1000006094"
+                        style={{ marginTop: '-8px' }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         {EquinorIcon('external_link', '#007079', 24)}
                         <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
-                    </EquinorLink>
+                    </StyledLink>
                     <TextField
                         placeholder="Please add Data ID"
                         label="DataId"
@@ -312,10 +323,15 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         value={dataset?.dataId}
                         data-cy="dataset_dataId"
                     />
-                    <EquinorLink to="/" style={{ marginTop: '-8px' }}>
+                    <StyledLink
+                        href="https://statoilsrm.sharepoint.com/:x:/r/sites/datafundamentals/_layouts/15/Doc.aspx?sourcedoc=%7B74CCD0A3-1C7E-4645-9D16-C9BFEDC5C07E%7D&file=Data%20description%20and%20classification%20inventory.xlsx&action=default&mobileredirect=true"
+                        style={{ marginTop: '-8px' }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         {EquinorIcon('external_link', '#007079', 24)}
                         <span style={{ marginLeft: '8px' }}>Data inventory</span>
-                    </EquinorLink>
+                    </StyledLink>
                     <SaveCancelWrapper>
                         <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
                             {loading ? <DotProgress variant="green" /> : 'Save'}
