@@ -6,6 +6,7 @@ import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
 import * as notify from '../../common/notify';
+import { resourceStatus, resourceType } from '../../common/types';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -100,7 +101,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             return res;
         }
         resources.map((resource: any, i: number) => {
-            if (resource.type === 'Virtual Machine' && resource.status === 'Ok' && resource.name === vm.name) {
+            if (
+                resource.type === resourceType.virtualMachine &&
+                resource.status === resourceStatus.ok &&
+                resource.name === vm.name
+            ) {
                 res = true;
                 if (!vm.linkToExternalSystem) {
                     getVms();
@@ -326,27 +331,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         )}
                     </Body>
                 </Table>
-                {/* 
-                <Button
-                    style={{ float: 'right', margin: '24px 24px 24px 16px' }}
-                    onClick={() => { saveRule(vm.rules)}}
-                    disabled={!checkIfSaveIsEnabled()}
-                    data-cy="vm_rule_save"
-                >
-                        Save
-                </Button>
-                <Button
-                    variant="outlined"
-                    style={{ float: 'right', margin: '24px 0 0 16px' }}
-                    onClick={() => {
-                        resetRules();
-                    }}
-                    disabled={!hasChanged}
-                    data-cy="vm_rule_cancel"
-                >
-                        Cancel
-                </Button>
-                */}
                 <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 16px 24px 16px' }}
@@ -388,23 +372,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                 </Button>
                             </Cell>
                         </Row>
-                        {/*
-                            <Row key={2}>
-                                <Cell component="th" scope="row">Outbound internet traffic is open intil XXXX</Cell>
-                                <Cell component="th" scope="row">
-                                    <div style={{ float: 'right' }}>
-                                        <Button variant="outlined" style={{ marginRight: '16px' }}>Close internet</Button>
-                                        <Button variant="outlined">Extend 12 hours</Button>
-                                    </div>
-                                </Cell>
-                            </Row>
-                            <Row key={3}>
-                                <Cell component="th" scope="row">Outbound internet traffic is currently closed</Cell>
-                                <Cell component="th" scope="row">
-                                    <Button variant="outlined" style={{ float: 'right' }}>Ask sponsor (rep) for permission to open</Button>
-                                </Cell>
-                            </Row>
-                             */}
                     </Body>
                 </Table>
                 <Button
