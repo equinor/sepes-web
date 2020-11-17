@@ -13,13 +13,13 @@ import * as notify from '../../common/notify';
 import useFetch from '../../common/hooks/useFetch';
 const { TabList, Tab } = Tabs;
 
-type DatasetProps = {
+type VmConfigProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
     resources: any;
 };
 
-const VmConfig: React.FC<DatasetProps> = ({ showAddNewVm, sandbox, resources }) => {
+const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
