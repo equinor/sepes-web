@@ -25,10 +25,10 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
-    useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id);
-    useFetch(getVirtualMachineDisks, setDisks);
+    useFetch(getVirtualMachineSizes, setSizes, 'vmSizes' + sandbox.id, sandbox.id);
+    useFetch(getVirtualMachineDisks, setDisks, 'vmDisks');
     useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
-    useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id);
+    useFetch(getVirtualMachineOperatingSystems, setOs, 'vmOs' + sandbox.id, sandbox.id);
 
     const getVms = () => {
         getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
