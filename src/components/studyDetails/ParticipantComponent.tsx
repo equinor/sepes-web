@@ -34,7 +34,7 @@ const SearchWrapper = styled.div`
 `;
 
 const TableWrapper = styled.div`
-    margin-top: 8px;
+    margin-top: 16px;
 `;
 
 type ParicipantComponentProps = {
@@ -156,10 +156,10 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 <div
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}
-                    style={{ width: '300px' }}
+                    style={{ width: '300px', marginTop: '-16px' }}
                 >
                     <AsynchSelect
-                        label={''}
+                        label="Add participants"
                         onChange={(option: any) => selectParticipant(option)}
                         placeholder={''}
                         selectedOption={{ value: 'Search..', label: text }}
@@ -177,12 +177,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         disabled={participantNotSelected}
                     />
                 </div>
-                <Button
-                    variant="outlined"
-                    disabled={checkIfButtonDisabled()}
-                    onClick={addParticipant}
-                    style={{ width: '224px' }}
-                >
+                <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>
                     {loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>

@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Divider } from '@equinor/eds-core-react';
 import { Icon } from '@equinor/eds-core-react';
-import { cloud_upload,
+import {
+    cloud_upload,
     delete_forever,
     arrow_drop_down,
     clear,
-    mood_very_happy ,
+    mood_very_happy,
     warning_outlined,
     arrow_forward,
     external_link,
     key,
-    check
+    check,
+    error_outlined
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -25,17 +27,20 @@ const icons = {
     arrow_forward,
     external_link,
     key,
-    check
+    check,
+    error_outlined
 };
 Icon.add(icons);
 
-export const EquinorIcon = (name: string, color: string, size: number, onClick?:any, clickAble?: boolean) => {
+export const EquinorIcon = (name: string, color: string, size: number, onClick?: any, clickAble?: boolean) => {
     if (clickAble && onClick) {
-        return <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} title={name} />
+        return (
+            <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} title={name} />
+        );
     }
 
-    return <Icon color={color} name={name} size={size} title={name} />
-}
+    return <Icon color={color} name={name} size={size} title={name} />;
+};
 
 export const EquinorLink = styled(Link)`
     font-size: 14px;
@@ -57,11 +62,11 @@ const DividerWrapper = styled.div<{ width?: string }>`
 `;
 
 export const Dot = styled.span<{ color?: string }>`
-  height: 14px;
-  width: 14px;
-  background-color: ${(props: any) => (props.color ? props.color : '#bbb')}; 
-  border-radius: 50%;
-  display: inline-block;
+    height: 14px;
+    width: 14px;
+    background-color: ${(props: any) => (props.color ? props.color : '#bbb')};
+    border-radius: 50%;
+    display: inline-block;
 `;
 
 export const StyledTextArea = styled.div`
@@ -74,7 +79,7 @@ export const Label = styled.div`
     line-height: 16px;
     display: flex;
     align-items: center;
-    color: #6F6F6F;
+    color: #6f6f6f;
 `;
 
 const Text = styled.div`
@@ -116,7 +121,7 @@ export const Title = (props: any) => {
             <Divider />
         </div>
     );
-}
+};
 
 export const TextArea = (props: any) => {
     let { label, text, textStyle } = props;
@@ -127,7 +132,7 @@ export const TextArea = (props: any) => {
             <Text style={textStyle}>{text}</Text>
         </StyledTextArea>
     );
-}
+};
 
 export const TextAreaDescription = (props: any) => {
     let { label, text, textStyle } = props;
@@ -138,7 +143,7 @@ export const TextAreaDescription = (props: any) => {
             <TextDescription style={textStyle}>{text}</TextDescription>
         </StyledTextArea>
     );
-}
+};
 
 export const RequiredLabel = (props: any) => {
     let { label } = props;
@@ -149,4 +154,4 @@ export const RequiredLabel = (props: any) => {
             <Label>*Required</Label>
         </StyledRequiredLabel>
     );
-}
+};

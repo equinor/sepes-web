@@ -216,7 +216,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
             />
             <div>
                 <Label>Actual VM name</Label>
-                <Typography variant="h6">{actualVmName}</Typography>
+                <Typography variant="h6">{actualVmName || '-'}</Typography>
             </div>
             <TextField
                 placeholder="Username"
@@ -302,7 +302,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 <Label>Estimated total</Label>
                 <Typography variant="h6">
                     {' '}
-                    {vmEstimatedCost ? roundUp(vmEstimatedCost, 10) + '$ / month' : '-'}
+                    {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>
             </div>
             <Button
