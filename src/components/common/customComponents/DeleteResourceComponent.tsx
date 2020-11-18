@@ -48,7 +48,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
-                    placeholder="Write the name of the sandbox to delete"
+                    placeholder={'Write the name of the ' + type + ' to delete' }
                     onChange={handleChange}
                     style={{ width: '100%' }}
                     value={text}

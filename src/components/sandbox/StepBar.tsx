@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Typography } from '@equinor/eds-core-react';
-import DeleteResourceComponent from './components/DeleteResourceComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';

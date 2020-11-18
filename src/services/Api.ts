@@ -1,6 +1,8 @@
-import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile, apiDeleteWithToken } from '../auth/AuthFunctions';
 import { StudyObj, DatasetObj, SandboxObj, SandboxCreateObj, ParticipantObj, VmObj } from "../components/common/interfaces";
 
+
+//Study
 
 export const getStudyList = async () => {
     return apiRequestWithToken('api/studies', 'GET');
@@ -12,6 +14,10 @@ export const getStudy = async (id:string) => {
 
 export const createStudy = async (study:StudyObj) => {
     return apiRequestWithToken('api/studies/', 'POST', study);
+};
+
+export const deleteStudy = async (studyId:string) => {
+    return apiDeleteWithToken('api/studies/' + studyId);
 };
 
 export const editStudy = async (study:StudyObj, id?:string) => {
