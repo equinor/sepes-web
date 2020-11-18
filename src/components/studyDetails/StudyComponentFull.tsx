@@ -77,7 +77,7 @@ const Wrapper = styled.div`
 `;
 
 const ScrimWrapper = styled.div`
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     padding: 32px;
     border-radius: 4px;
 `;
@@ -446,52 +446,76 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         </DescriptioTextfieldnWrapper>
                     )}
                     <div>
-                    {editMode && <div style={{float: 'right', marginBottom: 'auto'}}><Button style={{margin: '-13px'}} variant="ghost_icon" onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}><Icon color="#007079" name='settings' size={16} />
-                    </Button></div>}
-                    {displayDeleteStudy && 
-                    <Scrim>
-                        <ScrimWrapper>
-                            <Title title="Settings"/>
-                            <Button onClick={() => { setUserClickedDelete(true); setDisplayDeleteStudy(false); }} color="danger">Delete Study</Button>
-                            <Button variant="outlined" style={{ marginLeft: '8px' }} onClick={() => setDisplayDeleteStudy(false)}>Cancel</Button>
-                        </ScrimWrapper>
-                    </Scrim>}
-                    <RightWrapper editMode={editMode}>
-                        {!showImagePicker && (
-                            <PictureWrapper editMode={editMode}>
-                                <CustomLogoComponent logoUrl={logoUrl} />{' '}
-                            </PictureWrapper>
+                        {editMode && !newStudy && (
+                            <div style={{ float: 'right', marginBottom: 'auto' }}>
+                                <Button
+                                    style={{ margin: '-13px' }}
+                                    variant="ghost_icon"
+                                    onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}
+                                >
+                                    <Icon color="#007079" name="settings" size={16} />
+                                </Button>
+                            </div>
                         )}
-                        {editMode && (
-                            <>
-                                <div>
-                                    {showImagePicker && (
-                                        <PictureWrapper editMode={editMode}>
-                                            <AddImageAndCompressionContainer
-                                                setImageUrl={setImageUrl}
-                                                imageUrl={imageUrl}
-                                            />
-                                        </PictureWrapper>
-                                    )}
+                        {displayDeleteStudy && (
+                            <Scrim>
+                                <ScrimWrapper>
+                                    <Title title="Settings" />
                                     <Button
-                                        onClick={() => setShowImagePicker(!showImagePicker)}
-                                        variant="outlined"
-                                        style={{ margin: '16px 0 20px 56px' }}
+                                        onClick={() => {
+                                            setUserClickedDelete(true);
+                                            setDisplayDeleteStudy(false);
+                                        }}
+                                        color="danger"
                                     >
-                                        Change logo
+                                        Delete Study
                                     </Button>
-                                    <SaveCancelWrapper>
-                                        <Button data-cy="create_study" onClick={() => handleSave()}>
-                                            {newStudy ? 'Create' : 'Save'}
-                                        </Button>
-                                        <Button variant="outlined" onClick={() => handleCancel()}>
-                                            Cancel
-                                        </Button>
-                                    </SaveCancelWrapper>
-                                </div>
-                            </>
+                                    <Button
+                                        variant="outlined"
+                                        style={{ marginLeft: '8px' }}
+                                        onClick={() => setDisplayDeleteStudy(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </ScrimWrapper>
+                            </Scrim>
                         )}
-                    </RightWrapper>
+                        <RightWrapper editMode={editMode}>
+                            {!showImagePicker && (
+                                <PictureWrapper editMode={editMode}>
+                                    <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                </PictureWrapper>
+                            )}
+                            {editMode && (
+                                <>
+                                    <div>
+                                        {showImagePicker && (
+                                            <PictureWrapper editMode={editMode}>
+                                                <AddImageAndCompressionContainer
+                                                    setImageUrl={setImageUrl}
+                                                    imageUrl={imageUrl}
+                                                />
+                                            </PictureWrapper>
+                                        )}
+                                        <Button
+                                            onClick={() => setShowImagePicker(!showImagePicker)}
+                                            variant="outlined"
+                                            style={{ margin: '16px 0 20px 56px' }}
+                                        >
+                                            Change logo
+                                        </Button>
+                                        <SaveCancelWrapper>
+                                            <Button data-cy="create_study" onClick={() => handleSave()}>
+                                                {newStudy ? 'Create' : 'Save'}
+                                            </Button>
+                                            <Button variant="outlined" onClick={() => handleCancel()}>
+                                                Cancel
+                                            </Button>
+                                        </SaveCancelWrapper>
+                                    </div>
+                                </>
+                            )}
+                        </RightWrapper>
                     </div>
                 </Wrapper>
             ) : (
