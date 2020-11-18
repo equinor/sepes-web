@@ -7,11 +7,13 @@ import useFetch from '../../common/hooks/useFetch';
 const { Body, Row, Cell, Head } = Table;
 
 type datasetProps = {
-    datasets:any,
-    sandboxId:string
+    datasets:any;
+    sandboxId:string;
+    updateCache: any;
+    setUpdateCache: any;
   };
 
-const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId }) => {
+const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, setUpdateCache }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [datasetsInSandbox, setDatasetsInSandbox] = useState<any>([]);
     const [filteredDatasets, setFilteredDatasets] = useState<any>([]);
@@ -22,6 +24,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId }) => {
     },[datasetsInSandbox, loading])
 
     const handleCheck = (evt:any, dataset:any) => {
+       setUpdateCache({ ...updateCache, ['study' + studyId]: true });
        const temp:any = [...filteredDatasets];
        temp[temp.indexOf(dataset)].added = evt.target.checked;
        setFilteredDatasets(temp);

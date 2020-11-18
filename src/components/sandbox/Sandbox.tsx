@@ -79,7 +79,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             case 2:
                 return <div></div>;
             default:
-                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} />;
+                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} setUpdateCache={setUpdateCache} updateCache={updateCache} />;
         }
     };
 

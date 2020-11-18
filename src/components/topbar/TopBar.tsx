@@ -45,7 +45,7 @@ const LEFT_CHOICES = {
     text: 'Sepes',
     'text+icon': (
         <Fragment>
-            <Link to={'/'} style={{ textDecoration: 'none', color: '#000000', marginLeft: '16px' }}>
+            <Link to={'/'} style={{ color: '#000000', marginLeft: '16px' }}>
                 Sepes
             </Link>
         </Fragment>
