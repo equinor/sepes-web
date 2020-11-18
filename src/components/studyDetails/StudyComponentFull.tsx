@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Scrim } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, visibility, visibility_off, business } from '@equinor/eds-icons';
+import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, putStudy } from '../../services/Api';
+import { createStudy, deleteStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
-import { Label } from '../common/StyledComponents';
+import { Label, Title } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import * as notify from '../common/notify';
 
 const icons = {
     dollar,
     visibility,
     visibility_off,
-    business
+    business,
+    settings
 };
 Icon.add(icons);
 
-const Title = styled.span`
+const TitleText = styled.span`
     font-size: 28px;
 `;
 
@@ -71,6 +73,12 @@ const Wrapper = styled.div`
         align-content: center;
         gap: 16px;
     }
+`;
+
+const ScrimWrapper = styled.div`
+    background-color: #FFFFFF;
+    padding: 32px;
+    border-radius: 4px;
 `;
 
 const RightWrapper = styled.div<{ editMode: any }>`
@@ -149,7 +157,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
     const [editMode, setEditMode] = useState<boolean>(newStudy);
+    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState<string>('');
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
@@ -175,6 +185,13 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             e.preventDefault();
             handleSave();
         }
+    };
+
+    const deleteThisStudy = (): void => {
+        setUpdateCache({ ...updateCache, studies: true });
+        deleteStudy(study.id).then((result: any) => {
+            history.push('/');
+        });
     };
 
     const handleSave = () => {
@@ -293,12 +310,20 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 minWidth: '120px'
             }}
         >
+            {userClickedDelete && (
+                <DeleteResourceComponent
+                    ResourceName={study.name}
+                    setUserClickedDelete={setUserClickedDelete}
+                    onClick={deleteThisStudy}
+                    type="study"
+                />
+            )}
             {!loading ? (
                 <Wrapper>
                     <TitleWrapper editMode={editMode}>
                         {!editMode ? (
                             <>
-                                <Title>{name}</Title>
+                                <TitleText>{name}</TitleText>
                                 <SmallIconWrapper>
                                     <Icon color="#007079" name="business" size={24} />
                                     <SmallText>{vendor}</SmallText>
@@ -419,6 +444,17 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             />
                         </DescriptioTextfieldnWrapper>
                     )}
+                    <div>
+                    {editMode && <div style={{float: 'right', marginBottom: 'auto'}}><Button style={{margin: '-13px'}} variant="ghost_icon" onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}><Icon color="#007079" name='settings' size={16} />
+                    </Button></div>}
+                    {displayDeleteStudy && 
+                    <Scrim>
+                        <ScrimWrapper>
+                            <Title title="Settings"/>
+                            <Button onClick={() => { setUserClickedDelete(true); setDisplayDeleteStudy(false); }} color="danger">Delete Study</Button>
+                            <Button variant="outlined" style={{ marginLeft: '8px' }} onClick={() => setDisplayDeleteStudy(false)}>Cancel</Button>
+                        </ScrimWrapper>
+                    </Scrim>}
                     <RightWrapper editMode={editMode}>
                         {!showImagePicker && (
                             <PictureWrapper editMode={editMode}>
@@ -455,6 +491,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             </>
                         )}
                     </RightWrapper>
+                    </div>
                 </Wrapper>
             ) : (
                 <Loading />

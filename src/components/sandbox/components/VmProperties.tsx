@@ -4,7 +4,7 @@ import { Button, Typography } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
-import DeleteResourceComponent from './DeleteResourceComponent';
+import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import * as notify from '../../common/notify';
 import { useHistory } from "react-router-dom";
 

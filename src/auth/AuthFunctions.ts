@@ -62,6 +62,41 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
     });
 };
 
+export const apiDeleteWithToken = async (url: string) => {
+    return new Promise(function (resolve, reject) {
+        const _post = async (accessToken) => {
+            try {
+                const headers = makeHeaders(accessToken);
+                const options = {
+                    method: 'DELETE',
+                    headers: headers
+                };
+                return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+                    .then((responseData) => {
+                        return resolve(responseData);
+                    })
+                    .catch((error) => console.log(error));
+            } catch (error) {
+                return resolve(error);
+            }
+        };
+
+        if (cyToken) {
+            _post(cyToken);
+        } else {
+            myMSALObj
+                .acquireTokenSilent(loginRequest)
+                .then((tokenResponse: any) => {
+                    _post(tokenResponse.accessToken);
+                })
+                .catch((error: string) => {
+                    myMSALObj.acquireTokenRedirect(loginRequest);
+                    console.log(error);
+                });
+        }
+    });
+};
+
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
         baseURL: blobUrl,
