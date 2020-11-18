@@ -168,6 +168,12 @@ const StepBar: React.FC<StepBarProps> = ({
                     );
                 })}
             </Stepper>
+            <a href={sandbox.linkToCostAnalysis} target="_blank" rel="noopener noreferrer" style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px', marginLeft: 'auto' }}>
+                    <Typography style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }} variant="h2">
+                        Cost analysis
+                    </Typography>
+                    {EquinorIcon('external_link', '#007079', 24, () => {}, true)}
+            </a>
             {userClickedDelete && (
                 <DeleteResourceComponent
                     ResourceName={sandbox.name}
