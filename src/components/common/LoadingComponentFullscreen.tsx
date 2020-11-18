@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import loadingGif from '../../assets/loading.gif';
 import { CircularProgress, Scrim } from '@equinor/eds-core-react';
 import './styles.scss';
 

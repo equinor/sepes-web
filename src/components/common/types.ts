@@ -4,4 +4,8 @@ export const resourceType = {
     virtualNetwork: 'Virtual Network',
     bastion: 'Bastion',
     virtualMachine: 'Virtual Machine'
-}
+};
+
+export const resourceStatus = {
+    ok: 'Ok'
+};

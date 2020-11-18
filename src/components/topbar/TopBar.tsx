@@ -1,72 +1,64 @@
 import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { TopBar, Icon } from '@equinor/eds-core-react';
-import Logo from '../common/Logo';
+import { TopBar, Icon, Tooltip, Button } from '@equinor/eds-core-react';
 import NavTabs from './NavTabs';
 import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
 import { Link } from 'react-router-dom';
 
-import {
-    account_circle
-} from '@equinor/eds-icons'
+import { account_circle } from '@equinor/eds-icons';
 import useClickOutside from '../common/customComponents/useClickOutside';
 
 const { Actions, Header } = TopBar;
 
 const icons = {
     account_circle
-}
+};
 
 Icon.add(icons);
 
 const Wrapper = styled.div`
-  overflow: auto;
-`
+    overflow: auto;
+`;
 
 const Icons = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
-  > * {
-    margin-left: 40px;
-  }
-`
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    > * {
+        margin-left: 40px;
+    }
+`;
 
 const LogoutWrapper = styled.div`
-    position:absolute;
+    position: absolute;
     right: 8px;
-    background-color:#F7F7F7;
-    padding:16px;
-    z-index:99999;
-    border-radius:4px;
-    box-shadow: 0 0 4px 4px #E7E7E7;
+    background-color: #f7f7f7;
+    padding: 16px;
+    z-index: 99999;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 4px #e7e7e7;
 `;
 
 const LEFT_CHOICES = {
     none: null,
-    icon: <Logo />,
     text: 'Sepes',
     'text+icon': (
         <Fragment>
-            <Link to={'/'} style={{textDecoration: 'none', color: '#000000', marginLeft: '16px'}} >  
+            <Link to={'/'} style={{ color: '#000000', marginLeft: '16px' }}>
                 Sepes
             </Link>
         </Fragment>
-    ),
-}
+    )
+};
 
 const CENTER_CHOICES = {
     none: null,
-    tabs: (
-        <NavTabs />
-    ),
-    text: '',
-}
+    tabs: <NavTabs />,
+    text: ''
+};
 
-
-
-const Bar = (props:any) => {
+const Bar = (props: any) => {
     const leftChoice = 'text+icon';
     const centerChoice = 'tabs';
     const rightChoice = 'icons';
@@ -79,22 +71,33 @@ const Bar = (props:any) => {
         text: '',
         icons: (
             <Icons>
-                <Icon name="account_circle" style={{ cursor: 'pointer' }} onClick={() => setToggle(!toggle)} size={24} color={'#007079'} className='icon' />
+                <Tooltip title="User" placement="left">
+                    <Button variant="ghost_icon" onClick={() => setToggle(!toggle)}>
+                        <Icon
+                            name="account_circle"
+                            style={{ cursor: 'pointer' }}
+                            size={24}
+                            color={'#007079'}
+                            className="icon"
+                            title="account"
+                        />
+                    </Button>
+                </Tooltip>
             </Icons>
-        ),
-    }
+        )
+    };
 
     useEffect(() => {
-        document.addEventListener("keydown", listener, false);
+        document.addEventListener('keydown', listener, false);
         return () => {
-          document.removeEventListener("keydown", listener, false);
-      }
+            document.removeEventListener('keydown', listener, false);
+        };
     }, []);
-      const listener = (e: any) => {
+    const listener = (e: any) => {
         if (e.key === 'Escape') {
             setToggle(false);
         }
-      }
+    };
     return (
         <Wrapper>
             <TopBar>
@@ -102,13 +105,16 @@ const Bar = (props:any) => {
                 {CENTER_CHOICES[centerChoice]}
                 <Actions>{RIGHT_CHOICES[rightChoice]}</Actions>
             </TopBar>
-            {toggle &&
-            <LogoutWrapper ref={wrapperRef}>
-                <div style={{ marginBottom: '8px' }}>{user.getAccount().name}</div>
-                <EquinorLink style={{ marginLeft: '48px' }} to="/" onClick={() => user.logout()}>Log Out</EquinorLink>
-            </LogoutWrapper>}
+            {toggle && (
+                <LogoutWrapper ref={wrapperRef}>
+                    <div style={{ marginBottom: '8px' }}>{user.getAccount().name}</div>
+                    <EquinorLink style={{ marginLeft: '48px' }} to="/" onClick={() => user.logout()}>
+                        Log Out
+                    </EquinorLink>
+                </LogoutWrapper>
+            )}
         </Wrapper>
-    )
-}
+    );
+};
 
 export default Bar;

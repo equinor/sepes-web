@@ -20,17 +20,6 @@ const Wrapper = styled.div`
     z-index:9999;
 `;
 
-const WhiteWrapper = styled.div`
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: #ffffff;
-
-    opacity: 0.5;
-`;
-
 type DeleteResourceComponentProps = {
     ResourceName:string;
     setUserClickedDelete:any;
@@ -59,7 +48,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({ Resou
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">Sure you want to delete the {type} with name "{ResourceName}"?</Typography>
                 <TextField
-                    placeholder="Write the name of the sandbox to delete"
+                    placeholder={'Write the name of the ' + type + ' to delete' }
                     onChange={handleChange}
                     style={{ width: '100%' }}
                     value={text}

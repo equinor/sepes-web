@@ -36,9 +36,11 @@ type SandboxConfigProps = {
   resources:any;
   datasets:any;
   sandboxId:string;
+  updateCache: any;
+  setUpdateCache: any;
 };
 
-const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources, datasets, sandboxId }) => {
+const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources, datasets, sandboxId, updateCache, setUpdateCache }) => {
 
     return (
         <Wrapper>
@@ -46,6 +48,8 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({ resources, datasets, sand
                 <Dataset
                   datasets={datasets}
                   sandboxId={sandboxId}
+                  updateCache={updateCache}
+                  setUpdateCache={setUpdateCache}
                 />
                 <PolictyComponentWrapper>
                   <PolicyComponent displayCheckbox />

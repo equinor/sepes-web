@@ -18,8 +18,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
             setter(data);
             setIntialValue(data);
             setLoading(false);
-        }
-        else {
+        } else {
             setLoading(true);
             fetchFunction(para1 || null, para2 || null, para3 || null).then((result: any) => {
                 if (isSubscribed && result && !result.Message) {
@@ -31,17 +30,14 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
                     }
                     setter(result);
                     setIntialValue(result);
-                    console.log("result: ", result);
                     setLoading(false);
-                }
-                else if (result && result.Message && result.RequestId) {
-
+                } else if (result && result.Message && result.RequestId) {
                     notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log("Err");
+                    console.log('Err');
                 }
             });
         }
-    }
+    };
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -50,7 +46,6 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?) => {
     }, [fetchFunction]);
 
     return { loading, setLoading, cache, intialValue };
-
 };
 
 export default useFetch;

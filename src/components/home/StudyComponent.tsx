@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
@@ -7,16 +7,16 @@ import CustomLogoComponent from '../common/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
 
 const icons = {
-  lock,
-  lock_open
+    lock,
+    lock_open,
 };
 Icon.add(icons);
 
 const SmallText = styled.div`
-    font-size:10px;
-    display:inline-block;
+    font-size: 10px;
+    display: inline-block;
     width: 72px;
-  `;
+`;
 
 const Wrapper = styled.div`
     display: grid;
@@ -56,41 +56,34 @@ const LogoTitleWrapper = styled.div`
   }
 `;
 
-const TitleWrapper = styled.div`
-    @media (max-width: 768px) {
-      margin-Left: 16px;
-  }
-  }
-`;
-
 type StudyComponentProps = {
-  study:StudyObj
+    study: StudyObj;
 };
 
 const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
-  const { name, description, restricted, id, vendor, logoUrl } = study;
-  const url = '/studies/' + id;
+    const { name, description, restricted, id, vendor, logoUrl } = study;
+    const url = '/studies/' + id;
 
-  return (
-    <Link to={url} style={{ color: 'black', textDecoration: 'none' }}>
-      <Wrapper>
-        <LogoTitleWrapper>
-          <CustomLogoComponent logoUrl={logoUrl} />
-          <div>
-            <Typography variant="h6">{name}</Typography>
-            <SmallText>{vendor}</SmallText>
-            <div>
-              <SmallText>
-                {restricted ? 'Hidden' : 'Not hidden'}
-                <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
-              </SmallText>
-            </div>
-          </div>
-        </LogoTitleWrapper>
-        <div>{description}</div>
-      </Wrapper>
-    </Link>
-  )
-}
+    return (
+        <Link to={url} style={{ color: 'black', textDecoration: 'none' }}>
+            <Wrapper>
+                <LogoTitleWrapper>
+                    <CustomLogoComponent logoUrl={logoUrl} />
+                    <div>
+                        <Typography variant="h6">{name}</Typography>
+                        <SmallText>{vendor}</SmallText>
+                        <div>
+                            <SmallText>
+                                {restricted ? 'Hidden' : 'Not hidden'}
+                                <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
+                            </SmallText>
+                        </div>
+                    </div>
+                </LogoTitleWrapper>
+                <div>{description}</div>
+            </Wrapper>
+        </Link>
+    );
+};
 
 export default StudyComponent;

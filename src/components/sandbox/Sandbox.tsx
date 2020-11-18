@@ -12,24 +12,22 @@ import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
 
 const Wrapper = styled.div`
-  display:grid;
-  grid-template-rows: auto 4fr;
-  grid-gap: 16px;
-  margin: 8px 32px 32px 32px;
-  padding: 16px;
+    display: grid;
+    grid-template-rows: auto 4fr;
+    grid-gap: 16px;
+    margin: 8px 32px 32px 32px;
+    padding: 16px;
 `;
 
-type SandboxProps = {
-};
+type SandboxProps = {};
 
-const Sandbox: React.FC<SandboxProps> = ({ }) => {
+const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [datasets, setDatasets] = useState([]);
-    const [datasetsInSandbox, setDatasetsInSandbox] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -38,40 +36,41 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
         technicalContactEmail: '',
         technicalContactName: '',
         name: '',
-        template:'',
+        template: '',
         id: sandboxId,
         studyName: ''
     });
     const [resources, setResources] = useState<any>();
     const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
     useFetch(getDatasetsForStudy, setDatasets, null, studyId);
-    useFetch(getDatasetForSandbox, setDatasetsInSandbox, null, sandboxId);
 
     useEffect(() => {
         setIsSubscribed(true);
         getResources();
-        let timer:any;
+        let timer: any;
         try {
             timer = setInterval(async () => {
-            getResources();
-            }, 10000);
-          } catch(e) {
+                getResources();
+            }, 60000);
+        } catch (e) {
             console.log(e);
-          }
-        return () => { clearInterval(timer); setIsSubscribed(false); };
+        }
+        return () => {
+            clearInterval(timer);
+            setIsSubscribed(false);
+        };
     }, []);
 
     const getResources = () => {
         getResourceStatus(studyId, sandboxId).then((result: any) => {
             if (result && !result.Message) {
                 setResources(result);
-            }
-            else {
+            } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
-                console.log("Err");
-             }
+                console.log('Err');
+            }
         });
-    }
+    };
 
     const returnStepComponent = () => {
         switch (step) {
@@ -80,13 +79,13 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
             case 2:
                 return <div></div>;
             default:
-                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} />;
+                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} setUpdateCache={setUpdateCache} updateCache={updateCache} />;
         }
-    }
+    };
 
     return (
         <Wrapper>
-            {loading && <LoadingFull /> }
+            {loading && <LoadingFull />}
             <StepBar
                 sandbox={sandbox && sandbox}
                 step={step}
@@ -97,9 +96,11 @@ const Sandbox: React.FC<SandboxProps> = ({ }) => {
                 updateCache={updateCache}
             />
             {returnStepComponent()}
-            {(step === 0 || step === 1) && <VmConfig sandbox={sandbox} showAddNewVm={step === 0} resources={resources} />}
+            {(step === 0 || step === 1) && (
+                <VmConfig sandbox={sandbox} showAddNewVm={step === 0} resources={resources} />
+            )}
         </Wrapper>
-    )
-}
+    );
+};
 
 export default Sandbox;

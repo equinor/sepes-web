@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
-import { DatasetObj } from '../common/interfaces'
+import { DatasetObj } from '../common/interfaces';
 import { Link, useHistory } from 'react-router-dom';
 import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
+import useClickOutside from '../common/customComponents/useClickOutside';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -16,21 +17,21 @@ const icons = {
 Icon.add(icons);
 
 const UnstyledList = styled.ul`
-  margin-Top: 8px;
-  padding: 0 24px 0 24px;
-  z-index:99;
-  position:absolute;
-  background-color:white;
-  border-radius:4px;
-  box-shadow: 0 0 4px 4px #E7E7E7
+    margin-top: 8px;
+    right: 48px;
+    padding: 0 24px 0 24px;
+    z-index: 99;
+    position: absolute;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 4px #e7e7e7;
 `;
 
 const ButtonWrapper = styled.div`
-  display:grid;
-  grid-template-columns: 200px 200px;
-  float:right;
-  grid-gap:32px;
-  padding:24px;
+    display: inline-block;
+    margin-left: auto;
+    padding: 24px 0px 16px 0;
+    float: right;
 `;
 
 interface checkedColumns {
@@ -80,7 +81,7 @@ const DatasetsOverviewTable = (props: any) => {
         dataId: false,
         lraId: false,
         tags: false,
-        sepesApproved: false,
+        sepesApproved: false
     });
 
     const [filter, setFilter] = useState<filter>({
@@ -98,89 +99,96 @@ const DatasetsOverviewTable = (props: any) => {
         sepesApproved: ''
     });
     const [showColumnsPicker, setShowColumnsPicker] = useState<boolean>(false);
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setShowColumnsPicker);
 
     useEffect(() => {
-        document.addEventListener("keydown", listener, false);
+        document.addEventListener('keydown', listener, false);
         return () => {
-          document.removeEventListener("keydown", listener, false);
-      }
+            document.removeEventListener('keydown', listener, false);
+        };
     }, []);
-      const listener = (e: any) => {
+    const listener = (e: any) => {
         if (e.key === 'Escape') {
             setShowColumnsPicker(false);
         }
-      }
-    
+    };
+
     const handleColumnsChange = (evt) => {
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
-    }
+    };
 
-    const returnCell = (checker: any, fieldName?:string | number, header?:boolean) => {
+    const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {
         if (header) {
-            return checker ? <Cell as="th" scope="col">{fieldName || ''}</Cell> : null;
+            return checker ? (
+                <Cell as="th" scope="col">
+                    {fieldName || ''}
+                </Cell>
+            ) : null;
         }
-        return checker ? <Cell>{fieldName || ''}</Cell> : null;
-    }
+        return checker ? <Cell>{fieldName || '-'}</Cell> : null;
+    };
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {
-        return (
-            <Checkbox
-                checked={checked}
-                label={label}
-                name={name}
-                value={checked}
-                onChange={handleColumnsChange}
-                defaultChecked
-            />
-        )
-    }
+        return <Checkbox checked={checked} label={label} name={name} value={checked} onChange={handleColumnsChange} />;
+    };
 
     const returnFilter = (column: string, checker: boolean) => {
         if (checker) {
-            return <Cell><DatasetSearchFilter setFilter={setFilter} filter={filter} column={column} /></Cell>
+            return (
+                <Cell>
+                    <DatasetSearchFilter setFilter={setFilter} filter={filter} column={column} />
+                </Cell>
+            );
         }
-    }
+    };
 
     const returnDropwdownFilter = (column: string, checker: boolean) => {
         if (checker) {
-            return <Cell><DropdownFilter setFilter={setFilter} filter={filter} column={column} /></Cell>
+            return (
+                <Cell>
+                    <DropdownFilter setFilter={setFilter} filter={filter} column={column} />
+                </Cell>
+            );
         }
-    }
+    };
 
     const redirectToCreateDataset = (): void => {
         history.push('datasets/new');
-    }
+    };
 
     const filterList = (column: string, filterColumn: any, resDataset): Array<any> => {
         if (filterColumn !== '') {
-            return resDataset.filter(dataset => {
+            return resDataset.filter((dataset) => {
                 if (dataset[column]) {
                     return dataset[column].toString().toLowerCase().includes(filterColumn.toString().toLowerCase());
                 }
             });
         }
         return resDataset;
-    }
+    };
 
     const filterListOptions = (column: string, filterColumn: any, resDataset) => {
         if (filterColumn.length > 0) {
             let res = resDataset;
-            return combineArray(filterColumn.map((row:any) => {
-                return filterList(column, row, res);
-            }));
+            return combineArray(
+                filterColumn.map((row: any) => {
+                    return filterList(column, row, res);
+                })
+            );
         }
         return resDataset;
-    }
+    };
 
-      function combineArray(array: any) {
-        let newArray:any = [];
-        array.map((res:any, i: number) => {
-            res.map((dataset:any, j: number) => {
+    function combineArray(array: any) {
+        let newArray: any = [];
+        array.map((res: any, i: number) => {
+            res.map((dataset: any, j: number) => {
                 newArray.push(dataset);
             });
         });
         return newArray;
-      }
+    }
 
     const applyFilter = () => {
         let retDatasets = datasets;
@@ -196,15 +204,15 @@ const DatasetsOverviewTable = (props: any) => {
         retDatasets = filterList('lraId', filter.lraId, retDatasets);
         retDatasets = filterList('tags', filter.tags, retDatasets);
         return retDatasets;
-    }
+    };
 
-    const handleOnclick = (row:DatasetObj):void => {
+    const handleOnclick = (row: DatasetObj): void => {
         setToggle(true);
         setSelectedDataset(row);
-    }
+    };
 
     return (
-        <div style={{ padding: '0 16px 16px 16px' }}>
+        <div style={{ padding: '0 16px 16px 16px', backgroundColor: '#ffffff' }}>
             <SideSheet
                 variant="large"
                 title={selectedDataset.name}
@@ -215,41 +223,40 @@ const DatasetsOverviewTable = (props: any) => {
                 <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
-            <Button
-                variant="outlined"
-                onClick={redirectToCreateDataset}
-                data-cy="create_dataset"
-            >
-                Create data set
-            </Button>
-            <div>
-            <Button
-                variant="outlined"
-                onClick={() => setShowColumnsPicker(!showColumnsPicker)}
-            >
-                Add / remove columns
-            </Button>
-            {showColumnsPicker ?
-            <UnstyledList>
-                <li style={{ display: 'grid' }}>
-                    {returnCheckbox(checkedColums.name, 'Name', 'name')}
-                    {returnCheckbox(checkedColums.sourceSystem, 'Source system', 'sourceSystem')}
-                    {returnCheckbox(checkedColums.areaL2, 'Area L2', 'areaL2')}
-                    {returnCheckbox(checkedColums.areaL1, 'Area L1', 'areaL1')}
-                    {returnCheckbox(checkedColums.asset, 'Asset', 'asset')}
-                    {returnCheckbox(checkedColums.baDataOwner, 'BA data owner', 'baDataOwner')}
-                    {returnCheckbox(checkedColums.classification, 'Classification', 'classification')}
-                    {returnCheckbox(checkedColums.countryOfOrigin, 'Country of origin', 'countryOfOrigin')}
-                    {returnCheckbox(checkedColums.dataId, 'Data ID', 'dataId')}
-                    {returnCheckbox(checkedColums.lraId, 'LRA ID', 'lraId')}
-                    {returnCheckbox(checkedColums.tags, 'Tags', 'tags')}
-                    {returnCheckbox(checkedColums.sepesApproved, 'Sepes approved', 'sepesApproved')}
-                </li>
-            </UnstyledList>: null }
-            </div>
+                <Button
+                    variant="outlined"
+                    style={{ display: 'inline-block', marginRight: '24px' }}
+                    onClick={redirectToCreateDataset}
+                    data-cy="create_dataset"
+                >
+                    Create data set
+                </Button>
+                <div style={{ display: 'inline-block' }}>
+                    <Button variant="outlined" onClick={() => setShowColumnsPicker(!showColumnsPicker)}>
+                        Add / remove columns
+                    </Button>
+                    {showColumnsPicker ? (
+                        <UnstyledList ref={wrapperRef}>
+                            <li style={{ display: 'grid' }}>
+                                {returnCheckbox(checkedColums.name, 'Name', 'name')}
+                                {returnCheckbox(checkedColums.sourceSystem, 'Source system', 'sourceSystem')}
+                                {returnCheckbox(checkedColums.areaL2, 'Area L2', 'areaL2')}
+                                {returnCheckbox(checkedColums.areaL1, 'Area L1', 'areaL1')}
+                                {returnCheckbox(checkedColums.asset, 'Asset', 'asset')}
+                                {returnCheckbox(checkedColums.baDataOwner, 'BA data owner', 'baDataOwner')}
+                                {returnCheckbox(checkedColums.classification, 'Classification', 'classification')}
+                                {returnCheckbox(checkedColums.countryOfOrigin, 'Country of origin', 'countryOfOrigin')}
+                                {returnCheckbox(checkedColums.dataId, 'Data ID', 'dataId')}
+                                {returnCheckbox(checkedColums.lraId, 'LRA ID', 'lraId')}
+                                {returnCheckbox(checkedColums.tags, 'Tags', 'tags')}
+                                {returnCheckbox(checkedColums.sepesApproved, 'Sepes approved', 'sepesApproved')}
+                            </li>
+                        </UnstyledList>
+                    ) : null}
+                </div>
             </ButtonWrapper>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
-                    <Head>
+                <Head>
                     <Row>
                         {returnCell(checkedColums.name, 'Dataset', true)}
                         {returnCell(checkedColums.sourceSystem, 'Source system', true)}
@@ -263,44 +270,41 @@ const DatasetsOverviewTable = (props: any) => {
                         {returnCell(checkedColums.lraId, 'LRA ID', true)}
                         {returnCell(checkedColums.tags, 'Tags', true)}
                     </Row>
-                    </Head>
-                    <Body>
-                        <Row key={1}>
-                            {returnFilter('name', checkedColums.name)}
-                            {returnFilter('sourceSystem', checkedColums.sourceSystem)}
-                            {returnFilter('areaL2', checkedColums.areaL2)}
-                            {returnFilter('areaL1', checkedColums.areaL1)}
-                            {returnFilter('asset', checkedColums.asset)}
-                            {returnFilter('baDataOwner', checkedColums.baDataOwner)}
-                            {returnDropwdownFilter('classification', checkedColums.classification)}
-                            {returnFilter('countryOfOrigin', checkedColums.countryOfOrigin)}
-                            {returnFilter('dataId', checkedColums.dataId)}
-                            {returnFilter('lraId', checkedColums.lraId)}
-                            {returnFilter('tags', checkedColums.tags)}
-                        </Row>
-                    {datasets && applyFilter().map((row: DatasetObj, i: number) => (
-                        <Row
-                            key={row.id}
-                            onClick={() => handleOnclick(row)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            {returnCell(checkedColums.name, row.name)}
-                            {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
-                            {returnCell(checkedColums.areaL2, row.areaL2)}
-                            {returnCell(checkedColums.areaL1, row.areaL1)}
-                            {returnCell(checkedColums.asset, row.asset)}
-                            {returnCell(checkedColums.baDataOwner, row.baDataOwner)}
-                            {returnCell(checkedColums.classification, row.classification)}
-                            {returnCell(checkedColums.countryOfOrigin, row.countryOfOrigin)}
-                            {returnCell(checkedColums.dataId, row.dataId)}
-                            {returnCell(checkedColums.lraId, row.lraId)}
-                            {returnCell(checkedColums.tags, row.tags)}
-                        </Row>
-                    ))}
-                    </Body>
+                </Head>
+                <Body>
+                    <Row key={1}>
+                        {returnFilter('name', checkedColums.name)}
+                        {returnFilter('sourceSystem', checkedColums.sourceSystem)}
+                        {returnFilter('areaL2', checkedColums.areaL2)}
+                        {returnFilter('areaL1', checkedColums.areaL1)}
+                        {returnFilter('asset', checkedColums.asset)}
+                        {returnFilter('baDataOwner', checkedColums.baDataOwner)}
+                        {returnDropwdownFilter('classification', checkedColums.classification)}
+                        {returnFilter('countryOfOrigin', checkedColums.countryOfOrigin)}
+                        {returnFilter('dataId', checkedColums.dataId)}
+                        {returnFilter('lraId', checkedColums.lraId)}
+                        {returnFilter('tags', checkedColums.tags)}
+                    </Row>
+                    {datasets &&
+                        applyFilter().map((row: DatasetObj) => (
+                            <Row key={row.id} onClick={() => handleOnclick(row)} style={{ cursor: 'pointer' }}>
+                                {returnCell(checkedColums.name, row.name)}
+                                {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
+                                {returnCell(checkedColums.areaL2, row.areaL2)}
+                                {returnCell(checkedColums.areaL1, row.areaL1)}
+                                {returnCell(checkedColums.asset, row.asset)}
+                                {returnCell(checkedColums.baDataOwner, row.baDataOwner)}
+                                {returnCell(checkedColums.classification, row.classification)}
+                                {returnCell(checkedColums.countryOfOrigin, row.countryOfOrigin)}
+                                {returnCell(checkedColums.dataId, row.dataId)}
+                                {returnCell(checkedColums.lraId, row.lraId)}
+                                {returnCell(checkedColums.tags, row.tags)}
+                            </Row>
+                        ))}
+                </Body>
             </Table>
         </div>
-    )
-}
+    );
+};
 
 export default DatasetsOverviewTable;

@@ -16,12 +16,12 @@ import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
 
 const LoadingWrapper = styled.div`
-    height:196px;
+    height: 196px;
     background-color: #ffffff;
     margin: 24px 32px 24px 32px;
-    display:flex;
-    align-items:center;
-  `;
+    display: flex;
+    align-items: center;
+`;
 
 const { TabList, Tab } = Tabs;
 
@@ -80,8 +80,8 @@ const StudyDetails = () => {
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                    />)
-                    ;
+                    />
+                );
             case 4:
                 return <div>Missing spec</div>;
             default:
@@ -90,43 +90,47 @@ const StudyDetails = () => {
     };
 
     return (
-    <>
-        {!permissions.canAdministerDatasets && newStudy ? <NoAccess /> :
         <>
-            <Promt hasChanged={hasChanged} />
-            {!loading && study ?
-            <StudyComponentFull
-                study={study && study}
-                newStudy={newStudy}
-                setNewStudy={setNewStudy}
-                setLoading={setLoading}
-                loading={loading}
-                setStudy={setStudy}
-                setHasChanged={setHasChanged}
-                cache={cache}
-                setUpdateCache={setUpdateCache}
-                updateCache={updateCache}
-            /> :
-            <LoadingWrapper>
-                <LoadingFull />
-            </LoadingWrapper> }
-                {!newStudy &&
-                <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
-                    <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                        <TabList>
-                            <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                            <Tab data-cy="datasets_tab">Data sets</Tab>
-                            <Tab data-cy="sandbox_tab">Sandboxes</Tab>
-                            <Tab>Participants</Tab>
-                            <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
-                        </TabList>
-                    </Tabs>
-                    <div style={{ padding: '16px' }}>
-                        {changeComponent()}
-                    </div>
-                </div>}
-        </>}
-    </>
+            {!permissions.canAdministerDatasets && newStudy ? (
+                <NoAccess />
+            ) : (
+                <>
+                    <Promt hasChanged={hasChanged} />
+                    {!loading && study ? (
+                        <StudyComponentFull
+                            study={study && study}
+                            newStudy={newStudy}
+                            setNewStudy={setNewStudy}
+                            setLoading={setLoading}
+                            loading={loading}
+                            setStudy={setStudy}
+                            setHasChanged={setHasChanged}
+                            cache={cache}
+                            setUpdateCache={setUpdateCache}
+                            updateCache={updateCache}
+                        />
+                    ) : (
+                        <LoadingWrapper>
+                            <LoadingFull />
+                        </LoadingWrapper>
+                    )}
+                    {!newStudy && (
+                        <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+                            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
+                                <TabList>
+                                    <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
+                                    <Tab data-cy="datasets_tab">Data sets</Tab>
+                                    <Tab data-cy="sandbox_tab">Sandboxes</Tab>
+                                    <Tab>Participants</Tab>
+                                    <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
+                                </TabList>
+                            </Tabs>
+                            <div style={{ padding: '16px' }}>{changeComponent()}</div>
+                        </div>
+                    )}
+                </>
+            )}
+        </>
     );
 };
 

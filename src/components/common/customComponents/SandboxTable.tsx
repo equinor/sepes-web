@@ -17,7 +17,7 @@ const SandboxTable = (props: any) => {
         return (
             <Cell>
                 <Link
-                    style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }}
+                    style={{ color: '#000000', cursor: 'pointer' }}
                     to={"/studies/" + studyId +"/sandboxes/" + sandboxId}
                 >
                     {type === 'icon' ? <Icon name="chevron_right" size={24} /> : value}
