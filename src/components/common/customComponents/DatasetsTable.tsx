@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Table, Icon } from '@equinor/eds-core-react';
+import React from 'react';
+import { Table } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { EquinorIcon } from '../StyledComponents';
 
@@ -13,7 +13,7 @@ const DatasetsTable = (props: any) => {
             return (
                 <Cell>
                     <Link
-                        style={{ textDecoration: 'none', color: '#000000', cursor: 'pointer' }}
+                        style={{ color: '#000000', cursor: 'pointer' }}
                         to={'/studies/' + props.studyId + '/datasets/' + row.id}
                     >
                         {type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}
@@ -54,11 +54,13 @@ const DatasetsTable = (props: any) => {
                                 <Cell>
                                     {row.sandboxDatasets &&
                                         row.sandboxDatasets.map((sandbox: any, index: number) => {
-                                            console.log(index, row.sandboxDatasets.length);
-                                            if (index === row.sandboxDatasets.length - 1) {
-                                                return sandbox.sandboxName && sandbox.sandboxName;
-                                            }
-                                            return sandbox.sandboxName && sandbox.sandboxName + ', ';
+                                            return (<Link
+                                            style={{  color: '#000000', cursor: 'pointer' }}
+                                            to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.sandboxId}
+                                            >
+                                                {index === row.sandboxDatasets.length - 1 ? sandbox.sandboxName && sandbox.sandboxName: sandbox.sandboxName && sandbox.sandboxName + ', '}
+                                            </Link>)
+                                            
                                         })}
                                 </Cell>
                                 {returnCell(row, '', 'icon')}
