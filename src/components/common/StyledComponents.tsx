@@ -14,7 +14,8 @@ import {
     external_link,
     key,
     check,
-    error_outlined
+    error_outlined,
+    more_verticle
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -28,7 +29,8 @@ const icons = {
     external_link,
     key,
     check,
-    error_outlined
+    error_outlined,
+    more_verticle
 };
 Icon.add(icons);
 

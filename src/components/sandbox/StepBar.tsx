@@ -26,11 +26,18 @@ const ScrimWrapper = styled.div`
     border-radius: 4px;
 `;
 
-const BtnWrapper = styled.div`
+const BtnTwoWrapper = styled.div`
     display: grid;
-    grid-template-columns: 200px 200px;
-    grid-gap: 16px;
+    grid-template-columns: 160px 160px;
+    grid-gap: 8px;
 `;
+
+const BtnThreeWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 160px 160px 160px;
+    grid-gap: 8px;
+`;
+
 type StepBarProps = {
     setStep: (value: any) => void;
     step: number;
@@ -91,35 +98,34 @@ const StepBar: React.FC<StepBarProps> = ({
         });
     };
 
+    const returnOptionsButton = () => {
+        return (
+            <Button variant="outlined" onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}>
+                More options
+                {EquinorIcon('more_verticle', '#007079', 24)}
+            </Button>
+        );
+    };
+
     const returnControlButtons = () => {
         switch (step) {
             case 0: {
                 return (
-                    <div>
-                        {/*
+                    <BtnTwoWrapper>
+                        {returnOptionsButton()}
                         <Button
-                            variant="outlined"
-                            onClick={() => setUserClickedDelete(true)}
-                            color="danger"
-                            data-cy="delete_sandbox"
-                        >
-                            Delete sandbox
-                        </Button>
-                         */}
-                        <Button
-                            style={{ width: '200px' }}
                             onClick={() => {
                                 setStep(1);
                             }}
                         >
                             Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </div>
+                    </BtnTwoWrapper>
                 );
             }
             case 1: {
                 return (
-                    <BtnWrapper>
+                    <BtnThreeWrapper>
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -128,6 +134,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
                         </Button>
+                        {returnOptionsButton()}
                         <Button
                             onClick={() => {
                                 setStep(2);
@@ -135,22 +142,22 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </BtnWrapper>
+                    </BtnThreeWrapper>
                 );
             }
             default: {
                 return (
-                    <>
+                    <BtnTwoWrapper>
                         <Button
                             variant="outlined"
                             onClick={() => {
                                 setStep(0);
                             }}
-                            style={{ width: '200px', marginRight: '216px' }}
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available
                         </Button>
-                    </>
+                        {returnOptionsButton()}
+                    </BtnTwoWrapper>
                 );
             }
         }
@@ -179,14 +186,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     );
                 })}
             </Stepper>
-            <div>
-                <Button
-                    style={{ margin: '-8px -9px -10px 8px', display: 'inline-block', float: 'right' }}
-                    variant="ghost_icon"
-                    onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}
-                >
-                    <Icon color="#007079" name="settings" size={16} />
-                </Button>
+            <div style={{ float: 'right' }}>
                 <a
                     href={sandbox.linkToCostAnalysis}
                     target="_blank"

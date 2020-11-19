@@ -13,7 +13,7 @@ import * as notify from '../common/notify';
 const Wrapper = styled.div`
     margin-top: 8px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 0.7fr;
     grid-template-rows: minmax(384px, 1fr);
     grid-gap: 96px;
     @media (max-width: 768px) {

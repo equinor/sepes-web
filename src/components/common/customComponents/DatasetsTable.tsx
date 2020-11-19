@@ -39,7 +39,7 @@ const DatasetsTable = (props: any) => {
                             Dataset
                         </Cell>
                         <Cell as="th" scope="col">
-                            Sandboxes
+                            {editMode && 'Sandboxes'}
                         </Cell>
                         <Cell style={{ width: '10px' }} as="th" scope="col">
                             {''}
@@ -51,18 +51,28 @@ const DatasetsTable = (props: any) => {
                         datasets.map((row) => (
                             <Row key={row.id}>
                                 {returnCell(row, row.name, 'text')}
-                                <Cell>
-                                    {row.sandboxDatasets &&
-                                        row.sandboxDatasets.map((sandbox: any, index: number) => {
-                                            return (<Link
-                                            style={{  color: '#000000', cursor: 'pointer' }}
-                                            to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.sandboxId}
-                                            >
-                                                {index === row.sandboxDatasets.length - 1 ? sandbox.sandboxName && sandbox.sandboxName: sandbox.sandboxName && sandbox.sandboxName + ', '}
-                                            </Link>)
-                                            
-                                        })}
-                                </Cell>
+                                {editMode && (
+                                    <Cell>
+                                        {row.sandboxDatasets &&
+                                            row.sandboxDatasets.map((sandbox: any, index: number) => {
+                                                return (
+                                                    <Link
+                                                        style={{ color: '#000000', cursor: 'pointer' }}
+                                                        to={
+                                                            '/studies/' +
+                                                            props.studyId +
+                                                            '/sandboxes/' +
+                                                            sandbox.sandboxId
+                                                        }
+                                                    >
+                                                        {index === row.sandboxDatasets.length - 1
+                                                            ? sandbox.sandboxName && sandbox.sandboxName
+                                                            : sandbox.sandboxName && sandbox.sandboxName + ', '}
+                                                    </Link>
+                                                );
+                                            })}
+                                    </Cell>
+                                )}
                                 {returnCell(row, '', 'icon')}
                             </Row>
                         ))
