@@ -36,14 +36,27 @@ const ipMethod = [
     { displayValue: 'Custom', key: '2' }
 ];
 
+const ports = {
+    HTTP: 80,
+    HTTPS: 443
+};
+
+const protocolOptions = {
+    HTTP: 'HTTP',
+    HTTPS: 'HTTPS',
+    CUSTOM: 'Custom'
+};
+
 const portsOptions = [
-    { displayValue: 'HTTP', key: '1' },
-    { displayValue: 'Custom', key: '2' }
+    { displayValue: 'HTTP', key: 'HTTP' },
+    { displayValue: 'HTTPS', key: 'HTTPS' },
+    { displayValue: 'Custom', key: 'Custom' }
 ];
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+
     useEffect(() => {
         getVmExtendedInfo();
     }, [index, vm, resources]);
@@ -124,7 +137,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         currentRules.push({
             description: '',
             ip: '',
-            protocol: '',
+            protocol: 'Custom',
             port: '',
             useClientIp: false,
             direction: 0,
@@ -183,7 +196,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     const handleDropdownChange = (key: string, i: number, value?): void => {
         setHasChanged(true);
         let currentRules: any = [...vm.rules];
-        currentRules[i][key] = portsOptions[value - 1].displayValue;
+        currentRules[i][key] = value;
+        if (value === protocolOptions.HTTP) {
+            currentRules[i].port = ports.HTTP;
+        }
+        if (value === protocolOptions.HTTPS) {
+            currentRules[i].port = ports.HTTPS;
+        }
         let tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
@@ -225,6 +244,20 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 setClientIp(res.ip);
             })
             .catch((err: any) => console.error('Problem fetching my IP', err));
+    };
+
+    const returnOpenClosed = (type: 'text' | 'button') => {
+        if (!vm.rules) {
+            return;
+        }
+        const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
+        if (actionRule) {
+            if (actionRule.action === 0) {
+                return type === 'text' ? ' open' : 'Close internet';
+            } else {
+                return type === 'text' ? ' closed' : 'Open internet';
+            }
+        }
     };
 
     return (
@@ -295,21 +328,25 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                             handleDropdownChange('protocol', ruleNumber, e);
                                                         }}
                                                         name="protocol"
-                                                        preSlectedValue={rule.protocol}
+                                                        preSlectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
                                                     />
                                                 </div>
                                             </Cell>
                                             <Cell component="th" scope="row">
-                                                <TextField
-                                                    value={rule.port}
-                                                    onChange={(e: any) =>
-                                                        updateRule(ruleNumber, e.target.value, 'port')
-                                                    }
-                                                    type="number"
-                                                    placeholder="Port"
-                                                    data-cy="vm_rule_port"
-                                                />
+                                                {rule.protocol !== protocolOptions.CUSTOM ? (
+                                                    <span>{rule.port || '-'}</span>
+                                                ) : (
+                                                    <TextField
+                                                        value={rule.port}
+                                                        onChange={(e: any) =>
+                                                            updateRule(ruleNumber, e.target.value, 'port')
+                                                        }
+                                                        type="number"
+                                                        placeholder="Port"
+                                                        data-cy="vm_rule_port"
+                                                    />
+                                                )}
                                             </Cell>
 
                                             <Cell>
@@ -353,10 +390,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     <Body>
                         <Row key={1}>
                             <Cell component="th" scope="row">
-                                Outbound internet traffic is currently{' '}
-                                {vm.rules && vm.rules.find((rule: any) => rule.direction === 1).action === 0
-                                    ? 'open'
-                                    : 'closed'}
+                                Outbound internet traffic is currently {returnOpenClosed('text')}
                             </Cell>
                             <Cell component="th" scope="row">
                                 <Button
@@ -366,9 +400,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                         addOutBoundRule();
                                     }}
                                 >
-                                    {vm.rules && vm.rules.find((rule: any) => rule.direction === 1).action === 0
-                                        ? 'Close internet'
-                                        : 'Open internet'}
+                                    {returnOpenClosed('button')}
                                 </Button>
                             </Cell>
                         </Row>
