@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Typography } from '@equinor/eds-core-react';
+import { Button, Typography, Icon, Scrim } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import { Title } from '../common/StyledComponents';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox } from '../../services/Api';
 import * as notify from '../common/notify';
@@ -17,6 +18,12 @@ const Wrapper = styled.div`
     border-radius: 4px;
     padding: 16px;
     background-color: #ffffff;
+`;
+
+const ScrimWrapper = styled.div`
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 4px;
 `;
 
 const BtnWrapper = styled.div`
@@ -69,6 +76,7 @@ const StepBar: React.FC<StepBarProps> = ({
 }) => {
     const history = useHistory();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const steps = getSteps();
 
     const deleteThisSandbox = (): void => {
@@ -87,7 +95,8 @@ const StepBar: React.FC<StepBarProps> = ({
         switch (step) {
             case 0: {
                 return (
-                    <BtnWrapper>
+                    <div>
+                        {/*
                         <Button
                             variant="outlined"
                             onClick={() => setUserClickedDelete(true)}
@@ -96,14 +105,16 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             Delete sandbox
                         </Button>
+                         */}
                         <Button
+                            style={{ width: '200px' }}
                             onClick={() => {
                                 setStep(1);
                             }}
                         >
                             Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </BtnWrapper>
+                    </div>
                 );
             }
             case 1: {
@@ -168,12 +179,55 @@ const StepBar: React.FC<StepBarProps> = ({
                     );
                 })}
             </Stepper>
-            <a href={sandbox.linkToCostAnalysis} target="_blank" rel="noopener noreferrer" style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px', marginLeft: 'auto' }}>
+            <div>
+                <Button
+                    style={{ margin: '-8px -9px -10px 8px', display: 'inline-block', float: 'right' }}
+                    variant="ghost_icon"
+                    onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}
+                >
+                    <Icon color="#007079" name="settings" size={16} />
+                </Button>
+                <a
+                    href={sandbox.linkToCostAnalysis}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        color: '#007079',
+                        fontSize: '22px',
+                        margin: '0 0 0 16px',
+                        display: 'inline-block',
+                        float: 'right'
+                    }}
+                >
                     <Typography style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }} variant="h2">
                         Cost analysis
                     </Typography>
                     {EquinorIcon('external_link', '#007079', 24, () => {}, true)}
-            </a>
+                </a>
+            </div>
+            {displayDeleteStudy && (
+                <Scrim>
+                    <ScrimWrapper>
+                        <Title title="Settings" />
+                        <Button
+                            onClick={() => {
+                                setUserClickedDelete(true);
+                                setDisplayDeleteStudy(false);
+                            }}
+                            color="danger"
+                        >
+                            Delete Sandbox
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            style={{ marginLeft: '8px' }}
+                            onClick={() => setDisplayDeleteStudy(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </ScrimWrapper>
+                </Scrim>
+            )}
             {userClickedDelete && (
                 <DeleteResourceComponent
                     ResourceName={sandbox.name}
