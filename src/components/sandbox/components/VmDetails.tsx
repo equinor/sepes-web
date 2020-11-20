@@ -4,7 +4,12 @@ import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
+import {
+    createVirtualMachineRule,
+    getVirtualExternalLink,
+    getVirtualMachineExtended,
+    getVirtualMachineRule
+} from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
 const { Body, Row, Cell, Head } = Table;
@@ -28,7 +33,6 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
-    getVms: any;
 };
 
 const ipMethod = [
@@ -53,7 +57,7 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
 
@@ -108,6 +112,18 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         });
     };
 
+    const getExternalLink = () => {
+        getVirtualExternalLink(vm.id).then((result: any) => {
+            if (result && !result.Message) {
+                let tempsVms: any = [...vms];
+                tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
+                setVms(tempsVms);
+            } else {
+                console.log('Err');
+            }
+        });
+    };
+
     const isVmCreatingOrReady = (): boolean => {
         let res = false;
         if (!resources) {
@@ -121,7 +137,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             ) {
                 res = true;
                 if (!vm.linkToExternalSystem) {
-                    getVms();
+                    getExternalLink();
                 }
             }
         });
