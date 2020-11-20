@@ -51,7 +51,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         try {
             timer = setInterval(async () => {
                 getResources();
-            }, 60000);
+            }, 20000);
         } catch (e) {
             console.log(e);
         }
@@ -79,7 +79,15 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             case 2:
                 return <div></div>;
             default:
-                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} setUpdateCache={setUpdateCache} updateCache={updateCache} />;
+                return (
+                    <SandboxConfig
+                        resources={resources}
+                        datasets={datasets}
+                        sandboxId={sandboxId}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                );
         }
     };
 
