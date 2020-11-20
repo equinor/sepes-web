@@ -48,7 +48,10 @@ const StudyDetails = () => {
         api.getStudy,
         setStudy,
         'study' + window.location.pathname.split('/')[2],
-        window.location.pathname.split('/')[2]
+        window.location.pathname.split('/')[2],
+        null,
+        null,
+        id ? false : true
     );
     const permissions = useContext(Permissions);
 
