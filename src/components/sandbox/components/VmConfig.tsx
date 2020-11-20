@@ -30,17 +30,6 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
     useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
     useFetch(getVirtualMachineOperatingSystems, setOs, 'vmOs' + sandbox.id, sandbox.id);
 
-    const getVms = () => {
-        getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
-            if (result && !result.Message) {
-                setVms(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log('Err');
-            }
-        });
-    };
-
     const onChange = (e: any) => {
         setActiveTab(e);
     };
@@ -67,7 +56,6 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
                         resources={resources}
-                        getVms={getVms}
                     />
                 );
         }
