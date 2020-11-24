@@ -3,7 +3,7 @@ import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
-import ParticipantTable from '../common/customComponents/ParticipantTable';
+import ParticipantTable from './Tables/ParticipantTable';
 import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
@@ -42,9 +42,16 @@ type ParicipantComponentProps = {
     setStudy: any;
     setUpdateCache: any;
     updateCache: any;
+    disabled: boolean;
 };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({
+    study,
+    setStudy,
+    setUpdateCache,
+    updateCache,
+    disabled
+}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
@@ -164,6 +171,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         placeholder={''}
                         selectedOption={{ value: 'Search..', label: text }}
                         onInputChange={handleInputChange}
+                        disabled={disabled}
                     />
                 </div>
                 <div style={{ marginTop: '-16px' }}>
@@ -186,6 +194,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
+                    permissions={study.permissions}
                 />
             </TableWrapper>
         </Wrapper>

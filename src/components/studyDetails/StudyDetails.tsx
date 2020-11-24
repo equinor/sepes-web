@@ -39,7 +39,14 @@ const StudyDetails = () => {
         resultsAndLearnings: '',
         datasets: [],
         participants: [],
-        sandboxes: []
+        sandboxes: [],
+        permissions: {
+            addRemoveDataset: false,
+            addRemoveParticipant: false,
+            addRemoveSandbox: false,
+            delete: false,
+            updateDetails: false
+        }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(0);
@@ -74,6 +81,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        disabled={!study.permissions.addRemoveSandbox}
                     />
                 );
             case 3:
@@ -83,6 +91,7 @@ const StudyDetails = () => {
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        disabled={!study.permissions.addRemoveSandbox}
                     />
                 );
             case 4:

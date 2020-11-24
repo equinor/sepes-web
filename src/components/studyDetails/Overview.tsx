@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import DatasetsTable from '../common/customComponents/DatasetsTable';
-import ParticipantTable from '../common/customComponents/ParticipantTable';
-import SandboxTable from '../common/customComponents/SandboxTable';
+import DatasetsTable from './Tables/DatasetsTable';
+import ParticipantTable from './Tables/ParticipantTable';
+import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
