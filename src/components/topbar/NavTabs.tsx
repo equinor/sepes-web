@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Tabs } from '@equinor/eds-core-react';
 import { Permissions } from '../../index';
@@ -7,9 +7,12 @@ import { Permissions } from '../../index';
 const { TabList, Tab } = Tabs;
 
 const Wrapper = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
+    margin-left: 300px;
+    width: 256px;
+    @media (max-width: 1200px) {
+        margin-left: auto;
+        margin-right: auto;
+    }
 `;
 
 const NavTabs = (props: any) => {
@@ -18,11 +21,11 @@ const NavTabs = (props: any) => {
     const getActiveTab = () => {
         const location = window.location.pathname;
         return !location.includes('datasets') ? 0 : 1;
-    }
+    };
 
     const redirect = (e: any) => {
         return e === 0 ? history.push('/') : history.push('/datasets');
-    }
+    };
 
     return (
         <Wrapper>
@@ -33,7 +36,7 @@ const NavTabs = (props: any) => {
                 </TabList>
             </Tabs>
         </Wrapper>
-    )
-}
+    );
+};
 
 export default NavTabs;
