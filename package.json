@@ -29,10 +29,11 @@
     "commitizen": "^4.1.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.4",
+    "js-cookie": "^2.2.1",
     "lodash": ">=4.17.19",
     "msal": "^1.3.0",
-    "node-sass": "^4.14.1",
     "node-forge": ">=0.10.0",
+    "node-sass": "^4.14.1",
     "object-path": ">=0.11.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -43,8 +44,8 @@
     "react-scripts": "3.4.0",
     "react-select": "^3.1.0",
     "reactstrap": "^8.4.1",
-    "styled-components": "^5.1.0",
     "serialize-javascript": ">=3.1.0",
+    "styled-components": "^5.1.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
