@@ -38,7 +38,12 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         name: '',
         template: '',
         id: sandboxId,
-        studyName: ''
+        studyName: '',
+        permissions: {
+            delete: false,
+            editRules: false,
+            update: false
+        }
     });
     const [resources, setResources] = useState<any>();
     const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
@@ -105,7 +110,12 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (
-                <VmConfig sandbox={sandbox} showAddNewVm={step === 0} resources={resources} />
+                <VmConfig
+                    sandbox={sandbox}
+                    showAddNewVm={step === 0 && !sandbox.permissions.update}
+                    resources={resources}
+                    loadingSandbox={loading}
+                />
             )}
         </Wrapper>
     );

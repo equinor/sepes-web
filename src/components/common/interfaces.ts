@@ -74,6 +74,13 @@ export interface SandboxObj {
     template: string;
     id: string;
     studyName: string;
+    permissions: SandboxPermissions;
+}
+
+export interface SandboxPermissions {
+    delete: boolean;
+    editRules: boolean;
+    update: boolean;
 }
 
 export interface DropdownObj {
