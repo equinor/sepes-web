@@ -16,7 +16,7 @@ import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import useFetch from '../common/hooks/useFetch';
-import { EquinorIcon, EquinorLink } from '../common/StyledComponents';
+import { EquinorIcon } from '../common/StyledComponents';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -59,7 +59,7 @@ const dataClassificationsList = [
 ];
 const width = '512px';
 
-type StudySpecificDatasetProps = {
+type CreateEditDatasetProps = {
     datasetFromDetails: DatasetObj;
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
@@ -67,7 +67,7 @@ type StudySpecificDatasetProps = {
     cache: any;
 };
 
-const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
+const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     datasetFromDetails,
     setDatasetFromDetails,
     setShowEditDataset,
@@ -133,10 +133,10 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                if (result.datasets.length) {
+                if (result) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, ['study' + studyId]: true });
-                    history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
+                    history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
                     notify.show('danger', '500');
@@ -346,4 +346,4 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
     );
 };
 
-export default StudySpecificDataset;
+export default CreateEditDataset;

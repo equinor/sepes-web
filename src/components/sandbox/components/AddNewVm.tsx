@@ -25,10 +25,37 @@ const Wrapper = styled.div`
     padding-bottom: 196px;
 `;
 
+const SizeFilterWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px;
+`;
+
+const HardWareReqWrapper = styled.span`
+    font-size: 12px;
+    color: #6f6f6f;
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 5px;
+    background: white;
+    padding: 0 4px 0 4px;
+`;
+
+const HelperTextWrapper = styled.div`
+    background-color: #d5eaf4;
+    padding: 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.2px;
+    padding-top: 34px;
+`;
+
 const UnstyledList = styled.ul`
     margin: 0;
     padding: 0;
     list-style-type: none;
+    border: 1px solid #dcdcdc;
 `;
 
 type AddNewVmProps = {
@@ -252,22 +279,31 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                     </div>
                 }
             />
-            <UnstyledList>
-                <li>
-                    <Checkbox
-                        label="High memory"
-                        onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
-                        data-cy="just_a_test"
-                    />
-                </li>
-                <li>
-                    <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
-                </li>
-                <li>
-                    <Checkbox label="High CPU" onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)} />
-                </li>
-                <Label>Filters the VM size dropdown list</Label>
-            </UnstyledList>
+            <SizeFilterWrapper>
+                <UnstyledList>
+                    <HardWareReqWrapper>Hardware requirements</HardWareReqWrapper>
+                    <li>
+                        <Checkbox
+                            label="High memory"
+                            onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
+                            data-cy="just_a_test"
+                        />
+                    </li>
+                    <li>
+                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
+                    </li>
+                    <li>
+                        <Checkbox
+                            label="High CPU"
+                            onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
+                        />
+                    </li>
+                </UnstyledList>
+                <HelperTextWrapper>
+                    Specifying hardware requirements will affect which options you can choose between for size. Leave
+                    empty if you have no special requirements.
+                </HelperTextWrapper>
+            </SizeFilterWrapper>
             <CoreDevDropdown
                 label="VM size"
                 options={filterSizes(sizes)}

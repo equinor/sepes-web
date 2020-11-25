@@ -15,10 +15,10 @@ describe('Create study', function () {
         cy.get('[data-cy=new_study]')
             .click();
     });
-    
+    const studyName = "cy Title";
     it('fills out study information', () => {
         cy.get('[data-cy=study_name]')
-            .type('cy Title')
+            .type('studyName')
         cy.get('[data-cy=study_vendor]')
             .type('cy vendor')
         cy.get('[data-cy=study_wbs]')
@@ -116,5 +116,22 @@ describe('Create study', function () {
                     .click();
             });
 
+        describe('Edit study specific dataset', function () {
+    
+            it('fills out dataset information again', () => {
+                cy.get('[data-cy=dataset_back_to_study]')
+                    .click()         
+                cy.get('[data-cy=edit_study]')
+                    .click()
+                cy.get('[data-cy=study_options]')
+                    .click()
+                cy.get('[data-cy=study_delete]')
+                    .click()
+                cy.get('[data-cy="delete_resource"]')
+                    .type('studyNamecy Title edited')
+                cy.get('[data-cy=delete_resource_delete]')
+                    .click()
+                    
+                });
         
     }

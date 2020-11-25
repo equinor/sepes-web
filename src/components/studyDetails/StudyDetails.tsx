@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
@@ -14,6 +14,7 @@ import NoAccess from '../common/NoAccess';
 import { StudyObj } from '../common/interfaces';
 import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
+import Cookies from 'js-cookie';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -52,7 +53,7 @@ const StudyDetails = () => {
         }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
-    const [activeTab, setActiveTab] = useState<number>(0);
+    const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const { loading, setLoading, cache } = useFetch(
         api.getStudy,
@@ -64,8 +65,15 @@ const StudyDetails = () => {
         id ? false : true
     );
     const permissions = useContext(Permissions);
+    console.log(Cookies.get(id));
+    useEffect(() => {
+        setActiveTab(parseInt(Cookies.get(id)));
+        //return () => Cookies.set('activeTab', activeTab, { expires: 365 });
+    }, []);
 
     const changeComponent = () => {
+        Cookies.remove(id);
+        Cookies.set(id, activeTab, { expires: 365 });
         switch (activeTab) {
             case 1:
                 return (
