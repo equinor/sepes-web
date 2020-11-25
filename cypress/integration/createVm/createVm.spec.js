@@ -15,10 +15,10 @@ describe('Create vm', function () {
         cy.get('[data-cy=new_study]')
             .click();
     });
-    
+    const studyName = "cy Title";
     it('fills out study information', () => {
         cy.get('[data-cy=study_name]')
-            .type('cy Title')
+            .type(studyName)
         cy.get('[data-cy=study_vendor]')
             .type('cy vendor')
         cy.get('[data-cy=study_wbs]')
@@ -95,7 +95,7 @@ describe('Create vm', function () {
                 .type('Cypassword123!!')
             cy.get('[data-cy=vm_size]')
                 .click()
-            cy.contains("Standard_F1 (1 cores, 2048 MB Memory, os disk: 1047552, max data disks: 4)").click();
+            cy.contains("Standard_F1").click();
 
             cy.get('[data-cy=vm_operatingSystem]')
                 .click()
@@ -113,6 +113,7 @@ describe('Create vm', function () {
         it('creates VM rules', () => {
             cy.get('[data-cy=vm_add_rule]')
                 .click()
+            cy.wait(500)
             cy.get('[data-cy=vm_rule_description]')
                 .type('cy rule description')
             cy.get('[data-cy=vm_rule_ip]')
@@ -121,9 +122,6 @@ describe('Create vm', function () {
             cy.get('[data-cy="vm_rule_protocol"]')
                 .click()
             cy.contains("HTTP").click();
-
-            cy.get('[data-cy="vm_rule_port"]')
-                .type('80')
 
             cy.get('[data-cy=vm_rule_save]')
                 .click() 
@@ -151,10 +149,26 @@ describe('Create vm', function () {
         });
 
         it('delete sandbox', () => {
-            cy.get('[data-cy=delete_sandbox]')
+            cy.get('[data-cy=sandbox_more_options]')
+                .click()
+            cy.get('[data-cy=sandbox_delete]')
                 .click()
             cy.get('[data-cy="delete_resource"]')
                 .type(sandboxName)
+            cy.get('[data-cy=delete_resource_delete]')
+                .click()
+                
+                
+        });
+        it('delete study', () => {
+            cy.get('[data-cy=edit_study]')
+                .click()
+            cy.get('[data-cy=study_options]')
+                .click()
+            cy.get('[data-cy=study_delete]')
+                .click()
+            cy.get('[data-cy="delete_resource"]')
+                .type(studyName)
             cy.get('[data-cy=delete_resource_delete]')
                 .click()
                 

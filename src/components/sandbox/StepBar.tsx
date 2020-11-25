@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Button, Typography, Icon, Scrim } from '@equinor/eds-core-react';
+import { Button, Typography, Menu } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import { Title } from '../common/StyledComponents';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox } from '../../services/Api';
 import * as notify from '../common/notify';
+
+const { MenuItem } = Menu;
 
 const Wrapper = styled.div`
     display: grid;
@@ -18,12 +19,6 @@ const Wrapper = styled.div`
     border-radius: 4px;
     padding: 16px;
     background-color: #ffffff;
-`;
-
-const ScrimWrapper = styled.div`
-    background-color: #ffffff;
-    padding: 32px;
-    border-radius: 4px;
 `;
 
 const BtnTwoWrapper = styled.div`
@@ -86,6 +81,28 @@ const StepBar: React.FC<StepBarProps> = ({
     const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const steps = getSteps();
 
+    const [state, setState] = React.useState<{
+        buttonEl: any;
+        focus: 'first' | 'last';
+    }>({
+        focus: 'first',
+        buttonEl: null
+    });
+    const { buttonEl, focus } = state;
+    const isOpen = Boolean(buttonEl);
+
+    const openMenu = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
+        focus: 'first' | 'last'
+    ) => {
+        const target = e.target as HTMLButtonElement;
+        setState({ ...state, buttonEl: target, focus });
+    };
+
+    const closeMenu = () => {
+        setState({ ...state, buttonEl: null, focus });
+    };
+
     const deleteThisSandbox = (): void => {
         setUpdateCache({ ...updateCache, ['study' + studyId]: true });
         deleteSandbox(studyId, sandboxId).then((result: any) => {
@@ -98,12 +115,41 @@ const StepBar: React.FC<StepBarProps> = ({
         });
     };
 
+    const optionsTemplate = (
+        <>
+            <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="sandbox_delete">
+                {EquinorIcon('delete_forever', 'red', 24)}
+                <span style={{ color: 'red', marginLeft: '16px' }}>Delete sandbox</span>
+            </MenuItem>
+        </>
+    );
+
     const returnOptionsButton = () => {
         return (
-            <Button variant="outlined" onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}>
-                More options
-                {EquinorIcon('more_verticle', '#007079', 24)}
-            </Button>
+            <>
+                <Button
+                    variant="outlined"
+                    id="menuButton"
+                    aria-controls="menu-on-button"
+                    aria-haspopup="true"
+                    aria-expanded={displayDeleteStudy}
+                    onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                    data-cy="sandbox_more_options"
+                >
+                    More options
+                    {EquinorIcon('more_verticle', '#007079', 24)}
+                </Button>
+                <Menu
+                    id="menuButton"
+                    aria-labelledby="menuButton"
+                    open={isOpen}
+                    onClose={closeMenu}
+                    anchorEl={buttonEl}
+                    focus={focus}
+                >
+                    {optionsTemplate}
+                </Menu>
+            </>
         );
     };
 
@@ -205,29 +251,6 @@ const StepBar: React.FC<StepBarProps> = ({
                     {EquinorIcon('external_link', '#007079', 24, () => {}, true)}
                 </a>
             </div>
-            {displayDeleteStudy && (
-                <Scrim>
-                    <ScrimWrapper>
-                        <Title title="Settings" />
-                        <Button
-                            onClick={() => {
-                                setUserClickedDelete(true);
-                                setDisplayDeleteStudy(false);
-                            }}
-                            color="danger"
-                        >
-                            Delete Sandbox
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            style={{ marginLeft: '8px' }}
-                            onClick={() => setDisplayDeleteStudy(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </ScrimWrapper>
-                </Scrim>
-            )}
             {userClickedDelete && (
                 <DeleteResourceComponent
                     ResourceName={sandbox.name}

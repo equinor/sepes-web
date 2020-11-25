@@ -42,7 +42,7 @@ describe('Create dataset', function () {
                 .type('cy name edit')          
             cy.get('[data-cy=dataset_classification]')
                 .click()
-            cy.contains(2).click();
+            cy.contains('Internal').click();
             cy.get('[data-cy=dataset_dataId]')
                 .type(2)
             cy.get('[data-cy=dataset_save]')
