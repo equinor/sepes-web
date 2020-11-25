@@ -17,8 +17,11 @@ export interface StudyPermissions {
     addRemoveDataset: boolean;
     addRemoveParticipant: boolean;
     addRemoveSandbox: boolean;
-    delete: boolean;
-    updateDetails: boolean;
+    closeStudy: boolean;
+    deleteStudy: boolean;
+    readResulsAndLearnings: boolean;
+    updateMetadata: boolean;
+    updateResulsAndLearnings: boolean;
 }
 
 export interface ParticipantObj {

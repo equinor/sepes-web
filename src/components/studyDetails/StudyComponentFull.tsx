@@ -416,7 +416,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 data-cy="edit_study"
                                 onClick={() => setEditMode(true)}
                                 style={{ width: '80px' }}
-                                disabled={!study.permissions.updateDetails}
+                                disabled={study.permissions && !study.permissions.updateMetadata}
                             >
                                 Edit
                             </Button>
@@ -450,7 +450,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         {editMode && !newStudy && (
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
-                                    style={{ margin: '-13px', display: study.permissions.delete ? '' : 'none' }}
+                                    style={{
+                                        margin: '-13px',
+                                        display: study.permissions && study.permissions.closeStudy ? '' : 'none'
+                                    }}
                                     variant="ghost_icon"
                                     onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}
                                 >

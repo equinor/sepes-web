@@ -20,6 +20,19 @@ const Wrapper = styled.div`
         display: block;
     }
 `;
+
+/*
+const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
+    display: ${(props: any) => (props.canReadResandLearns ? '' : 'grid')};
+    grid-template-columns: ${(props: any) => (props.canReadResandLearns ? '' : '1fr 1fr 1fr')};
+    grid-gap: ${(props: any) => (props.canReadResandLearns ? '' : '16px')};
+
+    @media (max-width: 768px) {
+        display: block;
+    }
+`;
+*/
+
 type OverviewProps = {
     study: StudyObj;
     setStudy: any;
@@ -61,44 +74,55 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
 
     return (
         <Wrapper>
-            <div>
-                <Label>Results and learnings</Label>
-                {!editMode ? (
-                    <div style={{ marginTop: '8px' }}>{lineBreak(resultsAndLearnings || '-')}</div>
-                ) : (
-                    <TextField
-                        name="resultsandlearnings"
-                        placeholder="Write results and learnings from this study"
-                        data-cy="results_and_learnings"
-                        multiline
-                        onChange={handleChange}
-                        style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                        value={studyOnChange.resultsAndLearnings}
-                    />
-                )}
-                <div style={{ display: 'flex' }}>
-                    {editMode ? (
+            {study.permissions && study.permissions.readResulsAndLearnings ? (
+                <div>
+                    <Label>Results and learnings</Label>
+                    {!editMode ? (
+                        <div style={{ marginTop: '8px' }}>
+                            {study.permissions.readResulsAndLearnings ? (
+                                lineBreak(resultsAndLearnings || '-')
+                            ) : (
+                                <em>You do not have permission to view results and learnings</em>
+                            )}
+                        </div>
+                    ) : (
+                        <TextField
+                            name="resultsandlearnings"
+                            placeholder="Write results and learnings from this study"
+                            data-cy="results_and_learnings"
+                            multiline
+                            onChange={handleChange}
+                            style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
+                            value={studyOnChange.resultsAndLearnings}
+                        />
+                    )}
+                    <div style={{ display: 'flex' }}>
+                        {editMode ? (
+                            <Button
+                                onClick={handleSave}
+                                style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
+                                data-cy="save_results_and_learnings"
+                            >
+                                Save
+                            </Button>
+                        ) : null}
                         <Button
-                            onClick={handleSave}
-                            style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
-                            data-cy="save_results_and_learnings"
+                            variant="outlined"
+                            style={{ marginBottom: '16px', marginTop: '32px' }}
+                            data-cy="edit_results_and_learnings"
+                            disabled={study.permissions && !study.permissions.updateResulsAndLearnings}
+                            onClick={() => {
+                                setEditMode(!editMode);
+                                handleCancel();
+                            }}
                         >
-                            Save
+                            {!editMode ? 'Edit results and learnings' : 'Cancel'}
                         </Button>
-                    ) : null}
-                    <Button
-                        variant="outlined"
-                        style={{ marginBottom: '16px', marginTop: '32px' }}
-                        data-cy="edit_results_and_learnings"
-                        onClick={() => {
-                            setEditMode(!editMode);
-                            handleCancel();
-                        }}
-                    >
-                        {!editMode ? 'Edit results and learnings' : 'Cancel'}
-                    </Button>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div />
+            )}
             <div>
                 <SandboxTable sandboxes={sandboxes} />
                 <DatasetsTable datasets={datasets} editMode={false} studyId={id} />

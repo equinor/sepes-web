@@ -44,8 +44,11 @@ const StudyDetails = () => {
             addRemoveDataset: false,
             addRemoveParticipant: false,
             addRemoveSandbox: false,
-            delete: false,
-            updateDetails: false
+            closeStudy: false,
+            deleteStudy: false,
+            readResulsAndLearnings: false,
+            updateMetadata: false,
+            updateResulsAndLearnings: false
         }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
@@ -81,7 +84,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        disabled={!study.permissions.addRemoveSandbox}
+                        disabled={study.permissions && !study.permissions.addRemoveSandbox}
                     />
                 );
             case 3:
@@ -91,7 +94,6 @@ const StudyDetails = () => {
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        disabled={!study.permissions.addRemoveSandbox}
                     />
                 );
             case 4:

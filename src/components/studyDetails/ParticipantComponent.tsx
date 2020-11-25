@@ -42,16 +42,9 @@ type ParicipantComponentProps = {
     setStudy: any;
     setUpdateCache: any;
     updateCache: any;
-    disabled: boolean;
 };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({
-    study,
-    setStudy,
-    setUpdateCache,
-    updateCache,
-    disabled
-}) => {
+const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
@@ -171,7 +164,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({
                         placeholder={''}
                         selectedOption={{ value: 'Search..', label: text }}
                         onInputChange={handleInputChange}
-                        disabled={disabled}
+                        disabled={study.permissions && !study.permissions.addRemoveParticipant}
                     />
                 </div>
                 <div style={{ marginTop: '-16px' }}>
