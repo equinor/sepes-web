@@ -72,8 +72,11 @@ export const apiDeleteWithToken = async (url: string) => {
                     headers: headers
                 };
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+                    .then((response) => {
+                        return response.text();
+                    })
                     .then((responseData) => {
-                        return resolve(responseData);
+                        return resolve(responseData ? JSON.parse(responseData) : {});
                     })
                     .catch((error) => console.log(error));
             } catch (error) {
