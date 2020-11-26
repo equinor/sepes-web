@@ -214,7 +214,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const deleteThisStudy = (): void => {
         setUpdateCache({ ...updateCache, studies: true });
         deleteStudy(study.id).then((result: any) => {
-            history.push('/');
+            if (result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                history.push('/');
+            }
         });
     };
 
@@ -237,7 +241,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         <>
             <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="study_delete">
                 <Icon name="delete_forever" color="red" size={24} />
-                <span style={{ color: 'red', marginLeft: '16px' }}>Delete study</span>
+                <span style={{ color: 'red' }}>Delete study</span>
             </MenuItem>
         </>
     );
@@ -448,6 +452,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 data-cy="edit_study"
                                 onClick={() => setEditMode(true)}
                                 style={{ width: '80px' }}
+                                disabled={study.permissions && !study.permissions.updateMetadata}
                             >
                                 Edit
                             </Button>
@@ -481,7 +486,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         {editMode && !newStudy && (
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
-                                    style={{ margin: '-13px' }}
+                                    style={{
+                                        margin: '-13px',
+                                        display: study.permissions && study.permissions.closeStudy ? '' : 'none'
+                                    }}
                                     variant="ghost_icon"
                                     data-cy="study_options"
                                     id="menuButton"

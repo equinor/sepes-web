@@ -12,6 +12,7 @@ import {
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
+import { SandboxPermissions } from '../../common/interfaces';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -33,6 +34,7 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
+    permissions: SandboxPermissions;
 };
 
 const ipMethod = [
@@ -57,7 +59,7 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
 
@@ -307,6 +309,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     }
                                                     placeholder="Description"
                                                     data-cy="vm_rule_description"
+                                                    disabled={!permissions.editRules}
                                                 />
                                             </Cell>
                                             <Cell component="th" scope="row">
@@ -319,6 +322,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         name="useClientIp"
                                                         preSlectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -333,6 +337,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         }
                                                         placeholder="IP"
                                                         data-cy="vm_rule_ip"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 )}
                                             </Cell>
@@ -346,6 +351,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         name="protocol"
                                                         preSlectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -361,12 +367,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         type="number"
                                                         placeholder="Port"
                                                         data-cy="vm_rule_port"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 )}
                                             </Cell>
 
                                             <Cell>
-                                                {EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
+                                                {permissions.editRules &&
+                                                    EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
                                             </Cell>
                                         </Row>
                                     )
@@ -391,6 +399,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         addRule();
                     }}
                     data-cy="vm_add_rule"
+                    disabled={!permissions.editRules}
                 >
                     Add rule
                 </Button>
@@ -412,6 +421,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
+                                    disabled={!permissions.editRules}
                                     onClick={() => {
                                         addOutBoundRule();
                                     }}

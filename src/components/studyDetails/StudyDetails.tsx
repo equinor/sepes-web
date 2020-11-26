@@ -40,7 +40,17 @@ const StudyDetails = () => {
         resultsAndLearnings: '',
         datasets: [],
         participants: [],
-        sandboxes: []
+        sandboxes: [],
+        permissions: {
+            addRemoveDataset: false,
+            addRemoveParticipant: false,
+            addRemoveSandbox: false,
+            closeStudy: false,
+            deleteStudy: false,
+            readResulsAndLearnings: false,
+            updateMetadata: false,
+            updateResulsAndLearnings: false
+        }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
@@ -55,10 +65,8 @@ const StudyDetails = () => {
         id ? false : true
     );
     const permissions = useContext(Permissions);
-    console.log(Cookies.get(id));
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
-        //return () => Cookies.set('activeTab', activeTab, { expires: 365 });
     }, []);
 
     const changeComponent = () => {
@@ -82,6 +90,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        disabled={study.permissions && !study.permissions.addRemoveSandbox}
                     />
                 );
             case 3:

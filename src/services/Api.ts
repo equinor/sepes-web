@@ -108,7 +108,7 @@ export const createSandbox = async (studyId: string, sandbox: SandboxCreateObj) 
 };
 
 export const deleteSandbox = async (studyId: string, sandboxId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'DELETE');
+    return apiDeleteWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId);
 };
 
 export const getResourceStatus = async (studyId: string, sandboxId: string) => {
