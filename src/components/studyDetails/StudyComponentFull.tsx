@@ -214,7 +214,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const deleteThisStudy = (): void => {
         setUpdateCache({ ...updateCache, studies: true });
         deleteStudy(study.id).then((result: any) => {
-            history.push('/');
+            if (result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                history.push('/');
+            }
         });
     };
 
