@@ -138,8 +138,8 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                             <Item
                                 color="#000000"
                                 style={{
-                                    opacity: permissions.update ? 0.5 : 1,
-                                    pointerEvents: permissions.update ? 'none' : 'initial'
+                                    opacity: permissions.update ? 1 : 0.5,
+                                    pointerEvents: permissions.update ? 'initial' : 'none'
                                 }}
                             >
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
@@ -148,8 +148,8 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                             <Item
                                 color="#EB0000"
                                 style={{
-                                    opacity: permissions.update ? 0.5 : 1,
-                                    pointerEvents: permissions.update ? 'none' : 'initial'
+                                    opacity: permissions.update ? 1 : 0.5,
+                                    pointerEvents: permissions.update ? 'initial' : 'none'
                                 }}
                                 onClick={() => {
                                     setUserClickedDelete(true);
