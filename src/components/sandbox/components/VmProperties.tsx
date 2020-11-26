@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button, Typography } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
-import { VmObj } from '../../common/interfaces';
+import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import * as notify from '../../common/notify';
 import { useHistory } from 'react-router-dom';
+import useClickOutside from '../../common/customComponents/useClickOutside';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -53,14 +54,16 @@ type VmPropertiesProps = {
     setVms: any;
     vms: any;
     setActiveTab: any;
+    permissions: SandboxPermissions;
 };
 
-const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab }) => {
+const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab, permissions }) => {
     const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { maxDataDiskCount, MemoryGB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const history = useHistory();
+    const wrapperRef = useRef(null);
+    useClickOutside(wrapperRef, setDisplayMoreActions);
 
     const handleToggle = () => {
         setDisplayMoreActions(!displayMoreActions);
@@ -131,13 +134,23 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                         {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
                     </div>
                     {displayMoreActions && (
-                        <MoreActionsWrapper>
-                            <Item color="#000000">
+                        <MoreActionsWrapper ref={wrapperRef}>
+                            <Item
+                                color="#000000"
+                                style={{
+                                    opacity: permissions.update ? 0.5 : 1,
+                                    pointerEvents: permissions.update ? 'none' : 'initial'
+                                }}
+                            >
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
                                 <ItemText>Reset password</ItemText>
                             </Item>
                             <Item
                                 color="#EB0000"
+                                style={{
+                                    opacity: permissions.update ? 0.5 : 1,
+                                    pointerEvents: permissions.update ? 'none' : 'initial'
+                                }}
                                 onClick={() => {
                                     setUserClickedDelete(true);
                                 }}
