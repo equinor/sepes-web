@@ -9,6 +9,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox } from '../../services/Api';
 import * as notify from '../common/notify';
+import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 
 const { MenuItem } = Menu;
 
@@ -38,7 +39,7 @@ type StepBarProps = {
     step: number;
     studyId: string;
     sandboxId: string;
-    sandbox: any;
+    sandbox: SandboxObj;
     updateCache: any;
     setUpdateCache: any;
 };
@@ -106,20 +107,22 @@ const StepBar: React.FC<StepBarProps> = ({
     const deleteThisSandbox = (): void => {
         setUpdateCache({ ...updateCache, ['study' + studyId]: true });
         deleteSandbox(studyId, sandboxId).then((result: any) => {
-            if (result && !result.Message) {
-                history.push('/studies/' + studyId);
-            } else {
+            if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
-                console.log('Err');
             }
+            history.push('/studies/' + studyId);
         });
     };
 
     const optionsTemplate = (
         <>
-            <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="sandbox_delete">
+            <MenuItem
+                onClick={() => setUserClickedDelete(true)}
+                data-cy="sandbox_delete"
+                disabled={sandbox.permissions && !sandbox.permissions.delete}
+            >
                 {EquinorIcon('delete_forever', 'red', 24)}
-                <span style={{ color: 'red', marginLeft: '16px' }}>Delete sandbox</span>
+                <span style={{ color: 'red' }}>Delete sandbox</span>
             </MenuItem>
         </>
     );

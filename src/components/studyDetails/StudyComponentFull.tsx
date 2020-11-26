@@ -237,7 +237,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         <>
             <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="study_delete">
                 <Icon name="delete_forever" color="red" size={24} />
-                <span style={{ color: 'red', marginLeft: '16px' }}>Delete study</span>
+                <span style={{ color: 'red' }}>Delete study</span>
             </MenuItem>
         </>
     );

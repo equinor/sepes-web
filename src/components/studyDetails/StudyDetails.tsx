@@ -65,10 +65,8 @@ const StudyDetails = () => {
         id ? false : true
     );
     const permissions = useContext(Permissions);
-    console.log(Cookies.get(id));
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
-        //return () => Cookies.set('activeTab', activeTab, { expires: 365 });
     }, []);
 
     const changeComponent = () => {

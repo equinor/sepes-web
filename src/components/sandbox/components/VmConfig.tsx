@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, VmObj, SizeObj, DropdownObj, OperatingSystemObj } from '../../common/interfaces';
+import {
+    SandboxObj,
+    VmObj,
+    SizeObj,
+    DropdownObj,
+    OperatingSystemObj,
+    SandboxPermissions
+} from '../../common/interfaces';
 import {
     getVirtualMachineForSandbox,
     getVirtualMachineDisks,
@@ -18,9 +25,10 @@ type VmConfigProps = {
     sandbox: SandboxObj;
     resources: any;
     loadingSandbox: boolean;
+    permissions: SandboxPermissions;
 };
 
-const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, loadingSandbox }) => {
+const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, loadingSandbox, permissions }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
@@ -65,6 +73,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
                         resources={resources}
+                        permissions={permissions}
                     />
                 );
         }

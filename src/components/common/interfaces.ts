@@ -75,6 +75,7 @@ export interface SandboxObj {
     id: string;
     studyName: string;
     permissions: SandboxPermissions;
+    linkToCostAnalysis?: string;
 }
 
 export interface SandboxPermissions {
