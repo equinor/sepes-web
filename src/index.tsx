@@ -7,17 +7,16 @@ import { acquireTokenSilent, loginRequest, signInRedirect } from './auth/AuthFun
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
+import { GeneralPermissions } from './components/common/interfaces';
 
 export const UserConfig = React.createContext(myMSALObj);
-export const Permissions = React.createContext({
+export const Permissions = React.createContext<GeneralPermissions>({
     admin: false,
-    canAdministerDatasets: false,
+    canRead_PreApproved_Datasets: false,
+    canEdit_PreApproved_Datasets: false,
     canCreateStudy: false,
     datasetAdmin: false,
-    emailAddress: null,
-    fullName: null,
-    sponsor: false,
-    userName: null
+    sponsor: false
 });
 
 const renderApp = (user) => {

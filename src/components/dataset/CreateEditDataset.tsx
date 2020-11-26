@@ -17,6 +17,8 @@ import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import useFetch from '../common/hooks/useFetch';
 import { EquinorIcon } from '../common/StyledComponents';
+import { Permissions } from '../../index';
+import NoAccess from '../common/NoAccess';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -86,6 +88,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
+    const permissions = useContext(Permissions);
+
     useEffect(() => {
         checkIfEditMode();
         document.addEventListener('keydown', listener, false);
@@ -235,7 +239,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return (
+    return permissions.canEdit_PreApproved_Datasets ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
@@ -343,6 +347,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 </Wrapper>
             </OuterWrapper>
         </>
+    ) : (
+        <NoAccess />
     );
 };
 

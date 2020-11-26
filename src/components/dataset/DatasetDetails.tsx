@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
@@ -12,6 +12,7 @@ import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import useFetch from '../common/hooks/useFetch';
+import { Permissions } from '../../index';
 
 const icons = {
     arrow_back,
@@ -72,6 +73,7 @@ const DatasetDetails = (props: any) => {
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
     const [formData, setFormData] = useState<any>(null);
+    const permissions = useContext(Permissions);
 
     const uploadFiles = (): void => {
         setLoading(true);

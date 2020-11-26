@@ -119,7 +119,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     onClick={() => {
                         redirectToStudySpecificDataset();
                     }}
-                    disabled={!study.permissions.addRemoveDataset}
+                    disabled={study.permissions && !study.permissions.addRemoveDataset}
                 >
                     Create study specific data set
                 </Button>
@@ -131,7 +131,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                         isOpen={isOpen}
                         filter={checkIfDatasetIsAlreadyAdded}
                         label="Add data set from catalogue"
-                        disabled={!study.permissions.addRemoveDataset}
+                        disabled={study.permissions && !study.permissions.addRemoveDataset}
                     />
                 </div>
             </Bar>
@@ -144,7 +144,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     removeDataset={removeDataset}
                     editMode
                     studyId={study.id}
-                    disabled={!study.permissions.addRemoveDataset}
+                    disabled={study.permissions && !study.permissions.addRemoveDataset}
                 />
             </TableWrapper>
         </Wrapper>

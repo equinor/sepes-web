@@ -111,7 +111,7 @@ const StudyDetails = () => {
 
     return (
         <>
-            {!permissions.canAdministerDatasets && newStudy ? (
+            {!permissions.canCreateStudy && newStudy ? (
                 <NoAccess />
             ) : (
                 <>
