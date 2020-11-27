@@ -59,6 +59,8 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
+const numberOfPorts = 65535;
+
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -338,9 +340,9 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 ) : (
                                                     <TextField
                                                         value={rule.ip}
-                                                        onChange={(e: any) =>
-                                                            updateRule(ruleNumber, e.target.value, 'ip')
-                                                        }
+                                                        onChange={(e: any) => {
+                                                            updateRule(ruleNumber, e.target.value, 'ip');
+                                                        }}
                                                         placeholder="IP"
                                                         data-cy="vm_rule_ip"
                                                         disabled={!permissions.editRules}
@@ -367,9 +369,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 ) : (
                                                     <TextField
                                                         value={rule.port}
-                                                        onChange={(e: any) =>
-                                                            updateRule(ruleNumber, e.target.value, 'port')
-                                                        }
+                                                        onChange={(e: any) => {
+                                                            let value = e.target.value;
+                                                            if (value <= numberOfPorts && value >= 0) {
+                                                                updateRule(ruleNumber, value, 'port');
+                                                            }
+                                                        }}
                                                         type="number"
                                                         placeholder="Port"
                                                         data-cy="vm_rule_port"
