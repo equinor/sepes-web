@@ -240,8 +240,25 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         setVms(tempsVms);
     };
 
+    const checkIfEqualRules = (): boolean => {
+        if (vm.rules.length < 2) {
+            return false;
+        }
+        for (let i = 1; i < vm.rules.length; i++) {
+            for (let j = i + 1; j < vm.rules.length; j++) {
+                if (vm.rules[i].ip === vm.rules[j].ip && vm.rules[i].port.toString() === vm.rules[j].port.toString()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
     const checkIfSaveIsEnabled = (): boolean => {
         if (!vm.rules || !hasChanged) {
+            return false;
+        }
+        if (checkIfEqualRules()) {
             return false;
         }
         let enabled = true;
