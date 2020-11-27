@@ -61,7 +61,6 @@ const getIcon = (type) => {
 
 const CustomContent = (props) => {
     const { type, code, message, requestId } = props;
-    console.log(props);
     const icon = getIcon(type);
 
     return (
