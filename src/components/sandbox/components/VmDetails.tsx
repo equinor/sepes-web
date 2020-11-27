@@ -280,7 +280,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
 
     return (
         <Wrapper>
-            <VmProperties vmProperties={vm} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />
+            <VmProperties
+                vmProperties={vm}
+                setVms={setVms}
+                vms={vms}
+                setActiveTab={setActiveTab}
+                permissions={permissions}
+            />
             <div>
                 <Table style={{ width: '100%' }}>
                     <Head>
