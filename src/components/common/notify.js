@@ -3,6 +3,15 @@ import { store } from 'react-notifications-component';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { Typography, Tooltip, Icon } from '@equinor/eds-core-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { copy } from '@equinor/eds-icons';
+
+const icons = {
+    copy
+};
+
+Icon.add(icons);
 
 const width = 500;
 
@@ -11,7 +20,7 @@ const Card = styled.div`
     width: 100%;
     min-width: 112px;
     position: relative;
-    background-color: ${props => getCardVariant(props.variant)};
+    background-color: ${(props) => getCardVariant(props.variant)};
     box-sizing: border-box;
     gap: 16px;
     -moz-box-align: center;
@@ -20,10 +29,9 @@ const Card = styled.div`
     border-radius: 4px;
     min-height: 36px;
     padding: 16px;
-    pointer-events: none;
 `;
 
-const getCardVariant = variant => {
+const getCardVariant = (variant) => {
     switch (variant) {
         case 'warning':
             return 'rgb(255, 231, 214)';
@@ -34,30 +42,46 @@ const getCardVariant = variant => {
         default:
             return 'rgb(255, 255, 255)';
     }
-}
+};
 
-const getIcon = type => {
+const getIcon = (type) => {
     switch (type) {
         case 'danger':
-            return <FontAwesomeIcon icon={faExclamationTriangle} size="1x" style={{ color: '#FF1243', fontSize: '20px', marginRight: '6px' }} />
+            return (
+                <FontAwesomeIcon
+                    icon={faExclamationTriangle}
+                    size="1x"
+                    style={{ color: '#FF1243', fontSize: '20px', marginRight: '6px' }}
+                />
+            );
         default:
-            return <FontAwesomeIcon icon={faInfoCircle} size="1x" style={{ color: '#1E92F4', marginRight: '6px' }} />
+            return <FontAwesomeIcon icon={faInfoCircle} size="1x" style={{ color: '#1E92F4', marginRight: '6px' }} />;
     }
-}
+};
 
 const CustomContent = (props) => {
     const { type, code, message, requestId } = props;
-    const icon = getIcon(type)
+    console.log(props);
+    const icon = getIcon(type);
 
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <p>{icon} Code: {code}</p>
+            <p>
+                {icon} Code: {code}
+            </p>
             <span>
                 <p style={{ display: 'inline', fontSize: '14px' }}>
-                    {message} <br/><br/>
-                    Please contact support. Providing the following Event Id could make it easier to locate the problem: {requestId}
+                    {message} <br />
+                    <br />
+                    Please contact support. Providing the following Event Id could make it easier to locate the problem:{' '}
+                    {requestId}
                 </p>
+                <Tooltip title="Copy to clipboard" placement="top">
+                    <CopyToClipboard text={requestId}>
+                        <Icon name="copy" size={20} color={'#007079'} className="icon" />
+                    </CopyToClipboard>
+                </Tooltip>
             </span>
         </Card>
     );
@@ -73,9 +97,28 @@ export const show = (type, code, message, requestId) => {
         animationIn: ['animated', 'fadeIn'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
+            duration: 5000,
+            pauseOnHover: true,
+            click: true
+        },
+        width: width
+    });
+};
+
+export const warning = (message) => {
+    store.addNotification({
+        content: (
+            <Card variant={'warning'}>
+                {/*<Typography variant="h6">Error</Typography> <br />*/}
+                <Typography variant="body_short">{message}</Typography>
+            </Card>
+        ),
+        insert: 'top',
+        container: 'top-center',
+        animationIn: ['animated', 'fadeIn'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
             duration: 10000,
-            onScreen: true,
-            showIcon: true,
             touch: false,
             click: true
         },
