@@ -18,6 +18,7 @@ const Wrapper = styled.div`
 const NavTabs = (props: any) => {
     const history = useHistory();
     const permissions = useContext(Permissions);
+    console.log(permissions);
     const getActiveTab = () => {
         const location = window.location.pathname;
         return !location.includes('datasets') ? 0 : 1;
@@ -32,7 +33,7 @@ const NavTabs = (props: any) => {
             <Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
                 <TabList>
                     <Tab>Studies</Tab>
-                    <Tab disabled={!permissions.canAdministerDatasets}>Data sets</Tab>
+                    <Tab disabled={!permissions.canRead_PreApproved_Datasets}>Data sets</Tab>
                 </TabList>
             </Tabs>
         </Wrapper>

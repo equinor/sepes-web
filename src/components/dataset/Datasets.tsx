@@ -18,10 +18,10 @@ const Dataset = (props: any) => {
     const [datasets, setDatasets] = useState([]);
     const { loading } = useFetch(getStandardDatasets, setDatasets, 'datasets');
 
-    return permissions.canAdministerDatasets ? (
+    return permissions.canRead_PreApproved_Datasets ? (
         <Wrapper>
             {loading && <LoadingComponentFull />}
-            <DatasetsOverviewTable datasets={datasets} />
+            <DatasetsOverviewTable datasets={datasets} permissions={permissions} />
         </Wrapper>
     ) : (
         <NoAccess />

@@ -3,7 +3,7 @@ import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-c
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
-import { DatasetObj } from '../common/interfaces';
+import { DatasetObj, GeneralPermissions } from '../common/interfaces';
 import { Link, useHistory } from 'react-router-dom';
 import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
@@ -64,10 +64,14 @@ interface filter {
     sepesApproved: string;
 }
 
-const DatasetsOverviewTable = (props: any) => {
+type DatasetsOverviewTableProps = {
+    datasets: any;
+    permissions: GeneralPermissions;
+};
+
+const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets, permissions }) => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
-    const { datasets } = props;
     const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({});
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
         name: true,
@@ -228,6 +232,7 @@ const DatasetsOverviewTable = (props: any) => {
                     style={{ display: 'inline-block', marginRight: '24px' }}
                     onClick={redirectToCreateDataset}
                     data-cy="create_dataset"
+                    disabled={!permissions.canEdit_PreApproved_Datasets}
                 >
                     Create data set
                 </Button>

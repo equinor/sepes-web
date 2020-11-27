@@ -84,6 +84,18 @@ export interface SandboxPermissions {
     update: boolean;
 }
 
+export interface GeneralPermissions {
+    admin: boolean;
+    canRead_PreApproved_Datasets: boolean;
+    canEdit_PreApproved_Datasets: boolean;
+    canCreateStudy: boolean;
+    datasetAdmin: boolean;
+    sponsor: boolean;
+    emailAddress?: string;
+    fullName?: string;
+    userName?: string;
+}
+
 export interface DropdownObj {
     key: string;
     displayValue: string;
