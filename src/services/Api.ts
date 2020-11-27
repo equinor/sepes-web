@@ -99,20 +99,20 @@ export const putStudy = async (study: StudyObj, imageUrl: string) => {
 
 //Sandbox
 
-export const getSandbox = async (studyId: string, sandboxId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId, 'GET');
+export const getSandbox = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId, 'GET');
 };
 
 export const createSandbox = async (studyId: string, sandbox: SandboxCreateObj) => {
     return apiRequestWithToken('api/studies/' + studyId + '/sandboxes', 'POST', sandbox);
 };
 
-export const deleteSandbox = async (studyId: string, sandboxId: string) => {
-    return apiDeleteWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId);
+export const deleteSandbox = async (sandboxId: string) => {
+    return apiDeleteWithToken('api/sandboxes/' + sandboxId);
 };
 
-export const getResourceStatus = async (studyId: string, sandboxId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/sandboxes/' + sandboxId + '/resources', 'GET');
+export const getResourceStatus = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
 };
 
 //Sandbox dataset
