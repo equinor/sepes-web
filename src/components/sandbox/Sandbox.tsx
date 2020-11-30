@@ -46,7 +46,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     });
     const [resources, setResources] = useState<any>();
-    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
+    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, sandboxId);
     useFetch(getDatasetsForStudy, setDatasets, null, studyId);
 
     useEffect(() => {
@@ -67,7 +67,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     }, []);
 
     const getResources = () => {
-        getResourceStatus(studyId, sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId).then((result: any) => {
             if (result && !result.Message) {
                 setResources(result);
             } else {

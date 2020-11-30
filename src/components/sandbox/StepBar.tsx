@@ -106,7 +106,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const deleteThisSandbox = (): void => {
         setUpdateCache({ ...updateCache, ['study' + studyId]: true });
-        deleteSandbox(studyId, sandboxId).then((result: any) => {
+        deleteSandbox(sandboxId).then((result: any) => {
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
