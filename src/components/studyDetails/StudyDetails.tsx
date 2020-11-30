@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';
 import DataSetComponent from './DataSetComponent';
@@ -14,6 +14,7 @@ import NoAccess from '../common/NoAccess';
 import { StudyObj } from '../common/interfaces';
 import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
+import Cookies from 'js-cookie';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -39,20 +40,38 @@ const StudyDetails = () => {
         resultsAndLearnings: '',
         datasets: [],
         participants: [],
-        sandboxes: []
+        sandboxes: [],
+        permissions: {
+            addRemoveDataset: false,
+            addRemoveParticipant: false,
+            addRemoveSandbox: false,
+            closeStudy: false,
+            deleteStudy: false,
+            readResulsAndLearnings: false,
+            updateMetadata: false,
+            updateResulsAndLearnings: false
+        }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
-    const [activeTab, setActiveTab] = useState<number>(0);
+    const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const { loading, setLoading, cache } = useFetch(
         api.getStudy,
         setStudy,
         'study' + window.location.pathname.split('/')[2],
-        window.location.pathname.split('/')[2]
+        window.location.pathname.split('/')[2],
+        null,
+        null,
+        id ? false : true
     );
     const permissions = useContext(Permissions);
+    useEffect(() => {
+        setActiveTab(parseInt(Cookies.get(id)));
+    }, []);
 
     const changeComponent = () => {
+        Cookies.remove(id);
+        Cookies.set(id, activeTab, { expires: 365 });
         switch (activeTab) {
             case 1:
                 return (
@@ -71,6 +90,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        disabled={study.permissions && !study.permissions.addRemoveSandbox}
                     />
                 );
             case 3:
@@ -91,7 +111,7 @@ const StudyDetails = () => {
 
     return (
         <>
-            {!permissions.canAdministerDatasets && newStudy ? (
+            {!permissions.canCreateStudy && newStudy ? (
                 <NoAccess />
             ) : (
                 <>

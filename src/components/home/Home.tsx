@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { getStudyList, getResourceStatus } from '../../services/Api';
+import { getStudyList } from '../../services/Api';
 import Studies from './Studies';
-import { Button } from '@equinor/eds-core-react';
+import { Button, Menu } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';

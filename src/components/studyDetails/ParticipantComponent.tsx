@@ -3,7 +3,7 @@ import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
-import ParticipantTable from '../common/customComponents/ParticipantTable';
+import ParticipantTable from './Tables/ParticipantTable';
 import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
@@ -164,6 +164,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         placeholder={''}
                         selectedOption={{ value: 'Search..', label: text }}
                         onInputChange={handleInputChange}
+                        disabled={study.permissions && !study.permissions.addRemoveParticipant}
                     />
                 </div>
                 <div style={{ marginTop: '-16px' }}>
@@ -186,6 +187,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
+                    permissions={study.permissions}
                 />
             </TableWrapper>
         </Wrapper>

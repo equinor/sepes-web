@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
-import { EquinorIcon } from '../StyledComponents';
+import { EquinorIcon } from '../../common/StyledComponents';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -23,7 +23,7 @@ const DatasetsTable = (props: any) => {
         }
         return (
             <Cell>
-                {editMode && type === 'icon'
+                {editMode && type === 'icon' && !props.disabled
                     ? EquinorIcon('close', '', 24, () => props.removeDataset(row), true)
                     : value}
             </Cell>
@@ -38,9 +38,11 @@ const DatasetsTable = (props: any) => {
                         <Cell as="th" scope="col">
                             Dataset
                         </Cell>
-                        <Cell as="th" scope="col">
-                            Sandboxes
-                        </Cell>
+                        {editMode && (
+                            <Cell as="th" scope="col">
+                                Sandboxes
+                            </Cell>
+                        )}
                         <Cell style={{ width: '10px' }} as="th" scope="col">
                             {''}
                         </Cell>
@@ -51,18 +53,28 @@ const DatasetsTable = (props: any) => {
                         datasets.map((row) => (
                             <Row key={row.id}>
                                 {returnCell(row, row.name, 'text')}
-                                <Cell>
-                                    {row.sandboxDatasets &&
-                                        row.sandboxDatasets.map((sandbox: any, index: number) => {
-                                            return (<Link
-                                            style={{  color: '#000000', cursor: 'pointer' }}
-                                            to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.sandboxId}
-                                            >
-                                                {index === row.sandboxDatasets.length - 1 ? sandbox.sandboxName && sandbox.sandboxName: sandbox.sandboxName && sandbox.sandboxName + ', '}
-                                            </Link>)
-                                            
-                                        })}
-                                </Cell>
+                                {editMode && (
+                                    <Cell>
+                                        {row.sandboxDatasets &&
+                                            row.sandboxDatasets.map((sandbox: any, index: number) => {
+                                                return (
+                                                    <Link
+                                                        style={{ color: '#000000', cursor: 'pointer' }}
+                                                        to={
+                                                            '/studies/' +
+                                                            props.studyId +
+                                                            '/sandboxes/' +
+                                                            sandbox.sandboxId
+                                                        }
+                                                    >
+                                                        {index === row.sandboxDatasets.length - 1
+                                                            ? sandbox.sandboxName && sandbox.sandboxName
+                                                            : sandbox.sandboxName && sandbox.sandboxName + ', '}
+                                                    </Link>
+                                                );
+                                            })}
+                                    </Cell>
+                                )}
                                 {returnCell(row, '', 'icon')}
                             </Row>
                         ))
@@ -71,7 +83,7 @@ const DatasetsTable = (props: any) => {
                             <Cell component="th" scope="row">
                                 No datasets added
                             </Cell>
-                            <Cell component="th" scope="row"></Cell>
+                            {editMode && <Cell component="th" scope="row"></Cell>}
                             <Cell component="th" scope="row">
                                 {''}
                             </Cell>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon, Scrim } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Scrim, Menu } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
@@ -14,6 +14,8 @@ import { Label, Title } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import * as notify from '../common/notify';
+
+const { MenuItem } = Menu;
 
 const icons = {
     dollar,
@@ -77,7 +79,7 @@ const Wrapper = styled.div`
 `;
 
 const ScrimWrapper = styled.div`
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     padding: 32px;
     border-radius: 4px;
 `;
@@ -164,6 +166,27 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
 
+    const [state, setState] = React.useState<{
+        buttonEl: any;
+        focus: 'first' | 'last';
+    }>({
+        focus: 'first',
+        buttonEl: null
+    });
+    const { buttonEl, focus } = state;
+    const isOpen = Boolean(buttonEl);
+    const openMenu = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
+        focus: 'first' | 'last'
+    ) => {
+        const target = e.target as HTMLButtonElement;
+        setState({ ...state, buttonEl: target, focus });
+    };
+
+    const closeMenu = () => {
+        setState({ ...state, buttonEl: null, focus });
+    };
+
     useEffect(() => {
         if (!newStudy && !studyOnChange.id) {
             setStudyOnChange(study);
@@ -191,7 +214,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const deleteThisStudy = (): void => {
         setUpdateCache({ ...updateCache, studies: true });
         deleteStudy(study.id).then((result: any) => {
-            history.push('/');
+            if (result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                history.push('/');
+            }
         });
     };
 
@@ -209,6 +236,15 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
+
+    const optionsTemplate = (
+        <>
+            <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="study_delete">
+                <Icon name="delete_forever" color="red" size={24} />
+                <span style={{ color: 'red' }}>Delete study</span>
+            </MenuItem>
+        </>
+    );
 
     const sendStudyToApi = (study: StudyObj) => {
         if (imageUrl) {
@@ -416,6 +452,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 data-cy="edit_study"
                                 onClick={() => setEditMode(true)}
                                 style={{ width: '80px' }}
+                                disabled={study.permissions && !study.permissions.updateMetadata}
                             >
                                 Edit
                             </Button>
@@ -446,52 +483,70 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         </DescriptioTextfieldnWrapper>
                     )}
                     <div>
-                    {editMode && <div style={{float: 'right', marginBottom: 'auto'}}><Button style={{margin: '-13px'}} variant="ghost_icon" onClick={() => setDisplayDeleteStudy(!displayDeleteStudy)}><Icon color="#007079" name='settings' size={16} />
-                    </Button></div>}
-                    {displayDeleteStudy && 
-                    <Scrim>
-                        <ScrimWrapper>
-                            <Title title="Settings"/>
-                            <Button onClick={() => { setUserClickedDelete(true); setDisplayDeleteStudy(false); }} color="danger">Delete Study</Button>
-                            <Button variant="outlined" style={{ marginLeft: '8px' }} onClick={() => setDisplayDeleteStudy(false)}>Cancel</Button>
-                        </ScrimWrapper>
-                    </Scrim>}
-                    <RightWrapper editMode={editMode}>
-                        {!showImagePicker && (
-                            <PictureWrapper editMode={editMode}>
-                                <CustomLogoComponent logoUrl={logoUrl} />{' '}
-                            </PictureWrapper>
+                        {editMode && !newStudy && (
+                            <div style={{ float: 'right', marginBottom: 'auto' }}>
+                                <Button
+                                    style={{
+                                        margin: '-13px',
+                                        display: study.permissions && study.permissions.closeStudy ? '' : 'none'
+                                    }}
+                                    variant="ghost_icon"
+                                    data-cy="study_options"
+                                    id="menuButton"
+                                    aria-labelledby="menuButton"
+                                    aria-expanded={displayDeleteStudy}
+                                    onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                                >
+                                    <Icon color="#007079" name="settings" size={16} />
+                                </Button>
+                                <Menu
+                                    id="menuButton"
+                                    aria-labelledby="menuButton"
+                                    open={isOpen}
+                                    onClose={closeMenu}
+                                    anchorEl={buttonEl}
+                                    focus={focus}
+                                >
+                                    {optionsTemplate}
+                                </Menu>
+                            </div>
                         )}
-                        {editMode && (
-                            <>
-                                <div>
-                                    {showImagePicker && (
-                                        <PictureWrapper editMode={editMode}>
-                                            <AddImageAndCompressionContainer
-                                                setImageUrl={setImageUrl}
-                                                imageUrl={imageUrl}
-                                            />
-                                        </PictureWrapper>
-                                    )}
-                                    <Button
-                                        onClick={() => setShowImagePicker(!showImagePicker)}
-                                        variant="outlined"
-                                        style={{ margin: '16px 0 20px 56px' }}
-                                    >
-                                        Change logo
-                                    </Button>
-                                    <SaveCancelWrapper>
-                                        <Button data-cy="create_study" onClick={() => handleSave()}>
-                                            {newStudy ? 'Create' : 'Save'}
+                        <RightWrapper editMode={editMode}>
+                            {!showImagePicker && (
+                                <PictureWrapper editMode={editMode}>
+                                    <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                </PictureWrapper>
+                            )}
+                            {editMode && (
+                                <>
+                                    <div>
+                                        {showImagePicker && (
+                                            <PictureWrapper editMode={editMode}>
+                                                <AddImageAndCompressionContainer
+                                                    setImageUrl={setImageUrl}
+                                                    imageUrl={imageUrl}
+                                                />
+                                            </PictureWrapper>
+                                        )}
+                                        <Button
+                                            onClick={() => setShowImagePicker(!showImagePicker)}
+                                            variant="outlined"
+                                            style={{ margin: '16px 0 20px 56px' }}
+                                        >
+                                            Change logo
                                         </Button>
-                                        <Button variant="outlined" onClick={() => handleCancel()}>
-                                            Cancel
-                                        </Button>
-                                    </SaveCancelWrapper>
-                                </div>
-                            </>
-                        )}
-                    </RightWrapper>
+                                        <SaveCancelWrapper>
+                                            <Button data-cy="create_study" onClick={() => handleSave()}>
+                                                {newStudy ? 'Create' : 'Save'}
+                                            </Button>
+                                            <Button variant="outlined" onClick={() => handleCancel()}>
+                                                Cancel
+                                            </Button>
+                                        </SaveCancelWrapper>
+                                    </div>
+                                </>
+                            )}
+                        </RightWrapper>
                     </div>
                 </Wrapper>
             ) : (

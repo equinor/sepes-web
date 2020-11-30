@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, VmObj, SizeObj, DropdownObj, OperatingSystemObj } from '../../common/interfaces';
+import {
+    SandboxObj,
+    VmObj,
+    SizeObj,
+    DropdownObj,
+    OperatingSystemObj,
+    SandboxPermissions
+} from '../../common/interfaces';
 import {
     getVirtualMachineForSandbox,
     getVirtualMachineDisks,
@@ -17,29 +24,26 @@ type VmConfigProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
     resources: any;
+    loadingSandbox: boolean;
+    permissions: SandboxPermissions;
 };
 
-const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources }) => {
+const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, loadingSandbox, permissions }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
-    useFetch(getVirtualMachineSizes, setSizes, 'vmSizes' + sandbox.id, sandbox.id);
-    useFetch(getVirtualMachineDisks, setDisks, 'vmDisks');
-    useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
-    useFetch(getVirtualMachineOperatingSystems, setOs, 'vmOs' + sandbox.id, sandbox.id);
+    useFetch(getVirtualMachineSizes, setSizes, 'vmSizes' + sandbox.id, sandbox.id, null, null, showAddNewVm);
+    useFetch(getVirtualMachineDisks, setDisks, 'vmDisks', null, null, null, showAddNewVm);
+    const { loading } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    useFetch(getVirtualMachineOperatingSystems, setOs, 'vmOs' + sandbox.id, sandbox.id, null, null, showAddNewVm);
 
-    const getVms = () => {
-        getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
-            if (result && !result.Message) {
-                setVms(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log('Err');
-            }
-        });
-    };
+    useEffect(() => {
+        if (vms.length > 0 && !showAddNewVm) {
+            setActiveTab(1);
+        }
+    }, [vms]);
 
     const onChange = (e: any) => {
         setActiveTab(e);
@@ -47,7 +51,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return (
+                return showAddNewVm && !loadingSandbox ? (
                     <AddNewVm
                         sandbox={sandbox}
                         setVms={setVms}
@@ -57,6 +61,8 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
                         setActiveTab={setActiveTab}
                         os={os}
                     />
+                ) : (
+                    <div />
                 );
             default:
                 return (
@@ -67,7 +73,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
                         resources={resources}
-                        getVms={getVms}
+                        permissions={permissions}
                     />
                 );
         }
@@ -77,7 +83,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
                 <TabList>
-                    {showAddNewVm ? (
+                    {showAddNewVm && !loadingSandbox ? (
                         <Tab key={1} style={{ borderRadius: '4px' }}>
                             Add new vm
                         </Tab>
@@ -94,7 +100,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources })
                         })
                     ) : (
                         <Tab key={2} disabled>
-                            Vms will be here
+                            {loading ? 'loading..' : 'No virtual machines yet..'}
                         </Tab>
                     )}
                 </TabList>

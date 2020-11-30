@@ -8,7 +8,7 @@ import { StudyObj } from '../common/interfaces';
 
 const icons = {
     lock,
-    lock_open,
+    lock_open
 };
 Icon.add(icons);
 
@@ -21,7 +21,7 @@ const SmallText = styled.div`
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: minmax(216px,350px) minmax(200px,1fr);
-    grid-gap: 24px;
+    grid-gap: 96px;
     border-radius:4px;
     padding: 16px;
     min-width:120px;
@@ -34,9 +34,10 @@ const Wrapper = styled.div`
     }
     @media (max-width: 768px) {
       margin: 0 32px 16px 32px;
+      grid-gap: 32px;
 
     }
-    @media (max-width: 520px) {
+    @media (max-width: 540px) {
       display:block;
       margin: 0 0 16px 0;
       min-width:200px;

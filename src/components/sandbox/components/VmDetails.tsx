@@ -4,9 +4,15 @@ import { Table, TextField, Button } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { createVirtualMachineRule, getVirtualMachineExtended, getVirtualMachineRule } from '../../../services/Api';
+import {
+    createVirtualMachineRule,
+    getVirtualExternalLink,
+    getVirtualMachineExtended,
+    getVirtualMachineRule
+} from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
+import { SandboxPermissions } from '../../common/interfaces';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -28,7 +34,7 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
-    getVms: any;
+    permissions: SandboxPermissions;
 };
 
 const ipMethod = [
@@ -36,14 +42,29 @@ const ipMethod = [
     { displayValue: 'Custom', key: '2' }
 ];
 
+const ports = {
+    HTTP: 80,
+    HTTPS: 443
+};
+
+const protocolOptions = {
+    HTTP: 'HTTP',
+    HTTPS: 'HTTPS',
+    CUSTOM: 'Custom'
+};
+
 const portsOptions = [
-    { displayValue: 'HTTP', key: '1' },
-    { displayValue: 'Custom', key: '2' }
+    { displayValue: 'HTTP', key: 'HTTP' },
+    { displayValue: 'HTTPS', key: 'HTTPS' },
+    { displayValue: 'Custom', key: 'Custom' }
 ];
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, getVms }) => {
+const numberOfPorts = 65535;
+
+const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+
     useEffect(() => {
         getVmExtendedInfo();
     }, [index, vm, resources]);
@@ -95,6 +116,18 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         });
     };
 
+    const getExternalLink = () => {
+        getVirtualExternalLink(vm.id).then((result: any) => {
+            if (result && !result.Message) {
+                let tempsVms: any = [...vms];
+                tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
+                setVms(tempsVms);
+            } else {
+                console.log('Err');
+            }
+        });
+    };
+
     const isVmCreatingOrReady = (): boolean => {
         let res = false;
         if (!resources) {
@@ -108,7 +141,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             ) {
                 res = true;
                 if (!vm.linkToExternalSystem) {
-                    getVms();
+                    getExternalLink();
                 }
             }
         });
@@ -124,7 +157,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         currentRules.push({
             description: '',
             ip: '',
-            protocol: '',
+            protocol: 'Custom',
             port: '',
             useClientIp: false,
             direction: 0,
@@ -183,7 +216,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
     const handleDropdownChange = (key: string, i: number, value?): void => {
         setHasChanged(true);
         let currentRules: any = [...vm.rules];
-        currentRules[i][key] = portsOptions[value - 1].displayValue;
+        currentRules[i][key] = value;
+        if (value === protocolOptions.HTTP) {
+            currentRules[i].port = ports.HTTP;
+        }
+        if (value === protocolOptions.HTTPS) {
+            currentRules[i].port = ports.HTTPS;
+        }
         let tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
@@ -203,8 +242,25 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         setVms(tempsVms);
     };
 
+    const checkIfEqualRules = (): boolean => {
+        if (vm.rules.length < 2) {
+            return false;
+        }
+        for (let i = 1; i < vm.rules.length; i++) {
+            for (let j = i + 1; j < vm.rules.length; j++) {
+                if (vm.rules[i].ip === vm.rules[j].ip && vm.rules[i].port.toString() === vm.rules[j].port.toString()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
     const checkIfSaveIsEnabled = (): boolean => {
         if (!vm.rules || !hasChanged) {
+            return false;
+        }
+        if (checkIfEqualRules()) {
             return false;
         }
         let enabled = true;
@@ -227,9 +283,29 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             .catch((err: any) => console.error('Problem fetching my IP', err));
     };
 
+    const returnOpenClosed = (type: 'text' | 'button') => {
+        if (!vm.rules) {
+            return;
+        }
+        const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
+        if (actionRule) {
+            if (actionRule.action === 0) {
+                return type === 'text' ? ' open' : 'Close internet';
+            } else {
+                return type === 'text' ? ' closed' : 'Open internet';
+            }
+        }
+    };
+
     return (
         <Wrapper>
-            <VmProperties vmProperties={vm} setVms={setVms} vms={vms} setActiveTab={setActiveTab} />
+            <VmProperties
+                vmProperties={vm}
+                setVms={setVms}
+                vms={vms}
+                setActiveTab={setActiveTab}
+                permissions={permissions}
+            />
             <div>
                 <Table style={{ width: '100%' }}>
                     <Head>
@@ -258,6 +334,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     }
                                                     placeholder="Description"
                                                     data-cy="vm_rule_description"
+                                                    disabled={!permissions.editRules}
                                                 />
                                             </Cell>
                                             <Cell component="th" scope="row">
@@ -270,6 +347,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         name="useClientIp"
                                                         preSlectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -279,11 +357,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 ) : (
                                                     <TextField
                                                         value={rule.ip}
-                                                        onChange={(e: any) =>
-                                                            updateRule(ruleNumber, e.target.value, 'ip')
-                                                        }
+                                                        onChange={(e: any) => {
+                                                            updateRule(ruleNumber, e.target.value, 'ip');
+                                                        }}
                                                         placeholder="IP"
                                                         data-cy="vm_rule_ip"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 )}
                                             </Cell>
@@ -295,25 +374,35 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                             handleDropdownChange('protocol', ruleNumber, e);
                                                         }}
                                                         name="protocol"
-                                                        preSlectedValue={rule.protocol}
+                                                        preSlectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
+                                                        disabled={!permissions.editRules}
                                                     />
                                                 </div>
                                             </Cell>
                                             <Cell component="th" scope="row">
-                                                <TextField
-                                                    value={rule.port}
-                                                    onChange={(e: any) =>
-                                                        updateRule(ruleNumber, e.target.value, 'port')
-                                                    }
-                                                    type="number"
-                                                    placeholder="Port"
-                                                    data-cy="vm_rule_port"
-                                                />
+                                                {rule.protocol !== protocolOptions.CUSTOM ? (
+                                                    <span>{rule.port || '-'}</span>
+                                                ) : (
+                                                    <TextField
+                                                        value={rule.port}
+                                                        onChange={(e: any) => {
+                                                            let value = e.target.value;
+                                                            if (value <= numberOfPorts && value >= 0) {
+                                                                updateRule(ruleNumber, value, 'port');
+                                                            }
+                                                        }}
+                                                        type="number"
+                                                        placeholder="Port"
+                                                        data-cy="vm_rule_port"
+                                                        disabled={!permissions.editRules}
+                                                    />
+                                                )}
                                             </Cell>
 
                                             <Cell>
-                                                {EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
+                                                {permissions.editRules &&
+                                                    EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
                                             </Cell>
                                         </Row>
                                     )
@@ -338,6 +427,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         addRule();
                     }}
                     data-cy="vm_add_rule"
+                    disabled={!permissions.editRules}
                 >
                     Add rule
                 </Button>
@@ -353,22 +443,18 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     <Body>
                         <Row key={1}>
                             <Cell component="th" scope="row">
-                                Outbound internet traffic is currently{' '}
-                                {vm.rules && vm.rules.find((rule: any) => rule.direction === 1).action === 0
-                                    ? 'open'
-                                    : 'closed'}
+                                Outbound internet traffic is currently {returnOpenClosed('text')}
                             </Cell>
                             <Cell component="th" scope="row">
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
+                                    disabled={!permissions.editRules}
                                     onClick={() => {
                                         addOutBoundRule();
                                     }}
                                 >
-                                    {vm.rules && vm.rules.find((rule: any) => rule.direction === 1).action === 0
-                                        ? 'Close internet'
-                                        : 'Open internet'}
+                                    {returnOpenClosed('button')}
                                 </Button>
                             </Cell>
                         </Row>

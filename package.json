@@ -1,103 +1,106 @@
 {
-  "name": "sepes-web",
-  "version": "0.1.6",
-  "private": true,
-  "dependencies": {
-    "@azure/storage-blob": "^12.1.2",
-    "@equinor/eds-core-react": "^0.4.1",
-    "@fortawesome/fontawesome-free": "^5.13.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
-    "@fortawesome/free-solid-svg-icons": "^5.13.0",
-    "@fortawesome/react-fontawesome": "^0.1.9",
-    "@material-ui/core": "^4.10.0",
-    "@microsoft/applicationinsights-web": "^2.5.6",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.37",
-    "@types/react": "^16.9.34",
-    "@types/react-dom": "^16.9.7",
-    "@types/react-router": "^5.1.7",
-    "@types/react-router-dom": "^5.1.5",
-    "@types/reactstrap": "^8.4.2",
-    "@types/styled-components": "^5.1.0",
-    "animate.css": "^4.1.0",
-    "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
-    "browser-image-compression": "^1.0.12",
-    "commitizen": "^4.1.2",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.4",
-    "lodash": ">=4.17.19",
-    "msal": "^1.3.0",
-    "node-sass": "^4.14.1",
-    "node-forge": ">=0.10.0",
-    "object-path": ">=0.11.5",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-dropzone": "^11.0.1",
-    "react-notifications-component": "^2.4.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0",
-    "react-select": "^3.1.0",
-    "reactstrap": "^8.4.1",
-    "styled-components": "^5.1.0",
-    "serialize-javascript": ">=3.1.0",
-    "typescript": "^3.7.5"
-  },
-  "scripts": {
-    "start": "react-scripts -r @cypress/instrument-cra start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "commit": "git-cz",
-    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
-    "analyze": "node scripts/analyze.js"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@cypress/code-coverage": "^3.7.5",
-    "@cypress/instrument-cra": "^1.1.1",
-    "cypress": "^4.6.0",
-    "cypress-dark": "^1.7.14",
-    "cypress-plugin-retries": "^1.5.2",
-    "cz-conventional-changelog": "^3.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^2.5.0",
-    "progress-bar-webpack-plugin": "^2.1.0",
-    "webpack-bundle-analyzer": "^3.8.0"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!(@equinor/eds-icons)/)"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+    "name": "sepes-web",
+    "version": "0.1.6",
+    "private": true,
+    "dependencies": {
+        "@azure/storage-blob": "^12.1.2",
+        "@equinor/eds-core-react": "0.6.2",
+        "@fortawesome/fontawesome-free": "^5.13.0",
+        "@fortawesome/fontawesome-svg-core": "^1.2.28",
+        "@fortawesome/free-solid-svg-icons": "^5.13.0",
+        "@fortawesome/react-fontawesome": "^0.1.9",
+        "@material-ui/core": "^4.10.0",
+        "@microsoft/applicationinsights-web": "^2.5.6",
+        "@testing-library/jest-dom": "^4.2.4",
+        "@testing-library/react": "^9.5.0",
+        "@testing-library/user-event": "^7.2.1",
+        "@types/jest": "^24.9.1",
+        "@types/node": "^12.12.37",
+        "@types/react": "^16.9.34",
+        "@types/react-dom": "^16.9.7",
+        "@types/react-router": "^5.1.7",
+        "@types/react-router-dom": "^5.1.5",
+        "@types/reactstrap": "^8.4.2",
+        "@types/styled-components": "^5.1.0",
+        "animate.css": "^4.1.0",
+        "axios": "^0.19.2",
+        "bootstrap": "^4.4.1",
+        "browser-image-compression": "^1.0.12",
+        "commitizen": "^4.1.2",
+        "copy-to-clipboard": "^3.3.1",
+        "enzyme": "^3.11.0",
+        "enzyme-adapter-react-16": "^1.15.4",
+        "js-cookie": "^2.2.1",
+        "lodash": ">=4.17.19",
+        "msal": "^1.3.0",
+        "node-forge": ">=0.10.0",
+        "node-sass": "^4.14.1",
+        "object-path": ">=0.11.5",
+        "react": "^16.13.1",
+        "react-copy-to-clipboard": "^5.0.2",
+        "react-dom": "^16.13.1",
+        "react-dropzone": "^11.0.1",
+        "react-notifications-component": "^2.4.0",
+        "react-router": "^5.1.2",
+        "react-router-dom": "^5.1.2",
+        "react-scripts": "3.4.0",
+        "react-select": "^3.1.0",
+        "reactstrap": "^8.4.1",
+        "serialize-javascript": ">=3.1.0",
+        "styled-components": "^5.1.0",
+        "typescript": "^3.7.5"
+    },
+    "scripts": {
+        "start": "react-scripts -r @cypress/instrument-cra start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "commit": "git-cz",
+        "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
+        "analyze": "node scripts/analyze.js"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@cypress/code-coverage": "^3.7.5",
+        "@cypress/instrument-cra": "^1.1.1",
+        "cypress": "^4.6.0",
+        "cypress-dark": "^1.7.14",
+        "cypress-plugin-retries": "^1.5.2",
+        "cz-conventional-changelog": "^3.2.0",
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb": "^18.1.0",
+        "eslint-plugin-import": "^2.20.1",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-react": "^7.19.0",
+        "eslint-plugin-react-hooks": "^2.5.0",
+        "progress-bar-webpack-plugin": "^2.1.0",
+        "webpack-bundle-analyzer": "^3.8.0"
+    },
+    "jest": {
+        "transformIgnorePatterns": [
+            "node_modules/(?!(@equinor/eds-icons)/)"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "nyc": {
+        "report-dir": "cypress-coverage"
     }
-  },
-  "nyc": {
-    "report-dir": "cypress-coverage"
-  }
 }
