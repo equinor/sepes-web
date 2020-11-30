@@ -237,6 +237,7 @@ const DatasetDetails = (props: any) => {
                             variant="outlined"
                             onClick={handleEditMetdata}
                             data-cy="dataset_edit"
+                            disabled={!permissions.canEdit_PreApproved_Datasets}
                         >
                             Edit metadata
                         </Button>
