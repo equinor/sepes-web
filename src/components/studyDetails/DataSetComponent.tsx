@@ -102,11 +102,12 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
 
     const checkIfDatasetIsAlreadyAdded = (id: string) => {
         let elementExist = false;
-        study.datasets.forEach((element: any) => {
-            if (element.id === id) {
-                elementExist = true;
-            }
-        });
+        study.datasets &&
+            study.datasets.forEach((element: any) => {
+                if (element.id === id) {
+                    elementExist = true;
+                }
+            });
         return elementExist;
     };
 

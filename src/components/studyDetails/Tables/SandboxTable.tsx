@@ -31,7 +31,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
-                <Head style={{ backgroundColor: '#F7F7F7' }}>
+                <Head>
                     <Row>
                         <Cell as="th" scope="col">
                             Sandbox
@@ -51,12 +51,8 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
                         ))
                     ) : (
                         <Row key={1}>
-                            <Cell component="th" scope="row">
-                                No sandboxes added
-                            </Cell>
-                            <Cell component="th" scope="row">
-                                {''}
-                            </Cell>
+                            <Cell>No sandboxes added</Cell>
+                            <Cell>{''}</Cell>
                         </Row>
                     )}
                 </Body>

@@ -254,6 +254,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             : 'This data set will be available for all studies in Sepes. We need some meta data before we create the storage. When storage is created you can start uploading files.'}
                     </HelperTextWrapper>
                     <TextField
+                        id="textfield1"
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
@@ -262,9 +263,12 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         onChange={(e: any) => handleChange('name', e.target.value)}
                         value={dataset?.name}
                         data-cy="dataset_name"
+                        autoComplete="off"
                     />
                     {!editDataset ? (
                         <TextField
+                            id="textfield2"
+                            autoComplete="off"
                             placeholder="Please add storage account name..."
                             label="Storage account name"
                             meta="(required)"
@@ -318,14 +322,16 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
                     </StyledLink>
                     <TextField
+                        id="textfield13"
                         placeholder="Please add Data ID"
                         label="DataId"
                         meta=""
                         type="number"
                         style={{ width: '312px', backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('dataId', e.target.value)}
-                        value={dataset?.dataId}
+                        value={dataset?.dataId?.toString()}
                         data-cy="dataset_dataId"
+                        autoComplete="off"
                     />
                     <StyledLink
                         href="https://statoilsrm.sharepoint.com/:x:/r/sites/datafundamentals/_layouts/15/Doc.aspx?sourcedoc=%7B74CCD0A3-1C7E-4645-9D16-C9BFEDC5C07E%7D&file=Data%20description%20and%20classification%20inventory.xlsx&action=default&mobileredirect=true"

@@ -87,6 +87,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
                         </div>
                     ) : (
                         <TextField
+                            id="textfield1"
                             name="resultsandlearnings"
                             placeholder="Write results and learnings from this study"
                             data-cy="results_and_learnings"
@@ -94,6 +95,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
                             onChange={handleChange}
                             style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
                             value={studyOnChange.resultsAndLearnings}
+                            autoComplete="off"
                         />
                     )}
                     <div style={{ display: 'flex' }}>
