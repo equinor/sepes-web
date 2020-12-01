@@ -9,6 +9,7 @@ import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter'
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
 import useClickOutside from '../common/customComponents/useClickOutside';
+import Cookies from 'js-cookie';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -73,20 +74,24 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
     const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({ name: '' });
-    const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
-        name: true,
-        sourceSystem: true,
-        areaL2: true,
-        areaL1: true,
-        asset: true,
-        baDataOwner: false,
-        classification: false,
-        countryOfOrigin: false,
-        dataId: false,
-        lraId: false,
-        tags: false,
-        sepesApproved: false
-    });
+    const [checkedColums, setCheckedColumns] = useState<checkedColumns>(
+        Cookies.get('checkedColumns')
+            ? JSON.parse(Cookies.get('checkedColumns'))
+            : {
+                  name: true,
+                  sourceSystem: true,
+                  areaL2: true,
+                  areaL1: true,
+                  asset: true,
+                  baDataOwner: false,
+                  classification: false,
+                  countryOfOrigin: false,
+                  dataId: false,
+                  lraId: false,
+                  tags: false,
+                  sepesApproved: false
+              }
+    );
 
     const [filter, setFilter] = useState<filter>({
         name: '',
@@ -119,7 +124,9 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     };
 
     const handleColumnsChange = (evt) => {
+        const _columns = { ...checkedColums, [evt.target.name]: evt.target.checked };
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
+        Cookies.set('checkedColumns', _columns, { expires: 365 });
     };
 
     const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {
