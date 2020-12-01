@@ -40,9 +40,11 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     body: JSON.stringify(body)
                 };
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
-                    .then((response) => response.json())
+                    .then((response) => {
+                        return response.text();
+                    })
                     .then((responseData) => {
-                        return resolve(responseData);
+                        return resolve(responseData ? JSON.parse(responseData) : {});
                     })
                     .catch((error) => console.log(error));
             } catch (error) {
@@ -68,7 +70,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
         }
     });
 };
-
+/*
 export const apiDeleteWithToken = async (url: string) => {
     return new Promise(function (resolve, reject) {
         const _post = async (accessToken) => {
@@ -109,7 +111,7 @@ export const apiDeleteWithToken = async (url: string) => {
         }
     });
 };
-
+*/
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
         baseURL: blobUrl,

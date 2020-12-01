@@ -34,7 +34,6 @@ const Bar = styled.div`
     display: grid;
     grid-template-columns: 1fr 0.3fr 296px;
     margin-left: auto;
-    z-index: 99;
     margin-top: 32px;
     @media (max-width: 768px) {
         margin-left: 0;
@@ -77,7 +76,10 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
 
     const redirectToStudySpecificDataset = () => {
         const studyId = window.location.pathname.split('/')[2];
-        history.push('/studies/' + studyId + '/datasets');
+        history.push({
+            pathname: '/studies/' + studyId + '/datasets',
+            state: { canCreateStudySpecificDataset: study.permissions.addRemoveDataset }
+        });
     };
 
     const addDatasetToStudy = (row: any) => {
