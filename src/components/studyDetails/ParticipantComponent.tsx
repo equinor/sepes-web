@@ -24,7 +24,6 @@ const Wrapper = styled.div`
 `;
 
 const SearchWrapper = styled.div`
-    z-index: 99;
     margin-left: auto;
     margin-top: 32px;
     display: inline-flex;

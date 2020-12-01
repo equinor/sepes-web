@@ -19,6 +19,7 @@ import useFetch from '../common/hooks/useFetch';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
+import { useLocation } from 'react-router-dom';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -61,6 +62,11 @@ const dataClassificationsList = [
 ];
 const width = '512px';
 
+interface passedProps {
+    pathname: string;
+    canCreateStudySpecificDataset: boolean;
+}
+
 type CreateEditDatasetProps = {
     datasetFromDetails: DatasetObj;
     setDatasetFromDetails: (value: any) => void;
@@ -89,6 +95,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
     const permissions = useContext(Permissions);
+    const location = useLocation<passedProps>();
 
     useEffect(() => {
         checkIfEditMode();
@@ -239,7 +246,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return permissions.canEdit_PreApproved_Datasets ? (
+    return permissions.canEdit_PreApproved_Datasets ||
+        (location.state && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>

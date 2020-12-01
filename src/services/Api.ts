@@ -1,4 +1,4 @@
-import { apiRequestWithToken, postputStudy, postFile, apiDeleteWithToken } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
 import {
     StudyObj,
     DatasetObj,
@@ -23,7 +23,7 @@ export const createStudy = async (study: StudyObj) => {
 };
 
 export const deleteStudy = async (studyId: string) => {
-    return apiDeleteWithToken('api/studies/' + studyId);
+    return apiRequestWithToken('api/studies/' + studyId, 'DELETE');
 };
 
 export const editStudy = async (study: StudyObj, id?: string) => {
@@ -108,7 +108,7 @@ export const createSandbox = async (studyId: string, sandbox: SandboxCreateObj) 
 };
 
 export const deleteSandbox = async (sandboxId: string) => {
-    return apiDeleteWithToken('api/sandboxes/' + sandboxId);
+    return apiRequestWithToken('api/sandboxes/' + sandboxId, 'DELETE');
 };
 
 export const getResourceStatus = async (sandboxId: string) => {
