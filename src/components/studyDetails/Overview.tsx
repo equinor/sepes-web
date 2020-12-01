@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
-import { Button, TextField } from '@equinor/eds-core-react';
+import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
@@ -99,7 +99,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
                         />
                     )}
                     <div style={{ display: 'flex' }}>
-                        {editMode ? (
+                        {editMode && (
                             <Button
                                 onClick={handleSave}
                                 style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
@@ -107,19 +107,29 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
                             >
                                 Save
                             </Button>
-                        ) : null}
-                        <Button
-                            variant="outlined"
-                            style={{ marginBottom: '16px', marginTop: '32px' }}
-                            data-cy="edit_results_and_learnings"
-                            disabled={study.permissions && !study.permissions.updateResulsAndLearnings}
-                            onClick={() => {
-                                setEditMode(!editMode);
-                                handleCancel();
-                            }}
-                        >
-                            {!editMode ? 'Edit results and learnings' : 'Cancel'}
-                        </Button>
+                        )}
+                        <div style={{ marginBottom: '16px', marginTop: '32px' }}>
+                            <Tooltip
+                                title={
+                                    study.permissions && study.permissions.updateResulsAndLearnings
+                                        ? ''
+                                        : 'You do not have access to edit results and learnings'
+                                }
+                                placement="right"
+                            >
+                                <Button
+                                    variant="outlined"
+                                    data-cy="edit_results_and_learnings"
+                                    disabled={study.permissions && !study.permissions.updateResulsAndLearnings}
+                                    onClick={() => {
+                                        setEditMode(!editMode);
+                                        handleCancel();
+                                    }}
+                                >
+                                    {!editMode ? 'Edit results and learnings' : 'Cancel'}
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </div>
                 </div>
             ) : (

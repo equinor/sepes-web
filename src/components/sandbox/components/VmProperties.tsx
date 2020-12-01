@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Button, Typography } from '@equinor/eds-core-react';
+import { Button, Typography, Tooltip } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
@@ -110,19 +110,24 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
                 </div>
             </Wrapper>
             <BtnWrapper>
-                <div>
+                <div style={{ marginTop: '24px' }}>
                     <a href={vmProperties.linkToExternalSystem} target="_blank" rel="noopener noreferrer">
-                        <Button
-                            style={{ marginTop: '24px', width: '216px' }}
-                            disabled={!vmProperties.linkToExternalSystem}
+                        <Tooltip
+                            title={
+                                vmProperties.linkToExternalSystem ? '' : 'This will be disabled until VM has status OK'
+                            }
+                            placement="top"
                         >
-                            Open virtual machine
-                            <div style={{ marginLeft: 'auto', display: 'block' }}>
-                                {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
-                            </div>
-                        </Button>
+                            <Button style={{ width: '216px' }} disabled={!vmProperties.linkToExternalSystem}>
+                                Open virtual machine
+                                <div style={{ marginLeft: 'auto', display: 'block' }}>
+                                    {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
+                                </div>
+                            </Button>
+                        </Tooltip>
                     </a>
                 </div>
+
                 <Button
                     variant="outlined"
                     style={{ marginTop: '8px', width: '216px' }}

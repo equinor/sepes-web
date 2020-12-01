@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon, Scrim, Menu } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
@@ -452,15 +452,26 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             )}
                         </div>
                         {!editMode ? (
-                            <Button
-                                variant="outlined"
-                                data-cy="edit_study"
-                                onClick={() => setEditMode(true)}
-                                style={{ width: '80px' }}
-                                disabled={study.permissions && !study.permissions.updateMetadata}
-                            >
-                                Edit
-                            </Button>
+                            <div>
+                                <Tooltip
+                                    title={
+                                        study.permissions && study.permissions.updateMetadata
+                                            ? ''
+                                            : 'You do not have access to edit this study'
+                                    }
+                                    placement="right"
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        data-cy="edit_study"
+                                        onClick={() => setEditMode(true)}
+                                        style={{ width: '80px' }}
+                                        disabled={study.permissions && !study.permissions.updateMetadata}
+                                    >
+                                        Edit
+                                    </Button>
+                                </Tooltip>
+                            </div>
                         ) : (
                             <div>
                                 <Label

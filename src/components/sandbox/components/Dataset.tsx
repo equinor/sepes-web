@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Checkbox } from '@equinor/eds-core-react';
+import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj, SandboxPermissions } from '../../common/interfaces';
 import {
     deleteDatasetForSandbox,
@@ -9,6 +9,7 @@ import {
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetch from '../../common/hooks/useFetch';
+
 const { Body, Row, Cell, Head } = Table;
 
 type datasetProps = {
@@ -96,14 +97,23 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                                 <Cell>
                                     <div style={{ paddingTop: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
-                                            <Checkbox
-                                                checked={dataset.added}
-                                                label={dataset.name}
-                                                disabled={!permissions.update}
-                                                onChange={(e: any) => {
-                                                    handleCheck(e, dataset);
-                                                }}
-                                            />
+                                            <Tooltip
+                                                title={
+                                                    permissions.update
+                                                        ? ''
+                                                        : 'You do not have access to update data sets in sandbox'
+                                                }
+                                                placement="top"
+                                            >
+                                                <Checkbox
+                                                    checked={dataset.added}
+                                                    label={dataset.name}
+                                                    disabled={!permissions.update}
+                                                    onChange={(e: any) => {
+                                                        handleCheck(e, dataset);
+                                                    }}
+                                                />
+                                            </Tooltip>
                                         </span>
                                     </div>
                                 </Cell>

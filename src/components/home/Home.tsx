@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { getStudyList } from '../../services/Api';
 import Studies from './Studies';
-import { Button, Menu } from '@equinor/eds-core-react';
+import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
@@ -25,6 +25,8 @@ const RightWrapper = styled.div`
     padding: 16px;
     border-radius: 4px;
     margin-right: 32px;
+    text-align: center;
+    min-width: 368px;
     @media (max-width: 768px) {
         display: block;
         margin: 0 32px 32px 32px;
@@ -51,18 +53,23 @@ const Home = () => {
                     </div>
                 )}
                 <RightWrapper>
-                    <div>{mockText}</div>
-                    <div style={{ bottom: '16px' }}>
-                        <Button
-                            disabled={!permissions.canCreateStudy}
-                            data-cy="new_study"
-                            style={{ width: '100%', marginTop: '9px' }}
-                            onClick={() => {
-                                history.push('/studies');
-                            }}
+                    <div style={{ textAlign: 'initial' }}>{mockText}</div>
+                    <div style={{ bottom: '16px', width: '100%', marginTop: '9px' }}>
+                        <Tooltip
+                            title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
+                            placement="top"
                         >
-                            New study
-                        </Button>
+                            <Button
+                                disabled={!permissions.canCreateStudy}
+                                data-cy="new_study"
+                                style={{ width: '336px' }}
+                                onClick={() => {
+                                    history.push('/studies');
+                                }}
+                            >
+                                New study
+                            </Button>
+                        </Tooltip>
                     </div>
                 </RightWrapper>
             </Wrapper>
