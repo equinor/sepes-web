@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
+import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
@@ -242,15 +242,23 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                 <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
-                <Button
-                    variant="outlined"
-                    style={{ display: 'inline-block', marginRight: '24px' }}
-                    onClick={redirectToCreateDataset}
-                    data-cy="create_dataset"
-                    disabled={!permissions.canEdit_PreApproved_Datasets}
-                >
-                    Create data set
-                </Button>
+                <div style={{ display: 'inline-block', marginRight: '24px' }}>
+                    <Tooltip
+                        title={
+                            permissions.canEdit_PreApproved_Datasets ? '' : 'You do not have acces to create a data set'
+                        }
+                        placement="top"
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={redirectToCreateDataset}
+                            data-cy="create_dataset"
+                            disabled={!permissions.canEdit_PreApproved_Datasets}
+                        >
+                            Create data set
+                        </Button>
+                    </Tooltip>
+                </div>
                 <div style={{ display: 'inline-block' }}>
                     <Button variant="outlined" onClick={() => setShowColumnsPicker(!showColumnsPicker)}>
                         Add / remove columns

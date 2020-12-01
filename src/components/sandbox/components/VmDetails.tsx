@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Table, TextField, Button } from '@equinor/eds-core-react';
+import { Table, TextField, Button, Tooltip } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import VmProperties from './VmProperties';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
@@ -426,17 +426,23 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         )}
                     </Body>
                 </Table>
-                <Button
-                    variant="outlined"
-                    style={{ float: 'right', margin: '24px 16px 24px 16px' }}
-                    onClick={() => {
-                        addRule();
-                    }}
-                    data-cy="vm_add_rule"
-                    disabled={!permissions.editRules}
-                >
-                    Add rule
-                </Button>
+                <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
+                    <Tooltip
+                        title={permissions.editRules ? '' : 'You do not have permission to add or create rules'}
+                        placement="left"
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                addRule();
+                            }}
+                            data-cy="vm_add_rule"
+                            disabled={!permissions.editRules}
+                        >
+                            Add rule
+                        </Button>
+                    </Tooltip>
+                </div>
                 <Table style={{ width: '100%', marginTop: '24px' }}>
                     <Head>
                         <Row>
@@ -464,16 +470,26 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                         </Row>
                     </Body>
                 </Table>
-                <Button
-                    style={{ float: 'right', margin: '24px 16px 24px 16px' }}
-                    onClick={() => {
-                        saveRule(vm.rules);
-                    }}
-                    disabled={!checkIfSaveIsEnabled()}
-                    data-cy="vm_rule_save"
-                >
-                    Save
-                </Button>
+                <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
+                    <Tooltip
+                        title={
+                            checkIfSaveIsEnabled() || !hasChanged
+                                ? ''
+                                : 'Enabled when all rules values and are not equal'
+                        }
+                        placement="left"
+                    >
+                        <Button
+                            onClick={() => {
+                                saveRule(vm.rules);
+                            }}
+                            disabled={!checkIfSaveIsEnabled()}
+                            data-cy="vm_rule_save"
+                        >
+                            Save
+                        </Button>
+                    </Tooltip>
+                </div>
                 <Button
                     variant="outlined"
                     style={{ float: 'right', margin: '24px 0 0 0' }}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@equinor/eds-core-react';
+import { Button, Tooltip } from '@equinor/eds-core-react';
 import SandboxTable from './Tables/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
 import CreateSandboxComponent from './CreateSandboxComponent';
@@ -53,16 +53,23 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
     return (
         <Wrapper>
             <DropdownWrapper>
-                <Button
-                    variant="outlined"
-                    style={{ width: '200px', marginBottom: '24px' }}
-                    onClick={() => setToggle(!toggle)}
-                    data-cy="create_sandbox"
-                    disabled={disabled}
-                >
-                    Create sandbox
-                    {EquinorIcon('arrow_drop_down', '#007079', 24)}
-                </Button>
+                <div style={{ marginBottom: '24px' }}>
+                    <Tooltip
+                        title={disabled ? 'You do not have access to create a study specific data set' : ''}
+                        placement="left"
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={() => setToggle(!toggle)}
+                            data-cy="create_sandbox"
+                            disabled={disabled}
+                            style={{ width: '200px' }}
+                        >
+                            Create sandbox
+                            {EquinorIcon('arrow_drop_down', '#007079', 24)}
+                        </Button>
+                    </Tooltip>
+                </div>
                 {toggle && (
                     <CreateSandboxComponent
                         setHasChanged={setHasChanged}
