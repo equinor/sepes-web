@@ -80,13 +80,9 @@ const DatasetsTable = (props: any) => {
                         ))
                     ) : (
                         <Row key={1}>
-                            <Cell component="th" scope="row">
-                                No datasets added
-                            </Cell>
-                            {editMode && <Cell component="th" scope="row"></Cell>}
-                            <Cell component="th" scope="row">
-                                {''}
-                            </Cell>
+                            <Cell>No datasets added</Cell>
+                            {editMode && <Cell></Cell>}
+                            <Cell>{''}</Cell>
                         </Row>
                     )}
                 </Body>

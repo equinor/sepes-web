@@ -62,7 +62,9 @@ const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     let studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
-    const [dataset, setDataset] = useState<DatasetObj>({});
+    const [dataset, setDataset] = useState<DatasetObj>({
+        name: ''
+    });
     const { loading, setLoading, cache } = useFetch(
         isStandard ? getStandardDataset : getDataset,
         setDataset,

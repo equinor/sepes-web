@@ -108,6 +108,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     return !loading ? (
         <Wrapper ref={wrapperRef}>
             <TextField
+                id="textfield1"
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
                 meta="(required)"
@@ -115,6 +116,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
+                autoComplete="off"
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot

@@ -40,7 +40,6 @@ const SearchWithDropdown = (props: any) => {
                 onChange={handleOnSearchValueChange}
                 value={props.text || searchValue}
                 placeholder="Type to search"
-                label="test"
             />
             {!props.disabled && (
                 <Wrapper isOpen={props.isOpen}>

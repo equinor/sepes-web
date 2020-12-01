@@ -93,7 +93,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                     filteredDatasets.map((dataset: DatasetObj) => {
                         return (
                             <Row key={dataset.id}>
-                                <Cell component="th" scope="row">
+                                <Cell>
                                     <div style={{ paddingTop: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
                                             <Checkbox
@@ -113,12 +113,8 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                     })
                 ) : (
                     <Row key="1">
-                        <Cell component="th" scope="row">
-                            {loading ? 'loading data sets..' : 'No data sets in study'}
-                        </Cell>
-                        <Cell component="th" scope="row">
-                            {''}
-                        </Cell>
+                        <Cell>{loading ? 'loading data sets..' : 'No data sets in study'}</Cell>
+                        <Cell>{''}</Cell>
                     </Row>
                 )}
             </Body>

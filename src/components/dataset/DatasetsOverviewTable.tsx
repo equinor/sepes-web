@@ -73,7 +73,7 @@ type DatasetsOverviewTableProps = {
 const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets, permissions }) => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
-    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({});
+    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({ name: '' });
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>(
         Cookies.get('checkedColumns')
             ? JSON.parse(Cookies.get('checkedColumns'))
@@ -141,7 +141,15 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     };
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {
-        return <Checkbox checked={checked} label={label} name={name} value={checked} onChange={handleColumnsChange} />;
+        return (
+            <Checkbox
+                checked={checked}
+                label={label}
+                name={name}
+                value={checked.toString()}
+                onChange={handleColumnsChange}
+            />
+        );
     };
 
     const returnFilter = (column: string, checker: boolean) => {
@@ -229,7 +237,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                 title={selectedDataset.name}
                 open={toggle}
                 onClose={() => setToggle(!toggle)}
-                style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
+                style={{ zIndex: 9999, height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
                 <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>

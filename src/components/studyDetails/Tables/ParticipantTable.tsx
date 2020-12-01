@@ -23,7 +23,7 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
-                <Head style={{ backgroundColor: '#F7F7F7', borderBottom: '2px solid #DCDCDC' }}>
+                <Head>
                     <Row>
                         <Cell as="th" scope="col">
                             Name

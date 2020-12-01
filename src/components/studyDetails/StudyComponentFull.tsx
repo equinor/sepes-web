@@ -280,7 +280,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             putStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    cache['study' + study.id] = result;
                     setStudy(result);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -373,6 +372,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         ) : (
                             <>
                                 <TextField
+                                    id="textfield1"
                                     placeholder="What is the study name?"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
                                     onChange={(e: any) => handleChange('name', e.target.value)}
@@ -381,8 +381,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     style={{ margin: 'auto', marginLeft: '0' }}
                                     value={studyOnChange.name}
                                     data-cy="study_name"
+                                    autoComplete="off"
                                 />
                                 <TextField
+                                    id="textfield2"
+                                    autoComplete="off"
                                     placeholder="Who is the vendor?"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
                                     onChange={(e: any) => handleChange('vendor', e.target.value)}
@@ -401,6 +404,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     }
                                 />
                                 <TextField
+                                    id="textfield3"
+                                    autoComplete="off"
                                     placeholder="Wbs for the study"
                                     onChange={(e: any) => handleChange('wbsCode', e.target.value)}
                                     label="wbs"
@@ -471,6 +476,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     ) : (
                         <DescriptioTextfieldnWrapper>
                             <TextField
+                                id="textfield4"
+                                autoComplete="off"
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}

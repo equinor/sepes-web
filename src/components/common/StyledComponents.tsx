@@ -34,7 +34,13 @@ const icons = {
 };
 Icon.add(icons);
 
-export const EquinorIcon = (name: string, color: string, size: number, onClick?: any, clickAble?: boolean) => {
+export const EquinorIcon = (
+    name: string,
+    color: string,
+    size: 24 | 16 | 32 | 40 | 48 | undefined,
+    onClick?: any,
+    clickAble?: boolean
+) => {
     if (clickAble && onClick) {
         return (
             <Icon onClick={onClick} color={color} name={name} size={size} style={{ cursor: 'pointer' }} title={name} />

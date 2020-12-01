@@ -36,7 +36,7 @@ export interface ParticipantObj {
 }
 
 export interface DatasetObj {
-    name?: string;
+    name: string;
     storageAccountName?: string;
     location?: string;
     classification?: string;

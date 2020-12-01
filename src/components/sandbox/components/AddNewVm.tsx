@@ -225,11 +225,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
     return (
         <Wrapper>
             <TextField
+                id="textfield1"
                 placeholder="Name"
                 onChange={(e: any) => {
                     handleChange('name', e.target.value);
                 }}
                 value={vm.name}
+                autoComplete="off"
                 label="Name"
                 meta={returnLimitMeta(20, vm.name)}
                 data-cy="vm_name"
@@ -246,6 +248,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 <Typography variant="h6">{actualVmName || '-'}</Typography>
             </div>
             <TextField
+                id="textfield2"
+                autoComplete="off"
                 placeholder="Username"
                 onChange={(e: any) => handleChange('username', e.target.value)}
                 value={vm.username}
@@ -261,6 +265,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
                 }
             />
             <TextField
+                id="textfield3"
+                autoComplete="off"
                 placeholder="Password"
                 type="password"
                 onChange={(e: any) => handleChange('password', e.target.value)}

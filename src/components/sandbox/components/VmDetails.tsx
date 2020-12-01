@@ -326,8 +326,9 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                 return (
                                     rule.direction === 0 && (
                                         <Row>
-                                            <Cell component="th" scope="row">
+                                            <Cell>
                                                 <TextField
+                                                    id="textfield1"
                                                     value={rule.description}
                                                     onChange={(e: any) =>
                                                         updateRule(ruleNumber, e.target.value, 'description')
@@ -335,9 +336,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     placeholder="Description"
                                                     data-cy="vm_rule_description"
                                                     disabled={!permissions.editRules}
+                                                    autoComplete="off"
                                                 />
                                             </Cell>
-                                            <Cell component="th" scope="row">
+                                            <Cell>
                                                 <div style={{ paddingBottom: '16px' }}>
                                                     <CoreDevDropdown
                                                         options={ipMethod}
@@ -351,11 +353,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     />
                                                 </div>
                                             </Cell>
-                                            <Cell component="th" scope="row">
+                                            <Cell>
                                                 {rule.useClientIp ? (
                                                     <span>{rule.ip || 'loading ip..'}</span>
                                                 ) : (
                                                     <TextField
+                                                        id="textfield2"
+                                                        autoComplete="off"
                                                         value={rule.ip}
                                                         onChange={(e: any) => {
                                                             updateRule(ruleNumber, e.target.value, 'ip');
@@ -366,7 +370,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     />
                                                 )}
                                             </Cell>
-                                            <Cell component="th" scope="row">
+                                            <Cell>
                                                 <div style={{ paddingBottom: '16px' }}>
                                                     <CoreDevDropdown
                                                         options={portsOptions}
@@ -380,11 +384,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                     />
                                                 </div>
                                             </Cell>
-                                            <Cell component="th" scope="row">
+                                            <Cell>
                                                 {rule.protocol !== protocolOptions.CUSTOM ? (
                                                     <span>{rule.port || '-'}</span>
                                                 ) : (
                                                     <TextField
+                                                        id="textfield3"
+                                                        autoComplete="off"
                                                         value={rule.port}
                                                         onChange={(e: any) => {
                                                             let value = e.target.value;
@@ -442,10 +448,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     </Head>
                     <Body>
                         <Row key={1}>
-                            <Cell component="th" scope="row">
-                                Outbound internet traffic is currently {returnOpenClosed('text')}
-                            </Cell>
-                            <Cell component="th" scope="row">
+                            <Cell>Outbound internet traffic is currently {returnOpenClosed('text')}</Cell>
+                            <Cell>
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
