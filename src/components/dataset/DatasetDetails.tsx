@@ -13,6 +13,7 @@ import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import useFetch from '../common/hooks/useFetch';
 import { Permissions } from '../../index';
+import { useLocation } from 'react-router-dom';
 
 const icons = {
     arrow_back,
@@ -58,6 +59,11 @@ const checkUrlIfGeneralDataset = () => {
     return false;
 };
 
+interface passedProps {
+    pathname: string;
+    canEditStudySpecificDataset: boolean;
+}
+
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     let studyId = window.location.pathname.split('/')[2];
@@ -76,6 +82,7 @@ const DatasetDetails = (props: any) => {
     const [files, setFiles] = useState<any>([]);
     const [formData, setFormData] = useState<any>(null);
     const permissions = useContext(Permissions);
+    const location = useLocation<passedProps>();
 
     const uploadFiles = (): void => {
         setLoading(true);
@@ -239,7 +246,12 @@ const DatasetDetails = (props: any) => {
                             variant="outlined"
                             onClick={handleEditMetdata}
                             data-cy="dataset_edit"
-                            disabled={!permissions.canEdit_PreApproved_Datasets}
+                            disabled={
+                                !(
+                                    permissions.canEdit_PreApproved_Datasets ||
+                                    (location.state && location.state.canEditStudySpecificDataset)
+                                )
+                            }
                         >
                             Edit metadata
                         </Button>
