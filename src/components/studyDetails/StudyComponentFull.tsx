@@ -279,6 +279,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             setStudy(studyOnChange);
             putStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
+                    cache['study' + study.id] = result;
                     setHasChanged(false);
                     setStudy(result);
                 } else {
