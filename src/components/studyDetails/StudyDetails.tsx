@@ -62,7 +62,7 @@ const StudyDetails = () => {
         window.location.pathname.split('/')[2],
         null,
         null,
-        id ? false : true
+        id ? true : false
     );
     const permissions = useContext(Permissions);
     useEffect(() => {

@@ -34,16 +34,60 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
-    useFetch(getVirtualMachineSizes, setSizes, 'vmSizes' + sandbox.id, sandbox.id, null, null, showAddNewVm);
-    useFetch(getVirtualMachineDisks, setDisks, 'vmDisks', null, null, null, showAddNewVm);
-    const { loading } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
-    useFetch(getVirtualMachineOperatingSystems, setOs, 'vmOs' + sandbox.id, sandbox.id, null, null, showAddNewVm);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    // useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id, null, null, permissions.update);
+    //  useFetch(getVirtualMachineDisks, setDisks, null, null, null, null, permissions.update);
+    const { loading, cache } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    //useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id, null, null, permissions.update);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
             setActiveTab(1);
         }
     }, [vms]);
+
+    useEffect(() => {
+        setIsSubscribed(true);
+        if (permissions.update && isSubscribed) {
+            if (!sizes) getVmSizes();
+            if (!disks) getVmDisks();
+            if (!os) getVms();
+        }
+        return () => setIsSubscribed(false);
+    }, [permissions]);
+
+    const getVmSizes = () => {
+        getVirtualMachineSizes(sandbox.id).then((result: any) => {
+            if (result && !result.Message) {
+                setSizes(result);
+            } else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            }
+        });
+    };
+
+    const getVmDisks = () => {
+        getVirtualMachineDisks().then((result: any) => {
+            if (result && !result.Message) {
+                setDisks(result);
+            } else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            }
+        });
+    };
+
+    const getVms = () => {
+        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
+            if (result && !result.Message) {
+                setOs(result);
+            } else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            }
+        });
+    };
 
     const onChange = (e: any) => {
         setActiveTab(e);
