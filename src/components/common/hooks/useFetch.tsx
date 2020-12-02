@@ -11,7 +11,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?, condi
     const [intialValue, setIntialValue] = useState([]);
 
     const getData = () => {
-        if (condition) return;
+        if (condition !== undefined && condition === false) return;
         if (!fetchFunction) return;
 
         if (cacheId && cache[cacheId] && !updateCache[cacheId]) {
