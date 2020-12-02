@@ -245,7 +245,9 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                 <div style={{ display: 'inline-block', marginRight: '24px' }}>
                     <Tooltip
                         title={
-                            permissions.canEdit_PreApproved_Datasets ? '' : 'You do not have acces to create a data set'
+                            permissions.canEdit_PreApproved_Datasets
+                                ? ''
+                                : 'You do not have access to create a data set'
                         }
                         placement="top"
                     >
