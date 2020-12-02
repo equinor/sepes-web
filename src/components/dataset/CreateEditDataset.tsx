@@ -144,13 +144,13 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                if (result) {
+                if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, ['study' + studyId]: true });
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                 }
                 setLoading(false);
             });
