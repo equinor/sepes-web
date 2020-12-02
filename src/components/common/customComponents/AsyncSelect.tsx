@@ -13,6 +13,7 @@ type AsynchSelectProps = {
     style?: any;
     dataType?: string;
     isRequired?: boolean;
+    disabled?: boolean;
 };
 
 export const equinorTheme = (theme: any) => ({
@@ -38,7 +39,8 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
     onInputChange,
     style,
     dataType,
-    isRequired
+    isRequired,
+    disabled
 }) => {
     const getParticipants = (inputValue: string, callback: any): void => {
         getParticipantList(inputValue || 'a').then((result: any) => {
@@ -73,6 +75,7 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
                 onChange={onChange}
                 theme={(theme) => equinorTheme(theme)}
                 onInputChange={onInputChange}
+                isDisabled={disabled}
             />
         </span>
     );

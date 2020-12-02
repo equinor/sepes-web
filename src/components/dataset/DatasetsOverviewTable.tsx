@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Icon, Button, Checkbox, SideSheet, Search } from '@equinor/eds-core-react';
+import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 //import { close } from '@equinor/eds-icons';
-import { DatasetObj } from '../common/interfaces';
+import { DatasetObj, GeneralPermissions } from '../common/interfaces';
 import { Link, useHistory } from 'react-router-dom';
 import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
 import useClickOutside from '../common/customComponents/useClickOutside';
+import Cookies from 'js-cookie';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -64,25 +65,33 @@ interface filter {
     sepesApproved: string;
 }
 
-const DatasetsOverviewTable = (props: any) => {
+type DatasetsOverviewTableProps = {
+    datasets: any;
+    permissions: GeneralPermissions;
+};
+
+const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets, permissions }) => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
-    const { datasets } = props;
-    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({});
-    const [checkedColums, setCheckedColumns] = useState<checkedColumns>({
-        name: true,
-        sourceSystem: true,
-        areaL2: true,
-        areaL1: true,
-        asset: true,
-        baDataOwner: false,
-        classification: false,
-        countryOfOrigin: false,
-        dataId: false,
-        lraId: false,
-        tags: false,
-        sepesApproved: false
-    });
+    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({ name: '' });
+    const [checkedColums, setCheckedColumns] = useState<checkedColumns>(
+        Cookies.get('checkedColumns')
+            ? JSON.parse(Cookies.get('checkedColumns'))
+            : {
+                  name: true,
+                  sourceSystem: true,
+                  areaL2: true,
+                  areaL1: true,
+                  asset: true,
+                  baDataOwner: false,
+                  classification: false,
+                  countryOfOrigin: false,
+                  dataId: false,
+                  lraId: false,
+                  tags: false,
+                  sepesApproved: false
+              }
+    );
 
     const [filter, setFilter] = useState<filter>({
         name: '',
@@ -115,7 +124,9 @@ const DatasetsOverviewTable = (props: any) => {
     };
 
     const handleColumnsChange = (evt) => {
+        const _columns = { ...checkedColums, [evt.target.name]: evt.target.checked };
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
+        Cookies.set('checkedColumns', _columns, { expires: 365 });
     };
 
     const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {
@@ -130,7 +141,15 @@ const DatasetsOverviewTable = (props: any) => {
     };
 
     const returnCheckbox = (checked: boolean, label: string, name: string) => {
-        return <Checkbox checked={checked} label={label} name={name} value={checked} onChange={handleColumnsChange} />;
+        return (
+            <Checkbox
+                checked={checked}
+                label={label}
+                name={name}
+                value={checked.toString()}
+                onChange={handleColumnsChange}
+            />
+        );
     };
 
     const returnFilter = (column: string, checker: boolean) => {
@@ -218,19 +237,30 @@ const DatasetsOverviewTable = (props: any) => {
                 title={selectedDataset.name}
                 open={toggle}
                 onClose={() => setToggle(!toggle)}
-                style={{ zIndex: '9999', height: 'auto', paddingBottom: '8px', position: 'fixed' }}
+                style={{ zIndex: 9999, height: 'auto', paddingBottom: '8px', position: 'fixed' }}
             >
                 <DatasetSidesheetView dataset={selectedDataset} setToggle={setToggle} />
             </SideSheet>
             <ButtonWrapper>
-                <Button
-                    variant="outlined"
-                    style={{ display: 'inline-block', marginRight: '24px' }}
-                    onClick={redirectToCreateDataset}
-                    data-cy="create_dataset"
-                >
-                    Create data set
-                </Button>
+                <div style={{ display: 'inline-block', marginRight: '24px' }}>
+                    <Tooltip
+                        title={
+                            permissions.canEdit_PreApproved_Datasets
+                                ? ''
+                                : 'You do not have access to create a data set'
+                        }
+                        placement="top"
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={redirectToCreateDataset}
+                            data-cy="create_dataset"
+                            disabled={!permissions.canEdit_PreApproved_Datasets}
+                        >
+                            Create data set
+                        </Button>
+                    </Tooltip>
+                </div>
                 <div style={{ display: 'inline-block' }}>
                     <Button variant="outlined" onClick={() => setShowColumnsPicker(!showColumnsPicker)}>
                         Add / remove columns

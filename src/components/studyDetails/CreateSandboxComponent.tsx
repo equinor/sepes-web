@@ -15,11 +15,11 @@ import useFetch from '../common/hooks/useFetch';
 const Wrapper = styled.div`
     position: absolute;
     display: grid;
-    grid-template-rows: 1fr 1fr 24px 1fr 1fr;
+    grid-template-rows: 1fr 24px 1fr auto;
     grid-gap: 8px;
     background-color: #ffffff;
     width: 300px;
-    padding: 16px;
+    padding: 24px;
     right: 48px;
     margin-top: -16px;
     box-shadow: 0 0 4px 4px #e7e7e7;
@@ -33,7 +33,7 @@ type CreateSandboxComponentProps = {
     setUpdateCache: any;
     updateCache: any;
 };
-const width = '268px';
+const width = '252px';
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setToggle,
     setStudy,
@@ -107,12 +107,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     };
     return !loading ? (
         <Wrapper ref={wrapperRef}>
-            <StyledTitle style={{ color: '#000000' }}>
-                Title
-                <div style={{ float: 'right' }}>{EquinorIcon('clear', '#007079', 24, handleCancel, true)}</div>
-                <Divider />
-            </StyledTitle>
             <TextField
+                id="textfield1"
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
                 meta="(required)"
@@ -120,6 +116,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 onChange={(e: any) => handleChange('name', e.target.value)}
                 value={sandbox.name}
                 data-cy="sandbox_name"
+                autoComplete="off"
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot
@@ -146,7 +143,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             />
             */}
             <Button
-                style={{ width: '96px', marginLeft: 'auto', marginTop: 'auto' }}
+                style={{ width: '76px', margin: '8px 0 8px auto' }}
                 onClick={() => CreateSandbox()}
                 data-cy="create_actual_sandbox"
                 disabled={!checkRequiredFieldsAreNotEmpty()}

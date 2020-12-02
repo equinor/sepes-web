@@ -10,6 +10,18 @@ export interface StudyObj {
     datasets: [];
     participants: [];
     sandboxes: [];
+    permissions: StudyPermissions;
+}
+
+export interface StudyPermissions {
+    addRemoveDataset: boolean;
+    addRemoveParticipant: boolean;
+    addRemoveSandbox: boolean;
+    closeStudy: boolean;
+    deleteStudy: boolean;
+    readResulsAndLearnings: boolean;
+    updateMetadata: boolean;
+    updateResulsAndLearnings: boolean;
 }
 
 export interface ParticipantObj {
@@ -24,74 +36,94 @@ export interface ParticipantObj {
 }
 
 export interface DatasetObj {
-    name?:string;
-    storageAccountName?:string;
-    location?:string;
-    classification?:string;
-    lraId?:number;
-    dataId?:number;
-    sourceSystem?:string;
-    baDataOwner?:string;
-    asset?:string;
-    countryOfOrigin?:string;
-    areaL1?:string;
-    areaL2?:string;
-    tags?:string;
-    description?:string;
-    studies?:[];
-    id?:string;
-    added?:boolean;
-    studyId?:string;
+    name: string;
+    storageAccountName?: string;
+    location?: string;
+    classification?: string;
+    lraId?: number;
+    dataId?: number;
+    sourceSystem?: string;
+    baDataOwner?: string;
+    asset?: string;
+    countryOfOrigin?: string;
+    areaL1?: string;
+    areaL2?: string;
+    tags?: string;
+    description?: string;
+    studies?: [];
+    id?: string;
+    added?: boolean;
+    studyId?: string;
 }
 
 export interface SandboxCreateObj {
-    name:string;
-    region:string;
-    template:string;
-    id:string;
+    name: string;
+    region: string;
+    template: string;
+    id: string;
 }
 
 export interface SandboxObj {
-    deleted:boolean;
-    region:string;
+    deleted: boolean;
+    region: string;
     resources: [];
     studyId: string;
     technicalContactEmail: string;
     technicalContactName: string;
-    name:string;
-    template:string;
-    id:string;
-    studyName:string;
+    name: string;
+    template: string;
+    id: string;
+    studyName: string;
+    permissions: SandboxPermissions;
+    linkToCostAnalysis?: string;
+}
+
+export interface SandboxPermissions {
+    delete: boolean;
+    editRules: boolean;
+    update: boolean;
+}
+
+export interface GeneralPermissions {
+    admin: boolean;
+    canRead_PreApproved_Datasets: boolean;
+    canEdit_PreApproved_Datasets: boolean;
+    canCreateStudy: boolean;
+    datasetAdmin: boolean;
+    sponsor: boolean;
+    emailAddress?: string;
+    fullName?: string;
+    userName?: string;
 }
 
 export interface DropdownObj {
-    key:string;
-    displayValue:string;
+    key: string;
+    displayValue: string;
 }
 
 export interface VmObj {
-    id:string;
-    region: string,
-    name: string,
-    size: string,
-    operatingSystem: string,
-    distro: string,
-    username: string,
-    password: string,
-    extendedInfo?: any,
-    linkToExternalSystem:string,
-    dataDisks:string[]
+    id: string;
+    region: string;
+    name: string;
+    size: string;
+    operatingSystem: string;
+    distro: string;
+    username: string;
+    password: string;
+    extendedInfo?: any;
+    linkToExternalSystem: string;
+    dataDisks: string[];
 }
 
 export interface SizeObj {
-    description: string,
-    category: string,
-    key: string,
-    displayValue: string
+    description: string;
+    category: string;
+    key: string;
+    displayValue: string;
 }
 
 export interface OperatingSystemObj {
-    category: string,
-    key: string,
-    displayValue: string
+    category: string;
+    key: string;
+    displayValue: string;
 }

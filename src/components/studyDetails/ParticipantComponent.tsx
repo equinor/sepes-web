@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Icon, DotProgress } from '@equinor/eds-core-react';
+import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
-import ParticipantTable from '../common/customComponents/ParticipantTable';
+import ParticipantTable from './Tables/ParticipantTable';
 import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
@@ -24,7 +24,6 @@ const Wrapper = styled.div`
 `;
 
 const SearchWrapper = styled.div`
-    z-index: 99;
     margin-left: auto;
     margin-top: 32px;
     display: inline-flex;
@@ -153,29 +152,48 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     return (
         <Wrapper>
             <SearchWrapper>
-                <div
-                    onMouseEnter={() => setIsOpen(true)}
-                    onMouseLeave={() => setIsOpen(false)}
-                    style={{ width: '300px', marginTop: '-16px' }}
+                <Tooltip
+                    title={
+                        study.permissions && study.permissions.addRemoveParticipant
+                            ? ''
+                            : 'You do not have access to add participants'
+                    }
+                    placement="top"
                 >
-                    <AsynchSelect
-                        label="Add participants"
-                        onChange={(option: any) => selectParticipant(option)}
-                        placeholder={''}
-                        selectedOption={{ value: 'Search..', label: text }}
-                        onInputChange={handleInputChange}
-                    />
-                </div>
+                    <div
+                        onMouseEnter={() => setIsOpen(true)}
+                        onMouseLeave={() => setIsOpen(false)}
+                        style={{ width: '300px', marginTop: '-16px' }}
+                    >
+                        <AsynchSelect
+                            label="Add participants"
+                            onChange={(option: any) => selectParticipant(option)}
+                            placeholder={''}
+                            selectedOption={{ value: 'Search..', label: text }}
+                            onInputChange={handleInputChange}
+                            disabled={study.permissions && !study.permissions.addRemoveParticipant}
+                        />
+                    </div>
+                </Tooltip>
                 <div style={{ marginTop: '-16px' }}>
-                    <CoreDevDropdown
-                        label="Role"
-                        options={filterRoleList()}
-                        onChange={handleChange}
-                        name="region"
-                        width="224px"
-                        resetState={roleNotSelected}
-                        disabled={participantNotSelected}
-                    />
+                    <Tooltip
+                        title={
+                            participantNotSelected && study.permissions && study.permissions.addRemoveParticipant
+                                ? 'Select participant before role'
+                                : ''
+                        }
+                        placement="top"
+                    >
+                        <CoreDevDropdown
+                            label="Role"
+                            options={filterRoleList()}
+                            onChange={handleChange}
+                            name="region"
+                            width="224px"
+                            resetState={roleNotSelected}
+                            disabled={participantNotSelected}
+                        />
+                    </Tooltip>
                 </div>
                 <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>
                     {loading ? <DotProgress variant="green" /> : 'Add participant'}
@@ -186,6 +204,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participants={study.participants && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
+                    permissions={study.permissions}
                 />
             </TableWrapper>
         </Wrapper>

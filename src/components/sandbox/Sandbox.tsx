@@ -38,10 +38,15 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         name: '',
         template: '',
         id: sandboxId,
-        studyName: ''
+        studyName: '',
+        permissions: {
+            delete: false,
+            editRules: false,
+            update: false
+        }
     });
     const [resources, setResources] = useState<any>();
-    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, studyId, sandboxId);
+    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, sandboxId);
     useFetch(getDatasetsForStudy, setDatasets, null, studyId);
 
     useEffect(() => {
@@ -51,7 +56,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         try {
             timer = setInterval(async () => {
                 getResources();
-            }, 60000);
+            }, 20000);
         } catch (e) {
             console.log(e);
         }
@@ -62,7 +67,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     }, []);
 
     const getResources = () => {
-        getResourceStatus(studyId, sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId).then((result: any) => {
             if (result && !result.Message) {
                 setResources(result);
             } else {
@@ -79,7 +84,16 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             case 2:
                 return <div></div>;
             default:
-                return <SandboxConfig resources={resources} datasets={datasets} sandboxId={sandboxId} setUpdateCache={setUpdateCache} updateCache={updateCache} />;
+                return (
+                    <SandboxConfig
+                        resources={resources}
+                        datasets={datasets}
+                        sandboxId={sandboxId}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                        permissions={sandbox.permissions}
+                    />
+                );
         }
     };
 
@@ -97,7 +111,13 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (
-                <VmConfig sandbox={sandbox} showAddNewVm={step === 0} resources={resources} />
+                <VmConfig
+                    sandbox={sandbox}
+                    showAddNewVm={step === 0 && sandbox.permissions.update}
+                    resources={resources}
+                    loadingSandbox={loading}
+                    permissions={sandbox.permissions}
+                />
             )}
         </Wrapper>
     );

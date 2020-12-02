@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Typography } from '@equinor/eds-core-react';
+import { Button, Typography, Menu } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,6 +9,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox } from '../../services/Api';
 import * as notify from '../common/notify';
+import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+
+const { MenuItem } = Menu;
 
 const Wrapper = styled.div`
     display: grid;
@@ -19,17 +22,24 @@ const Wrapper = styled.div`
     background-color: #ffffff;
 `;
 
-const BtnWrapper = styled.div`
+const BtnTwoWrapper = styled.div`
     display: grid;
-    grid-template-columns: 200px 200px;
-    grid-gap: 16px;
+    grid-template-columns: 160px 160px;
+    grid-gap: 8px;
 `;
+
+const BtnThreeWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 160px 160px 160px;
+    grid-gap: 8px;
+`;
+
 type StepBarProps = {
     setStep: (value: any) => void;
     step: number;
     studyId: string;
     sandboxId: string;
-    sandbox: any;
+    sandbox: SandboxObj;
     updateCache: any;
     setUpdateCache: any;
 };
@@ -69,33 +79,89 @@ const StepBar: React.FC<StepBarProps> = ({
 }) => {
     const history = useHistory();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const steps = getSteps();
+
+    const [state, setState] = React.useState<{
+        buttonEl: any;
+        focus: 'first' | 'last';
+    }>({
+        focus: 'first',
+        buttonEl: null
+    });
+    const { buttonEl, focus } = state;
+    const isOpen = Boolean(buttonEl);
+
+    const openMenu = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
+        focus: 'first' | 'last'
+    ) => {
+        const target = e.target as HTMLButtonElement;
+        setState({ ...state, buttonEl: target, focus });
+    };
+
+    const closeMenu = () => {
+        setState({ ...state, buttonEl: null, focus });
+    };
 
     const deleteThisSandbox = (): void => {
         setUpdateCache({ ...updateCache, ['study' + studyId]: true });
-        deleteSandbox(studyId, sandboxId).then((result: any) => {
-            if (result && !result.Message) {
-                history.push('/studies/' + studyId);
-            } else {
+        deleteSandbox(sandboxId).then((result: any) => {
+            if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
-                console.log('Err');
             }
+            history.push('/studies/' + studyId);
         });
+    };
+
+    const optionsTemplate = (
+        <>
+            <MenuItem
+                onClick={() => setUserClickedDelete(true)}
+                data-cy="sandbox_delete"
+                disabled={sandbox.permissions && !sandbox.permissions.delete}
+            >
+                {EquinorIcon('delete_forever', 'red', 24)}
+                <span style={{ color: 'red' }}>Delete sandbox</span>
+            </MenuItem>
+        </>
+    );
+
+    const returnOptionsButton = () => {
+        return (
+            <>
+                <Button
+                    variant="outlined"
+                    id="menuButton"
+                    aria-controls="menu-on-button"
+                    aria-haspopup="true"
+                    aria-expanded={displayDeleteStudy}
+                    onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                    data-cy="sandbox_more_options"
+                >
+                    More options
+                    {EquinorIcon('more_verticle', '#007079', 24)}
+                </Button>
+                <Menu
+                    id="menuButton"
+                    aria-labelledby="menuButton"
+                    open={isOpen}
+                    onClose={closeMenu}
+                    anchorEl={buttonEl}
+                    focus={focus}
+                >
+                    {optionsTemplate}
+                </Menu>
+            </>
+        );
     };
 
     const returnControlButtons = () => {
         switch (step) {
             case 0: {
                 return (
-                    <BtnWrapper>
-                        <Button
-                            variant="outlined"
-                            onClick={() => setUserClickedDelete(true)}
-                            color="danger"
-                            data-cy="delete_sandbox"
-                        >
-                            Delete sandbox
-                        </Button>
+                    <BtnTwoWrapper>
+                        {returnOptionsButton()}
                         <Button
                             onClick={() => {
                                 setStep(1);
@@ -103,12 +169,12 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </BtnWrapper>
+                    </BtnTwoWrapper>
                 );
             }
             case 1: {
                 return (
-                    <BtnWrapper>
+                    <BtnThreeWrapper>
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -117,6 +183,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
                         </Button>
+                        {returnOptionsButton()}
                         <Button
                             onClick={() => {
                                 setStep(2);
@@ -124,22 +191,22 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </BtnWrapper>
+                    </BtnThreeWrapper>
                 );
             }
             default: {
                 return (
-                    <>
+                    <BtnTwoWrapper>
                         <Button
                             variant="outlined"
                             onClick={() => {
                                 setStep(0);
                             }}
-                            style={{ width: '200px', marginRight: '216px' }}
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available
                         </Button>
-                    </>
+                        {returnOptionsButton()}
+                    </BtnTwoWrapper>
                 );
             }
         }
@@ -168,12 +235,25 @@ const StepBar: React.FC<StepBarProps> = ({
                     );
                 })}
             </Stepper>
-            <a href={sandbox.linkToCostAnalysis} target="_blank" rel="noopener noreferrer" style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px', marginLeft: 'auto' }}>
+            <div style={{ float: 'right' }}>
+                <a
+                    href={sandbox.linkToCostAnalysis}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        color: '#007079',
+                        fontSize: '22px',
+                        margin: '0 0 0 16px',
+                        display: 'inline-block',
+                        float: 'right'
+                    }}
+                >
                     <Typography style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }} variant="h2">
                         Cost analysis
                     </Typography>
                     {EquinorIcon('external_link', '#007079', 24, () => {}, true)}
-            </a>
+                </a>
+            </div>
             {userClickedDelete && (
                 <DeleteResourceComponent
                     ResourceName={sandbox.name}

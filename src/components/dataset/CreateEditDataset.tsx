@@ -16,7 +16,10 @@ import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import useFetch from '../common/hooks/useFetch';
-import { EquinorIcon, EquinorLink } from '../common/StyledComponents';
+import { EquinorIcon } from '../common/StyledComponents';
+import { Permissions } from '../../index';
+import NoAccess from '../common/NoAccess';
+import { useLocation } from 'react-router-dom';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -59,7 +62,12 @@ const dataClassificationsList = [
 ];
 const width = '512px';
 
-type StudySpecificDatasetProps = {
+interface passedProps {
+    pathname: string;
+    canCreateStudySpecificDataset: boolean;
+}
+
+type CreateEditDatasetProps = {
     datasetFromDetails: DatasetObj;
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
@@ -67,7 +75,7 @@ type StudySpecificDatasetProps = {
     cache: any;
 };
 
-const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
+const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     datasetFromDetails,
     setDatasetFromDetails,
     setShowEditDataset,
@@ -86,6 +94,9 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
+    const permissions = useContext(Permissions);
+    const location = useLocation<passedProps>();
+
     useEffect(() => {
         checkIfEditMode();
         document.addEventListener('keydown', listener, false);
@@ -133,13 +144,13 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                if (result.datasets.length) {
+                if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, ['study' + studyId]: true });
-                    history.push('/studies/' + studyId + '/datasets/' + result.datasets[result.datasets.length - 1].id);
+                    history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
-                    notify.show('danger', '500');
+                    notify.show('danger', '500', result.Message, result.RequestId);
                 }
                 setLoading(false);
             });
@@ -235,7 +246,8 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
         );
     };
 
-    return (
+    return permissions.canEdit_PreApproved_Datasets ||
+        (location.state && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
@@ -250,6 +262,7 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                             : 'This data set will be available for all studies in Sepes. We need some meta data before we create the storage. When storage is created you can start uploading files.'}
                     </HelperTextWrapper>
                     <TextField
+                        id="textfield1"
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
@@ -258,9 +271,12 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         onChange={(e: any) => handleChange('name', e.target.value)}
                         value={dataset?.name}
                         data-cy="dataset_name"
+                        autoComplete="off"
                     />
                     {!editDataset ? (
                         <TextField
+                            id="textfield2"
+                            autoComplete="off"
                             placeholder="Please add storage account name..."
                             label="Storage account name"
                             meta="(required)"
@@ -314,14 +330,16 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                         <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
                     </StyledLink>
                     <TextField
+                        id="textfield13"
                         placeholder="Please add Data ID"
                         label="DataId"
                         meta=""
                         type="number"
                         style={{ width: '312px', backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('dataId', e.target.value)}
-                        value={dataset?.dataId}
+                        value={dataset?.dataId?.toString()}
                         data-cy="dataset_dataId"
+                        autoComplete="off"
                     />
                     <StyledLink
                         href="https://statoilsrm.sharepoint.com/:x:/r/sites/datafundamentals/_layouts/15/Doc.aspx?sourcedoc=%7B74CCD0A3-1C7E-4645-9D16-C9BFEDC5C07E%7D&file=Data%20description%20and%20classification%20inventory.xlsx&action=default&mobileredirect=true"
@@ -343,7 +361,9 @@ const StudySpecificDataset: React.FC<StudySpecificDatasetProps> = ({
                 </Wrapper>
             </OuterWrapper>
         </>
+    ) : (
+        <NoAccess />
     );
 };
 
-export default StudySpecificDataset;
+export default CreateEditDataset;
