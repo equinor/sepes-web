@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/equinor/sepes-web/compare/0.1.6...0.1.7) (2020-12-02)
+
+
+### Features
+
+* add tooltips on buttons and controllable components to help users. Mainly information about why a button is disabled ([2e17355](https://github.com/equinor/sepes-web/commit/2e1735515d9c61457f052e9087bc439e6b1a6089))
+* **study:** disable/enable functionality based on role ([#335](https://github.com/equinor/sepes-web/issues/335)) ([e6ffb68](https://github.com/equinor/sepes-web/commit/e6ffb689b4ebf5a9bd442e565685d21729dc6be2))
+* added study and sandbox button dropdown ([a1a26f6](https://github.com/equinor/sepes-web/commit/a1a26f6daf18191bf71ed52418fabcf8c75ab2a3))
+* **sandbox:** new delete button. Added a settings icon where the delete button is now placed ([a5049f9](https://github.com/equinor/sepes-web/commit/a5049f92ded554e651406af007ede570fc67e1c3))
+
+
+### Bug Fixes
+
+* **create study:** fixed bug where clicking new study made an api call ([6f42e43](https://github.com/equinor/sepes-web/commit/6f42e43e9216939c0c102db4c078040ea74b3bb6))
+* **create study:** removed settings bar when creating a study. This option is not needed here, only when editing an exisiting study. ([0f7aaa5](https://github.com/equinor/sepes-web/commit/0f7aaa50711d0ce0a2374c623c1fe2b16a357ad4))
+* **create study dataset:** issue with displaying no access screen when user had access. ([1683ab3](https://github.com/equinor/sepes-web/commit/1683ab35655d667992544f146428cd493086333e)), closes [#325](https://github.com/equinor/sepes-web/issues/325)
+* **create vm:** updated helper text for VM Size options ([6b96155](https://github.com/equinor/sepes-web/commit/6b961555bbab51b7ac4e5f1432124cc3c6b470a1))
+* **dataset details:** disabled edit metadata button if user do not have access ([58176c8](https://github.com/equinor/sepes-web/commit/58176c80f759c6546f385db0b37b9fd4fe98f348))
+* **datasets:** disable create data set based on permission ([1ced3cb](https://github.com/equinor/sepes-web/commit/1ced3cbfca2b0df03cac1ecd4aaf8d2d3acc5d5a))
+* **datasets:** remember selected columns filter for the table ([fff2cbf](https://github.com/equinor/sepes-web/commit/fff2cbfa696a1996cf52ef1f5b7088f7ec35369c))
+* **edit dataset:** bug where the edit metadata button was disabled when the user had access ([73d9081](https://github.com/equinor/sepes-web/commit/73d9081a62489cde33758b593a3b0675cd44b71f))
+* **sandbox:** stop call to api when user do not have permission to create a vm ([0f4e5bd](https://github.com/equinor/sepes-web/commit/0f4e5bd28416aa4276368c5ad8510a2e022f9179))
+* **study:** tabs are now remembered when user navigates sepes ([acf3762](https://github.com/equinor/sepes-web/commit/acf37623ae800c0f9ad8e9ee0637c649f5ab766e)), closes [#331](https://github.com/equinor/sepes-web/issues/331)
+* **study details:** fixed a bug where old info still displayed if you saved a study, went to the main screen and then back ([d5fd365](https://github.com/equinor/sepes-web/commit/d5fd3655397afed710b18585b7b0f3b52ae1f49f))
+* **vm:** fixed a bug where vm rules reset when status turned to OK ([6d3ccd5](https://github.com/equinor/sepes-web/commit/6d3ccd531693104bd287182543f62e61a1b21b15)), closes [#322](https://github.com/equinor/sepes-web/issues/322)
+* **vm rules:** add port validation ([100a036](https://github.com/equinor/sepes-web/commit/100a036fb13a1652025bc91c6fd9899c1b598c3a)), closes [#349](https://github.com/equinor/sepes-web/issues/349)
+* **vm rules:** disable save button if two rules are equal ([c7bf898](https://github.com/equinor/sepes-web/commit/c7bf898a7d5b29d5856fb84c4ee132f9ca442296)), closes [#339](https://github.com/equinor/sepes-web/issues/339)
+* issue with token renewal ([4cabba0](https://github.com/equinor/sepes-web/commit/4cabba06bfcd837473e9b8ba01996ff653fa27a2)), closes [#340](https://github.com/equinor/sepes-web/issues/340)
+* **vm rules:** fixed dropdown and textfield for protocols. When clicking HTPP/S it now fills out field with correct value ([57494be](https://github.com/equinor/sepes-web/commit/57494be6f2bcf447ba68c6df67af79497f927eab))
+
 ### [0.1.6](https://github.com/equinor/sepes-web/compare/0.1.5...0.1.6) (2020-11-19)
 
 ### [0.1.5](https://github.com/equinor/sepes-web/compare/0.1.4...0.1.5) (2020-11-18)
