@@ -13,6 +13,7 @@ import {
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
 import { SandboxPermissions } from '../../common/interfaces';
+import { checkIfValidIp } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -64,6 +65,7 @@ const numberOfPorts = 65535;
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [inputError, setInputError] = useState<string>('Enabled when all fields of rules are filled out');
 
     useEffect(() => {
         getVmExtendedInfo();
@@ -261,10 +263,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             return false;
         }
         if (checkIfEqualRules()) {
+            setInputError('Two or more rules are equal');
             return false;
         }
         let enabled = true;
         vm.rules.forEach((rule) => {
+            if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
+                enabled = false;
+            }
             if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
                 enabled = false;
             }
@@ -357,17 +363,26 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 {rule.useClientIp ? (
                                                     <span>{rule.ip || 'loading ip..'}</span>
                                                 ) : (
-                                                    <TextField
-                                                        id="textfield2"
-                                                        autoComplete="off"
-                                                        value={rule.ip}
-                                                        onChange={(e: any) => {
-                                                            updateRule(ruleNumber, e.target.value, 'ip');
-                                                        }}
-                                                        placeholder="IP"
-                                                        data-cy="vm_rule_ip"
-                                                        disabled={!permissions.editRules}
-                                                    />
+                                                    <Tooltip
+                                                        title={
+                                                            checkIfValidIp(rule.ip) || rule.ip === ''
+                                                                ? ''
+                                                                : 'This is not a valid ip'
+                                                        }
+                                                        placement="top"
+                                                    >
+                                                        <TextField
+                                                            id="textfield2"
+                                                            autoComplete="off"
+                                                            value={rule.ip}
+                                                            onChange={(e: any) => {
+                                                                updateRule(ruleNumber, e.target.value, 'ip');
+                                                            }}
+                                                            placeholder="IP"
+                                                            data-cy="vm_rule_ip"
+                                                            disabled={!permissions.editRules}
+                                                        />
+                                                    </Tooltip>
                                                 )}
                                             </Cell>
                                             <Cell>
@@ -394,7 +409,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                         value={rule.port}
                                                         onChange={(e: any) => {
                                                             let value = e.target.value;
-                                                            if (value <= numberOfPorts && value >= 0) {
+                                                            if (
+                                                                value <= numberOfPorts &&
+                                                                value >= 0 &&
+                                                                value !== '.' &&
+                                                                value &&
+                                                                value !== ','
+                                                            ) {
                                                                 updateRule(ruleNumber, value, 'port');
                                                             }
                                                         }}
@@ -471,14 +492,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                     </Body>
                 </Table>
                 <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                    <Tooltip
-                        title={
-                            checkIfSaveIsEnabled() || !hasChanged
-                                ? ''
-                                : 'Enabled when all rules values and are not equal'
-                        }
-                        placement="left"
-                    >
+                    <Tooltip title={checkIfSaveIsEnabled() || !hasChanged ? '' : inputError} placement="left">
                         <Button
                             onClick={() => {
                                 saveRule(vm.rules);
