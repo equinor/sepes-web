@@ -200,12 +200,15 @@ export const getPermissions = async () => {
 
 // Files
 
-export const addFiles = async (datasetId: string, formData: any, studyId?: string): Promise<any> => {
+export const addFiles = async (datasetId: string, formData: any): Promise<any> => {
+    return postFile('api/datasets/' + datasetId + '/files', formData);
+    /*
     if (studyId) {
         return postFile(`datasetfile/addfiles?datasetId=${datasetId}&studyId=${studyId}`, formData);
     }
     //Endpoint does not exists yet
     return postFile(`datasetfile/addfiles?datasetId=${datasetId}`, formData);
+    */
 };
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {

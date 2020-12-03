@@ -87,7 +87,7 @@ const DatasetDetails = (props: any) => {
     const uploadFiles = (): void => {
         setLoading(true);
         if (!checkUrlIfGeneralDataset()) {
-            addFiles(datasetId, formData, studyId).then((result) => {
+            addFiles(datasetId, formData).then((result) => {
                 if (result.Message) {
                     console.log('err', result);
                 } else {
@@ -133,7 +133,7 @@ const DatasetDetails = (props: any) => {
                         setFormData(_formData);
                     });
             });
-            uploadFiles();
+            //uploadFiles();
         }
     };
 
@@ -189,7 +189,11 @@ const DatasetDetails = (props: any) => {
                             );
                         })}
                     </AttachmentWrapper>
-                    {/*files.length > 0 && <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>Upload</Button> */}
+                    {files.length > 0 && (
+                        <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>
+                            Upload
+                        </Button>
+                    )}
                 </div>
                 {!loading ? (
                     <RightWrapper>
