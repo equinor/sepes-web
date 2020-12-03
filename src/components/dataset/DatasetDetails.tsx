@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
 import { Link } from 'react-router-dom';
@@ -241,20 +241,34 @@ const DatasetDetails = (props: any) => {
                             <Label>Area L2</Label>
                             {returnField(dataset?.areaL2)}
                         </div>
-                        <Button
-                            style={{ width: '150px' }}
-                            variant="outlined"
-                            onClick={handleEditMetdata}
-                            data-cy="dataset_edit"
-                            disabled={
-                                !(
-                                    permissions.canEdit_PreApproved_Datasets ||
-                                    (location.state && location.state.canEditStudySpecificDataset)
-                                )
-                            }
-                        >
-                            Edit metadata
-                        </Button>
+                        <div>
+                            <Tooltip
+                                title={
+                                    !(
+                                        permissions.canEdit_PreApproved_Datasets ||
+                                        (location.state && location.state.canEditStudySpecificDataset)
+                                    )
+                                        ? 'You do not have permission to edit metadata'
+                                        : ''
+                                }
+                                placement="top"
+                            >
+                                <Button
+                                    style={{ width: '150px' }}
+                                    variant="outlined"
+                                    onClick={handleEditMetdata}
+                                    data-cy="dataset_edit"
+                                    disabled={
+                                        !(
+                                            permissions.canEdit_PreApproved_Datasets ||
+                                            (location.state && location.state.canEditStudySpecificDataset)
+                                        )
+                                    }
+                                >
+                                    Edit metadata
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </RightWrapper>
                 ) : (
                     <LoadingFull />

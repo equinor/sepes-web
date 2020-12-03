@@ -13,7 +13,7 @@ import {
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
 import { SandboxPermissions } from '../../common/interfaces';
-import { checkIfValidIp } from '../../common/helpers';
+import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -60,12 +60,19 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
+const inputErrors = {
+    equalRules: 'Two or more rules are equal',
+    notAllFieldsFilled: 'Enabled when all fields of rules are filled out',
+    notValidIp: 'You entered an invalid IP',
+    ok: ''
+};
+
 const numberOfPorts = 65535;
 
 const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-    const [inputError, setInputError] = useState<string>('Enabled when all fields of rules are filled out');
+    const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
 
     useEffect(() => {
         getVmExtendedInfo();
@@ -202,7 +209,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
         currentRules[i][key] = value;
         let tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        console.log(vms[index].rules);
         setVms(tempsVms);
     };
 
@@ -263,16 +269,25 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
             return false;
         }
         if (checkIfEqualRules()) {
-            setInputError('Two or more rules are equal');
+            if (inputError !== inputErrors.equalRules) {
+                setInputError(inputErrors.equalRules);
+            }
             return false;
         }
+
         let enabled = true;
         vm.rules.forEach((rule) => {
             if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
                 enabled = false;
             }
+            if (rule.direction === 0 && !checkIfInputIsNumberWihoutCharacters(rule.port)) {
+                enabled = false;
+            }
             if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
                 enabled = false;
+                if (inputError !== inputErrors.notAllFieldsFilled) {
+                    setInputError(inputErrors.notAllFieldsFilled);
+                }
             }
         });
         return enabled;
@@ -403,27 +418,31 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                                                 {rule.protocol !== protocolOptions.CUSTOM ? (
                                                     <span>{rule.port || '-'}</span>
                                                 ) : (
-                                                    <TextField
-                                                        id="textfield3"
-                                                        autoComplete="off"
-                                                        value={rule.port}
-                                                        onChange={(e: any) => {
-                                                            let value = e.target.value;
-                                                            if (
-                                                                value <= numberOfPorts &&
-                                                                value >= 0 &&
-                                                                value !== '.' &&
-                                                                value &&
-                                                                value !== ','
-                                                            ) {
-                                                                updateRule(ruleNumber, value, 'port');
-                                                            }
-                                                        }}
-                                                        type="number"
-                                                        placeholder="Port"
-                                                        data-cy="vm_rule_port"
-                                                        disabled={!permissions.editRules}
-                                                    />
+                                                    <Tooltip
+                                                        title={
+                                                            checkIfInputIsNumberWihoutCharacters(rule.port) ||
+                                                            !hasChanged
+                                                                ? ''
+                                                                : 'Not a valid port number (0-65535)'
+                                                        }
+                                                        placement="top"
+                                                    >
+                                                        <TextField
+                                                            id="textfield3"
+                                                            autoComplete="off"
+                                                            value={rule.port}
+                                                            onChange={(e: any) => {
+                                                                let value = e.target.value;
+                                                                if (value <= numberOfPorts && value >= 0) {
+                                                                    updateRule(ruleNumber, value, 'port');
+                                                                }
+                                                            }}
+                                                            type="number"
+                                                            placeholder="Port"
+                                                            data-cy="vm_rule_port"
+                                                            disabled={!permissions.editRules}
+                                                        />
+                                                    </Tooltip>
                                                 )}
                                             </Cell>
 
