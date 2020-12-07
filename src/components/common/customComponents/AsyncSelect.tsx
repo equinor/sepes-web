@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { Label, RequiredLabel } from '../StyledComponents';
 import { getParticipantList } from '../../../services/Api';
@@ -14,6 +14,7 @@ type AsynchSelectProps = {
     dataType?: string;
     isRequired?: boolean;
     disabled?: boolean;
+    loadOptions?: any;
 };
 
 export const equinorTheme = (theme: any) => ({
@@ -40,36 +41,15 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
     style,
     dataType,
     isRequired,
-    disabled
+    disabled,
+    loadOptions
 }) => {
-    const getParticipants = (inputValue: string, callback: any): void => {
-        getParticipantList(inputValue || 'a').then((result: any) => {
-            if (!result.Message) {
-                let temp = result.map((user) => {
-                    return {
-                        label: `${user.fullName} (${user.emailAddress})`,
-                        value: user.objectId,
-                        emailAddress: user.emailAddress,
-                        source: user.source,
-                        objectId: user.objectId,
-                        name: user.fullName,
-                        databaseId: user.databaseId
-                    };
-                });
-                callback(temp);
-            } else {
-                console.log('err');
-                //notify.show('danger', '500');
-            }
-        });
-    };
-
     return (
         <span style={style}>
             {isRequired ? <RequiredLabel label={label} /> : <Label>{label}</Label>}
             <AsyncSelect
                 defaultOptions
-                loadOptions={getParticipants}
+                loadOptions={loadOptions}
                 placeholder={placeholder}
                 value={selectedOption}
                 onChange={onChange}
