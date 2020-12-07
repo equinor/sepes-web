@@ -15,6 +15,7 @@ import { StudyObj } from '../common/interfaces';
 import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -55,6 +56,8 @@ const StudyDetails = () => {
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const studyResponse = useFetchUrl('studies/' + id, setStudy, id ? true : false);
+    /*
     const { loading, setLoading, cache } = useFetch(
         api.getStudy,
         setStudy,
@@ -64,6 +67,7 @@ const StudyDetails = () => {
         null,
         id ? true : false
     );
+    */
     const permissions = useContext(Permissions);
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
@@ -105,7 +109,15 @@ const StudyDetails = () => {
             case 4:
                 return <div>Missing spec</div>;
             default:
-                return <Overview study={study} setStudy={setStudy} setHasChanged={setHasChanged} />;
+                return (
+                    <Overview
+                        study={study}
+                        setStudy={setStudy}
+                        setHasChanged={setHasChanged}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                );
         }
     };
 
@@ -116,16 +128,16 @@ const StudyDetails = () => {
             ) : (
                 <>
                     <Promt hasChanged={hasChanged} />
-                    {!loading && study ? (
+                    {!studyResponse.loading && study ? (
                         <StudyComponentFull
                             study={study && study}
                             newStudy={newStudy}
                             setNewStudy={setNewStudy}
-                            setLoading={setLoading}
-                            loading={loading}
+                            setLoading={studyResponse.setLoading}
+                            loading={studyResponse.loading}
                             setStudy={setStudy}
                             setHasChanged={setHasChanged}
-                            cache={cache}
+                            cache={studyResponse.cache}
                             setUpdateCache={setUpdateCache}
                             updateCache={updateCache}
                         />

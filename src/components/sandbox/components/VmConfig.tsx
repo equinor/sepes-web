@@ -16,8 +16,8 @@ import {
     getVirtualMachineOperatingSystems
 } from '../../../services/Api';
 import VmDetails from './VmDetails';
-import * as notify from '../../common/notify';
-import useFetch from '../../common/hooks/useFetch';
+import * as notify from '../../common/notify';';
+import useFetchUrl from '../../common/hooks/useFetchUrl';
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {
@@ -26,9 +26,19 @@ type VmConfigProps = {
     resources: any;
     loadingSandbox: boolean;
     permissions: SandboxPermissions;
+    setUpdateCache: any;
+    updateCache: any;
 };
 
-const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, loadingSandbox, permissions }) => {
+const VmConfig: React.FC<VmConfigProps> = ({
+    showAddNewVm,
+    sandbox,
+    resources,
+    loadingSandbox,
+    permissions,
+    setUpdateCache,
+    updateCache
+}) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
@@ -37,7 +47,8 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     // useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id, null, null, permissions.update);
     //  useFetch(getVirtualMachineDisks, setDisks, null, null, null, null, permissions.update);
-    const { loading, cache } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    //const { loading, cache } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
+    const vmsReponse = useFetchUrl('virtualmachines/forsandbox/' + sandbox.id, setVms);
     //useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id, null, null, permissions.update);
 
     useEffect(() => {
@@ -104,6 +115,8 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
                         disks={disks}
                         setActiveTab={setActiveTab}
                         os={os}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
                     />
                 ) : (
                     <div />
@@ -118,6 +131,8 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
                         index={activeTab - 1}
                         resources={resources}
                         permissions={permissions}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
                     />
                 );
         }
@@ -144,7 +159,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ showAddNewVm, sandbox, resources, l
                         })
                     ) : (
                         <Tab key={2} disabled>
-                            {loading ? 'loading..' : 'No virtual machines yet..'}
+                            {vmsReponse.loading ? 'loading..' : 'No virtual machines yet..'}
                         </Tab>
                     )}
                 </TabList>

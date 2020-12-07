@@ -255,7 +255,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 if (result && !result.Message) {
                     history.push('/studies/' + result.id);
                     let newStudy = result;
-                    cache['study' + study.id] = result;
+                    cache['studies/' + study.id] = result;
                     setStudy(newStudy);
                     if (imageUrl && newStudy.id) {
                         putStudy(newStudy, imageUrl).then((result: any) => {
@@ -279,7 +279,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             setStudy(studyOnChange);
             putStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
-                    cache['study' + study.id] = result;
+                    cache['studies/' + study.id] = result;
                     setHasChanged(false);
                     setStudy(result);
                 } else {
