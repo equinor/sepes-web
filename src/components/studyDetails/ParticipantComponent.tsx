@@ -10,6 +10,7 @@ import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
 import useFetch from '../common/hooks/useFetch';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 
@@ -53,10 +54,12 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
-    const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles, 'studyRoles');
+    //const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
+    const rolesResponse = useFetchUrl('lookup/studyroles', setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const user = useContext(UserConfig);
     const history = useHistory();
+
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -68,7 +71,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({ ...study, participants: participantList });
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (!result.Message && isSubscribed) {
                 if (user.getAccount().userName === participant.userName) {
@@ -77,16 +80,16 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             } else {
                 notify.show('danger', '500', result.Message, result.requestId);
             }
-            setLoading(false);
+            rolesResponse.setLoading(false);
         });
     };
 
     const addParticipant = () => {
-        setLoading(true);
+        rolesResponse.setLoading(true);
         setRole('');
         setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (!result.Message) {
@@ -98,7 +101,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     notify.show('danger', '500', result.Message, result.requestId);
                     console.log('Err getting participants');
                 }
-                setLoading(false);
+                rolesResponse.setLoading(false);
             });
         } else {
             // TODO Implement backend to handle email
@@ -230,7 +233,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     </Tooltip>
                 </div>
                 <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>
-                    {loading ? <DotProgress variant="green" /> : 'Add participant'}
+                    {rolesResponse.loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>
             <TableWrapper>

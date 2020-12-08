@@ -37,9 +37,11 @@ type OverviewProps = {
     study: StudyObj;
     setStudy: any;
     setHasChanged: any;
+    setUpdateCache: any;
+    updateCache: any;
 };
 
-const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) => {
+const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged, setUpdateCache, updateCache }) => {
     const { datasets, participants, sandboxes, id, resultsAndLearnings } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
@@ -53,6 +55,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged }) =
     };
 
     const handleSave = () => {
+        setUpdateCache({ ...updateCache, ['studies/' + study.id]: true });
         setStudy({ ...study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
         setEditMode(false);
         editStudy(studyOnChange, studyOnChange.id).then((result: any) => {

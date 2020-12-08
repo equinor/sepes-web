@@ -36,6 +36,8 @@ type VmDetailsProps = {
     index: number;
     resources: any;
     permissions: SandboxPermissions;
+    setUpdateCache: any;
+    updateCache: any;
 };
 
 const ipMethod = [
@@ -69,7 +71,17 @@ const inputErrors = {
 
 const numberOfPorts = 65535;
 
-const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, index, resources, permissions }) => {
+const VmDetails: React.FC<VmDetailsProps> = ({
+    vm,
+    setVms,
+    vms,
+    setActiveTab,
+    index,
+    resources,
+    permissions,
+    setUpdateCache,
+    updateCache
+}) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
@@ -326,6 +338,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({ vm, setVms, vms, setActiveTab, in
                 vms={vms}
                 setActiveTab={setActiveTab}
                 permissions={permissions}
+                setUpdateCache={setUpdateCache}
+                updateCache={updateCache}
             />
             <div>
                 <Table style={{ width: '100%' }}>
