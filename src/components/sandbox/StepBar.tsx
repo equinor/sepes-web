@@ -174,7 +174,7 @@ const StepBar: React.FC<StepBarProps> = ({
             }
             case 1: {
                 return (
-                    <BtnThreeWrapper>
+                    <BtnTwoWrapper>
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -184,6 +184,7 @@ const StepBar: React.FC<StepBarProps> = ({
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
                         </Button>
                         {returnOptionsButton()}
+                        {/* 
                         <Button
                             onClick={() => {
                                 setStep(2);
@@ -191,7 +192,8 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             Decommission{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
-                    </BtnThreeWrapper>
+                        */}
+                    </BtnTwoWrapper>
                 );
             }
             default: {

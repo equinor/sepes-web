@@ -28,7 +28,7 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
             </Table>
             {displayCheckbox && (
                 <div style={{ marginTop: '32px' }}>
-                    <Checkbox checked label="Retain data when decomissioning sandbox" />
+                    {/*<Checkbox checked label="Retain data when decomissioning sandbox" />*/}
                 </div>
             )}
         </>
