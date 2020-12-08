@@ -5,7 +5,8 @@ import {
     SandboxObj,
     SandboxCreateObj,
     ParticipantObj,
-    VmObj
+    VmObj,
+    resultsAndLearningsObj
 } from '../components/common/interfaces';
 
 //Study
@@ -44,6 +45,16 @@ export const removeStudyDataset = async (studyId: string, datasetId: string) => 
 
 export const getDatasetsForStudy = async (studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets', 'GET');
+};
+
+export const editResultsAndLearnings = async (resultsAndLearnings: resultsAndLearningsObj, studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/resultsAndLearnings', 'PUT', resultsAndLearnings);
+};
+
+// Dataset files
+
+export const deleteFileInDataset = async (datasetId: string, fileName: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files/fileName?fileName=' + fileName, 'DELETE');
 };
 
 //Specific dataset

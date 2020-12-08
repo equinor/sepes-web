@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
+import { getDataset, getStandardDataset, addFiles, deleteFileInDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
@@ -15,6 +15,7 @@ import useFetch from '../common/hooks/useFetch';
 import { Permissions } from '../../index';
 import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import * as notify from '../common/notify';
 
 const icons = {
     arrow_back,
@@ -73,26 +74,16 @@ const DatasetDetails = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>({
         name: ''
     });
-    /*
-    const { loading, setLoading, cache } = useFetch(
-        isStandard ? getStandardDataset : getDataset,
-        setDataset,
-        isStandard ? 'dataset' + studyId : 'dataset' + studyId + datasetId,
-        isStandard ? studyId : datasetId,
-        !isStandard && studyId
-    );
-    */
-    const datasetResponse = useFetchUrl(
-        isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId,
-        setDataset
-    );
+    useFetchUrl(isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId, setDataset);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const [formData, setFormData] = useState<any>(null);
+    const datasetResponse = useFetchUrl('datasets/' + datasetId + ' /files', setFiles);
+    //const [formData, setFormData] = useState<any>(null);
     const permissions = useContext(Permissions);
     const location = useLocation<passedProps>();
 
-    const uploadFiles = (): void => {
+    const uploadFiles = (formData: any): void => {
+        console.log(formData);
         datasetResponse.setLoading(true);
         if (!checkUrlIfGeneralDataset()) {
             addFiles(datasetId, formData).then((result) => {
@@ -118,7 +109,7 @@ const DatasetDetails = (props: any) => {
 
     const removeFiles = () => {
         setFiles([]);
-        setFormData(null);
+        //setFormData(null);
     };
 
     const handleEditMetdata = (evt) => {
@@ -126,11 +117,13 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
-        setFiles(_files);
+        const tempFiles = [...files];
+        tempFiles.push(..._files);
+        setFiles(tempFiles);
         let _formData = new FormData();
 
         if (!_files.length) {
-            setFormData(null);
+            //setFormData(null);
         } else {
             _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
@@ -138,18 +131,30 @@ const DatasetDetails = (props: any) => {
                         _formData.append(`files`, blob);
                     })
                     .then(() => {
-                        setFormData(_formData);
+                        //setFormData(_formData);
+                        uploadFiles(_formData);
                     });
             });
-            //uploadFiles();
+            /*
+            const timeoutId = setTimeout(() => {
+                uploadFiles();
+            }, 100);
+            clearTimeout(timeoutId);
+            */
+            //uploadFiles(_formData);
         }
     };
 
-    const removeFile = (i: number): void => {
+    const removeFile = (i: number, file: any): void => {
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
-        handleFileDrop(_files);
+        deleteFileInDataset(datasetId, file.name).then((result: any) => {
+            if (result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            }
+        });
+        //handleFileDrop(_files);
     };
 
     const returnField = (fieldName) => {
@@ -181,13 +186,13 @@ const DatasetDetails = (props: any) => {
                     )}
                     <Dropzone onDrop={(event: File[]) => handleFileDrop(event)} />
                     <AttachmentWrapper>
-                        {files.map((file: File, i: number) => {
+                        {files.map((file: any, i: number) => {
                             return (
                                 <>
                                     <div>{file.name}</div>
                                     <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
                                     <Icon
-                                        onClick={() => removeFile(i)}
+                                        onClick={() => removeFile(i, file)}
                                         color="#007079"
                                         name="delete_forever"
                                         size={24}
@@ -197,11 +202,11 @@ const DatasetDetails = (props: any) => {
                             );
                         })}
                     </AttachmentWrapper>
-                    {files.length > 0 && (
-                        <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>
+                    {/*files.length > 0 && (
+                        <Button onClick={() => uploadFiles(formData)} style={{ float: 'right', width: '128px' }}>
                             Upload
                         </Button>
-                    )}
+                    )*/}
                 </div>
                 {!datasetResponse.loading ? (
                     <RightWrapper>

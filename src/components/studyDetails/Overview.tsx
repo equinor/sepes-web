@@ -3,12 +3,13 @@ import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
-import { StudyObj } from '../common/interfaces';
-import { editStudy } from '../../services/Api';
+import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
+import { editResultsAndLearnings, editStudy } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -35,30 +36,26 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 
 type OverviewProps = {
     study: StudyObj;
-    setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
 };
 
-const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged, setUpdateCache, updateCache }) => {
-    const { datasets, participants, sandboxes, id, resultsAndLearnings } = study;
+const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCache, updateCache }) => {
+    const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
+    const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
+    const res = useFetchUrl('studies/' + study.id + '/resultsandlearnings', setResultsAndLearnings);
 
-    useEffect(() => {
-        setStudyOnChange(study);
-    }, [study.resultsAndLearnings]);
     const handleChange = (evt) => {
         setHasChanged(true);
-        setStudyOnChange({ ...study, resultsAndLearnings: evt.target.value });
+        setResultsAndLearnings({ resultsAndLearnings: evt.target.value });
     };
 
     const handleSave = () => {
         setUpdateCache({ ...updateCache, ['studies/' + study.id]: true });
-        setStudy({ ...study, resultsAndLearnings: studyOnChange.resultsAndLearnings });
         setEditMode(false);
-        editStudy(studyOnChange, studyOnChange.id).then((result: any) => {
+        editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
             if (result && !result.Message) {
                 setHasChanged(false);
             } else {
@@ -71,7 +68,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged, set
     const handleCancel = () => {
         if (editMode) {
             setHasChanged(false);
-            setStudyOnChange(study);
+            setResultsAndLearnings(res.intialValue || { resultsAndLearnings: '' });
         }
     };
 
@@ -83,7 +80,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged, set
                     {!editMode ? (
                         <div style={{ marginTop: '8px' }}>
                             {study.permissions.readResulsAndLearnings ? (
-                                lineBreak(resultsAndLearnings || '-')
+                                lineBreak(resultsAndLearnings.resultsAndLearnings || '-')
                             ) : (
                                 <em>You do not have permission to view results and learnings</em>
                             )}
@@ -97,7 +94,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setStudy, setHasChanged, set
                             multiline
                             onChange={handleChange}
                             style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
-                            value={studyOnChange.resultsAndLearnings}
+                            value={resultsAndLearnings.resultsAndLearnings}
                             autoComplete="off"
                         />
                     )}

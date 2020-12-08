@@ -112,7 +112,6 @@ const StudyDetails = () => {
                 return (
                     <Overview
                         study={study}
-                        setStudy={setStudy}
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}

@@ -9,7 +9,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
-    // const [intialValue, setIntialValue] = useState([]);
+    const [intialValue, setIntialValue] = useState();
     // const [data, setData] = useState<T>();
 
     const getData = () => {
@@ -20,6 +20,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
             const dataCached = cache[url];
             //setter(data);
             setter(dataCached);
+            setIntialValue(dataCached);
             setLoading(false);
         } else {
             setLoading(true);
@@ -32,6 +33,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
                         setUpdateCache({ ...updateCache, [url]: false });
                     }
                     // setter(result);
+                    setIntialValue(result);
                     setter(result);
                     setLoading(false);
                 } else if (result && result.Message && result.RequestId) {
@@ -48,7 +50,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
         return () => setIsSubscribed(false);
     }, [url]);
 
-    return { loading, setLoading, cache };
+    return { loading, setLoading, cache, intialValue };
 };
 
 export default useFetchUrl;

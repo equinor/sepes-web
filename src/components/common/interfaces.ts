@@ -127,3 +127,7 @@ export interface OperatingSystemObj {
     key: string;
     displayValue: string;
 }
+
+export interface resultsAndLearningsObj {
+    resultsAndLearnings: string;
+}
