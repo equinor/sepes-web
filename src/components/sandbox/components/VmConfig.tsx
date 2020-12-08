@@ -16,7 +16,7 @@ import {
     getVirtualMachineOperatingSystems
 } from '../../../services/Api';
 import VmDetails from './VmDetails';
-import * as notify from '../../common/notify';';
+import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 const { TabList, Tab } = Tabs;
 
