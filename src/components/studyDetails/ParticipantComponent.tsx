@@ -55,7 +55,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     //const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
     const rolesResponse = useFetchUrl('lookup/studyroles', setRoles);
 
-    useEffect(() => {}, [participantNotSelected]);
+    useEffect(() => {}, [participantNotSelected, study.permissions.addRemoveParticipant]);
 
     const removeParticipant = (participant: any) => {
         let participantList: any = [...study.participants];
@@ -120,6 +120,28 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         return tempRoles;
     };
 
+    const getParticipants = (inputValue: string, callback: any): void => {
+        api.getParticipantList(inputValue || 'a').then((result: any) => {
+            if (!result.Message) {
+                let temp = result.map((user) => {
+                    return {
+                        label: `${user.fullName} (${user.emailAddress})`,
+                        value: user.objectId,
+                        emailAddress: user.emailAddress,
+                        source: user.source,
+                        objectId: user.objectId,
+                        name: user.fullName,
+                        databaseId: user.databaseId
+                    };
+                });
+                callback(temp);
+            } else {
+                console.log('err');
+                //notify.show('danger', '500');
+            }
+        });
+    };
+
     const selectParticipant = (row: any) => {
         setText(row.label);
         setParticipantNotSelected(false);
@@ -174,6 +196,9 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             selectedOption={{ value: 'Search..', label: text }}
                             onInputChange={handleInputChange}
                             disabled={study.permissions && !study.permissions.addRemoveParticipant}
+                            loadOptions={
+                                study.permissions && study.permissions.addRemoveParticipant ? getParticipants : null
+                            }
                         />
                     </div>
                 </Tooltip>
