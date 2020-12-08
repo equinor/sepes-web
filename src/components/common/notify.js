@@ -66,9 +66,7 @@ const CustomContent = (props) => {
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <p>
-                {icon} Code: {code}
-            </p>
+            <p>{icon}</p>
             <span>
                 <p style={{ display: 'inline', fontSize: '14px' }}>
                     {message} <br />

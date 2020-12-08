@@ -102,3 +102,13 @@ export const roundUp = (num: number, precision: number): string => {
     if (!precision) return num.toLocaleString();
     return (Math.ceil(num / precision) * precision).toLocaleString();
 };
+
+export const checkIfValidIp = (ip: string) => {
+    const ipValidate = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
+    return ipValidate.test(ip);
+};
+
+export const checkIfInputIsNumberWihoutCharacters = (number: string) => {
+    const numberValidate = /^[0-9]*$/;
+    return numberValidate.test(number);
+};

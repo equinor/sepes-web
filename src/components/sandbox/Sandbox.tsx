@@ -10,6 +10,7 @@ import * as notify from '../common/notify';
 import styled from 'styled-components';
 import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     display: grid;
@@ -46,8 +47,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     });
     const [resources, setResources] = useState<any>();
-    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, sandboxId);
-    useFetch(getDatasetsForStudy, setDatasets, null, studyId);
+    // const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, sandboxId);
+    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
+    //useFetch(getDatasetsForStudy, setDatasets, null, studyId);
+    useFetchUrl('studies/' + studyId + '/datasets', setDatasets);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -99,7 +102,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
 
     return (
         <Wrapper>
-            {loading && <LoadingFull />}
+            {SandboxResponse.loading && <LoadingFull />}
             <StepBar
                 sandbox={sandbox && sandbox}
                 step={step}
@@ -115,8 +118,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     sandbox={sandbox}
                     showAddNewVm={step === 0 && sandbox.permissions.update}
                     resources={resources}
-                    loadingSandbox={loading}
+                    loadingSandbox={SandboxResponse.loading}
                     permissions={sandbox.permissions}
+                    setUpdateCache={setUpdateCache}
+                    updateCache={updateCache}
                 />
             )}
         </Wrapper>
