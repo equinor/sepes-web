@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
@@ -10,6 +10,8 @@ import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
 import useFetch from '../common/hooks/useFetch';
+import { UserConfig } from '../../index';
+import { useHistory } from 'react-router-dom';
 
 const icons = {
     close
@@ -52,8 +54,14 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
     const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles, 'studyRoles');
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const user = useContext(UserConfig);
+    const history = useHistory();
 
-    useEffect(() => {}, [participantNotSelected, study.permissions.addRemoveParticipant]);
+    useEffect(() => {
+        setIsSubscribed(true);
+        return () => setIsSubscribed(false);
+    }, [participantNotSelected, study.permissions.addRemoveParticipant]);
 
     const removeParticipant = (participant: any) => {
         let participantList: any = [...study.participants];
@@ -62,8 +70,10 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         const studyId = window.location.pathname.split('/')[2];
         setUpdateCache({ ...updateCache, ['study' + studyId]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (!result.Message) {
-                console.log('participants: ', result);
+            if (!result.Message && isSubscribed) {
+                if (user.getAccount().userName === participant.userName) {
+                    history.push('/');
+                }
             } else {
                 notify.show('danger', '500', result.Message, result.requestId);
             }
@@ -110,7 +120,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         roles.forEach((element: DropdownObj, key: number) => {
             for (let i = 0; i < partAsSelected.length; i++) {
                 if (element.displayValue === partAsSelected[i].role) {
-                    console.log('delete');
                     tempRoles.splice(tempRoles.indexOf(element), 1);
                 }
             }
