@@ -11,6 +11,8 @@ import DatasetsTable from './Tables/DatasetsTable';
 import * as notify from '../common/notify';
 import useFetch from '../common/hooks/useFetch';
 import { Permissions } from '../../index';
+import { PropertiesPlugin } from '@microsoft/applicationinsights-web';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const icons = {
     close
@@ -58,20 +60,13 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const permissions = useContext(Permissions);
-    const { setLoading } = useFetch(
-        getDatasetList,
-        setDatasetsList,
-        null,
-        null,
-        null,
-        null,
-        permissions.canRead_PreApproved_Datasets
-    );
+    //const { setLoading } = useFetch(getDatasetList, setDatasetsList);
+    const datasetsResponse = useFetchUrl('datasets/', setDatasetsList, permissions.canRead_PreApproved_Datasets);
 
     const removeDataset = (row: any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true, ['studies/' + study.id + '/datasets']: true });
         removeStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
                 //setStudy({...study, datasets: result.datasets });
@@ -79,7 +74,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
-            setLoading(false);
+            datasetsResponse.setLoading(false);
         });
     };
 
@@ -92,7 +87,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     };
 
     const addDatasetToStudy = (row: any) => {
-        setUpdateCache({ ...updateCache, ['study' + study.id]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + study.id]: true, ['studies/' + study.id + '/datasets']: true });
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];
@@ -106,7 +101,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
+                datasetsResponse.setLoading(false);
             });
         }
     };

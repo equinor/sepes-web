@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import useFetch from '../common/hooks/useFetch';
 import { Permissions } from '../../index';
 import { useLocation } from 'react-router-dom';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const icons = {
     arrow_back,
@@ -68,15 +69,22 @@ const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     let studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
+
     const [dataset, setDataset] = useState<DatasetObj>({
         name: ''
     });
+    /*
     const { loading, setLoading, cache } = useFetch(
         isStandard ? getStandardDataset : getDataset,
         setDataset,
         isStandard ? 'dataset' + studyId : 'dataset' + studyId + datasetId,
         isStandard ? studyId : datasetId,
         !isStandard && studyId
+    );
+    */
+    const datasetResponse = useFetchUrl(
+        isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId,
+        setDataset
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
@@ -85,7 +93,7 @@ const DatasetDetails = (props: any) => {
     const location = useLocation<passedProps>();
 
     const uploadFiles = (): void => {
-        setLoading(true);
+        datasetResponse.setLoading(true);
         if (!checkUrlIfGeneralDataset()) {
             addFiles(datasetId, formData, studyId).then((result) => {
                 if (result.Message) {
@@ -93,7 +101,7 @@ const DatasetDetails = (props: any) => {
                 } else {
                     //removeFiles();
                 }
-                setLoading(false);
+                datasetResponse.setLoading(false);
             });
         } else {
             datasetId = studyId;
@@ -103,7 +111,7 @@ const DatasetDetails = (props: any) => {
                 } else {
                     //removeFiles();
                 }
-                setLoading(false);
+                datasetResponse.setLoading(false);
             });
         }
     };
@@ -191,7 +199,7 @@ const DatasetDetails = (props: any) => {
                     </AttachmentWrapper>
                     {/*files.length > 0 && <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>Upload</Button> */}
                 </div>
-                {!loading ? (
+                {!datasetResponse.loading ? (
                     <RightWrapper>
                         <div>
                             <Label>Data set name</Label>
@@ -241,20 +249,34 @@ const DatasetDetails = (props: any) => {
                             <Label>Area L2</Label>
                             {returnField(dataset?.areaL2)}
                         </div>
-                        <Button
-                            style={{ width: '150px' }}
-                            variant="outlined"
-                            onClick={handleEditMetdata}
-                            data-cy="dataset_edit"
-                            disabled={
-                                !(
-                                    permissions.canEdit_PreApproved_Datasets ||
-                                    (location.state && location.state.canEditStudySpecificDataset)
-                                )
-                            }
-                        >
-                            Edit metadata
-                        </Button>
+                        <div>
+                            <Tooltip
+                                title={
+                                    !(
+                                        permissions.canEdit_PreApproved_Datasets ||
+                                        (location.state && location.state.canEditStudySpecificDataset)
+                                    )
+                                        ? 'You do not have permission to edit metadata'
+                                        : ''
+                                }
+                                placement="top"
+                            >
+                                <Button
+                                    style={{ width: '150px' }}
+                                    variant="outlined"
+                                    onClick={handleEditMetdata}
+                                    data-cy="dataset_edit"
+                                    disabled={
+                                        !(
+                                            permissions.canEdit_PreApproved_Datasets ||
+                                            (location.state && location.state.canEditStudySpecificDataset)
+                                        )
+                                    }
+                                >
+                                    Edit metadata
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </RightWrapper>
                 ) : (
                     <LoadingFull />
@@ -267,7 +289,7 @@ const DatasetDetails = (props: any) => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
-            cache={cache}
+            cache={datasetResponse.cache}
         />
     );
 };

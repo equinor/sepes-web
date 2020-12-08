@@ -66,6 +66,8 @@ type AddNewVmProps = {
     sizes?: SizeObj;
     disks?: DropdownObj;
     os?: OperatingSystemObj;
+    setUpdateCache: any;
+    updateCache: any;
 };
 
 const limits = {
@@ -80,7 +82,17 @@ const sizeType = {
     compute: 'compute'
 };
 
-const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks, setActiveTab, os }) => {
+const AddNewVm: React.FC<AddNewVmProps> = ({
+    sandbox,
+    setVms,
+    vms,
+    sizes,
+    disks,
+    setActiveTab,
+    os,
+    setUpdateCache,
+    updateCache
+}) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [vm, setVm] = useState<VmObj>({
         id: '',
@@ -142,6 +154,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({ sandbox, setVms, vms, sizes, disks,
 
     const createVm = () => {
         setLoading(true);
+        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandbox.id]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 let vmsList: any = [...vms];

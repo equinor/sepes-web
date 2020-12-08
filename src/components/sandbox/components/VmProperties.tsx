@@ -55,9 +55,20 @@ type VmPropertiesProps = {
     vms: any;
     setActiveTab: any;
     permissions: SandboxPermissions;
+    setUpdateCache: any;
+    updateCache: any;
 };
 
-const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, setActiveTab, permissions }) => {
+const VmProperties: React.FC<VmPropertiesProps> = ({
+    vmProperties,
+    setVms,
+    vms,
+    setActiveTab,
+    permissions,
+    setUpdateCache,
+    updateCache
+}) => {
+    const sandboxId = window.location.pathname.split('/')[4];
     const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { maxDataDiskCount, MemoryGB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
@@ -71,6 +82,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({ vmProperties, setVms, vms, 
     useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
+        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandboxId]: true });
         setActiveTab(0);
         let currentVms: any = [...vms];
         currentVms.splice(vms.indexOf(vmProperties), 1);

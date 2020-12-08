@@ -7,19 +7,18 @@ import {
     addStudySpecificDataset,
     editStudySpecificDataset,
     createStandardDataset,
-    updateStandardDataset,
-    getAzureRegions
+    updateStandardDataset
 } from '../../services/Api';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
-import useFetch from '../common/hooks/useFetch';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
 import { useLocation } from 'react-router-dom';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -90,7 +89,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
-    useFetch(getAzureRegions, setRegions, 'regions');
+    //useFetch(getAzureRegions, setRegions, 'regions');
+    useFetchUrl('lookup/regions', setRegions);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
@@ -140,13 +140,17 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             return;
         }
         setLoading(true);
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+                    setUpdateCache({
+                        ...updateCache,
+                        ['studies/' + studyId]: true,
+                        ['studies/' + studyId + '/datasets']: true
+                    });
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
@@ -158,8 +162,15 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    const datasetCache = 'dataset' + studyId + result.id;
-                    setUpdateCache({ ...updateCache, ['study' + studyId]: true, [datasetCache]: true });
+                    //const datasetCache = 'dataset' + studyId + result.id;
+
+                    const datasetCache = 'studies/' + studyId + '/datasets/' + result.id;
+                    setUpdateCache({
+                        ...updateCache,
+                        ['studies/' + studyId]: true,
+                        [datasetCache]: true,
+                        ['studies/' + studyId + '/datasets']: true
+                    });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
@@ -172,7 +183,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, datasets: true, ['dataset' + studyId]: true });
+                    const datasetCache = 'datasets/' + result.id;
+                    //const datasetCache = 'dataset' + studyId;
+                    setUpdateCache({ ...updateCache, 'datasets/': true, [datasetCache]: true });
                     history.push('/datasets/' + result.id);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -184,8 +197,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, datasets: true });
-                    cache['dataset' + studyId] = result;
+                    //const datasetCache = 'datasets/' + result.id;
+                    // setUpdateCache({ ...updateCache, datasets: true, [datasetCache]: true });
+                    cache['datasets/' + studyId] = result;
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);

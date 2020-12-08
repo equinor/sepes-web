@@ -7,6 +7,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetch from '../common/hooks/useFetch';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     display: grid;
@@ -40,12 +41,12 @@ const Home = () => {
     const history = useHistory();
     const permissions = useContext(Permissions);
     const [studyList, setStudylist] = useState([]);
-    const { loading } = useFetch(getStudyList, setStudylist, 'studies');
+    const studies = useFetchUrl('studies', setStudylist);
 
     return (
         <>
             <Wrapper>
-                {!loading ? (
+                {!studies.loading ? (
                     <Studies studyList={studyList} />
                 ) : (
                     <div>

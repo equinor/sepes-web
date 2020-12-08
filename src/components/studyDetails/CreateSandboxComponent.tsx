@@ -11,6 +11,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetch from '../common/hooks/useFetch';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -43,7 +44,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
-    useFetch(getAzureRegions, setRegions, 'regions');
+    //useFetch(getAzureRegions, setRegions, 'regions');
+    useFetchUrl('lookup/regions', setRegions);
     const [loading, setLoading] = useState<Boolean>(false);
     const wrapperRef = useRef(null);
     useClickOutside(wrapperRef, setToggle);
@@ -91,7 +93,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             return;
         }
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {

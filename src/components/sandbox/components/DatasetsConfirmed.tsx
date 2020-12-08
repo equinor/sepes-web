@@ -3,6 +3,7 @@ import { Table, Checkbox } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { getDatasetForSandbox } from '../../../services/Api';
 import useFetch from '../../common/hooks/useFetch';
+import useFetchUrl from '../../common/hooks/useFetchUrl';
 const { Body, Row, Cell, Head } = Table;
 
 const mockData = [
@@ -24,7 +25,8 @@ type SandboxConfirmedProps = {
 
 const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
     const [datasetsConfirmed, setDatasetsConfirmed] = useState([]);
-    const { loading } = useFetch(getDatasetForSandbox, setDatasetsConfirmed, null, sandboxId);
+    // const { loading } = useFetch(getDatasetForSandbox, setDatasetsConfirmed, null, sandboxId);
+    const datasetsConfirmedResponse = useFetchUrl('sandbox/' + sandboxId + '/datasets', setDatasetsConfirmed);
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
@@ -50,7 +52,7 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
                     })
                 ) : (
                     <Row key={1}>
-                        <Cell>{loading ? 'loading...' : 'No data sets in sandbox'}</Cell>
+                        <Cell>{datasetsConfirmedResponse.loading ? 'loading...' : 'No data sets in sandbox'}</Cell>
                         <Cell style={{ width: '32px' }}>{''}</Cell>
                     </Row>
                 )}
