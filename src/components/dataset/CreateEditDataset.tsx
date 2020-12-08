@@ -287,28 +287,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         data-cy="dataset_name"
                         autoComplete="off"
                     />
-                    {!editDataset ? (
-                        <TextField
-                            id="textfield2"
-                            autoComplete="off"
-                            placeholder="Please add storage account name..."
-                            label="Storage account name"
-                            meta="(required)"
-                            variant={checkIfRequiredFieldsAreNull(dataset?.storageAccountName, userPressedCreate)}
-                            style={{ width, backgroundColor: '#FFFFFF' }}
-                            onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
-                            data-cy="dataset_storage_name"
-                            inputIcon={
-                                <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                    <Tooltip title="This cannot be changed later" placement={'right'}>
-                                        {EquinorIcon('error_outlined', '#6F6F6F', 24)}
-                                    </Tooltip>
-                                </div>
-                            }
-                        />
-                    ) : (
-                        returnField('Storage account name', dataset?.storageAccountName)
-                    )}
+                    {editDataset && returnField('Storage account name', dataset?.storageAccountName)}
                     {!editDataset ? (
                         <CoreDevDropdown
                             width={width}

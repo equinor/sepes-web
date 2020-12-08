@@ -121,27 +121,16 @@ const DatasetDetails = (props: any) => {
         tempFiles.push(..._files);
         setFiles(tempFiles);
         let _formData = new FormData();
-
-        if (!_files.length) {
-            //setFormData(null);
-        } else {
+        if (_files.length) {
             _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                     .then((blob) => {
                         _formData.append(`files`, blob);
                     })
                     .then(() => {
-                        //setFormData(_formData);
                         uploadFiles(_formData);
                     });
             });
-            /*
-            const timeoutId = setTimeout(() => {
-                uploadFiles();
-            }, 100);
-            clearTimeout(timeoutId);
-            */
-            //uploadFiles(_formData);
         }
     };
 
