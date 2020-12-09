@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 const Dataset = (props: any) => {
     const permissions = useContext(Permissions);
     const [datasets, setDatasets] = useState([]);
-    // const { loading } = useFetch(getStandardDatasets, setDatasets, 'datasets');
     const datasetsResponse = useFetchUrl('datasets/', setDatasets);
 
     return permissions.canRead_PreApproved_Datasets ? (

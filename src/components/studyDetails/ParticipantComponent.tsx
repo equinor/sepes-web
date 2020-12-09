@@ -9,7 +9,6 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import useFetch from '../common/hooks/useFetch';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
@@ -54,12 +53,10 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
-    //const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
     const rolesResponse = useFetchUrl('lookup/studyroles', setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const user = useContext(UserConfig);
     const history = useHistory();
-
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -96,7 +93,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     let participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
-                    console.log('participants: ', result);
                 } else {
                     notify.show('danger', '500', result.Message, result.requestId);
                     console.log('Err getting participants');

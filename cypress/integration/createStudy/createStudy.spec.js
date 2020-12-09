@@ -66,9 +66,10 @@ describe('Create study', function () {
                 .type('cy Results and learnings')
         });
 
-        it('clicks edit results and learnings', () => {
+        it('clicks save results and learnings', () => {
             cy.get('[data-cy=save_results_and_learnings]')
                 .click();
+            cy.wait(500)
         });
 
         it('clicks on data sets tab', () => {
@@ -86,8 +87,10 @@ describe('Create study', function () {
         it('fills out dataset information', () => {
             cy.get('[data-cy=dataset_name]')
                 .type('cy name')
+                /*
             cy.get('[data-cy=dataset_storage_name]')
                 .type('cy storage')
+                */
             cy.get('[data-cy=dataset_location]')
                 .click()
             cy.contains("Norway East").click();
@@ -98,6 +101,7 @@ describe('Create study', function () {
                 .type(1)
             cy.get('[data-cy=dataset_save]')
                 .click();
+            cy.wait(25000)
             cy.get('[data-cy=dataset_edit]')
                 .click();
         });
@@ -116,11 +120,18 @@ describe('Create study', function () {
                     .click();
             });
 
-        describe('Edit study specific dataset', function () {
-    
-            it('fills out dataset information again', () => {
-                cy.get('[data-cy=dataset_back_to_study]')
+            it('Delete study specific dataset', () => {
+                cy.get('[data-cy=dataset_delete]')
                     .click()         
+                cy.get('[data-cy="delete_resource"]')
+                    .type('cy namecy name edit')
+                cy.get('[data-cy=delete_resource_delete]')
+                    .click()
+                    });
+
+        describe('Delete study', function () {
+    
+            it('fills out dataset information again', () => {      
                 cy.get('[data-cy=edit_study]')
                     .click()
                 cy.get('[data-cy=study_options]')
@@ -133,5 +144,8 @@ describe('Create study', function () {
                     .click()
                     
                 });
-        
+
+
+    
+            
     }

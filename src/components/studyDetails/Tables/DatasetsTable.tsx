@@ -62,6 +62,7 @@ const DatasetsTable = (props: any) => {
                                             row.sandboxDatasets.map((sandbox: any, index: number) => {
                                                 return (
                                                     <Link
+                                                        key={sandbox.sandboxId}
                                                         style={{ color: '#000000', cursor: 'pointer' }}
                                                         to={
                                                             '/studies/' +

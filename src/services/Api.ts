@@ -39,8 +39,12 @@ export const addStudyDataset = async (studyId: string, datasetId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'PUT');
 };
 
-export const removeStudyDataset = async (studyId: string, datasetId: string) => {
+export const unlinkStudyDataset = async (studyId: string, datasetId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
+};
+
+export const removeStudyDataset = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId, 'DELETE');
 };
 
 export const getDatasetsForStudy = async (studyId: string) => {
@@ -138,6 +142,10 @@ export const putDatasetForSandbox = async (sandboxId: string, datasetId: string)
 
 export const deleteDatasetForSandbox = async (sandboxId: string, datasetId: string) => {
     return apiRequestWithToken('api/sandbox/' + sandboxId + '/datasets/' + datasetId, 'DELETE');
+};
+
+export const deleteDatasetForSandbox2 = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId, 'DELETE');
 };
 
 //Virtual machine

@@ -5,14 +5,12 @@ import DataSetComponent from './DataSetComponent';
 import ParticipantComponent from './ParticipantComponent';
 import SandBoxComponent from './SandboxComponent';
 import Overview from './Overview';
-import * as api from '../../services/Api';
 import { Tabs } from '@equinor/eds-core-react';
 import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
 import { StudyObj } from '../common/interfaces';
-import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
@@ -57,17 +55,6 @@ const StudyDetails = () => {
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const studyResponse = useFetchUrl('studies/' + id, setStudy, id ? true : false);
-    /*
-    const { loading, setLoading, cache } = useFetch(
-        api.getStudy,
-        setStudy,
-        'study' + window.location.pathname.split('/')[2],
-        window.location.pathname.split('/')[2],
-        null,
-        null,
-        id ? true : false
-    );
-    */
     const permissions = useContext(Permissions);
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
@@ -75,7 +62,7 @@ const StudyDetails = () => {
 
     const changeComponent = () => {
         Cookies.remove(id);
-        Cookies.set(id, activeTab, { expires: 365 });
+        Cookies.set(id, activeTab, { expires: 1 });
         switch (activeTab) {
             case 1:
                 return (

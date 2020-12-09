@@ -45,7 +45,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const res = useFetchUrl('studies/' + study.id + '/resultsandlearnings', setResultsAndLearnings);
+    const res = useFetchUrl('studies/' + study.id + '/resultsandlearnings', setResultsAndLearnings, study.id !== '');
 
     const handleChange = (evt) => {
         setHasChanged(true);
@@ -54,6 +54,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
 
     const handleSave = () => {
         setUpdateCache({ ...updateCache, ['studies/' + study.id]: true });
+        res.cache['studies/' + study.id + '/resultsandlearnings'] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
             if (result && !result.Message) {
