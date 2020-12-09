@@ -202,7 +202,7 @@ const DatasetDetails = (props: any) => {
                                 return (
                                     <>
                                         <div>{file.name}</div>
-                                        <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
+                                        <div>{bytesToMB(file.size) + ' '} MB</div>
                                         <Icon
                                             onClick={() => removeFile(i, file)}
                                             color="#007079"
