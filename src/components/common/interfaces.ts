@@ -54,6 +54,7 @@ export interface DatasetObj {
     id?: string;
     added?: boolean;
     studyId?: string;
+    storageAccountLink?: string;
 }
 
 export interface SandboxCreateObj {

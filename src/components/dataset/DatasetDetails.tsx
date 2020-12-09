@@ -209,7 +209,9 @@ const DatasetDetails = (props: any) => {
                         </div>
                         <div>
                             <Label>Storage account url</Label>
-                            {returnField(dataset?.location)}
+                            <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
+                                {dataset?.storageAccountLink}
+                            </a>
                         </div>
                         <div>
                             <Label>Data classification</Label>

@@ -245,7 +245,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.storageAccountName) {
+        if (!dataset?.name?.length || !dataset?.classification?.length) {
             return true;
         }
         return false;
