@@ -3,44 +3,36 @@ import imageCompression from 'browser-image-compression';
 import Dropzone from './Dropzone';
 
 let link1 = document.createElement('img');
-const AddImageAndCompressionContainer = (
-  props:any
-) => {
-  function handleImageUpload(imageEvent: File[]) {
-    var imageFile = imageEvent[0];
-    var options = {
-      maxSizeMB: 0.2,
-      maxWidthOrHeight: 1000,
-      useWebWorker: false,
-    };
-    imageCompression(imageFile, options)
-      .then(function (compressedFile) {
-        link1.src = URL.createObjectURL(compressedFile);
-        console.log(link1.src);
-        props.setImageUrl(link1.src);
-      })
-      .catch(function (error) {
-        
-      });
-  }
+const AddImageAndCompressionContainer = (props: any) => {
+    function handleImageUpload(imageEvent: File[]) {
+        var imageFile = imageEvent[0];
+        var options = {
+            maxSizeMB: 0.2,
+            maxWidthOrHeight: 1000,
+            useWebWorker: false
+        };
+        imageCompression(imageFile, options)
+            .then(function (compressedFile) {
+                link1.src = URL.createObjectURL(compressedFile);
+                props.setImageUrl(link1.src);
+            })
+            .catch(function (error) {});
+    }
 
-  return (
-    <div style={{position: 'relative'}}>
-    <Dropzone
-      onDrop={(event: File[]) => handleImageUpload(event)}
-      accept={'image/*'}
-    />
-    {props.imageUrl ?
-    <img
-      src={props.imageUrl}
-      style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
-      width="100%"
-      height="100%"
-      alt="logoUrl"
-    />
-    : null }
-    </div>
-  );
+    return (
+        <div style={{ position: 'relative' }}>
+            <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} accept={'image/*'} />
+            {props.imageUrl ? (
+                <img
+                    src={props.imageUrl}
+                    style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
+                    width="100%"
+                    height="100%"
+                    alt="logoUrl"
+                />
+            ) : null}
+        </div>
+    );
 };
 export default AddImageAndCompressionContainer;
 

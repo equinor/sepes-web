@@ -59,7 +59,6 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const permissions = useContext(Permissions);
     const datasetsResponse = useFetchUrl('datasets/', setDatasetsList, permissions.canRead_PreApproved_Datasets);
-
     const removeDataset = (row: any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
@@ -165,7 +164,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     removeDataset={removeDataset}
                     editMode
                     studyId={study.id}
-                    disabled={study.permissions && !study.permissions.addRemoveDataset}
+                    disabled={study.permissions && study.permissions.addRemoveDataset}
                 />
             </TableWrapper>
         </Wrapper>
