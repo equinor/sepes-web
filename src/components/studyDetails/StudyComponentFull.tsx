@@ -78,12 +78,6 @@ const Wrapper = styled.div`
     }
 `;
 
-const ScrimWrapper = styled.div`
-    background-color: #ffffff;
-    padding: 32px;
-    border-radius: 4px;
-`;
-
 const RightWrapper = styled.div<{ editMode: any }>`
     margin-top: ${(props: any) => (props.editMode ? '48px' : '0px')};
     @media (max-width: 768px) {

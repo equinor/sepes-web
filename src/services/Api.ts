@@ -5,7 +5,8 @@ import {
     SandboxObj,
     SandboxCreateObj,
     ParticipantObj,
-    VmObj
+    VmObj,
+    resultsAndLearningsObj
 } from '../components/common/interfaces';
 
 //Study
@@ -38,12 +39,26 @@ export const addStudyDataset = async (studyId: string, datasetId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'PUT');
 };
 
-export const removeStudyDataset = async (studyId: string, datasetId: string) => {
+export const unlinkStudyDataset = async (studyId: string, datasetId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'DELETE');
+};
+
+export const removeStudyDataset = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId, 'DELETE');
 };
 
 export const getDatasetsForStudy = async (studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets', 'GET');
+};
+
+export const editResultsAndLearnings = async (resultsAndLearnings: resultsAndLearningsObj, studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/resultsAndLearnings', 'PUT', resultsAndLearnings);
+};
+
+// Dataset files
+
+export const deleteFileInDataset = async (datasetId: string, fileName: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files/fileName?fileName=' + fileName, 'DELETE');
 };
 
 //Specific dataset
@@ -129,6 +144,10 @@ export const deleteDatasetForSandbox = async (sandboxId: string, datasetId: stri
     return apiRequestWithToken('api/sandbox/' + sandboxId + '/datasets/' + datasetId, 'DELETE');
 };
 
+export const deleteDatasetForSandbox2 = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId, 'DELETE');
+};
+
 //Virtual machine
 
 export const createVirtualMachine = async (sandboxId: string, vm: VmObj) => {
@@ -200,12 +219,15 @@ export const getPermissions = async () => {
 
 // Files
 
-export const addFiles = async (datasetId: string, formData: any, studyId?: string): Promise<any> => {
+export const addFiles = async (datasetId: string, formData: any): Promise<any> => {
+    return postFile('api/datasets/' + datasetId + '/files', formData);
+    /*
     if (studyId) {
         return postFile(`datasetfile/addfiles?datasetId=${datasetId}&studyId=${studyId}`, formData);
     }
     //Endpoint does not exists yet
     return postFile(`datasetfile/addfiles?datasetId=${datasetId}`, formData);
+    */
 };
 /*
 export const postOnlyBlobimage = async (imageUrl: string) => {

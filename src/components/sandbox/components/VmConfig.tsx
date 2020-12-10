@@ -10,7 +10,6 @@ import {
     SandboxPermissions
 } from '../../common/interfaces';
 import {
-    getVirtualMachineForSandbox,
     getVirtualMachineDisks,
     getVirtualMachineSizes,
     getVirtualMachineOperatingSystems
@@ -45,11 +44,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    // useFetch(getVirtualMachineSizes, setSizes, null, sandbox.id, null, null, permissions.update);
-    //  useFetch(getVirtualMachineDisks, setDisks, null, null, null, null, permissions.update);
-    //const { loading, cache } = useFetch(getVirtualMachineForSandbox, setVms, null, sandbox.id);
     const vmsReponse = useFetchUrl('virtualmachines/forsandbox/' + sandbox.id, setVms);
-    //useFetch(getVirtualMachineOperatingSystems, setOs, null, sandbox.id, null, null, permissions.update);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {

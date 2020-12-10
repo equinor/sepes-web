@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { getDataset, getStandardDataset, addFiles } from '../../services/Api';
+import { addFiles, deleteFileInDataset, removeStudyDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
@@ -11,10 +11,14 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
-import useFetch from '../common/hooks/useFetch';
 import { Permissions } from '../../index';
 import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import * as notify from '../common/notify';
+import { EquinorIcon } from '../common/StyledComponents';
+import { useHistory } from 'react-router-dom';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import { UpdateCache } from '../../App';
 
 const icons = {
     arrow_back,
@@ -67,39 +71,32 @@ interface passedProps {
 
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
-    let studyId = window.location.pathname.split('/')[2];
+    const studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
-
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: ''
     });
-    /*
-    const { loading, setLoading, cache } = useFetch(
-        isStandard ? getStandardDataset : getDataset,
-        setDataset,
-        isStandard ? 'dataset' + studyId : 'dataset' + studyId + datasetId,
-        isStandard ? studyId : datasetId,
-        !isStandard && studyId
-    );
-    */
-    const datasetResponse = useFetchUrl(
-        isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId,
-        setDataset
-    );
+    useFetchUrl(isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId, setDataset);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const [formData, setFormData] = useState<any>(null);
+    const datasetResponse = useFetchUrl(
+        isStandard ? 'datasets/' + studyId + '/files' : 'datasets/' + datasetId + '/files',
+        setFiles,
+        !isStandard
+    );
     const permissions = useContext(Permissions);
     const location = useLocation<passedProps>();
+    const { updateCache, setUpdateCache } = useContext(UpdateCache);
+    const history = useHistory();
 
-    const uploadFiles = (): void => {
+    const uploadFiles = (formData: any): void => {
         datasetResponse.setLoading(true);
         if (!checkUrlIfGeneralDataset()) {
-            addFiles(datasetId, formData, studyId).then((result) => {
+            addFiles(datasetId, formData).then((result) => {
                 if (result.Message) {
                     console.log('err', result);
-                } else {
-                    //removeFiles();
                 }
                 datasetResponse.setLoading(false);
             });
@@ -108,48 +105,58 @@ const DatasetDetails = (props: any) => {
             addFiles(datasetId, formData).then((result) => {
                 if (result.Message) {
                     console.log('err', result);
-                } else {
-                    //removeFiles();
                 }
                 datasetResponse.setLoading(false);
             });
         }
     };
 
-    const removeFiles = () => {
-        setFiles([]);
-        setFormData(null);
-    };
-
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
     };
 
-    const handleFileDrop = async (_files: File[]): Promise<void> => {
-        setFiles(_files);
-        let _formData = new FormData();
+    const deleteDataset = () => {
+        setLoading(true);
+        setUserClickedDelete(false);
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        removeStudyDataset(datasetId).then((result: any) => {
+            if (result && !result.Message) {
+                history.push('/studies/' + studyId);
+            } else {
+                console.log('Err');
+                notify.show('danger', '500', result.Message, result.RequestId);
+            }
+            setLoading(false);
+        });
+    };
 
-        if (!_files.length) {
-            setFormData(null);
-        } else {
+    const handleFileDrop = async (_files: File[]): Promise<void> => {
+        const tempFiles = [...files];
+        tempFiles.push(..._files);
+        setFiles(tempFiles);
+        let _formData = new FormData();
+        if (_files.length) {
             _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                     .then((blob) => {
                         _formData.append(`files`, blob);
                     })
                     .then(() => {
-                        setFormData(_formData);
+                        uploadFiles(_formData);
                     });
             });
-            uploadFiles();
         }
     };
 
-    const removeFile = (i: number): void => {
+    const removeFile = (i: number, file: any): void => {
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
-        handleFileDrop(_files);
+        deleteFileInDataset(datasetId, file.name).then((result: any) => {
+            if (result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            }
+        });
     };
 
     const returnField = (fieldName) => {
@@ -158,6 +165,15 @@ const DatasetDetails = (props: any) => {
 
     return !showEditDataset ? (
         <OuterWrapper>
+            {loading && <LoadingFull />}
+            {userClickedDelete && (
+                <DeleteResourceComponent
+                    ResourceName={dataset?.name}
+                    setUserClickedDelete={setUserClickedDelete}
+                    onClick={deleteDataset}
+                    type="dataset"
+                />
+            )}
             <Wrapper>
                 <div>
                     <div style={{ marginBottom: '16px' }}>
@@ -181,36 +197,35 @@ const DatasetDetails = (props: any) => {
                     )}
                     <Dropzone onDrop={(event: File[]) => handleFileDrop(event)} />
                     <AttachmentWrapper>
-                        {files.map((file: File, i: number) => {
-                            return (
-                                <>
-                                    <div>{file.name}</div>
-                                    <div>{bytesToMB(file.size) + ' '} MB / 42.00 MB</div>
-                                    <Icon
-                                        onClick={() => removeFile(i)}
-                                        color="#007079"
-                                        name="delete_forever"
-                                        size={24}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                </>
-                            );
-                        })}
+                        {files &&
+                            files.map((file: any, i: number) => {
+                                return (
+                                    <>
+                                        <div>{file.name}</div>
+                                        <div>{bytesToMB(file.size) + ' '} MB</div>
+                                        <Icon
+                                            onClick={() => removeFile(i, file)}
+                                            color="#007079"
+                                            name="delete_forever"
+                                            size={24}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </>
+                                );
+                            })}
                     </AttachmentWrapper>
-                    {/*files.length > 0 && <Button onClick={uploadFiles} style={{ float: 'right', width: '128px' }}>Upload</Button> */}
                 </div>
                 {!datasetResponse.loading ? (
                     <RightWrapper>
                         <div>
-                            <Label>Data set name</Label>
-                            {returnField(dataset?.name)}
+                            <Label>Storage account</Label>
+                            <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
+                                <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
+                                {EquinorIcon('external_link', '#007079', 24)}
+                            </a>
                         </div>
                         <div>
-                            <Label>location</Label>
-                            {returnField(dataset?.location)}
-                        </div>
-                        <div>
-                            <Label>Storage account url</Label>
+                            <Label>Location</Label>
                             {returnField(dataset?.location)}
                         </div>
                         <div>
@@ -250,32 +265,65 @@ const DatasetDetails = (props: any) => {
                             {returnField(dataset?.areaL2)}
                         </div>
                         <div>
-                            <Tooltip
-                                title={
-                                    !(
-                                        permissions.canEdit_PreApproved_Datasets ||
-                                        (location.state && location.state.canEditStudySpecificDataset)
-                                    )
-                                        ? 'You do not have permission to edit metadata'
-                                        : ''
-                                }
-                                placement="top"
-                            >
-                                <Button
-                                    style={{ width: '150px' }}
-                                    variant="outlined"
-                                    onClick={handleEditMetdata}
-                                    data-cy="dataset_edit"
-                                    disabled={
+                            <div style={{ display: 'inline-block' }}>
+                                <Tooltip
+                                    title={
                                         !(
                                             permissions.canEdit_PreApproved_Datasets ||
                                             (location.state && location.state.canEditStudySpecificDataset)
                                         )
+                                            ? 'You do not have permission to edit metadata'
+                                            : ''
                                     }
+                                    placement="top"
                                 >
-                                    Edit metadata
-                                </Button>
-                            </Tooltip>
+                                    <Button
+                                        style={{ width: '150px' }}
+                                        variant="outlined"
+                                        onClick={handleEditMetdata}
+                                        data-cy="dataset_edit"
+                                        disabled={
+                                            !(
+                                                permissions.canEdit_PreApproved_Datasets ||
+                                                (location.state && location.state.canEditStudySpecificDataset)
+                                            )
+                                        }
+                                    >
+                                        Edit metadata
+                                    </Button>
+                                </Tooltip>
+                            </div>
+                            {!checkUrlIfGeneralDataset() && (
+                                <div style={{ display: 'inline-block', marginTop: '8px', marginLeft: '8px' }}>
+                                    <Tooltip
+                                        title={
+                                            !(
+                                                permissions.canEdit_PreApproved_Datasets ||
+                                                (location.state && location.state.canEditStudySpecificDataset)
+                                            )
+                                                ? 'You do not have permission to edit metadata'
+                                                : ''
+                                        }
+                                        placement="top"
+                                    >
+                                        <Button
+                                            style={{ width: '150px' }}
+                                            variant="outlined"
+                                            color="danger"
+                                            onClick={() => setUserClickedDelete(true)}
+                                            data-cy="dataset_delete"
+                                            disabled={
+                                                !(
+                                                    permissions.canEdit_PreApproved_Datasets ||
+                                                    (location.state && location.state.canEditStudySpecificDataset)
+                                                )
+                                            }
+                                        >
+                                            Delete data set
+                                        </Button>
+                                    </Tooltip>
+                                </div>
+                            )}
                         </div>
                     </RightWrapper>
                 ) : (

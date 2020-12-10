@@ -45,7 +45,7 @@ const Wrapper = styled.div`
     }
   }
 `;
-//D5EAF4
+
 const LogoTitleWrapper = styled.div`
     display: grid;
     grid-gap: 40px;

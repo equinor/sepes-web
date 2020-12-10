@@ -46,8 +46,10 @@ describe('Create vm', function () {
     it('fills out dataset information', () => {
         cy.get('[data-cy=dataset_name]')
             .type('cy name')
+            /*
         cy.get('[data-cy=dataset_storage_name]')
             .type('cy storage')
+            */
         cy.get('[data-cy=dataset_location]')
             .click()
         cy.contains("Norway East").click();
@@ -58,6 +60,7 @@ describe('Create vm', function () {
             .type(1)
         cy.get('[data-cy=dataset_save]')
             .click();
+        cy.wait(25000)
         cy.get('[data-cy=dataset_back_to_study]')
             .click();
     });
@@ -113,7 +116,7 @@ describe('Create vm', function () {
         it('creates VM rules', () => {
             cy.get('[data-cy=vm_add_rule]')
                 .click()
-            cy.wait(500)
+            cy.wait(1000)
             cy.get('[data-cy=vm_rule_description]')
                 .type('cy rule description')
             cy.get('[data-cy=vm_rule_ip]')

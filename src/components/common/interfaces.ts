@@ -54,6 +54,7 @@ export interface DatasetObj {
     id?: string;
     added?: boolean;
     studyId?: string;
+    storageAccountLink?: string;
 }
 
 export interface SandboxCreateObj {
@@ -126,4 +127,8 @@ export interface OperatingSystemObj {
     category: string;
     key: string;
     displayValue: string;
+}
+
+export interface resultsAndLearningsObj {
+    resultsAndLearnings: string;
 }

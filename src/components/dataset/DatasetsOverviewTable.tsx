@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
-//import { close } from '@equinor/eds-icons';
 import { DatasetObj, GeneralPermissions } from '../common/interfaces';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
@@ -126,7 +125,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     const handleColumnsChange = (evt) => {
         const _columns = { ...checkedColums, [evt.target.name]: evt.target.checked };
         setCheckedColumns({ ...checkedColums, [evt.target.name]: evt.target.checked });
-        Cookies.set('checkedColumns', _columns, { expires: 365 });
+        Cookies.set('checkedColumns', _columns, { expires: 1 });
     };
 
     const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {

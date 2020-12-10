@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, TextField, Divider } from '@equinor/eds-core-react';
-import { EquinorIcon, StyledTitle, Label } from '../common/StyledComponents';
+import { Button, TextField } from '@equinor/eds-core-react';
+import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { createSandbox, getAzureRegions } from '../../services/Api';
+import { createSandbox } from '../../services/Api';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
-import useFetch from '../common/hooks/useFetch';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
@@ -44,7 +43,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
-    //useFetch(getAzureRegions, setRegions, 'regions');
     useFetchUrl('lookup/regions', setRegions);
     const [loading, setLoading] = useState<Boolean>(false);
     const wrapperRef = useRef(null);
