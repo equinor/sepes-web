@@ -70,6 +70,7 @@ const width = '512px';
 interface passedProps {
     pathname: string;
     canCreateStudySpecificDataset: boolean;
+    canEditStudySpecificDataset: boolean;
 }
 
 type CreateEditDatasetProps = {
@@ -156,7 +157,13 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         ['studies/' + studyId]: true,
                         ['studies/' + studyId + '/datasets']: true
                     });
-                    history.push('/studies/' + studyId + '/datasets/' + result.id);
+                    history.push({
+                        pathname: '/studies/' + studyId + '/datasets/' + result.id,
+                        state: {
+                            canCreateStudySpecificDataset: location.state.canCreateStudySpecificDataset,
+                            canEditStudySpecificDataset: location.state.canEditStudySpecificDataset
+                        }
+                    });
                 } else {
                     console.log('Err');
                     notify.show('danger', '500', result.Message, result.RequestId);

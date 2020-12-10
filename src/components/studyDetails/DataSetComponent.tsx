@@ -79,7 +79,10 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
         const studyId = window.location.pathname.split('/')[2];
         history.push({
             pathname: '/studies/' + studyId + '/datasets',
-            state: { canCreateStudySpecificDataset: study.permissions.addRemoveDataset }
+            state: {
+                canCreateStudySpecificDataset: study.permissions.addRemoveDataset,
+                canEditStudySpecificDataset: study.permissions.addRemoveDataset
+            }
         });
     };
 
