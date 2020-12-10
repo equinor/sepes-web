@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/equinor/sepes-web/compare/0.1.7...0.1.8) (2020-12-10)
+
+
+### Features
+
+* **datasets:** add files upload ([029714e](https://github.com/equinor/sepes-web/commit/029714e809c86350d8a964a561040a867577cbb2))
+* **datasets:** user can now delete datasets ([2bcf19c](https://github.com/equinor/sepes-web/commit/2bcf19c10b77f5a519f8428a8645ae7432e56c1f))
+
+
+### Bug Fixes
+
+* **api calls:** fix some cache issues and refactor api call hook ([4086307](https://github.com/equinor/sepes-web/commit/40863075a94665a7cb7284e81d9b109a8a655131)), closes [#389](https://github.com/equinor/sepes-web/issues/389)
+* **create dataset:** hide storage account name ([a8cc67d](https://github.com/equinor/sepes-web/commit/a8cc67dc241bc011cd7fedd0f7038f3072ea46f7))
+* **notification:** remove http code from popup ([6e38fa2](https://github.com/equinor/sepes-web/commit/6e38fa2ce0afd509c6400e9c9e7a35a7691ce773)), closes [#371](https://github.com/equinor/sepes-web/issues/371)
+* **participant:** redirect user if they remove themselves as a participant in a study ([2ca781e](https://github.com/equinor/sepes-web/commit/2ca781e63c28f1e27947e4f932cc74f7e298ee76)), closes [#374](https://github.com/equinor/sepes-web/issues/374)
+* **participants:** stop call to api if user do not have permission to add participants to a study ([29a4230](https://github.com/equinor/sepes-web/commit/29a4230344e06faa00d3ec57f11e157e919fb577))
+* **results and learnings:** fixed a bug where study metadata and results and learnings overwrited eachother ([60ed6ea](https://github.com/equinor/sepes-web/commit/60ed6eaeb8dabc54d04d987e34c91bfa47af1d42)), closes [#390](https://github.com/equinor/sepes-web/issues/390)
+* **studies:** update list when a study has been deleted ([0a70eff](https://github.com/equinor/sepes-web/commit/0a70effce4752059e594f72c210c8fc31f804099))
+* **vm rules:** add input check IP and port number ([ffb8e80](https://github.com/equinor/sepes-web/commit/ffb8e809b22fff0929757add3a5cf0cdf67e7fa8))
+* **vm rules:** disable save button if user writes inavlid port number ([abaf653](https://github.com/equinor/sepes-web/commit/abaf6539ba2843ad1c9693a198c0f80cd4f04dbd))
+
 ### [0.1.7](https://github.com/equinor/sepes-web/compare/0.1.6...0.1.7) (2020-12-02)
 
 

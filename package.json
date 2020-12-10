@@ -1,6 +1,6 @@
 {
     "name": "sepes-web",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "private": true,
     "dependencies": {
         "@azure/storage-blob": "^12.1.2",
