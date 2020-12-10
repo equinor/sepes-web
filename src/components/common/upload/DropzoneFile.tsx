@@ -11,53 +11,62 @@ const icons = {
 Icon.add(icons);
 
 const ChooseImgdiv = styled.div`
-  height: 128px;
-  display: flex;
-  margin-top: 40px;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed #007079;
-  cursor: pointer;
-  box-sizing: border-box;
-  background: #FFFFFF;
-  @media (max-width: 700px) {
-    width: 95%;
-  }
+    height: 128px;
+    display: flex;
+    margin-top: 40px;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #007079;
+    cursor: pointer;
+    box-sizing: border-box;
+    background: #ffffff;
+    @media (max-width: 700px) {
+        width: 95%;
+    }
 `;
 interface props {
-  onDrop: any;
-  accept?: string;
+    onDrop: any;
+    accept?: string;
+    disabled?: boolean;
 }
-const Dropzone = ({ onDrop, accept }: props) => {
-  // Initializing useDropzone hooks with options
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept,
-  });
+const Dropzone = ({ onDrop, accept, disabled }: props) => {
+    // Initializing useDropzone hooks with options
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept
+    });
 
-  /* 
+    /* 
     useDropzone hooks exposes two functions called getRootProps and getInputProps
     and also exposes isDragActive boolean
   */
 
-  return (
-    <ChooseImgdiv {...getRootProps()}>
-      <input className="dropzone-input" {...getInputProps()} />
-      <div className="text-center">
-        {isDragActive ? (
-          <div className="dropzone-content">
-            {EquinorIcon('cloud_upload', '#007079', 32)}
-            <div>Drop here</div>
-          </div>
-        ) : (
-          <div className="dropzone-content">
-            {EquinorIcon('cloud_upload', '#007079', 32)}
-            <div>Drop files or <span style={{color: '#007079'}}>browse</span> to upload</div>
-          </div>
-        )}
-      </div>
-    </ChooseImgdiv>
-  );
+    return (
+        <ChooseImgdiv
+            {...getRootProps()}
+            style={{
+                opacity: disabled ? 0.5 : 1,
+                pointerEvents: disabled ? 'none' : 'initial'
+            }}
+        >
+            <input className="dropzone-input" {...getInputProps()} />
+            <div className="text-center">
+                {isDragActive ? (
+                    <div className="dropzone-content">
+                        {EquinorIcon('cloud_upload', '#007079', 32)}
+                        <div>Drop here</div>
+                    </div>
+                ) : (
+                    <div className="dropzone-content">
+                        {EquinorIcon('cloud_upload', '#007079', 32)}
+                        <div>
+                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                        </div>
+                    </div>
+                )}
+            </div>
+        </ChooseImgdiv>
+    );
 };
 
 export default Dropzone;

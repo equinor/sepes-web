@@ -78,6 +78,7 @@ const DatasetDetails = (props: any) => {
     const [dataset, setDataset] = useState<DatasetObj>({
         name: ''
     });
+    const location = useLocation<passedProps>();
     useFetchUrl(isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId, setDataset);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
@@ -87,11 +88,11 @@ const DatasetDetails = (props: any) => {
         !isStandard
     );
     const permissions = useContext(Permissions);
-    const location = useLocation<passedProps>();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
 
     const uploadFiles = (formData: any): void => {
+        updateOnNextVisit();
         datasetResponse.setLoading(true);
         if (!checkUrlIfGeneralDataset()) {
             addFiles(datasetId, formData).then((result) => {
@@ -113,6 +114,11 @@ const DatasetDetails = (props: any) => {
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
+    };
+
+    const updateOnNextVisit = () => {
+        const dataCache = isStandard ? 'datasets/' + studyId + '/files' : 'datasets/' + datasetId + '/files';
+        setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
     const deleteDataset = () => {
@@ -149,6 +155,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (i: number, file: any): void => {
+        updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
@@ -195,7 +202,10 @@ const DatasetDetails = (props: any) => {
                             Back to datasets
                         </Link>
                     )}
-                    <Dropzone onDrop={(event: File[]) => handleFileDrop(event)} />
+                    <Dropzone
+                        onDrop={(event: File[]) => handleFileDrop(event)}
+                        disabled={location.state && !location.state.canEditStudySpecificDataset}
+                    />
                     <AttachmentWrapper>
                         {files &&
                             files.map((file: any, i: number) => {

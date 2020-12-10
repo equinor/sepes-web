@@ -45,7 +45,11 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const res = useFetchUrl('studies/' + study.id + '/resultsandlearnings', setResultsAndLearnings, study.id !== '');
+    const res = useFetchUrl(
+        'studies/' + study.id + '/resultsandlearnings',
+        setResultsAndLearnings,
+        study.id !== '' && study.permissions.readResulsAndLearnings
+    );
 
     const handleChange = (evt) => {
         setHasChanged(true);
