@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
@@ -9,7 +9,9 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
-import useFetch from '../common/hooks/useFetch';
+import useFetchUrl from '../common/hooks/useFetchUrl';
+import { UserConfig } from '../../index';
+import { useHistory } from 'react-router-dom';
 
 const icons = {
     close
@@ -51,44 +53,51 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
-    const { loading, setLoading } = useFetch(api.getStudyRoles, setRoles);
+    const rolesResponse = useFetchUrl('lookup/studyroles', setRoles);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const user = useContext(UserConfig);
+    const history = useHistory();
 
-    useEffect(() => {}, [participantNotSelected]);
+    useEffect(() => {
+        setIsSubscribed(true);
+        return () => setIsSubscribed(false);
+    }, [participantNotSelected, study.permissions.addRemoveParticipant]);
 
     const removeParticipant = (participant: any) => {
         let participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({ ...study, participants: participantList });
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (!result.Message) {
-                console.log('participants: ', result);
+            if (!result.Message && isSubscribed) {
+                if (user.getAccount().userName === participant.userName) {
+                    history.push('/');
+                }
             } else {
                 notify.show('danger', '500', result.Message, result.requestId);
             }
-            setLoading(false);
+            rolesResponse.setLoading(false);
         });
     };
 
     const addParticipant = () => {
-        setLoading(true);
+        rolesResponse.setLoading(true);
         setRole('');
         setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (!result.Message) {
                     let participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
-                    console.log('participants: ', result);
                 } else {
                     notify.show('danger', '500', result.Message, result.requestId);
                     console.log('Err getting participants');
                 }
-                setLoading(false);
+                rolesResponse.setLoading(false);
             });
         } else {
             // TODO Implement backend to handle email
@@ -110,12 +119,33 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         roles.forEach((element: DropdownObj, key: number) => {
             for (let i = 0; i < partAsSelected.length; i++) {
                 if (element.displayValue === partAsSelected[i].role) {
-                    console.log('delete');
                     tempRoles.splice(tempRoles.indexOf(element), 1);
                 }
             }
         });
         return tempRoles;
+    };
+
+    const getParticipants = (inputValue: string, callback: any): void => {
+        api.getParticipantList(inputValue || 'a').then((result: any) => {
+            if (!result.Message) {
+                let temp = result.map((user) => {
+                    return {
+                        label: `${user.fullName} (${user.emailAddress})`,
+                        value: user.objectId,
+                        emailAddress: user.emailAddress,
+                        source: user.source,
+                        objectId: user.objectId,
+                        name: user.fullName,
+                        databaseId: user.databaseId
+                    };
+                });
+                callback(temp);
+            } else {
+                console.log('err');
+                //notify.show('danger', '500');
+            }
+        });
     };
 
     const selectParticipant = (row: any) => {
@@ -172,6 +202,9 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             selectedOption={{ value: 'Search..', label: text }}
                             onInputChange={handleInputChange}
                             disabled={study.permissions && !study.permissions.addRemoveParticipant}
+                            loadOptions={
+                                study.permissions && study.permissions.addRemoveParticipant ? getParticipants : null
+                            }
                         />
                     </div>
                 </Tooltip>
@@ -196,7 +229,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     </Tooltip>
                 </div>
                 <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>
-                    {loading ? <DotProgress variant="green" /> : 'Add participant'}
+                    {rolesResponse.loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>
             <TableWrapper>

@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { getSandbox, getResourceStatus, getDatasetsForStudy, getDatasetForSandbox } from '../../services/Api';
+import { getResourceStatus } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import styled from 'styled-components';
-import useFetch from '../common/hooks/useFetch';
 import { UpdateCache } from '../../App';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     display: grid;
@@ -25,7 +25,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
-    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [datasets, setDatasets] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
@@ -46,11 +45,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     });
     const [resources, setResources] = useState<any>();
-    const { loading } = useFetch(getSandbox, setSandbox, 'sandbox' + sandboxId, sandboxId);
-    useFetch(getDatasetsForStudy, setDatasets, null, studyId);
+    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
+    useFetchUrl('studies/' + studyId + '/datasets', setDatasets);
 
     useEffect(() => {
-        setIsSubscribed(true);
         getResources();
         let timer: any;
         try {
@@ -62,7 +60,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
         return () => {
             clearInterval(timer);
-            setIsSubscribed(false);
         };
     }, []);
 
@@ -99,7 +96,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
 
     return (
         <Wrapper>
-            {loading && <LoadingFull />}
+            {SandboxResponse.loading && <LoadingFull />}
             <StepBar
                 sandbox={sandbox && sandbox}
                 step={step}
@@ -115,8 +112,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     sandbox={sandbox}
                     showAddNewVm={step === 0 && sandbox.permissions.update}
                     resources={resources}
-                    loadingSandbox={loading}
+                    loadingSandbox={SandboxResponse.loading}
                     permissions={sandbox.permissions}
+                    setUpdateCache={setUpdateCache}
+                    updateCache={updateCache}
                 />
             )}
         </Wrapper>

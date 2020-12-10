@@ -7,19 +7,19 @@ import {
     addStudySpecificDataset,
     editStudySpecificDataset,
     createStandardDataset,
-    updateStandardDataset,
-    getAzureRegions
+    updateStandardDataset
 } from '../../services/Api';
 import { checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
-import useFetch from '../common/hooks/useFetch';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
 import { useLocation } from 'react-router-dom';
+import useFetchUrl from '../common/hooks/useFetchUrl';
+import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/commonLinks';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -54,6 +54,11 @@ const StyledLink = styled.a`
     color: #007079;
     text-decoration-line: underline;
 `;
+
+const studySpecificHelpText =
+    'This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.';
+const standardHelpText =
+    'This data set will be available for all studies in Sepes. We need some meta data before we create the storage. When storage is created you can start uploading files.';
 
 const dataClassificationsList = [
     { displayValue: 'Open', key: 'Open' },
@@ -90,7 +95,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
-    useFetch(getAzureRegions, setRegions, 'regions');
+    useFetchUrl('lookup/regions', setRegions);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
@@ -140,13 +145,17 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             return;
         }
         setLoading(true);
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, ['study' + studyId]: true });
+                    setUpdateCache({
+                        ...updateCache,
+                        ['studies/' + studyId]: true,
+                        ['studies/' + studyId + '/datasets']: true
+                    });
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
@@ -158,8 +167,13 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    const datasetCache = 'dataset' + studyId + result.id;
-                    setUpdateCache({ ...updateCache, ['study' + studyId]: true, [datasetCache]: true });
+                    const datasetCache = 'studies/' + studyId + '/datasets/' + result.id;
+                    setUpdateCache({
+                        ...updateCache,
+                        ['studies/' + studyId]: true,
+                        [datasetCache]: true,
+                        ['studies/' + studyId + '/datasets']: true
+                    });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
@@ -172,7 +186,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             createStandardDataset(dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, datasets: true, ['dataset' + studyId]: true });
+                    const datasetCache = 'datasets/' + result.id;
+                    setUpdateCache({ ...updateCache, 'datasets/': true, [datasetCache]: true });
                     history.push('/datasets/' + result.id);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -184,8 +199,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, datasets: true });
-                    cache['dataset' + studyId] = result;
+                    setUpdateCache({ ...updateCache, 'datasets/': true });
+                    cache['datasets/' + studyId] = result;
                     history.push('/datasets/' + result.id);
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -231,7 +246,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.storageAccountName) {
+        if (!dataset?.name?.length || !dataset?.classification?.length) {
             return true;
         }
         return false;
@@ -257,9 +272,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                     </div>
                     <HelperTextWrapper>
-                        {!checkUrlIfGeneralDataset()
-                            ? 'This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.'
-                            : 'This data set will be available for all studies in Sepes. We need some meta data before we create the storage. When storage is created you can start uploading files.'}
+                        {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
                     </HelperTextWrapper>
                     <TextField
                         id="textfield1"
@@ -273,7 +286,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         data-cy="dataset_name"
                         autoComplete="off"
                     />
-                    {!editDataset ? (
+                    {editDataset && returnField('Storage account name', dataset?.storageAccountName)}
+                    {!editDataset && checkUrlIfGeneralDataset() && (
                         <TextField
                             id="textfield2"
                             autoComplete="off"
@@ -292,8 +306,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                                 </div>
                             }
                         />
-                    ) : (
-                        returnField('Storage account name', dataset?.storageAccountName)
                     )}
                     {!editDataset ? (
                         <CoreDevDropdown
@@ -321,7 +333,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         color="#FFFFFF"
                     />
                     <StyledLink
-                        href="https://docmap.equinor.com/Docmap/page/doc/dmDocIndex.html?DOCID=1000006094"
+                        href={ClassificationGuidlinesLink}
                         style={{ marginTop: '-8px' }}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -342,7 +354,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         autoComplete="off"
                     />
                     <StyledLink
-                        href="https://statoilsrm.sharepoint.com/:x:/r/sites/datafundamentals/_layouts/15/Doc.aspx?sourcedoc=%7B74CCD0A3-1C7E-4645-9D16-C9BFEDC5C07E%7D&file=Data%20description%20and%20classification%20inventory.xlsx&action=default&mobileredirect=true"
+                        href={dataInventoryLink}
                         style={{ marginTop: '-8px' }}
                         target="_blank"
                         rel="noopener noreferrer"

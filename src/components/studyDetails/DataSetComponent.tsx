@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
-import { getDatasetList, addStudyDataset, removeStudyDataset } from '../../services/Api';
+import { getDatasetList, addStudyDataset, removeStudyDataset, unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
 import * as notify from '../common/notify';
-import useFetch from '../common/hooks/useFetch';
-import { PropertiesPlugin } from '@microsoft/applicationinsights-web';
+import { Permissions } from '../../index';
+import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const icons = {
     close
@@ -57,20 +57,21 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const { setLoading } = useFetch(getDatasetList, setDatasetsList);
+    const permissions = useContext(Permissions);
+    const datasetsResponse = useFetchUrl('datasets/', setDatasetsList, permissions.canRead_PreApproved_Datasets);
 
     const removeDataset = (row: any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
-        setUpdateCache({ ...updateCache, ['study' + studyId]: true });
-        removeStudyDataset(studyId, row.id).then((result: any) => {
+        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true, ['studies/' + study.id + '/datasets']: true });
+        unlinkStudyDataset(studyId, row.id).then((result: any) => {
             if (result && !result.Message) {
                 //setStudy({...study, datasets: result.datasets });
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
-            setLoading(false);
+            datasetsResponse.setLoading(false);
         });
     };
 
@@ -83,7 +84,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     };
 
     const addDatasetToStudy = (row: any) => {
-        setUpdateCache({ ...updateCache, ['study' + study.id]: true });
+        setUpdateCache({ ...updateCache, ['studies/' + study.id]: true, ['studies/' + study.id + '/datasets']: true });
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
             const studyId = window.location.pathname.split('/')[2];
@@ -97,7 +98,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
+                datasetsResponse.setLoading(false);
             });
         }
     };
@@ -115,28 +116,29 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
 
     return (
         <Wrapper>
-            <Bar>
-                <div>
-                    <Tooltip
-                        title={
-                            study.permissions && study.permissions.addRemoveDataset
-                                ? ''
-                                : 'You do not have access to create a study specific data set'
-                        }
-                        placement="top"
+            {/*<Bar>*/}
+            <div style={{ marginLeft: 'auto', marginTop: '32px', marginBottom: '8px' }}>
+                <Tooltip
+                    title={
+                        study.permissions && study.permissions.addRemoveDataset
+                            ? ''
+                            : 'You do not have access to create a study specific data set'
+                    }
+                    placement="top"
+                >
+                    <Button
+                        variant="outlined"
+                        data-cy="add_study_specific_dataset"
+                        onClick={() => {
+                            redirectToStudySpecificDataset();
+                        }}
+                        disabled={study.permissions && !study.permissions.addRemoveDataset}
                     >
-                        <Button
-                            variant="outlined"
-                            data-cy="add_study_specific_dataset"
-                            onClick={() => {
-                                redirectToStudySpecificDataset();
-                            }}
-                            disabled={study.permissions && !study.permissions.addRemoveDataset}
-                        >
-                            Create study specific data set
-                        </Button>
-                    </Tooltip>
-                </div>
+                        Create study specific data set
+                    </Button>
+                </Tooltip>
+            </div>
+            {/* 
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
                     <SearchWithDropdown
@@ -148,11 +150,13 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                         disabled={study.permissions && !study.permissions.addRemoveDataset}
                     />
                 </div>
+                
             </Bar>
             <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>
                 Advanced search
             </Link>
-            <TableWrapper>
+            */}
+            <TableWrapper style={{ marginTop: '44px' }}>
                 <DatasetsTable
                     datasets={study.datasets}
                     removeDataset={removeDataset}
