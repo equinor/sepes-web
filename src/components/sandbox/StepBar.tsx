@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Typography, Menu } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
@@ -7,7 +7,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox } from '../../services/Api';
+import { deleteSandbox, getResourceStatus } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 
@@ -42,6 +42,9 @@ type StepBarProps = {
     sandbox: SandboxObj;
     updateCache: any;
     setUpdateCache: any;
+    userClickedDelete: any;
+    setUserClickedDelete: any;
+    setResources: any;
 };
 
 const getSteps = () => {
@@ -75,12 +78,41 @@ const StepBar: React.FC<StepBarProps> = ({
     sandboxId,
     sandbox,
     updateCache,
-    setUpdateCache
+    setUpdateCache,
+    setResources,
+    userClickedDelete,
+    setUserClickedDelete
 }) => {
     const history = useHistory();
-    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const steps = getSteps();
+
+    useEffect(() => {
+        getResources();
+        let timer: any;
+        try {
+            timer = setInterval(async () => {
+                if (!userClickedDelete) {
+                    getResources();
+                }
+            }, 20000);
+        } catch (e) {
+            console.log(e);
+        }
+        return () => {
+            clearInterval(timer);
+        };
+    }, [userClickedDelete]);
+
+    const getResources = () => {
+        getResourceStatus(sandboxId).then((result: any) => {
+            if (result && !result.Message) {
+                setResources(result);
+            } else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            }
+        });
+    };
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -135,7 +167,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     id="menuButton"
                     aria-controls="menu-on-button"
                     aria-haspopup="true"
-                    aria-expanded={displayDeleteStudy}
+                    aria-expanded={isOpen}
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
