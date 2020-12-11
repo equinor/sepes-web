@@ -542,7 +542,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             </PictureWrapper>
                                         )}
                                         <Button
-                                            onClick={() => setShowImagePicker(!showImagePicker)}
+                                            onClick={() => {
+                                                setShowImagePicker(!showImagePicker);
+                                                setImageUrl('');
+                                            }}
                                             variant="outlined"
                                             style={{ margin: '16px 0 20px 56px' }}
                                         >

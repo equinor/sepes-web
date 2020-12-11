@@ -275,7 +275,7 @@ const DatasetDetails = (props: any) => {
                             {returnField(dataset?.areaL2)}
                         </div>
                         <div>
-                            <div style={{ display: 'inline-block' }}>
+                            <div style={{ display: 'inline-block', marginRight: '8px' }}>
                                 <Tooltip
                                     title={
                                         !(
@@ -304,7 +304,7 @@ const DatasetDetails = (props: any) => {
                                 </Tooltip>
                             </div>
                             {!checkUrlIfGeneralDataset() && (
-                                <div style={{ display: 'inline-block', marginTop: '8px', marginLeft: '8px' }}>
+                                <div style={{ display: 'inline-block', marginTop: '8px' }}>
                                     <Tooltip
                                         title={
                                             !(
