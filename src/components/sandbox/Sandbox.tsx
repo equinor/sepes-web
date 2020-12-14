@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { getResourceStatus } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
-import * as notify from '../common/notify';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
@@ -47,32 +45,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const [resources, setResources] = useState<any>();
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     useFetchUrl('studies/' + studyId + '/datasets', setDatasets);
-
-    useEffect(() => {
-        getResources();
-        let timer: any;
-        try {
-            timer = setInterval(async () => {
-                getResources();
-            }, 20000);
-        } catch (e) {
-            console.log(e);
-        }
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
-
-    const getResources = () => {
-        getResourceStatus(sandboxId).then((result: any) => {
-            if (result && !result.Message) {
-                setResources(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
-                console.log('Err');
-            }
-        });
-    };
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const returnStepComponent = () => {
         switch (step) {
@@ -105,6 +78,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 sandboxId={sandboxId}
                 setUpdateCache={setUpdateCache}
                 updateCache={updateCache}
+                setUserClickedDelete={setUserClickedDelete}
+                userClickedDelete={userClickedDelete}
+                setResources={setResources}
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (
