@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip, LinearProgress } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
 import { addFiles, deleteFileInDataset, removeStudyDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { bytesToMB } from '../common/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
-import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
+import { loginRequest, makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
@@ -19,6 +19,7 @@ import { EquinorIcon } from '../common/StyledComponents';
 import { useHistory } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
+import myMSALObj from '../../auth/AuthConfig';
 
 const icons = {
     arrow_back,
@@ -90,26 +91,81 @@ const DatasetDetails = (props: any) => {
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
+    const [percentComplete, setPercentComplete] = useState<any>(0);
+    //let percentComplete: any = 0;
 
     const uploadFiles = (formData: any): void => {
+        setPercentComplete(0);
         updateOnNextVisit();
-        datasetResponse.setLoading(true);
+        //datasetResponse.setLoading(false);
         if (!checkUrlIfGeneralDataset()) {
-            addFiles(datasetId, formData).then((result) => {
+            postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
-                datasetResponse.setLoading(false);
             });
         } else {
             datasetId = studyId;
-            addFiles(datasetId, formData).then((result) => {
+            postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
-                datasetResponse.setLoading(false);
             });
         }
+    };
+
+    const postFile = async (url, files: any) => {
+        return new Promise(function (resolve, reject) {
+            myMSALObj
+                .acquireTokenSilent(loginRequest)
+                .then((tokenResponse: any) => {
+                    if (tokenResponse.accessToken) {
+                        const headers = new Headers();
+                        const bearer = `Bearer ${tokenResponse.accessToken}`;
+                        headers.append('Authorization', bearer);
+
+                        const options = {
+                            method: 'POST',
+                            headers: headers,
+                            body: files
+                        };
+
+                        const config = {
+                            headers: {
+                                Authorization: `Bearer ${bearer}`
+                            }
+                        };
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.upload.addEventListener(
+                            'progress',
+                            function (evt) {
+                                if (evt.lengthComputable) {
+                                    let test = (evt.loaded / evt.total) * 100;
+                                    setPercentComplete(test);
+                                }
+                            },
+                            false
+                        );
+                        xhr.open('POST', `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`);
+                        xhr.setRequestHeader('Authorization', bearer);
+                        xhr.send(files);
+
+                        xhr.onreadystatechange = function () {
+                            // Call a function when the state changes.
+                            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                // Request finished. Do processing here.
+                                return this.response;
+                            }
+                        };
+                    }
+
+                    // Callback code here
+                })
+                .catch((error: string) => {
+                    console.log(error);
+                });
+        });
     };
 
     const handleEditMetdata = (evt) => {
@@ -155,6 +211,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (i: number, file: any): void => {
+        setPercentComplete(0);
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
@@ -206,6 +263,9 @@ const DatasetDetails = (props: any) => {
                         onDrop={(event: File[]) => handleFileDrop(event)}
                         disabled={location.state && !location.state.canEditStudySpecificDataset}
                     />
+                    {percentComplete > 0 && (
+                        <LinearProgress style={{ marginTop: '8px' }} value={percentComplete} variant="determinate" />
+                    )}
                     <AttachmentWrapper>
                         {files &&
                             files.map((file: any, i: number) => {
