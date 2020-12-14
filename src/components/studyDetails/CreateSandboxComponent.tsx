@@ -80,10 +80,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         return true;
     };
 
-    const handleCancel = (): void => {
-        setToggle(false);
-    };
-
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
@@ -96,8 +92,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
-                history.push(studyId + '/sandboxes/' + result.id);
                 setLoading(false);
+                history.push(studyId + '/sandboxes/' + result.id);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');

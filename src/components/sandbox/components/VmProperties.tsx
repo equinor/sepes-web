@@ -88,9 +88,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result && !result.Message) {
-                console.log('resultStudy: ', result);
-            } else {
+            if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });

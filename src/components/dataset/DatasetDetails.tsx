@@ -126,13 +126,13 @@ const DatasetDetails = (props: any) => {
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         removeStudyDataset(datasetId).then((result: any) => {
+            setLoading(false);
             if (result && !result.Message) {
                 history.push('/studies/' + studyId);
             } else {
                 console.log('Err');
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
-            setLoading(false);
         });
     };
 
