@@ -200,12 +200,29 @@ export const postFile = async (url, files: any) => {
                         }
                     };
 
-                    return fetch(`${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`, options)
-                        .then((response) => response.blob())
-                        .then((responseData) => {
-                            return resolve(responseData);
-                        })
-                        .catch((error) => console.log(error));
+                    var xhr = new XMLHttpRequest();
+                    xhr.upload.addEventListener(
+                        'progress',
+                        function (evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                console.log(percentComplete);
+                                return percentComplete;
+                            }
+                        },
+                        false
+                    );
+                    xhr.open('POST', `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`);
+                    xhr.setRequestHeader('Authorization', bearer);
+                    xhr.send(files);
+
+                    xhr.onreadystatechange = function () {
+                        // Call a function when the state changes.
+                        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                            // Request finished. Do processing here.
+                            return this.response;
+                        }
+                    };
                 }
 
                 // Callback code here
