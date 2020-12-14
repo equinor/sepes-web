@@ -288,6 +288,6 @@ export function signOut(myMSALObj: any) {
     myMSALObj.logout();
 }
 
-export const loginRequest = {
-    scopes: [process.env.REACT_APP_SEPES_CLIENTID + '/User.Read']
+export const  loginRequest = {
+    scopes: [process.env.REACT_APP_SEPES_CLIENTID + ""]
 };
