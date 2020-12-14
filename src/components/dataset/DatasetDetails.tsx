@@ -97,16 +97,12 @@ const DatasetDetails = (props: any) => {
     const uploadFiles = (formData: any): void => {
         setPercentComplete(0);
         updateOnNextVisit();
-        console.log('aiiiiiii');
         //datasetResponse.setLoading(false);
         if (!checkUrlIfGeneralDataset()) {
             postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
-                console.log('aiiiiiii22');
-                console.log(result);
-                //datasetResponse.setLoading(false);
             });
         } else {
             datasetId = studyId;
@@ -114,8 +110,6 @@ const DatasetDetails = (props: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
-                console.log('aiiiiiii22');
-                // datasetResponse.setLoading(false);
             });
         }
     };
@@ -149,7 +143,6 @@ const DatasetDetails = (props: any) => {
                                 if (evt.lengthComputable) {
                                     let test = (evt.loaded / evt.total) * 100;
                                     setPercentComplete(test);
-                                    console.log(percentComplete);
                                 }
                             },
                             false
