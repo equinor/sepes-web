@@ -54,7 +54,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     useEffect(() => {
         setIsSubscribed(true);
-        if (permissions.update && isSubscribed) {
+        if (permissions && permissions.update && isSubscribed) {
             if (!sizes) getVmSizes();
             if (!disks) getVmDisks();
             if (!os) getVms();
