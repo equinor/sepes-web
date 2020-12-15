@@ -96,7 +96,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     }, [index]);
 
     const getKey = () => {
-        return keyCount++;
+        const res = keyCount++;
+        return res.toString();
     };
 
     const getVmExtendedInfo = () => {

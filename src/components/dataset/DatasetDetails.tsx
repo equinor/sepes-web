@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress } from '@equinor/eds-core-react';
 import { DatasetObj } from '../common/interfaces';
-import { addFiles, deleteFileInDataset, removeStudyDataset } from '../../services/Api';
+import { deleteFileInDataset, removeStudyDataset } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
@@ -20,6 +20,12 @@ import { useHistory } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
 import myMSALObj from '../../auth/AuthConfig';
+import {
+    getDatasetsFilesUrl,
+    getStandardDatasetUrl,
+    getStudySpecificDatasetUrl,
+    getStudyByIdUrl
+} from '../../services/ApiCallStrings';
 
 const icons = {
     arrow_back,
@@ -55,7 +61,7 @@ const RightWrapper = styled.div`
 const AttachmentWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 196px 16px;
-    padding: 8px;
+    grid-gap: 0 8px;
 `;
 
 const checkUrlIfGeneralDataset = () => {
@@ -80,11 +86,14 @@ const DatasetDetails = (props: any) => {
         name: ''
     });
     const location = useLocation<passedProps>();
-    useFetchUrl(isStandard ? 'datasets/' + studyId : 'studies/' + studyId + '/datasets/' + datasetId, setDataset);
+    useFetchUrl(
+        isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
+        setDataset
+    );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
     const datasetResponse = useFetchUrl(
-        isStandard ? 'datasets/' + studyId + '/files' : 'datasets/' + datasetId + '/files',
+        isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId),
         setFiles,
         !isStandard
     );
@@ -92,12 +101,15 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
-    //let percentComplete: any = 0;
+    let keyCount: number = 0;
+
+    const getKey = () => {
+        return keyCount++;
+    };
 
     const uploadFiles = (formData: any): void => {
         setPercentComplete(0);
         updateOnNextVisit();
-        //datasetResponse.setLoading(false);
         if (!checkUrlIfGeneralDataset()) {
             postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
                 if (result.Message) {
@@ -115,34 +127,19 @@ const DatasetDetails = (props: any) => {
     };
 
     const postFile = async (url, files: any) => {
-        return new Promise(function (resolve, reject) {
+        return new Promise(() => {
             myMSALObj
                 .acquireTokenSilent(loginRequest)
                 .then((tokenResponse: any) => {
                     if (tokenResponse.accessToken) {
-                        const headers = new Headers();
                         const bearer = `Bearer ${tokenResponse.accessToken}`;
-                        headers.append('Authorization', bearer);
-
-                        const options = {
-                            method: 'POST',
-                            headers: headers,
-                            body: files
-                        };
-
-                        const config = {
-                            headers: {
-                                Authorization: `Bearer ${bearer}`
-                            }
-                        };
-
                         var xhr = new XMLHttpRequest();
                         xhr.upload.addEventListener(
                             'progress',
-                            function (evt) {
+                            (evt) => {
                                 if (evt.lengthComputable) {
-                                    let test = (evt.loaded / evt.total) * 100;
-                                    setPercentComplete(test);
+                                    const percentCalculated = (evt.loaded / evt.total) * 100;
+                                    setPercentComplete(percentCalculated);
                                 }
                             },
                             false
@@ -173,14 +170,14 @@ const DatasetDetails = (props: any) => {
     };
 
     const updateOnNextVisit = () => {
-        const dataCache = isStandard ? 'datasets/' + studyId + '/files' : 'datasets/' + datasetId + '/files';
+        const dataCache = isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId);
         setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
     const deleteDataset = () => {
         setLoading(true);
         setUserClickedDelete(false);
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
             setLoading(false);
             if (result && !result.Message) {
@@ -266,11 +263,11 @@ const DatasetDetails = (props: any) => {
                     {percentComplete > 0 && (
                         <LinearProgress style={{ marginTop: '8px' }} value={percentComplete} variant="determinate" />
                     )}
-                    <AttachmentWrapper>
+                    <div style={{ paddingTop: '8px' }}>
                         {files &&
                             files.map((file: any, i: number) => {
                                 return (
-                                    <>
+                                    <AttachmentWrapper key={getKey()}>
                                         <div>{file.name}</div>
                                         <div>{bytesToMB(file.size) + ' '} MB</div>
                                         <Icon
@@ -280,10 +277,10 @@ const DatasetDetails = (props: any) => {
                                             size={24}
                                             style={{ cursor: 'pointer' }}
                                         />
-                                    </>
+                                    </AttachmentWrapper>
                                 );
                             })}
-                    </AttachmentWrapper>
+                    </div>
                 </div>
                 {!datasetResponse.loading ? (
                     <RightWrapper>

@@ -8,6 +8,7 @@ import DeleteResourceComponent from '../../common/customComponents/DeleteResourc
 import * as notify from '../../common/notify';
 import { useHistory } from 'react-router-dom';
 import useClickOutside from '../../common/customComponents/useClickOutside';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -82,7 +83,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
-        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandboxId]: true });
+        setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
         setActiveTab(0);
         let currentVms: any = [...vms];
         currentVms.splice(vms.indexOf(vmProperties), 1);

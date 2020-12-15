@@ -4,6 +4,7 @@ import { DatasetObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
+import { getDatasetsInSandboxUrl, getDatasetsInStudyUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -19,29 +20,31 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
     const studyId = window.location.pathname.split('/')[2];
     const [datasetsInSandbox, setDatasetsInSandbox] = useState<any>([]);
     const [filteredDatasets, setFilteredDatasets] = useState<any>([]);
-    useFetchUrl('sandbox/' + sandboxId + '/datasets', setDatasetsInSandbox);
-    const filteredDatasetsResponse = useFetchUrl('studies/' + studyId + '/datasets', setFilteredDatasets);
+    useFetchUrl(getDatasetsInSandboxUrl(sandboxId), setDatasetsInSandbox);
+    const filteredDatasetsResponse = useFetchUrl(getDatasetsInStudyUrl(studyId), setFilteredDatasets);
     useEffect(() => {
         checkIfDatasetsIsAdded();
     }, [datasetsInSandbox, filteredDatasetsResponse.loading]);
 
     const handleCheck = (evt: any, dataset: any) => {
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true, ['sandbox/' + sandboxId + '/datasets']: true });
+        setUpdateCache({
+            ...updateCache,
+            [getStudyByIdUrl(studyId)]: true,
+            [getDatasetsInSandboxUrl(sandboxId)]: true
+        });
         const temp: any = [...filteredDatasets];
         temp[temp.indexOf(dataset)].added = evt.target.checked;
         setFilteredDatasets(temp);
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.id).then((result: any) => {
-                if (result && !result.Message) {
-                } else {
+                if (result && result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
             });
         } else {
             deleteDatasetForSandbox(sandboxId, dataset.id).then((result: any) => {
-                if (result && !result.Message) {
-                } else {
+                if (result && result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }

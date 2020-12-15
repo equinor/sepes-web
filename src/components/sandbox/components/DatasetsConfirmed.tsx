@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
+import { getDatasetsInSandboxUrl } from '../../../services/ApiCallStrings';
 const { Body, Row, Cell, Head } = Table;
 
 type SandboxConfirmedProps = {
@@ -10,7 +11,7 @@ type SandboxConfirmedProps = {
 
 const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
     const [datasetsConfirmed, setDatasetsConfirmed] = useState([]);
-    const datasetsConfirmedResponse = useFetchUrl('sandbox/' + sandboxId + '/datasets', setDatasetsConfirmed);
+    const datasetsConfirmedResponse = useFetchUrl(getDatasetsInSandboxUrl(sandboxId), setDatasetsConfirmed);
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
