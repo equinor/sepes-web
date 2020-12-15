@@ -81,6 +81,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 setUserClickedDelete={setUserClickedDelete}
                 userClickedDelete={userClickedDelete}
                 setResources={setResources}
+                setLoading={SandboxResponse.setLoading}
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (
