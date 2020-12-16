@@ -10,6 +10,7 @@ import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;
 
@@ -141,7 +142,7 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);

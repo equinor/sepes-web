@@ -11,6 +11,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -43,7 +44,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
-    useFetchUrl('lookup/regions', setRegions);
+    useFetchUrl(getRegionsUrl(), setRegions);
     const [loading, setLoading] = useState<Boolean>(false);
     const wrapperRef = useRef(null);
     useClickOutside(wrapperRef, setToggle);
@@ -80,10 +81,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         return true;
     };
 
-    const handleCancel = (): void => {
-        setToggle(false);
-    };
-
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
@@ -91,13 +88,13 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             return;
         }
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.Message) {
                 setStudy(result);
-                history.push(studyId + '/sandboxes/' + result.id);
                 setLoading(false);
+                history.push(studyId + '/sandboxes/' + result.id);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');

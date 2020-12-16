@@ -20,6 +20,13 @@ import NoAccess from '../common/NoAccess';
 import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/commonLinks';
+import {
+    getDatasetsUrl,
+    getRegionsUrl,
+    getStandardDatasetUrl,
+    getStudyByIdUrl,
+    getStudySpecificDatasetUrl
+} from '../../services/ApiCallStrings';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -96,7 +103,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [loading, setLoading] = useState<boolean>();
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
-    useFetchUrl('lookup/regions', setRegions);
+    useFetchUrl(getRegionsUrl(), setRegions);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
@@ -146,16 +153,15 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             return;
         }
         setLoading(true);
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
         const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
+                setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({
                         ...updateCache,
-                        ['studies/' + studyId]: true,
-                        ['studies/' + studyId + '/datasets']: true
+                        [getStudyByIdUrl(studyId)]: true
                     });
                     history.push({
                         pathname: '/studies/' + studyId + '/datasets/' + result.id,
@@ -168,18 +174,16 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     console.log('Err');
                     notify.show('danger', '500', result.Message, result.RequestId);
                 }
-                setLoading(false);
             });
         } else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
+                setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    const datasetCache = 'studies/' + studyId + '/datasets/' + result.id;
                     setUpdateCache({
                         ...updateCache,
-                        ['studies/' + studyId]: true,
-                        [datasetCache]: true,
-                        ['studies/' + studyId + '/datasets']: true
+                        [getStudyByIdUrl(studyId)]: true,
+                        [getStudySpecificDatasetUrl(result.Id, studyId)]: true
                     });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -187,35 +191,36 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         } else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
+                setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    const datasetCache = 'datasets/' + result.id;
-                    setUpdateCache({ ...updateCache, 'datasets/': true, [datasetCache]: true });
+                    setUpdateCache({
+                        ...updateCache,
+                        [getDatasetsUrl()]: true,
+                        [getStandardDatasetUrl(result.id)]: true
+                    });
                     history.push('/datasets/' + result.id);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         } else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
+                setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, 'datasets/': true });
-                    cache['datasets/' + studyId] = result;
-                    history.push('/datasets/' + result.id);
+                    cache[getStandardDatasetUrl(studyId)] = result;
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         }
     };
