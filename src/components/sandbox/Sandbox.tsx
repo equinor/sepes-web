@@ -8,6 +8,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getDatasetsInStudyUrl, getSandboxByIdUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     display: grid;
@@ -24,7 +25,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
-    const [datasets, setDatasets] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -42,9 +42,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             update: false
         }
     });
-    const [resources, setResources] = useState<any>();
+
+    const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
-    useFetchUrl('studies/' + studyId + '/datasets', setDatasets);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const returnStepComponent = () => {
@@ -57,7 +57,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 return (
                     <SandboxConfig
                         resources={resources}
-                        datasets={datasets}
                         sandboxId={sandboxId}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
@@ -81,12 +80,13 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 setUserClickedDelete={setUserClickedDelete}
                 userClickedDelete={userClickedDelete}
                 setResources={setResources}
+                setLoading={SandboxResponse.setLoading}
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (
                 <VmConfig
                     sandbox={sandbox}
-                    showAddNewVm={step === 0 && sandbox.permissions.update}
+                    showAddNewVm={step === 0 && sandbox.permissions && sandbox.permissions.update}
                     resources={resources}
                     loadingSandbox={SandboxResponse.loading}
                     permissions={sandbox.permissions}

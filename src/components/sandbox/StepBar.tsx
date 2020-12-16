@@ -10,6 +10,7 @@ import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;
 
@@ -45,6 +46,7 @@ type StepBarProps = {
     userClickedDelete: any;
     setUserClickedDelete: any;
     setResources: any;
+    setLoading: any;
 };
 
 const getSteps = () => {
@@ -71,6 +73,8 @@ const getSteps = () => {
     ];
 };
 
+let resourcesFailed = false;
+
 const StepBar: React.FC<StepBarProps> = ({
     step,
     setStep,
@@ -81,7 +85,8 @@ const StepBar: React.FC<StepBarProps> = ({
     setUpdateCache,
     setResources,
     userClickedDelete,
-    setUserClickedDelete
+    setUserClickedDelete,
+    setLoading
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -91,7 +96,7 @@ const StepBar: React.FC<StepBarProps> = ({
         let timer: any;
         try {
             timer = setInterval(async () => {
-                if (!userClickedDelete) {
+                if (!userClickedDelete && !resourcesFailed) {
                     getResources();
                 }
             }, 20000);
@@ -100,14 +105,16 @@ const StepBar: React.FC<StepBarProps> = ({
         }
         return () => {
             clearInterval(timer);
+            resourcesFailed = false;
         };
     }, [userClickedDelete]);
 
     const getResources = () => {
         getResourceStatus(sandboxId).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.errors) {
                 setResources(result);
             } else {
+                resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
@@ -137,8 +144,11 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUserClickedDelete(false);
+        setLoading(true);
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
+            setLoading(false);
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }

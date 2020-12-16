@@ -10,10 +10,11 @@ import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
-import { Label, Title } from '../common/StyledComponents';
+import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import * as notify from '../common/notify';
+import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;
 
@@ -206,8 +207,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const deleteThisStudy = (): void => {
-        setUpdateCache({ ...updateCache, '/studies': true });
+        setUserClickedDelete(false);
+        setLoading(true);
+        setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         deleteStudy(study.id).then((result: any) => {
+            setLoading(false);
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
@@ -217,7 +221,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const handleSave = () => {
-        setUpdateCache({ ...updateCache, studies: true });
+        setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setHasChanged(false);
         setUserPressedCreate(true);
         if (checkRequiredFieldsArNotNull()) {
@@ -247,9 +251,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (newStudy) {
             createStudy(study).then((result: any) => {
                 if (result && !result.Message) {
-                    history.push('/studies/' + result.id);
+                    setLoading(false);
                     let newStudy = result;
-                    cache['studies/' + study.id] = result;
+                    cache[getStudyByIdUrl(study.id)] = result;
                     setStudy(newStudy);
                     if (imageUrl && newStudy.id) {
                         putStudy(newStudy, imageUrl).then((result: any) => {
@@ -262,18 +266,18 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             setLoading(false);
                         });
                     }
+                    history.push('/studies/' + result.id);
                 } else {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         } else {
             study.id = id;
             setStudy(studyOnChange);
             putStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
-                    cache['studies/' + study.id] = result;
+                    cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                     setStudy(result);
                 } else {

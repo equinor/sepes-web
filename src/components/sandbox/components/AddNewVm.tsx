@@ -9,6 +9,7 @@ import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../..
 import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
 const icons = {
     info_circle
@@ -154,7 +155,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
 
     const createVm = () => {
         setLoading(true);
-        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandbox.id]: true });
+        setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 let vmsList: any = [...vms];

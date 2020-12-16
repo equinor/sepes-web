@@ -35,7 +35,6 @@ const PolictyComponentWrapper = styled.div`
 
 type SandboxConfigProps = {
     resources: any;
-    datasets: any;
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
@@ -44,7 +43,6 @@ type SandboxConfigProps = {
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
     resources,
-    datasets,
     sandboxId,
     updateCache,
     setUpdateCache,
@@ -54,7 +52,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
         <Wrapper>
             <InfoWrapper>
                 <Dataset
-                    datasets={datasets}
                     sandboxId={sandboxId}
                     updateCache={updateCache}
                     setUpdateCache={setUpdateCache}

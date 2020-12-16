@@ -27,7 +27,7 @@ class ErrorBoundary extends Component {
         });
     }
 
-    makeErrorMessage = errorType => {
+    makeErrorMessage = (errorType) => {
         switch (errorType) {
             case 'accessDenied':
                 return (
@@ -57,7 +57,9 @@ class ErrorBoundary extends Component {
                 <div style={{ paddingTop: '128px', textAlign: 'center' }}>
                     {this.makeErrorMessage(this.state.errorMessage)}
                     {this.props.appInsights.trackTrace(this.state.errorMessage)}
-                    <Link to={'/'} style={linkStyle}>Go back</Link>
+                    <Link to={'/'} style={linkStyle}>
+                        Go back
+                    </Link>
                 </div>
             );
         }
