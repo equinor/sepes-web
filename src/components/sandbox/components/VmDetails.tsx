@@ -85,6 +85,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
+    let keyCount: number = 0;
 
     useEffect(() => {
         getVmExtendedInfo();
@@ -93,6 +94,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         getMyIp();
         getVmRules();
     }, [index]);
+
+    const getKey = () => {
+        const res = keyCount++;
+        return res.toString();
+    };
 
     const getVmExtendedInfo = () => {
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
@@ -182,7 +188,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             port: '',
             useClientIp: false,
             direction: 0,
-            name: ''
+            name: '',
+            key: getKey()
         });
         let tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
@@ -360,10 +367,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                             vm.rules.map((rule: any, ruleNumber: number) => {
                                 return (
                                     rule.direction === 0 && (
-                                        <Row>
+                                        <Row key={getKey()}>
                                             <Cell>
                                                 <TextField
-                                                    id="textfield1"
+                                                    id={getKey()}
                                                     value={rule.description}
                                                     onChange={(e: any) =>
                                                         updateRule(ruleNumber, e.target.value, 'description')
@@ -401,7 +408,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         placement="top"
                                                     >
                                                         <TextField
-                                                            id="textfield2"
+                                                            id={getKey()}
                                                             autoComplete="off"
                                                             value={rule.ip}
                                                             onChange={(e: any) => {
@@ -442,7 +449,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         placement="top"
                                                     >
                                                         <TextField
-                                                            id="textfield3"
+                                                            id={getKey()}
                                                             autoComplete="off"
                                                             value={rule.port}
                                                             onChange={(e: any) => {
