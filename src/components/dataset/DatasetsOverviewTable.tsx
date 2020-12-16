@@ -147,6 +147,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                 name={name}
                 value={checked.toString()}
                 onChange={handleColumnsChange}
+                enterKeyHint="Select filter"
             />
         );
     };

@@ -394,6 +394,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 style={{ position: 'absolute', right: '4px' }}
                                                 name="business"
                                                 size={24}
+                                                color="#6F6F6F"
                                             />
                                         </div>
                                     }
@@ -412,6 +413,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 style={{ position: 'absolute', right: '4px', top: '-2px' }}
                                                 name="dollar"
                                                 size={24}
+                                                color="#6F6F6F"
                                             />
                                         </div>
                                     }
