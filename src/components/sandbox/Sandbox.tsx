@@ -25,7 +25,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [step, setStep] = useState<number>(0);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
-    const [datasets, setDatasets] = useState([]);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
@@ -43,9 +42,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             update: false
         }
     });
-    const [resources, setResources] = useState<any>();
-    const SandboxResponse = useFetchUrl(getSandboxByIdUrl(sandboxId), setSandbox);
-    useFetchUrl(getDatasetsInStudyUrl(studyId), setDatasets);
+
+    const [resources, setResources] = useState<any>([]);
+    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const returnStepComponent = () => {
@@ -58,7 +57,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 return (
                     <SandboxConfig
                         resources={resources}
-                        datasets={datasets}
                         sandboxId={sandboxId}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
@@ -87,7 +85,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             {(step === 0 || step === 1) && (
                 <VmConfig
                     sandbox={sandbox}
-                    showAddNewVm={step === 0 && sandbox.permissions.update}
+                    showAddNewVm={step === 0 && sandbox.permissions && sandbox.permissions.update}
                     resources={resources}
                     loadingSandbox={SandboxResponse.loading}
                     permissions={sandbox.permissions}

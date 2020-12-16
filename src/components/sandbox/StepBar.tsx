@@ -72,6 +72,8 @@ const getSteps = () => {
     ];
 };
 
+let resourcesFailed = false;
+
 const StepBar: React.FC<StepBarProps> = ({
     step,
     setStep,
@@ -92,7 +94,7 @@ const StepBar: React.FC<StepBarProps> = ({
         let timer: any;
         try {
             timer = setInterval(async () => {
-                if (!userClickedDelete) {
+                if (!userClickedDelete && !resourcesFailed) {
                     getResources();
                 }
             }, 20000);
@@ -101,14 +103,16 @@ const StepBar: React.FC<StepBarProps> = ({
         }
         return () => {
             clearInterval(timer);
+            resourcesFailed = false;
         };
     }, [userClickedDelete]);
 
     const getResources = () => {
         getResourceStatus(sandboxId).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.errors) {
                 setResources(result);
             } else {
+                resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }

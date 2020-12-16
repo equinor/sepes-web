@@ -9,14 +9,13 @@ import { getDatasetsInSandboxUrl, getDatasetsInStudyUrl, getStudyByIdUrl } from 
 const { Body, Row, Cell, Head } = Table;
 
 type datasetProps = {
-    datasets: any;
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
     permissions: SandboxPermissions;
 };
 
-const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, setUpdateCache, permissions }) => {
+const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCache, permissions }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [datasetsInSandbox, setDatasetsInSandbox] = useState<any>([]);
     const [filteredDatasets, setFilteredDatasets] = useState<any>([]);
@@ -53,9 +52,12 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
     };
 
     const checkIfDatasetsIsAdded = () => {
+        if (!filteredDatasets || !filteredDatasets.length) {
+            return;
+        }
         let res: any = [...filteredDatasets];
         if (!filteredDatasetsResponse.loading && datasetsInSandbox.length === 0) {
-            res = [...datasets];
+            res = [...filteredDatasets];
             for (let i = 0; i < res.length; i++) {
                 res[i].added = false;
             }
@@ -88,7 +90,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                 </Row>
             </Head>
             <Body>
-                {datasets.length > 0 ? (
+                {filteredDatasets.length > 0 ? (
                     filteredDatasets.map((dataset: DatasetObj) => {
                         return (
                             <Row key={dataset.id}>
@@ -97,7 +99,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                                         <span data-cy="add_dataset_to_sandbox">
                                             <Tooltip
                                                 title={
-                                                    permissions.update
+                                                    permissions && permissions.update
                                                         ? ''
                                                         : 'You do not have access to update data sets in sandbox'
                                                 }
@@ -106,7 +108,7 @@ const Dataset: React.FC<datasetProps> = ({ datasets, sandboxId, updateCache, set
                                                 <Checkbox
                                                     checked={dataset.added}
                                                     label={dataset.name}
-                                                    disabled={!permissions.update}
+                                                    disabled={permissions && !permissions.update}
                                                     onChange={(e: any) => {
                                                         handleCheck(e, dataset);
                                                     }}
