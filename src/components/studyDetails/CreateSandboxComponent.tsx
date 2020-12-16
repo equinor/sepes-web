@@ -114,6 +114,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 value={sandbox.name}
                 data-cy="sandbox_name"
                 autoComplete="off"
+                autoFocus
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot

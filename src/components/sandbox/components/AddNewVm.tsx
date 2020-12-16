@@ -338,6 +338,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_size"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <CoreDevDropdown
                 label="Operating system"
@@ -348,6 +349,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_operatingSystem"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <CoreDevDropdown
                 label="Data disk"
@@ -358,6 +360,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_dataDisks"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <div>
                 <Label>Estimated total</Label>

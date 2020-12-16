@@ -297,6 +297,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         value={dataset?.name}
                         data-cy="dataset_name"
                         autoComplete="off"
+                        autoFocus
                     />
                     {editDataset && returnField('Storage account name', dataset?.storageAccountName)}
                     {!editDataset && checkUrlIfGeneralDataset() && (
@@ -329,6 +330,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             name="location"
                             data-cy="dataset_location"
                             color="#FFFFFF"
+                            tabIndex={0}
                         />
                     ) : (
                         returnField('Location', dataset?.location)
@@ -343,6 +345,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         preSlectedValue={dataset?.classification}
                         data-cy="dataset_classification"
                         color="#FFFFFF"
+                        tabIndex={0}
                     />
                     <StyledLink
                         href={ClassificationGuidlinesLink}
