@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { getStandardDatasets } from '../../services/Api';
 import DatasetsOverviewTable from './DatasetsOverviewTable';
 import LoadingComponentFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { Permissions } from '../../index';
 import NoAccess from '../common/NoAccess';
-import useFetch from '../common/hooks/useFetch';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getDatasetsUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin: 24px 32px 32px 32px;
@@ -17,7 +16,7 @@ const Wrapper = styled.div`
 const Dataset = (props: any) => {
     const permissions = useContext(Permissions);
     const [datasets, setDatasets] = useState([]);
-    const datasetsResponse = useFetchUrl('datasets/', setDatasets);
+    const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasets);
 
     return permissions.canRead_PreApproved_Datasets ? (
         <Wrapper>

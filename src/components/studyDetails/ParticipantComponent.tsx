@@ -12,6 +12,7 @@ import { ValidateEmail } from '../common/helpers';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
+import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const icons = {
     close
@@ -68,7 +69,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({ ...study, participants: participantList });
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (!result.Message && isSubscribed) {
                 if (user.getAccount().userName === participant.userName) {
@@ -86,7 +87,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setRole('');
         setRoleNotSelected(true);
         const studyId = window.location.pathname.split('/')[2];
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         if (!participantNotSelected) {
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 if (!result.Message) {

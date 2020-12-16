@@ -14,6 +14,7 @@ import { StudyObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -54,7 +55,7 @@ const StudyDetails = () => {
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-    const studyResponse = useFetchUrl('studies/' + id, setStudy, id ? true : false);
+    const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
     const permissions = useContext(Permissions);
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));

@@ -8,6 +8,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getDatasetsInStudyUrl, getSandboxByIdUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     display: grid;
@@ -43,8 +44,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     });
     const [resources, setResources] = useState<any>();
-    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
-    useFetchUrl('studies/' + studyId + '/datasets', setDatasets);
+    const SandboxResponse = useFetchUrl(getSandboxByIdUrl(sandboxId), setSandbox);
+    useFetchUrl(getDatasetsInStudyUrl(studyId), setDatasets);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const returnStepComponent = () => {

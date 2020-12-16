@@ -17,6 +17,7 @@ import {
 import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {
@@ -44,7 +45,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const vmsReponse = useFetchUrl('virtualmachines/forsandbox/' + sandbox.id, setVms);
+    const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
