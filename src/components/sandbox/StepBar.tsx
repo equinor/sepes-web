@@ -182,7 +182,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     data-cy="sandbox_more_options"
                 >
                     More options
-                    {EquinorIcon('more_verticle', '#007079', 24)}
+                    {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu
                     id="menuButton"

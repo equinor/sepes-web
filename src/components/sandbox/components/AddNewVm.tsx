@@ -252,7 +252,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -273,7 +273,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -294,7 +294,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
                             placement={'right'}
                         >
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -306,16 +306,21 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         <Checkbox
                             label="High memory"
                             onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
-                            data-cy="just_a_test"
+                            enterKeyHint="Filter memory"
                         />
                     </li>
                     <li>
-                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
+                        <Checkbox
+                            label="High GPU"
+                            onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)}
+                            enterKeyHint="Filter GPU"
+                        />
                     </li>
                     <li>
                         <Checkbox
                             label="High CPU"
                             onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
+                            enterKeyHint="Filter CPU"
                         />
                     </li>
                 </UnstyledList>
@@ -361,14 +366,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>
             </div>
-            <Button
-                style={{ width: '100px', marginLeft: 'auto' }}
-                data-cy="create_vm"
-                onClick={createVm}
-                disabled={checkIfButtonDisabled()}
-            >
-                {loading ? <DotProgress variant="green" /> : 'Create'}
-            </Button>
+            <div>
+                <Tooltip title={checkIfButtonDisabled() ? 'Please fill out all required fields' : ''} placement="right">
+                    <Button
+                        style={{ width: '100px', marginLeft: 'auto' }}
+                        data-cy="create_vm"
+                        onClick={createVm}
+                        disabled={checkIfButtonDisabled()}
+                    >
+                        {loading ? <DotProgress variant="green" /> : 'Create'}
+                    </Button>
+                </Tooltip>
+            </div>
         </Wrapper>
     );
 };

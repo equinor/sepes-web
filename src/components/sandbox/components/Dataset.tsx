@@ -108,6 +108,7 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                                                 <Checkbox
                                                     checked={dataset.added}
                                                     label={dataset.name}
+                                                    enterKeyHint="Add dataset to sandbox"
                                                     disabled={permissions && !permissions.update}
                                                     onChange={(e: any) => {
                                                         handleCheck(e, dataset);
