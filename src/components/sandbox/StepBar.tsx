@@ -10,7 +10,8 @@ import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
-import { getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import Cookies from 'js-cookie';
 
 const { MenuItem } = Menu;
 
@@ -47,6 +48,7 @@ type StepBarProps = {
     setUserClickedDelete: any;
     setResources: any;
     setLoading: any;
+    loading: boolean;
 };
 
 const getSteps = () => {
@@ -86,10 +88,12 @@ const StepBar: React.FC<StepBarProps> = ({
     setResources,
     userClickedDelete,
     setUserClickedDelete,
-    setLoading
+    setLoading,
+    loading
 }) => {
     const history = useHistory();
     const steps = getSteps();
+    const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
 
     useEffect(() => {
         getResources();
@@ -157,13 +161,16 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const makeThisSandboxAvailable = (): void => {
+        setUserClickedMakeAvailable(true);
         if (sandbox.currentPhase !== 1) {
+            setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
             setLoading(true);
             makeAvailable(sandboxId).then((result: any) => {
                 setLoading(false);
                 if (result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                 } else {
+                    //Cookies.set('sandbox/' + sandboxId, 1, { expires: 1 });
                     setStep(1);
                 }
             });
@@ -222,7 +229,9 @@ const StepBar: React.FC<StepBarProps> = ({
                             onClick={() => {
                                 makeThisSandboxAvailable();
                             }}
-                            disabled={sandbox.permissions && !sandbox.permissions.increasePhase}
+                            disabled={
+                                !(sandbox.permissions && sandbox.permissions.increasePhase && !userClickedMakeAvailable)
+                            }
                         >
                             Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>

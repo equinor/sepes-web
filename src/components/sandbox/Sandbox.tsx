@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getSandboxByIdUrl } from '../../services/ApiCallStrings';
+import Cookies from 'js-cookie';
 
 const Wrapper = styled.div`
     display: grid;
@@ -23,7 +24,7 @@ type SandboxProps = {};
 const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
-    const [step, setStep] = useState<number>(0);
+
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
@@ -48,11 +49,16 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [stuff, setStuff] = useState<boolean>(false);
+    const [step, setStep] = useState<number>(parseInt(Cookies.get('sandbox/' + sandboxId) || 0));
     useEffect(() => {
-        if (sandbox) {
+        if (sandbox.currentPhase && !SandboxResponse.loading) {
+            console.log('.........');
+            Cookies.set('sandbox/' + sandboxId, sandbox.currentPhase, { expires: 1 });
             setStep(sandbox.currentPhase);
+            setStuff(true);
         }
-    }, [sandbox]);
+    }, [SandboxResponse.loading, sandbox.currentPhase]);
     const returnStepComponent = () => {
         switch (step) {
             case 1:
@@ -75,6 +81,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     return (
         <Wrapper>
             {SandboxResponse.loading && <LoadingFull />}
+
             <StepBar
                 sandbox={sandbox && sandbox}
                 step={step}
@@ -87,6 +94,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 userClickedDelete={userClickedDelete}
                 setResources={setResources}
                 setLoading={SandboxResponse.setLoading}
+                loading={stuff}
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (

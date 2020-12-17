@@ -12,7 +12,7 @@ import {
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
-import { SandboxPermissions } from '../../common/interfaces';
+import { SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;
 
@@ -38,6 +38,7 @@ type VmDetailsProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    sandbox: SandboxObj;
 };
 
 const ipMethod = [
@@ -80,7 +81,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     resources,
     permissions,
     setUpdateCache,
-    updateCache
+    updateCache,
+    sandbox
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -520,7 +522,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
-                                    disabled={!permissions.editRules}
+                                    disabled={!(permissions.editRules && sandbox.currentPhase === 0)}
                                     onClick={() => {
                                         addOutBoundRule();
                                     }}
