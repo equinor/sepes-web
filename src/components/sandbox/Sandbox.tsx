@@ -100,7 +100,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             {(step === 0 || step === 1) && (
                 <VmConfig
                     sandbox={sandbox}
-                    showAddNewVm={step === 0 && sandbox.permissions && sandbox.permissions.update}
+                    showAddNewVm={sandbox.permissions && sandbox.permissions.update}
                     resources={resources}
                     loadingSandbox={SandboxResponse.loading}
                     permissions={sandbox.permissions}
