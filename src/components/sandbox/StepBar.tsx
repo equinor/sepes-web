@@ -48,7 +48,6 @@ type StepBarProps = {
     setUserClickedDelete: any;
     setResources: any;
     setLoading: any;
-    loading: boolean;
 };
 
 const getSteps = () => {
@@ -88,8 +87,7 @@ const StepBar: React.FC<StepBarProps> = ({
     setResources,
     userClickedDelete,
     setUserClickedDelete,
-    setLoading,
-    loading
+    setLoading
 }) => {
     const history = useHistory();
     const steps = getSteps();
