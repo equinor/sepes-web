@@ -7,7 +7,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourceStatus } from '../../services/Api';
+import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -156,6 +156,20 @@ const StepBar: React.FC<StepBarProps> = ({
         });
     };
 
+    const makeThisSandboxAvailable = (): void => {
+        if (sandbox.currentPhase !== 1) {
+            setLoading(true);
+            makeAvailable(sandboxId).then((result: any) => {
+                setLoading(false);
+                if (result.Message) {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                } else {
+                    setStep(1);
+                }
+            });
+        }
+    };
+
     const optionsTemplate = (
         <>
             <MenuItem
@@ -206,8 +220,9 @@ const StepBar: React.FC<StepBarProps> = ({
                         {returnOptionsButton()}
                         <Button
                             onClick={() => {
-                                setStep(1);
+                                makeThisSandboxAvailable();
                             }}
+                            disabled={sandbox.permissions && !sandbox.permissions.increasePhase}
                         >
                             Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
@@ -217,6 +232,7 @@ const StepBar: React.FC<StepBarProps> = ({
             case 1: {
                 return (
                     <BtnTwoWrapper>
+                        {/*}
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -225,6 +241,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
                         </Button>
+                        */}
                         {returnOptionsButton()}
                         {/* 
                         <Button

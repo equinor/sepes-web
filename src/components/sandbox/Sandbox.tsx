@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
@@ -35,18 +35,24 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         name: '',
         template: '',
         id: sandboxId,
+        currentPhase: 0,
         studyName: '',
         permissions: {
             delete: false,
             editRules: false,
-            update: false
+            update: false,
+            increasePhase: false
         }
     });
 
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-
+    useEffect(() => {
+        if (sandbox) {
+            setStep(sandbox.currentPhase);
+        }
+    }, [sandbox]);
     const returnStepComponent = () => {
         switch (step) {
             case 1:
