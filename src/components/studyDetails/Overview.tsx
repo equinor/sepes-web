@@ -49,7 +49,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const res = useFetchUrl(
         getResultsAndLearningsUrl(study.id),
         setResultsAndLearnings,
-        study.id !== '' && study.permissions.readResulsAndLearnings
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings
     );
 
     const handleChange = (evt) => {

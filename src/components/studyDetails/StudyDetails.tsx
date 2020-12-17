@@ -15,6 +15,7 @@ import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
+import NotFound from '../common/NotFound';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -57,6 +58,7 @@ const StudyDetails = () => {
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
     const permissions = useContext(Permissions);
+    console.log(study);
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
     }, []);
@@ -110,7 +112,10 @@ const StudyDetails = () => {
 
     return (
         <>
-            {!permissions.canCreateStudy && newStudy ? (
+            {' '}
+            {!newStudy && !studyResponse.loading && !study.id ? (
+                <NotFound />
+            ) : !permissions.canCreateStudy && newStudy ? (
                 <NoAccess />
             ) : (
                 <>
