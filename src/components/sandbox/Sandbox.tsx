@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getSandboxByIdUrl } from '../../services/ApiCallStrings';
+import NotFound from '../common/NotFound';
 
 const Wrapper = styled.div`
     display: grid;
@@ -66,7 +67,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     };
 
-    return (
+    return !SandboxResponse.loading && !sandbox.studyName ? (
+        <NotFound />
+    ) : (
         <Wrapper>
             {SandboxResponse.loading && <LoadingFull />}
             <StepBar

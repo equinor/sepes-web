@@ -10,7 +10,6 @@ const useFetchUrl = (url: string, setter, condition?) => {
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [intialValue, setIntialValue] = useState();
-    // const [data, setData] = useState<T>();
 
     const getData = () => {
         if (condition !== undefined && condition === false) return;
@@ -18,28 +17,26 @@ const useFetchUrl = (url: string, setter, condition?) => {
 
         if (cache[url] && !updateCache[url]) {
             const dataCached = cache[url];
-            //setter(data);
             setter(dataCached);
             setIntialValue(dataCached);
             setLoading(false);
         } else {
             setLoading(true);
             apiRequestWithToken('api/' + url, 'GET').then((result: any) => {
-                if (isSubscribed && result && !result.Message) {
+                if (isSubscribed && result && !result.Message && !result.errors) {
                     if (url) {
                         cache[url] = result;
                     }
                     if (setUpdateCache) {
                         setUpdateCache({ ...updateCache, [url]: false });
                     }
-                    // setter(result);
                     setIntialValue(result);
                     setter(result);
-                    setLoading(false);
                 } else if (result && result.Message && result.RequestId) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
+                setLoading(false);
             });
         }
     };

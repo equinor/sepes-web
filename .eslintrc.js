@@ -37,6 +37,7 @@ module.exports = {
         'no-param-reassign': 0,
         'arrow-body-style': 0,
         'implicit-arrow-linebreak': 0,
-        'jsx-curly-newline': 0
+        'jsx-curly-newline': 0,
+        'no-nested-ternary': 0
     }
 };
