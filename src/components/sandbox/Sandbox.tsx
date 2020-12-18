@@ -49,10 +49,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const [step, setStep] = useState<number>(
+    const [step, setStep] = useState<number | undefined>(
         (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
-            0
+            undefined
     );
     useEffect(() => {
         if (sandbox.currentPhase && !SandboxResponse.loading) {
@@ -79,10 +79,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     };
 
-    return (
+    return step ? (
         <Wrapper>
             {SandboxResponse.loading && <LoadingFull />}
-
             <StepBar
                 sandbox={sandbox && sandbox}
                 step={step}
@@ -109,6 +108,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 />
             )}
         </Wrapper>
+    ) : (
+        <LoadingFull />
     );
 };
 
