@@ -45,7 +45,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
                     {sandboxes && sandboxes.length > 0 ? (
                         sandboxes.map((row) => (
                             <Row key={row.name}>
-                                {returnCell(row.name, row.id, 'text')}
+                                {returnCell(row.id, row.id, 'text')}
                                 {returnCell('', row.id, 'icon')}
                             </Row>
                         ))

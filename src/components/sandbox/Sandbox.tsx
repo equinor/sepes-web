@@ -49,10 +49,14 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const [step, setStep] = useState<number>(parseInt(Cookies.get('sandbox/' + sandboxId) || 0));
+    const [step, setStep] = useState<number>(
+        (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
+            0
+    );
     useEffect(() => {
         if (sandbox.currentPhase && !SandboxResponse.loading) {
-            Cookies.set('sandbox/' + sandboxId, sandbox.currentPhase, { expires: 1 });
+            //Cookies.set('sandbox/' + sandboxId, sandbox.currentPhase, { expires: 1 });
             setStep(sandbox.currentPhase);
         }
     }, [SandboxResponse.loading, sandbox.currentPhase]);

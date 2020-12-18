@@ -160,19 +160,18 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const makeThisSandboxAvailable = (): void => {
         setUserClickedMakeAvailable(true);
-        if (sandbox.currentPhase !== 1) {
-            setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
-            setLoading(true);
-            makeAvailable(sandboxId).then((result: any) => {
-                setLoading(false);
-                if (result.Message) {
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                } else {
-                    //Cookies.set('sandbox/' + sandboxId, 1, { expires: 1 });
-                    setStep(1);
-                }
-            });
-        }
+        setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
+        setLoading(true);
+        makeAvailable(sandboxId).then((result: any) => {
+            setLoading(false);
+            if (result.Message) {
+                setUserClickedMakeAvailable(false);
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                //Cookies.set('sandbox/' + sandboxId, 1, { expires: 1 });
+                setStep(1);
+            }
+        });
     };
 
     const optionsTemplate = (
