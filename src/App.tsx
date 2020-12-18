@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Home from './components/home/Home';
 import StudyDetails from './components/studyDetails/StudyDetails';

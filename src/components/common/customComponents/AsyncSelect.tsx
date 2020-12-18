@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AsyncSelect from 'react-select/async';
 import { Label, RequiredLabel } from '../StyledComponents';
-import { getParticipantList } from '../../../services/Api';
 import './styles.scss';
 
 type AsynchSelectProps = {
