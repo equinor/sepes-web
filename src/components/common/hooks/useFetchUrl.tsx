@@ -25,6 +25,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
         } else {
             setLoading(true);
             apiRequestWithToken('api/' + url, 'GET').then((result: any) => {
+                setLoading(false);
                 if (isSubscribed && result && !result.Message) {
                     if (url) {
                         cache[url] = result;

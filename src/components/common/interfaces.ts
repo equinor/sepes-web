@@ -77,7 +77,7 @@ export interface SandboxObj {
     studyName: string;
     permissions: SandboxPermissions;
     linkToCostAnalysis?: string;
-    currentPhase: number;
+    currentPhase: number | undefined;
 }
 
 export interface SandboxPermissions {

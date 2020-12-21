@@ -36,7 +36,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         name: '',
         template: '',
         id: sandboxId,
-        currentPhase: 0,
+        currentPhase: undefined,
         studyName: '',
         permissions: {
             delete: false,
@@ -55,11 +55,22 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             undefined
     );
     useEffect(() => {
-        if (sandbox.currentPhase && !SandboxResponse.loading) {
-            //Cookies.set('sandbox/' + sandboxId, sandbox.currentPhase, { expires: 1 });
-            setStep(sandbox.currentPhase);
+        if (
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase
+        ) {
+            setNewPhase(SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase);
+        } else if (sandbox.currentPhase !== undefined && !SandboxResponse.loading) {
+            setNewPhase(sandbox.currentPhase);
         }
     }, [SandboxResponse.loading, sandbox.currentPhase]);
+
+    const setNewPhase = (phase: any) => {
+        setStep(phase);
+        setSandbox({ ...sandbox, currentPhase: step });
+        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
+    };
+
     const returnStepComponent = () => {
         switch (step) {
             case 1:
@@ -79,7 +90,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     };
 
-    return step ? (
+    return step !== undefined ? (
         <Wrapper>
             {SandboxResponse.loading && <LoadingFull />}
             <StepBar
@@ -94,6 +105,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 userClickedDelete={userClickedDelete}
                 setResources={setResources}
                 setLoading={SandboxResponse.setLoading}
+                setNewPhase={setNewPhase}
             />
             {returnStepComponent()}
             {(step === 0 || step === 1) && (

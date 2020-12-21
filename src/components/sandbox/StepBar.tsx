@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Menu } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import * as notify from '../common/notify';
 import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import Cookies from 'js-cookie';
+import SureToProceed from '../common/customComponents/SureToProceed';
 
 const { MenuItem } = Menu;
 
@@ -48,6 +49,7 @@ type StepBarProps = {
     setUserClickedDelete: any;
     setResources: any;
     setLoading: any;
+    setNewPhase: any;
 };
 
 const getSteps = () => {
@@ -87,11 +89,13 @@ const StepBar: React.FC<StepBarProps> = ({
     setResources,
     userClickedDelete,
     setUserClickedDelete,
-    setLoading
+    setLoading,
+    setNewPhase
 }) => {
     const history = useHistory();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
+    const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
 
     useEffect(() => {
         getResources();
@@ -159,17 +163,16 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const makeThisSandboxAvailable = (): void => {
-        setUserClickedMakeAvailable(true);
+        setUserClickedMakeAvailable(false);
         setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
-        setLoading(true);
-        makeAvailable(sandboxId).then((result: any) => {
-            setLoading(false);
-            if (result.Message) {
-                setUserClickedMakeAvailable(false);
+        setMakeAvailableInProgress(true);
+        makeAvailable('sandboxId').then((result: any) => {
+            setMakeAvailableInProgress(false);
+            if (result.Message || result.errors) {
+                setNewPhase(0);
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
-                //Cookies.set('sandbox/' + sandboxId, 1, { expires: 1 });
-                setStep(1);
+                setNewPhase(1);
             }
         });
     };
@@ -224,13 +227,14 @@ const StepBar: React.FC<StepBarProps> = ({
                         {returnOptionsButton()}
                         <Button
                             onClick={() => {
-                                makeThisSandboxAvailable();
+                                setUserClickedMakeAvailable(true);
                             }}
                             disabled={
-                                !(sandbox.permissions && sandbox.permissions.increasePhase && !userClickedMakeAvailable)
+                                !(sandbox.permissions && sandbox.permissions.increasePhase && !makeAvailableInProgress)
                             }
                         >
-                            Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                            {makeAvailableInProgress ? <DotProgress variant="green" /> : 'Make available'}
+                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                         </Button>
                     </BtnTwoWrapper>
                 );
@@ -327,6 +331,13 @@ const StepBar: React.FC<StepBarProps> = ({
                     setUserClickedDelete={setUserClickedDelete}
                     onClick={deleteThisSandbox}
                     type="sandbox"
+                />
+            )}
+            {userClickedMakeAvailable && (
+                <SureToProceed
+                    setUserClickedButton={setUserClickedMakeAvailable}
+                    onClick={makeThisSandboxAvailable}
+                    type="making this sandbox available"
                 />
             )}
         </Wrapper>
