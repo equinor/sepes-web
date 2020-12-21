@@ -82,7 +82,8 @@ export interface SandboxObj {
 
 export interface SandboxPermissions {
     delete: boolean;
-    editRules: boolean;
+    editInboundRules: boolean;
+    openInternet: boolean;
     update: boolean;
     increasePhase: boolean;
 }

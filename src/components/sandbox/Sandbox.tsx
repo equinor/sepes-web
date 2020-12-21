@@ -40,7 +40,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         studyName: '',
         permissions: {
             delete: false,
-            editRules: false,
+            editInboundRules: false,
+            openInternet: false,
             update: false,
             increasePhase: false
         }

@@ -166,7 +166,7 @@ const StepBar: React.FC<StepBarProps> = ({
         setUserClickedMakeAvailable(false);
         setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
         setMakeAvailableInProgress(true);
-        makeAvailable('sandboxId').then((result: any) => {
+        makeAvailable(sandboxId).then((result: any) => {
             setMakeAvailableInProgress(false);
             if (result.Message || result.errors) {
                 setNewPhase(0);

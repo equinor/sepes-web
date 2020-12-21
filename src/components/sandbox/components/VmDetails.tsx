@@ -379,7 +379,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     }
                                                     placeholder="Description"
                                                     data-cy="vm_rule_description"
-                                                    disabled={!permissions.editRules}
+                                                    disabled={!permissions.editInboundRules}
                                                     autoComplete="off"
                                                 />
                                             </Cell>
@@ -393,7 +393,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         name="useClientIp"
                                                         preSlectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
-                                                        disabled={!permissions.editRules}
+                                                        disabled={!permissions.editInboundRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -418,7 +418,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             }}
                                                             placeholder="IP"
                                                             data-cy="vm_rule_ip"
-                                                            disabled={!permissions.editRules}
+                                                            disabled={!permissions.editInboundRules}
                                                         />
                                                     </Tooltip>
                                                 )}
@@ -433,7 +433,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         name="protocol"
                                                         preSlectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
-                                                        disabled={!permissions.editRules}
+                                                        disabled={!permissions.editInboundRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -463,14 +463,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             type="number"
                                                             placeholder="Port"
                                                             data-cy="vm_rule_port"
-                                                            disabled={!permissions.editRules}
+                                                            disabled={!permissions.editInboundRules}
                                                         />
                                                     </Tooltip>
                                                 )}
                                             </Cell>
 
                                             <Cell>
-                                                {permissions.editRules &&
+                                                {permissions.editInboundRules &&
                                                     EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
                                             </Cell>
                                         </Row>
@@ -491,7 +491,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 </Table>
                 <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
                     <Tooltip
-                        title={permissions.editRules ? '' : 'You do not have permission to add or create rules'}
+                        title={permissions.editInboundRules ? '' : 'You do not have permission to add or create rules'}
                         placement="left"
                     >
                         <Button
@@ -500,7 +500,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 addRule();
                             }}
                             data-cy="vm_add_rule"
-                            disabled={!permissions.editRules}
+                            disabled={!permissions.editInboundRules}
                         >
                             Add rule
                         </Button>
@@ -522,7 +522,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
-                                    disabled={!(permissions.editRules && sandbox.currentPhase === 0)}
+                                    disabled={!permissions.openInternet}
                                     onClick={() => {
                                         addOutBoundRule();
                                     }}
