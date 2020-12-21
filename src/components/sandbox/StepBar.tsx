@@ -233,8 +233,14 @@ const StepBar: React.FC<StepBarProps> = ({
                                 !(sandbox.permissions && sandbox.permissions.increasePhase && !makeAvailableInProgress)
                             }
                         >
-                            {makeAvailableInProgress ? <DotProgress variant="green" /> : 'Make available'}
-                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                            {makeAvailableInProgress ? (
+                                <DotProgress variant="green" />
+                            ) : (
+                                <>
+                                    <span>Make available</span>
+                                    {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                                </>
+                            )}
                         </Button>
                     </BtnTwoWrapper>
                 );
