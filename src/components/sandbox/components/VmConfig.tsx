@@ -129,6 +129,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         permissions={permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        sandbox={sandbox}
                     />
                 );
         }

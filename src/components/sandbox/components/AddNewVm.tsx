@@ -370,7 +370,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 </Typography>
             </div>
             <div>
-                <Tooltip title={checkIfButtonDisabled() ? 'Please fill out all required fields' : ''} placement="right">
+                <Tooltip
+                    title={checkIfButtonDisabled() && !loading ? 'Please fill out all required fields' : ''}
+                    placement="right"
+                >
                     <Button
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"

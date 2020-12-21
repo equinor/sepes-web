@@ -145,7 +145,6 @@ const CoreDevDropdown = (props: any): JSX.Element => {
             ref={wrapperRef}
             onFocus={() => {
                 setIsOpen(true);
-                console.log(isOpen);
             }}
             onBlur={() => {
                 setIsOpen(false);
