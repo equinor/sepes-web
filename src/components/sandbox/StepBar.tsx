@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Menu, DotProgress } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import Cookies from 'js-cookie';
 import SureToProceed from '../common/customComponents/SureToProceed';
+import { resourceStatus, resourceType } from '../common/types';
 
 const { MenuItem } = Menu;
 
@@ -48,6 +49,7 @@ type StepBarProps = {
     userClickedDelete: any;
     setUserClickedDelete: any;
     setResources: any;
+    resources: any;
     setLoading: any;
     setNewPhase: any;
 };
@@ -90,22 +92,26 @@ const StepBar: React.FC<StepBarProps> = ({
     userClickedDelete,
     setUserClickedDelete,
     setLoading,
-    setNewPhase
+    setNewPhase,
+    resources
 }) => {
     const history = useHistory();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
     const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
+    const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
 
     useEffect(() => {
         getResources();
+        //allResourcesStatusOk();
         let timer: any;
         try {
             timer = setInterval(async () => {
                 if (!userClickedDelete && !resourcesFailed) {
                     getResources();
+                    //allResourcesStatusOk();
                 }
-            }, 20000);
+            }, 5000);
         } catch (e) {
             console.log(e);
         }
@@ -119,12 +125,30 @@ const StepBar: React.FC<StepBarProps> = ({
         getResourceStatus(sandboxId).then((result: any) => {
             if (result && !result.errors) {
                 setResources(result);
+                allResourcesStatusOkAndAtleastOneVm(result);
             } else {
                 resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
         });
+    };
+
+    const allResourcesStatusOkAndAtleastOneVm = (resourcesIn) => {
+        let res = true;
+        if (!resourcesIn) {
+            return res;
+        }
+        let hasVm = false;
+        resourcesIn.map((resource: any, i: number) => {
+            if (resource.status !== resourceStatus.ok) {
+                res = false;
+            }
+            if (resource.type === resourceType.virtualMachine) {
+                hasVm = true;
+            }
+        });
+        setAllResourcesOk(res && hasVm);
     };
 
     const [state, setState] = React.useState<{
@@ -231,7 +255,12 @@ const StepBar: React.FC<StepBarProps> = ({
                             }}
                             data-cy="sandbox_make_available"
                             disabled={
-                                !(sandbox.permissions && sandbox.permissions.increasePhase && !makeAvailableInProgress)
+                                !(
+                                    sandbox.permissions &&
+                                    sandbox.permissions.increasePhase &&
+                                    !makeAvailableInProgress &&
+                                    allResourcesOk
+                                )
                             }
                         >
                             {makeAvailableInProgress ? (

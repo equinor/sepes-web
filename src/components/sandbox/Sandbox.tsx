@@ -105,6 +105,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 setUserClickedDelete={setUserClickedDelete}
                 userClickedDelete={userClickedDelete}
                 setResources={setResources}
+                resources={resources}
                 setLoading={SandboxResponse.setLoading}
                 setNewPhase={setNewPhase}
             />
