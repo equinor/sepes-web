@@ -229,6 +229,7 @@ const StepBar: React.FC<StepBarProps> = ({
                             onClick={() => {
                                 setUserClickedMakeAvailable(true);
                             }}
+                            data-cy="sandbox_make_available"
                             disabled={
                                 !(sandbox.permissions && sandbox.permissions.increasePhase && !makeAvailableInProgress)
                             }
