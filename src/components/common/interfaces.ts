@@ -77,12 +77,15 @@ export interface SandboxObj {
     studyName: string;
     permissions: SandboxPermissions;
     linkToCostAnalysis?: string;
+    currentPhase: number | undefined;
 }
 
 export interface SandboxPermissions {
     delete: boolean;
-    editRules: boolean;
+    editInboundRules: boolean;
+    openInternet: boolean;
     update: boolean;
+    increasePhase: boolean;
 }
 
 export interface GeneralPermissions {

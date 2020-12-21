@@ -102,6 +102,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
                             style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
                             value={resultsAndLearnings.resultsAndLearnings}
                             autoComplete="off"
+                            autoFocus
                         />
                     )}
                     <div style={{ display: 'flex' }}>
