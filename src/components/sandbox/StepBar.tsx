@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Typography, Menu } from '@equinor/eds-core-react';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus } from '../../services/Api';
 import * as notify from '../common/notify';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;

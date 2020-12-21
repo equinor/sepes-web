@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Search, Button, Checkbox } from '@equinor/eds-core-react';
-
-const DatasetItem = styled.div`
-    padding: 16px;
-    z-index: 99;
-    cursor: pointer;
-    &:hover {
-        background-color: #d5eaf4;
-    }
-`;
+import { Search, Checkbox } from '@equinor/eds-core-react';
 
 const Wrapper = styled.div`
     background-color: #ffffff;

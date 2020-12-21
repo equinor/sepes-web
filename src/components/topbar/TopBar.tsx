@@ -5,7 +5,6 @@ import NavTabs from './NavTabs';
 import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
 import { Link } from 'react-router-dom';
-
 import { account_circle } from '@equinor/eds-icons';
 import useClickOutside from '../common/customComponents/useClickOutside';
 
