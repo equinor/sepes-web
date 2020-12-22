@@ -108,7 +108,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
                     <div style={{ display: 'flex' }}>
                         {editMode && (
                             <Button
-                                onClick={handleSave}
+                                onClick={() => handleSave()}
                                 style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
                                 data-cy="save_results_and_learnings"
                             >

@@ -112,7 +112,7 @@ const StudyDetails = () => {
     return (
         <>
             {' '}
-            {!newStudy && !studyResponse.loading && !study.id ? (
+            {studyResponse.notFound ? (
                 <NotFound />
             ) : !permissions.canCreateStudy && newStudy ? (
                 <NoAccess />
