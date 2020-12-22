@@ -59,7 +59,7 @@ const StudyDetails = () => {
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
     const permissions = useContext(Permissions);
     useEffect(() => {
-        setActiveTab(parseInt(Cookies.get(id)));
+        //setActiveTab(parseInt(Cookies.get(id)));
     }, []);
 
     const changeComponent = () => {
@@ -111,48 +111,43 @@ const StudyDetails = () => {
 
     return (
         <>
-            {' '}
-            {studyResponse.notFound ? (
-                <NotFound />
-            ) : !permissions.canCreateStudy && newStudy ? (
-                <NoAccess />
-            ) : (
-                <>
-                    <Promt hasChanged={hasChanged} />
-                    {!studyResponse.loading && study ? (
-                        <StudyComponentFull
-                            study={study && study}
-                            newStudy={newStudy}
-                            setNewStudy={setNewStudy}
-                            setLoading={studyResponse.setLoading}
-                            loading={studyResponse.loading}
-                            setStudy={setStudy}
-                            setHasChanged={setHasChanged}
-                            cache={studyResponse.cache}
-                            setUpdateCache={setUpdateCache}
-                            updateCache={updateCache}
-                        />
-                    ) : (
-                        <LoadingWrapper>
-                            <LoadingFull />
-                        </LoadingWrapper>
-                    )}
-                    {!newStudy && (
-                        <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
-                            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                                <TabList>
-                                    <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                                    <Tab data-cy="datasets_tab">Data sets</Tab>
-                                    <Tab data-cy="sandbox_tab">Sandboxes</Tab>
-                                    <Tab>Participants</Tab>
-                                    <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
-                                </TabList>
-                            </Tabs>
-                            <div style={{ padding: '16px' }}>{changeComponent()}</div>
-                        </div>
-                    )}
-                </>
-            )}
+            {studyResponse.notFound && <NotFound />}
+            {!permissions.canCreateStudy && newStudy && <NoAccess />}
+            <>
+                <Promt hasChanged={hasChanged} />
+                {!studyResponse.loading && study ? (
+                    <StudyComponentFull
+                        study={study && study}
+                        newStudy={newStudy}
+                        setNewStudy={setNewStudy}
+                        setLoading={studyResponse.setLoading}
+                        loading={studyResponse.loading}
+                        setStudy={setStudy}
+                        setHasChanged={setHasChanged}
+                        cache={studyResponse.cache}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                ) : (
+                    <LoadingWrapper>
+                        <LoadingFull />
+                    </LoadingWrapper>
+                )}
+                {!newStudy && (
+                    <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+                        <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
+                            <TabList>
+                                <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
+                                <Tab data-cy="datasets_tab">Data sets</Tab>
+                                <Tab data-cy="sandbox_tab">Sandboxes</Tab>
+                                <Tab>Participants</Tab>
+                                <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
+                            </TabList>
+                        </Tabs>
+                        <div style={{ padding: '16px' }}>{changeComponent()}</div>
+                    </div>
+                )}
+            </>
         </>
     );
 };
