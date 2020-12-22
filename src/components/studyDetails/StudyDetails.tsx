@@ -58,7 +58,6 @@ const StudyDetails = () => {
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
     const permissions = useContext(Permissions);
-    console.log(study);
     useEffect(() => {
         setActiveTab(parseInt(Cookies.get(id)));
     }, []);
