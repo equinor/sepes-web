@@ -8,7 +8,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getDatasetsInStudyUrl, getSandboxByIdUrl } from '../../services/ApiCallStrings';
+import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
 
 const Wrapper = styled.div`
@@ -68,7 +68,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
 
     const setNewPhase = (phase: any) => {
         setStep(phase);
-        //setSandbox({ ...sandbox, currentPhase: step });
         SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
     };
 
@@ -89,52 +88,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     />
                 );
         }
-    };
-
-    const returnComponent = () => {
-        console.log(sandbox);
-        if (SandboxResponse.loading || !step || step === undefined) {
-            return <LoadingFull />;
-        } else if (SandboxResponse.notFound) {
-            return <NotFound />;
-        }
-        /*
-        if (!SandboxResponse.loading && sandbox.currentPhase === undefined) {
-            
-        }*/
-
-        return (
-            <Wrapper>
-                {SandboxResponse.loading && <LoadingFull />}
-                <StepBar
-                    sandbox={sandbox && sandbox}
-                    step={step}
-                    setStep={setStep}
-                    studyId={studyId}
-                    sandboxId={sandboxId}
-                    setUpdateCache={setUpdateCache}
-                    updateCache={updateCache}
-                    setUserClickedDelete={setUserClickedDelete}
-                    userClickedDelete={userClickedDelete}
-                    setResources={setResources}
-                    resources={resources}
-                    setLoading={SandboxResponse.setLoading}
-                    setNewPhase={setNewPhase}
-                />
-                {returnStepComponent()}
-                {(step === 0 || step === 1) && (
-                    <VmConfig
-                        sandbox={sandbox}
-                        showAddNewVm={sandbox.permissions && sandbox.permissions.update}
-                        resources={resources}
-                        loadingSandbox={SandboxResponse.loading}
-                        permissions={sandbox.permissions}
-                        setUpdateCache={setUpdateCache}
-                        updateCache={updateCache}
-                    />
-                )}
-            </Wrapper>
-        );
     };
 
     return !SandboxResponse.notFound ? (
