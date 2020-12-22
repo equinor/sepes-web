@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import * as notify from '../common/notify';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
-import Cookies from 'js-cookie';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/types';
 
@@ -103,15 +102,13 @@ const StepBar: React.FC<StepBarProps> = ({
 
     useEffect(() => {
         getResources();
-        //allResourcesStatusOk();
         let timer: any;
         try {
             timer = setInterval(async () => {
                 if (!userClickedDelete && !resourcesFailed) {
                     getResources();
-                    //allResourcesStatusOk();
                 }
-            }, 5000);
+            }, 20000);
         } catch (e) {
             console.log(e);
         }
@@ -201,6 +198,16 @@ const StepBar: React.FC<StepBarProps> = ({
         });
     };
 
+    const returnToolTipForMakeAvailable = (): string => {
+        if (sandbox.permissions && !sandbox.permissions.increasePhase) {
+            return 'You do not have permission to make this sandbox Available';
+        }
+        if (!allResourcesOk) {
+            return 'All resources must have status OK and atleast one VM and Data set';
+        }
+        return '';
+    };
+
     const optionsTemplate = (
         <>
             <MenuItem
@@ -249,29 +256,36 @@ const StepBar: React.FC<StepBarProps> = ({
                 return (
                     <BtnTwoWrapper>
                         {returnOptionsButton()}
-                        <Button
-                            onClick={() => {
-                                setUserClickedMakeAvailable(true);
-                            }}
-                            data-cy="sandbox_make_available"
-                            disabled={
-                                !(
-                                    sandbox.permissions &&
-                                    sandbox.permissions.increasePhase &&
-                                    !makeAvailableInProgress &&
-                                    allResourcesOk
-                                )
-                            }
-                        >
-                            {makeAvailableInProgress ? (
-                                <DotProgress variant="green" />
-                            ) : (
-                                <>
-                                    <span>Make available</span>
-                                    {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
-                                </>
-                            )}
-                        </Button>
+                        <div>
+                            <Tooltip title={returnToolTipForMakeAvailable()} placement="left">
+                                <Button
+                                    onClick={() => {
+                                        setUserClickedMakeAvailable(true);
+                                    }}
+                                    data-cy="sandbox_make_available"
+                                    style={{ width: '160px' }}
+                                    disabled={
+                                        !(
+                                            sandbox.permissions &&
+                                            sandbox.permissions.increasePhase &&
+                                            !makeAvailableInProgress &&
+                                            allResourcesOk
+                                        )
+                                    }
+                                >
+                                    {makeAvailableInProgress ? (
+                                        <div>
+                                            <DotProgress variant="green" />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <span>Make available</span>
+                                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                                        </>
+                                    )}
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </BtnTwoWrapper>
                 );
             }

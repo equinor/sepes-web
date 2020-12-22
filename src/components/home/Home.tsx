@@ -33,7 +33,7 @@ const RightWrapper = styled.div`
     }
 `;
 
-let mockText =
+const mockText =
     'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {

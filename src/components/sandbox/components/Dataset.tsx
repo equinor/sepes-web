@@ -21,9 +21,12 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
     const [filteredDatasets, setFilteredDatasets] = useState<any>([]);
     useFetchUrl(getDatasetsInSandboxUrl(sandboxId), setDatasetsInSandbox);
     const filteredDatasetsResponse = useFetchUrl(getDatasetsInStudyUrl(studyId), setFilteredDatasets);
+    const [datasetsFiltered, setDatasetsfiltered] = useState<boolean>(false);
     useEffect(() => {
-        checkIfDatasetsIsAdded();
-    }, [datasetsInSandbox, filteredDatasetsResponse.loading]);
+        if (!datasetsFiltered) {
+            checkIfDatasetsIsAdded();
+        }
+    }, [datasetsInSandbox, filteredDatasetsResponse.loading, filteredDatasets]);
 
     const handleCheck = (evt: any, dataset: any) => {
         setUpdateCache({
@@ -74,6 +77,7 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                 }
             }
         }
+        setDatasetsfiltered(true);
         setFilteredDatasets(res);
     };
 

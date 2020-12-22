@@ -21,6 +21,7 @@ import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/commonLinks';
 import {
+    getDatasetsInStudyUrl,
     getDatasetsUrl,
     getRegionsUrl,
     getStandardDatasetUrl,
@@ -161,7 +162,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setHasChanged(false);
                     setUpdateCache({
                         ...updateCache,
-                        [getStudyByIdUrl(studyId)]: true
+                        [getStudyByIdUrl(studyId)]: true,
+                        [getDatasetsInStudyUrl(studyId)]: true
                     });
                     history.push({
                         pathname: '/studies/' + studyId + '/datasets/' + result.id,

@@ -30,8 +30,8 @@ const makeHeaders = (accessToken: any, acceptHeader?: string) => {
 };
 
 export const apiRequestWithToken = async (url: string, method: string, body?: any) => {
-    return new Promise(function (resolve, reject) {
-        const _post = async (accessToken) => {
+    return new Promise((resolve, reject) => {
+        const post = async (accessToken) => {
             try {
                 const headers = makeHeaders(accessToken);
                 const options = {
@@ -53,7 +53,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
         };
 
         if (cyToken) {
-            _post(cyToken);
+            post(cyToken);
         } else {
             myMSALObj
                 .acquireTokenSilent(loginRequest)
@@ -61,7 +61,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     if (!tokenResponse.accessToken) {
                         signInRedirect();
                     }
-                    _post(tokenResponse.accessToken);
+                    post(tokenResponse.accessToken);
                 })
                 .catch((error: string) => {
                     myMSALObj.acquireTokenRedirect(loginRequest);
@@ -70,48 +70,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
         }
     });
 };
-/*
-export const apiDeleteWithToken = async (url: string) => {
-    return new Promise(function (resolve, reject) {
-        const _post = async (accessToken) => {
-            try {
-                const headers = makeHeaders(accessToken);
-                const options = {
-                    method: 'DELETE',
-                    headers: headers
-                };
-                return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
-                    .then((response) => {
-                        return response.text();
-                    })
-                    .then((responseData) => {
-                        return resolve(responseData ? JSON.parse(responseData) : {});
-                    })
-                    .catch((error) => console.log(error));
-            } catch (error) {
-                return resolve(error);
-            }
-        };
 
-        if (cyToken) {
-            _post(cyToken);
-        } else {
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (!tokenResponse.accessToken) {
-                        signInRedirect();
-                    }
-                    _post(tokenResponse.accessToken);
-                })
-                .catch((error: string) => {
-                    myMSALObj.acquireTokenRedirect(loginRequest);
-                    console.log(error);
-                });
-        }
-    });
-};
-*/
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
         baseURL: blobUrl,
@@ -140,7 +99,7 @@ const makeBlobFromUrl = async (blobUrl: string) => {
 // Posts the image separately before the piece is posted to the API, returns URL of the uploaded file
 export const postBlob = async (imageUrl: string, studyId: string) => {
     const imageFile = await makeBlobFromUrl(imageUrl);
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         myMSALObj
             .acquireTokenSilent(loginRequest)
             .then((tokenResponse: any) => {
@@ -154,13 +113,6 @@ export const postBlob = async (imageUrl: string, studyId: string) => {
                         headers: headers,
                         body: imageFile
                     };
-                    const config = {
-                        headers: {
-                            Authorization: 'Bearer ' + bearer
-                        }
-                    };
-
-                    //axios.put(process.env.REACT_APP_SEPES_BASE_API_URL + 'api/studies/1/'+ "logo", imageFile, config);
 
                     return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + 'api/studies/' + studyId + '/logo', options)
                         .then((response) => response.json())
@@ -179,7 +131,7 @@ export const postBlob = async (imageUrl: string, studyId: string) => {
 };
 
 export const postFile = async (url, files: any) => {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         myMSALObj
             .acquireTokenSilent(loginRequest)
             .then((tokenResponse: any) => {
@@ -188,22 +140,10 @@ export const postFile = async (url, files: any) => {
                     const bearer = `Bearer ${tokenResponse.accessToken}`;
                     headers.append('Authorization', bearer);
 
-                    const options = {
-                        method: 'POST',
-                        headers: headers,
-                        body: files
-                    };
-
-                    const config = {
-                        headers: {
-                            Authorization: `Bearer ${bearer}`
-                        }
-                    };
-
                     var xhr = new XMLHttpRequest();
                     xhr.upload.addEventListener(
                         'progress',
-                        function (evt) {
+                        (evt) => {
                             if (evt.lengthComputable) {
                                 var percentComplete = evt.loaded / evt.total;
                                 console.log(percentComplete);
@@ -217,9 +157,7 @@ export const postFile = async (url, files: any) => {
                     xhr.send(files);
 
                     xhr.onreadystatechange = function () {
-                        // Call a function when the state changes.
                         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                            // Request finished. Do processing here.
                             return this.response;
                         }
                     };
@@ -248,8 +186,8 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
         console.log(fileUrl);
     }
 
-    return new Promise(function (resolve, reject) {
-        const _post = async (accessToken) => {
+    return new Promise((resolve, reject) => {
+        const post = async (accessToken) => {
             console.log('post request made to Graph API at: ' + new Date().toString());
             try {
                 const headers = makeHeaders(accessToken);
@@ -270,7 +208,7 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
         };
 
         if (cyToken) {
-            _post(cyToken);
+            post(cyToken);
         } else {
             myMSALObj
                 .acquireTokenSilent(loginRequest)
@@ -278,7 +216,7 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
                     if (!tokenResponse.accessToken) {
                         signInRedirect();
                     }
-                    _post(tokenResponse.accessToken);
+                    post(tokenResponse.accessToken);
                 })
                 .catch((error: string) => {
                     console.log(error);
@@ -305,6 +243,6 @@ export function signOut(myMSALObj: any) {
     myMSALObj.logout();
 }
 
-export const  loginRequest = {
-    scopes: [process.env.REACT_APP_SEPES_CLIENTID + ""]
+export const loginRequest = {
+    scopes: [process.env.REACT_APP_SEPES_CLIENTID + '']
 };

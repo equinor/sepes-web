@@ -1,1 +1,1 @@
-export const studyOwner = "Study Owner";
+export const studyOwner = 'Study Owner';

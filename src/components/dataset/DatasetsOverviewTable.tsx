@@ -4,7 +4,7 @@ import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import { DatasetObj, GeneralPermissions } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
-import DatasetSearchFilter from '../common/customComponents/DatasetSearchFilter';
+import DatasetSearchFilter from './DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
 import useClickOutside from '../common/customComponents/useClickOutside';
