@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
@@ -8,6 +8,8 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
+import NotFound from '../common/NotFound';
 
 const Wrapper = styled.div`
     display: grid;
@@ -22,7 +24,7 @@ type SandboxProps = {};
 const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
-    const [step, setStep] = useState<number>(0);
+
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
@@ -34,17 +36,40 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         name: '',
         template: '',
         id: sandboxId,
+        currentPhase: undefined,
         studyName: '',
         permissions: {
             delete: false,
-            editRules: false,
-            update: false
+            editInboundRules: false,
+            openInternet: false,
+            update: false,
+            increasePhase: false
         }
     });
 
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [step, setStep] = useState<number | undefined>(
+        (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
+            undefined
+    );
+    useEffect(() => {
+        if (
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase
+        ) {
+            setNewPhase(SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase);
+        } else if (sandbox.currentPhase !== undefined && !SandboxResponse.loading) {
+            setNewPhase(sandbox.currentPhase);
+        }
+    }, [SandboxResponse.loading, sandbox.currentPhase]);
+
+    const setNewPhase = (phase: any) => {
+        setStep(phase);
+        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
+    };
 
     const returnStepComponent = () => {
         switch (step) {
@@ -65,35 +90,43 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     };
 
-    return (
-        <Wrapper>
-            {SandboxResponse.loading && <LoadingFull />}
-            <StepBar
-                sandbox={sandbox && sandbox}
-                step={step}
-                setStep={setStep}
-                studyId={studyId}
-                sandboxId={sandboxId}
-                setUpdateCache={setUpdateCache}
-                updateCache={updateCache}
-                setUserClickedDelete={setUserClickedDelete}
-                userClickedDelete={userClickedDelete}
-                setResources={setResources}
-                setLoading={SandboxResponse.setLoading}
-            />
-            {returnStepComponent()}
-            {(step === 0 || step === 1) && (
-                <VmConfig
-                    sandbox={sandbox}
-                    showAddNewVm={step === 0 && sandbox.permissions && sandbox.permissions.update}
-                    resources={resources}
-                    loadingSandbox={SandboxResponse.loading}
-                    permissions={sandbox.permissions}
+    return !SandboxResponse.notFound ? (
+        step !== undefined ? (
+            <Wrapper>
+                {SandboxResponse.loading && <LoadingFull />}
+                <StepBar
+                    sandbox={sandbox && sandbox}
+                    step={step}
+                    setStep={setStep}
+                    studyId={studyId}
+                    sandboxId={sandboxId}
                     setUpdateCache={setUpdateCache}
                     updateCache={updateCache}
+                    setUserClickedDelete={setUserClickedDelete}
+                    userClickedDelete={userClickedDelete}
+                    setResources={setResources}
+                    resources={resources}
+                    setLoading={SandboxResponse.setLoading}
+                    setNewPhase={setNewPhase}
                 />
-            )}
-        </Wrapper>
+                {returnStepComponent()}
+                {(step === 0 || step === 1) && (
+                    <VmConfig
+                        sandbox={sandbox}
+                        showAddNewVm={sandbox.permissions && sandbox.permissions.update}
+                        resources={resources}
+                        loadingSandbox={SandboxResponse.loading}
+                        permissions={sandbox.permissions}
+                        setUpdateCache={setUpdateCache}
+                        updateCache={updateCache}
+                    />
+                )}
+            </Wrapper>
+        ) : (
+            <LoadingFull />
+        )
+    ) : (
+        <NotFound />
     );
 };
 
