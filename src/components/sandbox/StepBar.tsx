@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -198,6 +198,16 @@ const StepBar: React.FC<StepBarProps> = ({
         });
     };
 
+    const returnToolTipForMakeAvailable = (): string => {
+        if (sandbox.permissions && !sandbox.permissions.increasePhase) {
+            return 'You do not have permission to make this sandbox Available';
+        }
+        if (!allResourcesOk) {
+            return 'All resources must have status OK and atleast one VM and Data set';
+        }
+        return '';
+    };
+
     const optionsTemplate = (
         <>
             <MenuItem
@@ -246,29 +256,31 @@ const StepBar: React.FC<StepBarProps> = ({
                 return (
                     <BtnTwoWrapper>
                         {returnOptionsButton()}
-                        <Button
-                            onClick={() => {
-                                setUserClickedMakeAvailable(true);
-                            }}
-                            data-cy="sandbox_make_available"
-                            disabled={
-                                !(
-                                    sandbox.permissions &&
-                                    sandbox.permissions.increasePhase &&
-                                    !makeAvailableInProgress &&
-                                    allResourcesOk
-                                )
-                            }
-                        >
-                            {makeAvailableInProgress ? (
-                                <DotProgress variant="green" />
-                            ) : (
-                                <>
-                                    <span>Make available</span>
-                                    {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
-                                </>
-                            )}
-                        </Button>
+                        <Tooltip title={returnToolTipForMakeAvailable()} placement="left">
+                            <Button
+                                onClick={() => {
+                                    setUserClickedMakeAvailable(true);
+                                }}
+                                data-cy="sandbox_make_available"
+                                disabled={
+                                    !(
+                                        sandbox.permissions &&
+                                        sandbox.permissions.increasePhase &&
+                                        !makeAvailableInProgress &&
+                                        allResourcesOk
+                                    )
+                                }
+                            >
+                                {makeAvailableInProgress ? (
+                                    <DotProgress variant="green" />
+                                ) : (
+                                    <>
+                                        <span>Make available</span>
+                                        {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                                    </>
+                                )}
+                            </Button>
+                        </Tooltip>
                     </BtnTwoWrapper>
                 );
             }
