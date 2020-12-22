@@ -1,8 +1,10 @@
 import React from 'react';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
+import { posix } from 'path';
 
-const NoAccess = () => {
+const NotFound = () => {
     return (
         <div
             style={{
@@ -19,10 +21,11 @@ const NoAccess = () => {
         >
             <FontAwesomeIcon icon={faTimesCircle} size="5x" style={{ margin: '20px' }} />
             <div>
-                <b>It seems like you don´t have access to this content.</b>
+                <b>This resource does not exist or have been removed..</b>
             </div>
+            <Link to="/">Go back</Link>
         </div>
     );
 };
 
-export default NoAccess;
+export default NotFound;

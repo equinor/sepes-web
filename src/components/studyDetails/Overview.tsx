@@ -49,7 +49,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const res = useFetchUrl(
         getResultsAndLearningsUrl(study.id),
         setResultsAndLearnings,
-        study.id !== '' && study.permissions.readResulsAndLearnings
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings
     );
 
     const handleChange = (evt) => {
@@ -108,7 +108,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
                     <div style={{ display: 'flex' }}>
                         {editMode && (
                             <Button
-                                onClick={handleSave}
+                                onClick={() => handleSave()}
                                 style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
                                 data-cy="save_results_and_learnings"
                             >

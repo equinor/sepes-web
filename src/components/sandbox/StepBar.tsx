@@ -123,13 +123,13 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getResources = () => {
         getResourceStatus(sandboxId).then((result: any) => {
-            if (result && !result.errors) {
-                setResources(result);
-                allResourcesStatusOkAndAtleastOneVm(result);
-            } else {
+            if (result && (result.errors || result.Message)) {
                 resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
+            } else {
+                setResources(result);
+                allResourcesStatusOkAndAtleastOneVm(result);
             }
         });
     };
