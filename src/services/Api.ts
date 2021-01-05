@@ -130,6 +130,10 @@ export const getResourceStatus = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
 };
 
+export const makeAvailable = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/nextPhase', 'POST');
+};
+
 //Sandbox dataset
 
 export const getDatasetForSandbox = async (sandboxId: string) => {

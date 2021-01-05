@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { getStudyList } from '../../services/Api';
+import { getStudiesUrl } from '../../services/ApiCallStrings';
 import Studies from './Studies';
 import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
-import useFetch from '../common/hooks/useFetch';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
@@ -34,14 +33,14 @@ const RightWrapper = styled.div`
     }
 `;
 
-let mockText =
+const mockText =
     'Sepes is great! You should use it and everyone else should as well! Take my word for it. Or someone elses word. It doesn’t really matter whos word it is.';
 
 const Home = () => {
     const history = useHistory();
     const permissions = useContext(Permissions);
     const [studyList, setStudylist] = useState([]);
-    const studies = useFetchUrl('studies', setStudylist);
+    const studies = useFetchUrl(getStudiesUrl(), setStudylist);
 
     return (
         <>

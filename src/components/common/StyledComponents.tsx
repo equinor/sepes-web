@@ -15,7 +15,7 @@ import {
     key,
     check,
     error_outlined,
-    more_verticle
+    more_vertical
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -30,7 +30,7 @@ const icons = {
     key,
     check,
     error_outlined,
-    more_verticle
+    more_vertical
 };
 Icon.add(icons);
 

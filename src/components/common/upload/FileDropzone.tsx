@@ -2,23 +2,18 @@ import React from 'react';
 //import imageCompression from 'browser-image-compression';
 import Dropzone from './DropzoneFile';
 
-const FileDropzoneContainer = (
-  props:any
-) => {
-  function handleImageUpload(fileEvent: File[]) {
-    var file = fileEvent[0];
-    props.setFiles(fileEvent);
-    props.setImageUrl(URL.createObjectURL(file));
-  }
+const FileDropzoneContainer = (props: any) => {
+    function handleImageUpload(fileEvent: File[]) {
+        var file = fileEvent[0];
+        props.setFiles(fileEvent);
+        props.setImageUrl(URL.createObjectURL(file));
+    }
 
-  return (
-    <div style={{ position: 'relative' }}>
-    <Dropzone
-      onDrop={(event: File[]) => handleImageUpload(event)}
-      accept={'image/*'}
-    />
-    </div>
-  );
+    return (
+        <div style={{ position: 'relative' }}>
+            <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} disabled={props.disabled} />
+        </div>
+    );
 };
 export default FileDropzoneContainer;
 

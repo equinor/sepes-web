@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { Button, Typography, Menu } from '@equinor/eds-core-react';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import React, { useEffect, useState } from 'react';
+import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox } from '../../services/Api';
+import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import * as notify from '../common/notify';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
+import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import SureToProceed from '../common/customComponents/SureToProceed';
+import { resourceStatus, resourceType } from '../common/types';
 
 const { MenuItem } = Menu;
 
@@ -42,6 +45,12 @@ type StepBarProps = {
     sandbox: SandboxObj;
     updateCache: any;
     setUpdateCache: any;
+    userClickedDelete: any;
+    setUserClickedDelete: any;
+    setResources: any;
+    resources: any;
+    setLoading: any;
+    setNewPhase: any;
 };
 
 const getSteps = () => {
@@ -68,6 +77,8 @@ const getSteps = () => {
     ];
 };
 
+let resourcesFailed = false;
+
 const StepBar: React.FC<StepBarProps> = ({
     step,
     setStep,
@@ -75,12 +86,67 @@ const StepBar: React.FC<StepBarProps> = ({
     sandboxId,
     sandbox,
     updateCache,
-    setUpdateCache
+    setUpdateCache,
+    setResources,
+    userClickedDelete,
+    setUserClickedDelete,
+    setLoading,
+    setNewPhase,
+    resources
 }) => {
     const history = useHistory();
-    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const steps = getSteps();
+    const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
+    const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
+    const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
+
+    useEffect(() => {
+        getResources();
+        let timer: any;
+        try {
+            timer = setInterval(async () => {
+                if (!userClickedDelete && !resourcesFailed) {
+                    getResources();
+                }
+            }, 20000);
+        } catch (e) {
+            console.log(e);
+        }
+        return () => {
+            clearInterval(timer);
+            resourcesFailed = false;
+        };
+    }, [userClickedDelete]);
+
+    const getResources = () => {
+        getResourceStatus(sandboxId).then((result: any) => {
+            if (result && (result.errors || result.Message)) {
+                resourcesFailed = true;
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            } else {
+                setResources(result);
+                allResourcesStatusOkAndAtleastOneVm(result);
+            }
+        });
+    };
+
+    const allResourcesStatusOkAndAtleastOneVm = (resourcesIn) => {
+        let res = true;
+        if (!resourcesIn) {
+            return res;
+        }
+        let hasVm = false;
+        resourcesIn.map((resource: any, i: number) => {
+            if (resource.status !== resourceStatus.ok) {
+                res = false;
+            }
+            if (resource.type === resourceType.virtualMachine) {
+                hasVm = true;
+            }
+        });
+        setAllResourcesOk(res && hasVm);
+    };
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -105,13 +171,41 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
-        setUpdateCache({ ...updateCache, ['studies/' + studyId]: true });
+        setUserClickedDelete(false);
+        setLoading(true);
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
+            setLoading(false);
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
             history.push('/studies/' + studyId);
         });
+    };
+
+    const makeThisSandboxAvailable = (): void => {
+        setUserClickedMakeAvailable(false);
+        setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
+        setMakeAvailableInProgress(true);
+        makeAvailable(sandboxId).then((result: any) => {
+            setMakeAvailableInProgress(false);
+            if (result.Message || result.errors) {
+                setNewPhase(0);
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                setNewPhase(1);
+            }
+        });
+    };
+
+    const returnToolTipForMakeAvailable = (): string => {
+        if (sandbox.permissions && !sandbox.permissions.increasePhase) {
+            return 'You do not have permission to make this sandbox Available';
+        }
+        if (!allResourcesOk) {
+            return 'All resources must have status OK and atleast one VM and Data set';
+        }
+        return '';
     };
 
     const optionsTemplate = (
@@ -135,12 +229,12 @@ const StepBar: React.FC<StepBarProps> = ({
                     id="menuButton"
                     aria-controls="menu-on-button"
                     aria-haspopup="true"
-                    aria-expanded={displayDeleteStudy}
+                    aria-expanded={isOpen}
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
                     More options
-                    {EquinorIcon('more_verticle', '#007079', 24)}
+                    {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu
                     id="menuButton"
@@ -162,19 +256,43 @@ const StepBar: React.FC<StepBarProps> = ({
                 return (
                     <BtnTwoWrapper>
                         {returnOptionsButton()}
-                        <Button
-                            onClick={() => {
-                                setStep(1);
-                            }}
-                        >
-                            Make available{EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
-                        </Button>
+                        <div>
+                            <Tooltip title={returnToolTipForMakeAvailable()} placement="left">
+                                <Button
+                                    onClick={() => {
+                                        setUserClickedMakeAvailable(true);
+                                    }}
+                                    data-cy="sandbox_make_available"
+                                    style={{ width: '160px' }}
+                                    disabled={
+                                        !(
+                                            sandbox.permissions &&
+                                            sandbox.permissions.increasePhase &&
+                                            !makeAvailableInProgress &&
+                                            allResourcesOk
+                                        )
+                                    }
+                                >
+                                    {makeAvailableInProgress ? (
+                                        <div>
+                                            <DotProgress variant="green" />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <span>Make available</span>
+                                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
+                                        </>
+                                    )}
+                                </Button>
+                            </Tooltip>
+                        </div>
                     </BtnTwoWrapper>
                 );
             }
             case 1: {
                 return (
                     <BtnTwoWrapper>
+                        {/*}
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -183,6 +301,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         >
                             {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Config
                         </Button>
+                        */}
                         {returnOptionsButton()}
                         {/* 
                         <Button
@@ -262,6 +381,13 @@ const StepBar: React.FC<StepBarProps> = ({
                     setUserClickedDelete={setUserClickedDelete}
                     onClick={deleteThisSandbox}
                     type="sandbox"
+                />
+            )}
+            {userClickedMakeAvailable && (
+                <SureToProceed
+                    setUserClickedButton={setUserClickedMakeAvailable}
+                    onClick={makeThisSandboxAvailable}
+                    type="making this sandbox available"
                 />
             )}
         </Wrapper>

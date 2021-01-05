@@ -6,8 +6,8 @@ import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import * as notify from '../../common/notify';
-import { useHistory } from 'react-router-dom';
 import useClickOutside from '../../common/customComponents/useClickOutside';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -69,8 +69,8 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     updateCache
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
-    const { disks, nics, osType, powerState, size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
-    const { maxDataDiskCount, MemoryGB, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB } = size || {};
+    const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
+    const { MemoryGB, numberOfCores } = size || {};
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const wrapperRef = useRef(null);
@@ -82,15 +82,13 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
-        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandboxId]: true });
+        setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
         setActiveTab(0);
         let currentVms: any = [...vms];
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result && !result.Message) {
-                console.log('resultStudy: ', result);
-            } else {
+            if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });

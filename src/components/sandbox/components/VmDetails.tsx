@@ -12,7 +12,7 @@ import {
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
-import { SandboxPermissions } from '../../common/interfaces';
+import { SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;
 
@@ -38,6 +38,7 @@ type VmDetailsProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    sandbox: SandboxObj;
 };
 
 const ipMethod = [
@@ -80,11 +81,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     resources,
     permissions,
     setUpdateCache,
-    updateCache
+    updateCache,
+    sandbox
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
+    let keyCount: number = 0;
 
     useEffect(() => {
         getVmExtendedInfo();
@@ -93,6 +96,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         getMyIp();
         getVmRules();
     }, [index]);
+
+    const getKey = () => {
+        const res = keyCount++;
+        return res.toString();
+    };
 
     const getVmExtendedInfo = () => {
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
@@ -182,7 +190,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             port: '',
             useClientIp: false,
             direction: 0,
-            name: ''
+            name: '',
+            key: getKey()
         });
         let tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
@@ -360,17 +369,17 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                             vm.rules.map((rule: any, ruleNumber: number) => {
                                 return (
                                     rule.direction === 0 && (
-                                        <Row>
+                                        <Row key={getKey()}>
                                             <Cell>
                                                 <TextField
-                                                    id="textfield1"
+                                                    id={getKey()}
                                                     value={rule.description}
                                                     onChange={(e: any) =>
                                                         updateRule(ruleNumber, e.target.value, 'description')
                                                     }
                                                     placeholder="Description"
                                                     data-cy="vm_rule_description"
-                                                    disabled={!permissions.editRules}
+                                                    disabled={!permissions.editInboundRules}
                                                     autoComplete="off"
                                                 />
                                             </Cell>
@@ -384,7 +393,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         name="useClientIp"
                                                         preSlectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
-                                                        disabled={!permissions.editRules}
+                                                        disabled={!permissions.editInboundRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -401,7 +410,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         placement="top"
                                                     >
                                                         <TextField
-                                                            id="textfield2"
+                                                            id={getKey()}
                                                             autoComplete="off"
                                                             value={rule.ip}
                                                             onChange={(e: any) => {
@@ -409,7 +418,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             }}
                                                             placeholder="IP"
                                                             data-cy="vm_rule_ip"
-                                                            disabled={!permissions.editRules}
+                                                            disabled={!permissions.editInboundRules}
                                                         />
                                                     </Tooltip>
                                                 )}
@@ -424,7 +433,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         name="protocol"
                                                         preSlectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
-                                                        disabled={!permissions.editRules}
+                                                        disabled={!permissions.editInboundRules}
                                                     />
                                                 </div>
                                             </Cell>
@@ -442,7 +451,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         placement="top"
                                                     >
                                                         <TextField
-                                                            id="textfield3"
+                                                            id={getKey()}
                                                             autoComplete="off"
                                                             value={rule.port}
                                                             onChange={(e: any) => {
@@ -454,14 +463,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             type="number"
                                                             placeholder="Port"
                                                             data-cy="vm_rule_port"
-                                                            disabled={!permissions.editRules}
+                                                            disabled={!permissions.editInboundRules}
                                                         />
                                                     </Tooltip>
                                                 )}
                                             </Cell>
 
                                             <Cell>
-                                                {permissions.editRules &&
+                                                {permissions.editInboundRules &&
                                                     EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
                                             </Cell>
                                         </Row>
@@ -482,7 +491,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 </Table>
                 <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
                     <Tooltip
-                        title={permissions.editRules ? '' : 'You do not have permission to add or create rules'}
+                        title={permissions.editInboundRules ? '' : 'You do not have permission to add or create rules'}
                         placement="left"
                     >
                         <Button
@@ -491,7 +500,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 addRule();
                             }}
                             data-cy="vm_add_rule"
-                            disabled={!permissions.editRules}
+                            disabled={!permissions.editInboundRules}
                         >
                             Add rule
                         </Button>
@@ -513,7 +522,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 <Button
                                     variant="outlined"
                                     style={{ float: 'right' }}
-                                    disabled={!permissions.editRules}
+                                    disabled={!permissions.openInternet}
                                     onClick={() => {
                                         addOutBoundRule();
                                     }}

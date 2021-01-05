@@ -9,6 +9,7 @@ import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../..
 import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
 const icons = {
     info_circle
@@ -154,7 +155,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
 
     const createVm = () => {
         setLoading(true);
-        setUpdateCache({ ...updateCache, ['virtualmachines/forsandbox/' + sandbox.id]: true });
+        setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 let vmsList: any = [...vms];
@@ -251,7 +252,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -272,7 +273,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -293,7 +294,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
                             placement={'right'}
                         >
-                            <Icon name="info_circle" size={24} />
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
                 }
@@ -305,16 +306,21 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         <Checkbox
                             label="High memory"
                             onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
-                            data-cy="just_a_test"
+                            enterKeyHint="Filter memory"
                         />
                     </li>
                     <li>
-                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
+                        <Checkbox
+                            label="High GPU"
+                            onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)}
+                            enterKeyHint="Filter GPU"
+                        />
                     </li>
                     <li>
                         <Checkbox
                             label="High CPU"
                             onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
+                            enterKeyHint="Filter CPU"
                         />
                     </li>
                 </UnstyledList>
@@ -332,6 +338,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_size"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <CoreDevDropdown
                 label="Operating system"
@@ -342,6 +349,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_operatingSystem"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <CoreDevDropdown
                 label="Data disk"
@@ -352,6 +360,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_dataDisks"
                 meta="(required)"
                 useOverflow
+                tabIndex={0}
             />
             <div>
                 <Label>Estimated total</Label>
@@ -360,14 +369,21 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>
             </div>
-            <Button
-                style={{ width: '100px', marginLeft: 'auto' }}
-                data-cy="create_vm"
-                onClick={createVm}
-                disabled={checkIfButtonDisabled()}
-            >
-                {loading ? <DotProgress variant="green" /> : 'Create'}
-            </Button>
+            <div>
+                <Tooltip
+                    title={checkIfButtonDisabled() && !loading ? 'Please fill out all required fields' : ''}
+                    placement="right"
+                >
+                    <Button
+                        style={{ width: '100px', marginLeft: 'auto' }}
+                        data-cy="create_vm"
+                        onClick={createVm}
+                        disabled={checkIfButtonDisabled()}
+                    >
+                        {loading ? <DotProgress variant="green" /> : 'Create'}
+                    </Button>
+                </Tooltip>
+            </div>
         </Wrapper>
     );
 };

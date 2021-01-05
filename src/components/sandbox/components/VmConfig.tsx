@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import {
-    SandboxObj,
-    VmObj,
-    SizeObj,
-    DropdownObj,
-    OperatingSystemObj,
-    SandboxPermissions
-} from '../../common/interfaces';
+import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, SandboxPermissions } from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
@@ -17,6 +10,7 @@ import {
 import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {
@@ -44,7 +38,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const vmsReponse = useFetchUrl('virtualmachines/forsandbox/' + sandbox.id, setVms);
+    const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
@@ -54,7 +48,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     useEffect(() => {
         setIsSubscribed(true);
-        if (permissions.update && isSubscribed) {
+        if (permissions && permissions.update && isSubscribed) {
             if (!sizes) getVmSizes();
             if (!disks) getVmDisks();
             if (!os) getVms();
@@ -128,6 +122,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         permissions={permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        sandbox={sandbox}
                     />
                 );
         }

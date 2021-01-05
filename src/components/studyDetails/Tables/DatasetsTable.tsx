@@ -16,7 +16,7 @@ const DatasetsTable = (props: any) => {
                         style={{ color: '#000000', cursor: 'pointer' }}
                         to={{
                             pathname: '/studies/' + props.studyId + '/datasets/' + row.id,
-                            state: { canEditStudySpecificDataset: true }
+                            state: { canEditStudySpecificDataset: props.disabled }
                         }}
                     >
                         {type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}
@@ -26,7 +26,7 @@ const DatasetsTable = (props: any) => {
         }
         return (
             <Cell>
-                {editMode && type === 'icon' && !props.disabled
+                {editMode && type === 'icon' && props.disabled
                     ? EquinorIcon('close', '', 24, () => props.removeDataset(row), true)
                     : value}
             </Cell>

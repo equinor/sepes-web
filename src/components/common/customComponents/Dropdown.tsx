@@ -23,6 +23,7 @@ const Dropdown = styled.div<{ isOpen: any; color: any }>`
     background: ${(props: any) => (props.color ? props.color : '#f7f7f7')};
     font-family: Equinor;
     letter-spacing: 0.4px;
+    outline-color: #007079;
     border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
     border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
     border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
@@ -114,7 +115,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
                 >
                     {options.map((option: any, i: number) => {
                         return (
-                            <li key={i} onClick={() => handleChange(option)}>
+                            <li key={i} onMouseDown={() => handleChange(option)}>
                                 <DropdownOption>{option.displayValue}</DropdownOption>
                             </li>
                         );
@@ -142,6 +143,12 @@ const CoreDevDropdown = (props: any): JSX.Element => {
             }}
             className={'coredev-dropdown'}
             ref={wrapperRef}
+            onFocus={() => {
+                setIsOpen(true);
+            }}
+            onBlur={() => {
+                setIsOpen(false);
+            }}
         >
             <div style={{ display: 'flex' }}>
                 <Label>{label}</Label>
@@ -149,7 +156,14 @@ const CoreDevDropdown = (props: any): JSX.Element => {
                     <Label>{meta}</Label>
                 </div>
             </div>
-            <Dropdown onClick={() => setIsOpen(!isOpen)} {...props} isOpen={isOpen} color={props.color}>
+            <Dropdown
+                onMouseDown={() => {
+                    setIsOpen(!isOpen);
+                }}
+                {...props}
+                isOpen={isOpen}
+                color={props.color}
+            >
                 <span>{truncate(selectedOption.displayValue, 40)}</span>
                 {isOpen ? arrowUp : arrowDown}
             </Dropdown>

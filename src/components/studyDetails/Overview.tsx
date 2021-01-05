@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
 import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
-import { editResultsAndLearnings, editStudy } from '../../services/Api';
+import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -45,7 +46,11 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const res = useFetchUrl('studies/' + study.id + '/resultsandlearnings', setResultsAndLearnings, study.id !== '');
+    const res = useFetchUrl(
+        getResultsAndLearningsUrl(study.id),
+        setResultsAndLearnings,
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings
+    );
 
     const handleChange = (evt) => {
         setHasChanged(true);
@@ -53,8 +58,8 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     };
 
     const handleSave = () => {
-        setUpdateCache({ ...updateCache, ['studies/' + study.id]: true });
-        res.cache['studies/' + study.id + '/resultsandlearnings'] = resultsAndLearnings;
+        setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true });
+        res.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
             if (result && !result.Message) {
@@ -97,12 +102,13 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
                             style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
                             value={resultsAndLearnings.resultsAndLearnings}
                             autoComplete="off"
+                            autoFocus
                         />
                     )}
                     <div style={{ display: 'flex' }}>
                         {editMode && (
                             <Button
-                                onClick={handleSave}
+                                onClick={() => handleSave()}
                                 style={{ margin: '32px 8px 16px 0px', marginTop: '32px' }}
                                 data-cy="save_results_and_learnings"
                             >
