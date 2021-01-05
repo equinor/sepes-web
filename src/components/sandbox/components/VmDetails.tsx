@@ -424,6 +424,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             placeholder="IP"
                                                             data-cy="vm_rule_ip"
                                                             disabled={!permissions.editInboundRules}
+                                                            variant={
+                                                                checkIfValidIp(rule.ip) || rule.ip === ''
+                                                                    ? 'default'
+                                                                    : 'error'
+                                                            }
                                                         />
                                                     </Tooltip>
                                                 )}

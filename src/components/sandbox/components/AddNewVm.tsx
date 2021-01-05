@@ -239,6 +239,16 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         setFilter(currentFilter);
     };
 
+    const returnPasswordVariant = () => {
+        if (vm.password === '') {
+            return 'default';
+        }
+        if (passwordValidate(vm.password)) {
+            return 'success';
+        }
+        return 'error';
+    };
+
     return (
         <Wrapper>
             <TextField
@@ -291,6 +301,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 label="Password"
                 meta="(required)"
                 data-cy="vm_password"
+                variant={returnPasswordVariant()}
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                         <Tooltip
