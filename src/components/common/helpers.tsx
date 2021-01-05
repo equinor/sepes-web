@@ -94,7 +94,7 @@ export const passwordValidate = (password: string): boolean => {
     //Atleast one special character
     const special = /(?=.*[!@#$%^&*])/;
     //Between 8-123 long
-    const limit = /(?=.{8,123})/;
+    const limit = /(?=.{12,123})/;
     return upper.test(password) && number.test(password) && special.test(password) && limit.test(password);
 };
 
