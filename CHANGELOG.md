@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/equinor/sepes-web/compare/0.1.8...0.1.9) (2021-01-05)
+
+
+### Features
+
+* **files:** added progress bar ([0820f0b](https://github.com/equinor/sepes-web/commit/0820f0bfcae54e5e10ed88bd576e3f54739d8f08)), closes [#398](https://github.com/equinor/sepes-web/issues/398)
+* **sandbox:** data can now be made available to sandbox ([8e917d5](https://github.com/equinor/sepes-web/commit/8e917d5b8ac57579e600fbd0d7648e032b045622))
+
+
+### Bug Fixes
+
+* **sandbox:** make available button resized on load ([a518abc](https://github.com/equinor/sepes-web/commit/a518abcb696ec755cc97412a1208680e06e67f8b))
+*  bug where an error happened when switching tab right after creating a study ([7ae794f](https://github.com/equinor/sepes-web/commit/7ae794fac87934df92040e8548634bac7ca96402))
+* bug where data sets in sandbox where not always checking. Also added tooltip to make available button in sandbox ([d0e5f85](https://github.com/equinor/sepes-web/commit/d0e5f858281aa279772d5980ab33aa4712725e3c)), closes [#428](https://github.com/equinor/sepes-web/issues/428)
+* not found page showing on create study ([100d479](https://github.com/equinor/sepes-web/commit/100d4796b6a2c0c9a40e159d97ff810b6769f996))
+* **create dataset:** added tooltip on create VM button. Changed colors of input icons on textfields. Updated EDS to latest version ([70f7096](https://github.com/equinor/sepes-web/commit/70f70966d7705801c2f20098597f5e8c95a57ed7))
+* **create sandbox:** can not select region ([c5f77d6](https://github.com/equinor/sepes-web/commit/c5f77d6556da309eded40643ba7fcf3855d27977))
+* **create vm:** Creating vms should be possible on step 2 ([b87b3e2](https://github.com/equinor/sepes-web/commit/b87b3e23bb95a44fec6ca8584c5f3c25fc2fcde2))
+* **datasets:** bug ([b908829](https://github.com/equinor/sepes-web/commit/b908829fbccf62a23b0a9fa45d2488881ea2bca4))
+* **datasets:** cache bug when remove/add files ([ae977bc](https://github.com/equinor/sepes-web/commit/ae977bc60696e3cbe26243a10bbe5b3adfb7fc7b))
+* **delete sandbox:** fixed a bug where sepes tried to find resources for a deleted study ([4f70028](https://github.com/equinor/sepes-web/commit/4f70028a5e938b316f8ccd030e106ef0644349fd)), closes [#298](https://github.com/equinor/sepes-web/issues/298)
+* **file upload:** support all file types ([edb55c4](https://github.com/equinor/sepes-web/commit/edb55c442e981f2da641feaa5b5139301055adc1))
+* **login:** removed user.read scope from login url ([#406](https://github.com/equinor/sepes-web/issues/406)) ([fb926e7](https://github.com/equinor/sepes-web/commit/fb926e7f5cb4aaadc5c4552008c3c2eefcff0fcf))
+* **results and learnings:** stop fetching if user do not have permission to read ([44caa0d](https://github.com/equinor/sepes-web/commit/44caa0d0ce1ac3d0c90b62b056448d176c1f8a60))
+* **sandbox:** bug where step would not increase if user clicked Make available" ([4931bd4](https://github.com/equinor/sepes-web/commit/4931bd4f398394613abb130ff1ac68fa7380ec0b))
+* **sandbox:** disable make available button if not all resources have status OK or there is no VMs in the sandbox ([5ab394e](https://github.com/equinor/sepes-web/commit/5ab394ea45cfd1c63692a900f6022fcf283956ce))
+* **sandbox:** disable open internet button on phase 2. Disable Make available button when user clicks so it is not possbile to make multiple calls ([4443b68](https://github.com/equinor/sepes-web/commit/4443b68f1e0c6f169f9459c419b56d6824e89325))
+* **sandbox:** enable make available button if next phase call fails ([b33ee73](https://github.com/equinor/sepes-web/commit/b33ee7346c03f1a6c6d8128b1cd7ccf770a22207))
+* **sandbox:** if sandbox was in phase 2, the ui would jump between phase 1 and 2 first ([161e76a](https://github.com/equinor/sepes-web/commit/161e76a6e826f474fc192ab6cb62409c83e635ef))
+* **sandbox:** make open internet button available on phase 2 for those who have permission ([deacf46](https://github.com/equinor/sepes-web/commit/deacf46f86dc7a142cd17c09b3c198dca03a74f5))
+* **sandbox:** name of sandbox dissapeared on phase 2 ([8cd8b71](https://github.com/equinor/sepes-web/commit/8cd8b71be638c1f334510d89204568da7225c05c))
+* **sandbox resources:** stop calling api if this call fails ([5c1280f](https://github.com/equinor/sepes-web/commit/5c1280fd3df6eee1a3db31f5001d25db55d99841)), closes [#408](https://github.com/equinor/sepes-web/issues/408)
+* **sandox:** center loading icon when clickimg make available ([4754ce6](https://github.com/equinor/sepes-web/commit/4754ce6be78fe898b4223211053331cb714fbb35))
+* **study and sandbox:** add loading screen if deleting a study or sandbox takes a while. For instance if a study needs to delete datasets as well as the study when user deletes study ([d23d9ee](https://github.com/equinor/sepes-web/commit/d23d9eeb7551e176b5aef62367e15b4c570674d9)), closes [#413](https://github.com/equinor/sepes-web/issues/413)
+* **study logo:** fixed bug where user did not be able to reselect logo ([d38c8c1](https://github.com/equinor/sepes-web/commit/d38c8c1023628cde9f99e2010bf2ee5a0551627e)), closes [#401](https://github.com/equinor/sepes-web/issues/401)
+* **tab control:** update tab focus on dropdown so it drops on focus. Also autofocuses fields where it makes sense ([1bfdb38](https://github.com/equinor/sepes-web/commit/1bfdb38ece1f76d8fc7d74f94fd56cfcd3772a9a)), closes [#202](https://github.com/equinor/sepes-web/issues/202)
+* **vm:** remove label on create button when creating a vm is in progress ([6622c59](https://github.com/equinor/sepes-web/commit/6622c596a1d441b6780e6ded32fd5fc588e1cef3))
+* added general notfound page to datasets and sandboxes. As well as any other paths/urls that does not match resources ([e4f0f10](https://github.com/equinor/sepes-web/commit/e4f0f102a0daca18b7449b2147ece7dccf8d17a7))
+* added not found page if user types an id to a study that does not exist or has been deleted ([a1aec69](https://github.com/equinor/sepes-web/commit/a1aec6949502c93f5fb1e527aeea4d6bd8ae51b0)), closes [#409](https://github.com/equinor/sepes-web/issues/409)
+* codeql warnings and notes ([a2ee820](https://github.com/equinor/sepes-web/commit/a2ee8206907dd5330e035a652f99cf8ab6b078bf)), closes [#425](https://github.com/equinor/sepes-web/issues/425)
+* console errors on all pages ([7759228](https://github.com/equinor/sepes-web/commit/7759228df1ba8697e640b560a9c1b6cf9d5bd6f9))
+* update codeql analysis tool to be more strict ([a838fc3](https://github.com/equinor/sepes-web/commit/a838fc3d6748a2c03dd3d76b05930d115bc9dd82))
+
 ### [0.1.8](https://github.com/equinor/sepes-web/compare/0.1.7...0.1.8) (2020-12-10)
 
 
