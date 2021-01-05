@@ -35,6 +35,7 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
+    getResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -82,7 +83,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    sandbox
+    sandbox,
+    getResources
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -208,6 +210,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
         setVms(tempsVms);
+        getResources();
     };
 
     const saveRule = (rules: any) => {
@@ -217,6 +220,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
+                getResources();
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
@@ -349,6 +353,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 permissions={permissions}
                 setUpdateCache={setUpdateCache}
                 updateCache={updateCache}
+                getResources={getResources}
             />
             <div>
                 <Table style={{ width: '100%' }}>

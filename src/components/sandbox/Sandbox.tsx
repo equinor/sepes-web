@@ -10,6 +10,7 @@ import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
+import { getResourceStatus } from '../../services/Api';
 
 const Wrapper = styled.div`
     display: grid;
@@ -66,6 +67,16 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         }
     }, [SandboxResponse.loading, sandbox.currentPhase]);
 
+    const getResources = () => {
+        getResourceStatus(sandboxId).then((result: any) => {
+            if (result && (result.errors || result.Message)) {
+                console.log('Err');
+            } else {
+                setResources(result);
+            }
+        });
+    };
+
     const setNewPhase = (phase: any) => {
         setStep(phase);
         SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
@@ -105,7 +116,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     setUserClickedDelete={setUserClickedDelete}
                     userClickedDelete={userClickedDelete}
                     setResources={setResources}
-                    resources={resources}
                     setLoading={SandboxResponse.setLoading}
                     setNewPhase={setNewPhase}
                 />
@@ -115,6 +125,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         sandbox={sandbox}
                         showAddNewVm={sandbox.permissions && sandbox.permissions.update}
                         resources={resources}
+                        getResources={getResources}
                         loadingSandbox={SandboxResponse.loading}
                         permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}

@@ -48,7 +48,6 @@ type StepBarProps = {
     userClickedDelete: any;
     setUserClickedDelete: any;
     setResources: any;
-    resources: any;
     setLoading: any;
     setNewPhase: any;
 };
@@ -78,6 +77,7 @@ const getSteps = () => {
 };
 
 let resourcesFailed = false;
+const interval = 20000; //20 seconds
 
 const StepBar: React.FC<StepBarProps> = ({
     step,
@@ -91,8 +91,7 @@ const StepBar: React.FC<StepBarProps> = ({
     userClickedDelete,
     setUserClickedDelete,
     setLoading,
-    setNewPhase,
-    resources
+    setNewPhase
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -108,7 +107,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 if (!userClickedDelete && !resourcesFailed) {
                     getResources();
                 }
-            }, 20000);
+            }, interval);
         } catch (e) {
             console.log(e);
         }
@@ -203,7 +202,7 @@ const StepBar: React.FC<StepBarProps> = ({
             return 'You do not have permission to make this sandbox Available';
         }
         if (!allResourcesOk) {
-            return 'All resources must have status OK and atleast one VM and Data set';
+            return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
         }
         return '';
     };
