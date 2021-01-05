@@ -69,6 +69,7 @@ type AddNewVmProps = {
     os?: OperatingSystemObj;
     setUpdateCache: any;
     updateCache: any;
+    getResources: any;
 };
 
 const limits = {
@@ -92,7 +93,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     setActiveTab,
     os,
     setUpdateCache,
-    updateCache
+    updateCache,
+    getResources
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [vm, setVm] = useState<VmObj>({
@@ -158,6 +160,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
+                getResources();
                 let vmsList: any = [...vms];
                 vmsList.push(result);
                 setVms(vmsList);

@@ -203,7 +203,7 @@ const StepBar: React.FC<StepBarProps> = ({
             return 'You do not have permission to make this sandbox Available';
         }
         if (!allResourcesOk) {
-            return 'All resources must have status OK and atleast one VM and Data set';
+            return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
         }
         return '';
     };
