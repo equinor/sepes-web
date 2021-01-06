@@ -40,10 +40,7 @@ const DescriptionWrapper = styled.div`
         margin-right: 0px;
         margin-left: 0px;
         order: 3;
-        min-width: 500px;
-    }
-    @media (max-width: 600px) {
-        min-width: 200px;
+        min-width: 424px;
     }
 `;
 
@@ -501,7 +498,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             />
                         </DescriptioTextfieldnWrapper>
                     )}
-                    <div>
+                    <RightWrapper editMode={editMode}>
                         {editMode && !newStudy && (
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
@@ -530,7 +527,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 </Menu>
                             </div>
                         )}
-                        <RightWrapper editMode={editMode}>
+                        <div>
                             {!showImagePicker && (
                                 <PictureWrapper editMode={editMode}>
                                     <CustomLogoComponent logoUrl={logoUrl} />{' '}
@@ -568,8 +565,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     </div>
                                 </>
                             )}
-                        </RightWrapper>
-                    </div>
+                        </div>
+                    </RightWrapper>
                 </Wrapper>
             ) : (
                 <Loading />
