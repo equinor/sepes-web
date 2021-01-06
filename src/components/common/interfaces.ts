@@ -57,6 +57,13 @@ export interface DatasetObj {
     storageAccountLink?: string;
 }
 
+export interface AvailableDatasetObj {
+    datasetId: string;
+    name: string;
+    classification: string;
+    addedToSandbox: boolean;
+}
+
 export interface SandboxCreateObj {
     name: string;
     region: string;

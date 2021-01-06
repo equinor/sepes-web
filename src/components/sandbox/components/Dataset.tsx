@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, DatasetObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
-import { getDatasetsInSandboxUrl, getDatasetsInStudyUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
+import { getAvailableDatasetsUrl, getDatasetsInSandboxUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -17,68 +17,35 @@ type datasetProps = {
 
 const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCache, permissions }) => {
     const studyId = window.location.pathname.split('/')[2];
-    const [datasetsInSandbox, setDatasetsInSandbox] = useState<any>([]);
-    const [filteredDatasets, setFilteredDatasets] = useState<any>([]);
-    useFetchUrl(getDatasetsInSandboxUrl(sandboxId), setDatasetsInSandbox);
-    const filteredDatasetsResponse = useFetchUrl(getDatasetsInStudyUrl(studyId), setFilteredDatasets);
-    const [datasetsFiltered, setDatasetsfiltered] = useState<boolean>(false);
-    useEffect(() => {
-        if (!datasetsFiltered) {
-            checkIfDatasetsIsAdded();
-        }
-    }, [datasetsInSandbox, filteredDatasetsResponse.loading, filteredDatasets]);
+    const [availableDatasets, setAvailableDatasets] = useState<any>([]);
+    const availableDatasetsResponse = useFetchUrl(getAvailableDatasetsUrl(sandboxId), setAvailableDatasets);
+    const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});
 
-    const handleCheck = (evt: any, dataset: any) => {
+    const handleCheck = (evt: any, dataset: AvailableDatasetObj) => {
+        setAddDatasetInprogress({ ...addDatasetInProgress, [dataset.datasetId]: true });
         setUpdateCache({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
             [getDatasetsInSandboxUrl(sandboxId)]: true
         });
-        const temp: any = [...filteredDatasets];
-        temp[temp.indexOf(dataset)].added = evt.target.checked;
-        setFilteredDatasets(temp);
         if (evt.target.checked) {
-            putDatasetForSandbox(sandboxId, dataset.id).then((result: any) => {
+            putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
+                setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
+                } else {
                 }
             });
         } else {
-            deleteDatasetForSandbox(sandboxId, dataset.id).then((result: any) => {
+            deleteDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
+                setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
             });
         }
-    };
-
-    const checkIfDatasetsIsAdded = () => {
-        if (!filteredDatasets || !filteredDatasets.length) {
-            return;
-        }
-        let res: any = [...filteredDatasets];
-        if (!filteredDatasetsResponse.loading && datasetsInSandbox.length === 0) {
-            res = [...filteredDatasets];
-            for (let i = 0; i < res.length; i++) {
-                res[i].added = false;
-            }
-            return res;
-        }
-
-        for (let i = 0; i < filteredDatasets.length; i++) {
-            for (let j = 0; j < datasetsInSandbox.length; j++) {
-                if (filteredDatasets[i] && filteredDatasets[i].id === datasetsInSandbox[j].datasetId) {
-                    res[i].added = true;
-                    break;
-                } else {
-                    res[i].added = false;
-                }
-            }
-        }
-        setDatasetsfiltered(true);
-        setFilteredDatasets(res);
     };
 
     return (
@@ -94,10 +61,10 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                 </Row>
             </Head>
             <Body>
-                {filteredDatasets.length > 0 ? (
-                    filteredDatasets.map((dataset: DatasetObj) => {
+                {availableDatasets.length > 0 ? (
+                    availableDatasets.map((dataset: AvailableDatasetObj) => {
                         return (
-                            <Row key={dataset.id}>
+                            <Row key={dataset.datasetId}>
                                 <Cell>
                                     <div style={{ paddingTop: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
@@ -110,10 +77,13 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                                                 placement="top"
                                             >
                                                 <Checkbox
-                                                    checked={dataset.added}
+                                                    defaultChecked={dataset.addedToSandbox}
                                                     label={dataset.name}
                                                     enterKeyHint="Add dataset to sandbox"
-                                                    disabled={permissions && !permissions.update}
+                                                    disabled={
+                                                        (permissions && !permissions.update) ||
+                                                        addDatasetInProgress[dataset.datasetId] === true
+                                                    }
                                                     onChange={(e: any) => {
                                                         handleCheck(e, dataset);
                                                     }}
@@ -129,7 +99,7 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                 ) : (
                     <Row key="1">
                         <Cell>
-                            {filteredDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
+                            {availableDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
                         </Cell>
                         <Cell>{''}</Cell>
                     </Row>

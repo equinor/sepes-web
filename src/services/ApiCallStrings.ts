@@ -47,6 +47,10 @@ export const getDatasetsInSandboxUrl = (sandboxId: string): string => {
     return 'sandbox/' + sandboxId + '/datasets';
 };
 
+export const getAvailableDatasetsUrl = (sandboxId: string): string => {
+    return 'sandbox/' + sandboxId + '/availabledatasets';
+};
+
 //lookup
 
 export const getRegionsUrl = (): string => {
