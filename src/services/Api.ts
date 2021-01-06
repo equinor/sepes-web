@@ -190,7 +190,7 @@ export const getVirtualMachineExtended = async (vmId: string) => {
 };
 
 export const getVirtualMachineCost = async (sandboxId: string, vm: any) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedVmprice', 'POST', vm);
 };
 
 export const createVirtualMachineRule = async (rule: any, vmId: string) => {
