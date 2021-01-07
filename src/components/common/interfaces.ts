@@ -55,6 +55,12 @@ export interface DatasetObj {
     added?: boolean;
     studyId?: string;
     storageAccountLink?: string;
+    permissions?: DatasetPermissionObj;
+}
+
+export interface DatasetPermissionObj {
+    deleteDataset: boolean;
+    editDataset: boolean;
 }
 
 export interface AvailableDatasetObj {

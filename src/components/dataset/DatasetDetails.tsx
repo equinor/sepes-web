@@ -71,12 +71,12 @@ const checkUrlIfGeneralDataset = () => {
     }
     return false;
 };
-
+/*
 interface passedProps {
     pathname: string;
     canEditStudySpecificDataset: boolean;
 }
-
+*/
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
@@ -84,9 +84,13 @@ const DatasetDetails = (props: any) => {
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
-        name: ''
+        name: '',
+        permissions: {
+            deleteDataset: false,
+            editDataset: false
+        }
     });
-    const location = useLocation<passedProps>();
+    //const location = useLocation<passedProps>();
     useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
@@ -264,7 +268,7 @@ const DatasetDetails = (props: any) => {
                         )}
                         <Dropzone
                             onDrop={(event: File[]) => handleFileDrop(event)}
-                            disabled={location.state && !location.state.canEditStudySpecificDataset}
+                            disabled={!dataset.permissions?.editDataset}
                         />
                         {percentComplete > 0 && (
                             <LinearProgress
@@ -347,7 +351,7 @@ const DatasetDetails = (props: any) => {
                                         title={
                                             !(
                                                 permissions.canEdit_PreApproved_Datasets ||
-                                                (location.state && location.state.canEditStudySpecificDataset)
+                                                dataset.permissions?.editDataset
                                             )
                                                 ? 'You do not have permission to edit metadata'
                                                 : ''
@@ -362,7 +366,7 @@ const DatasetDetails = (props: any) => {
                                             disabled={
                                                 !(
                                                     permissions.canEdit_PreApproved_Datasets ||
-                                                    (location.state && location.state.canEditStudySpecificDataset)
+                                                    dataset.permissions?.editDataset
                                                 )
                                             }
                                         >
@@ -376,7 +380,7 @@ const DatasetDetails = (props: any) => {
                                             title={
                                                 !(
                                                     permissions.canEdit_PreApproved_Datasets ||
-                                                    (location.state && location.state.canEditStudySpecificDataset)
+                                                    dataset.permissions?.editDataset
                                                 )
                                                     ? 'You do not have permission to edit metadata'
                                                     : ''
@@ -392,7 +396,7 @@ const DatasetDetails = (props: any) => {
                                                 disabled={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        (location.state && location.state.canEditStudySpecificDataset)
+                                                        dataset.permissions?.deleteDataset
                                                     )
                                                 }
                                             >

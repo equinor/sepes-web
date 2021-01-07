@@ -13,6 +13,7 @@ import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/types';
+let set = require('lodash/set');
 
 const { MenuItem } = Menu;
 
@@ -43,6 +44,7 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     sandbox: SandboxObj;
+    setSandbox: any;
     updateCache: any;
     setUpdateCache: any;
     userClickedDelete: any;
@@ -85,6 +87,7 @@ const StepBar: React.FC<StepBarProps> = ({
     studyId,
     sandboxId,
     sandbox,
+    setSandbox,
     updateCache,
     setUpdateCache,
     setResources,
@@ -192,6 +195,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 setNewPhase(0);
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
+                setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
                 setNewPhase(1);
             }
         });
