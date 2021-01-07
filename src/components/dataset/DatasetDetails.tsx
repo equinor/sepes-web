@@ -71,12 +71,7 @@ const checkUrlIfGeneralDataset = () => {
     }
     return false;
 };
-/*
-interface passedProps {
-    pathname: string;
-    canEditStudySpecificDataset: boolean;
-}
-*/
+
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
@@ -90,7 +85,6 @@ const DatasetDetails = (props: any) => {
             editDataset: false
         }
     });
-    //const location = useLocation<passedProps>();
     useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
