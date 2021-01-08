@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, DatasetObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, DatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
@@ -13,9 +13,18 @@ type datasetProps = {
     updateCache: any;
     setUpdateCache: any;
     permissions: SandboxPermissions;
+    setSandbox: any;
+    sandbox: SandboxObj;
 };
 
-const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCache, permissions }) => {
+const Dataset: React.FC<datasetProps> = ({
+    sandboxId,
+    updateCache,
+    setUpdateCache,
+    permissions,
+    setSandbox,
+    sandbox
+}) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
     const availableDatasetsResponse = useFetchUrl(getAvailableDatasetsUrl(sandboxId), setAvailableDatasets);
@@ -35,6 +44,9 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 } else {
+                    let tempDatasets: any = sandbox.datasets;
+                    tempDatasets.push(dataset.datasetId);
+                    setSandbox({ ...sandbox, datasets: tempDatasets });
                 }
             });
         } else {
@@ -43,6 +55,10 @@ const Dataset: React.FC<datasetProps> = ({ sandboxId, updateCache, setUpdateCach
                 if (result && result.Message) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
+                } else {
+                    let tempDatasets: any = sandbox.datasets;
+                    tempDatasets.splice(tempDatasets.indexOf(dataset.datasetId), 1);
+                    setSandbox({ ...sandbox, datasets: tempDatasets });
                 }
             });
         }

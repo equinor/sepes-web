@@ -25,12 +25,12 @@ type SandboxProps = {};
 const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
-
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
         resources: [],
+        datasets: [],
         studyId: '',
         technicalContactEmail: '',
         technicalContactName: '',
@@ -96,6 +96,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         permissions={sandbox.permissions}
+                        sandbox={sandbox}
+                        setSandbox={setSandbox}
                     />
                 );
         }

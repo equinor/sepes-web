@@ -201,7 +201,7 @@ const StepBar: React.FC<StepBarProps> = ({
         if (sandbox.permissions && !sandbox.permissions.increasePhase) {
             return 'You do not have permission to make this sandbox Available';
         }
-        if (!allResourcesOk) {
+        if (!allResourcesOk || sandbox.datasets.length === 0) {
             return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
         }
         return '';
@@ -267,6 +267,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                         !(
                                             sandbox.permissions &&
                                             sandbox.permissions.increasePhase &&
+                                            sandbox.datasets.length > 0 &&
                                             !makeAvailableInProgress &&
                                             allResourcesOk
                                         )
