@@ -14,10 +14,7 @@ const DatasetsTable = (props: any) => {
                 <Cell>
                     <Link
                         style={{ color: '#000000', cursor: 'pointer' }}
-                        to={{
-                            pathname: '/studies/' + props.studyId + '/datasets/' + row.id,
-                            state: { canEditStudySpecificDataset: props.disabled }
-                        }}
+                        to={'/studies/' + props.studyId + '/datasets/' + row.id}
                     >
                         {type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}
                     </Link>

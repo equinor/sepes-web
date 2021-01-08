@@ -107,6 +107,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 {SandboxResponse.loading && <LoadingFull />}
                 <StepBar
                     sandbox={sandbox && sandbox}
+                    setSandbox={setSandbox}
                     step={step}
                     setStep={setStep}
                     studyId={studyId}
