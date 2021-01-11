@@ -81,6 +81,7 @@ export interface SandboxObj {
     deleted: boolean;
     region: string;
     resources: [];
+    datasets: [];
     studyId: string;
     technicalContactEmail: string;
     technicalContactName: string;
