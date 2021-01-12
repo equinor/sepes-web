@@ -39,7 +39,6 @@ type VmDetailsProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    sandbox: SandboxObj;
 };
 
 const ipMethod = [
@@ -83,7 +82,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    sandbox,
     getResources
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
@@ -127,7 +125,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
                 } else {
-                    //notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
             });

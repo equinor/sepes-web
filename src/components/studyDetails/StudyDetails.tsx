@@ -69,7 +69,7 @@ const StudyDetails = () => {
             case 1:
                 return (
                     <DataSetComponent
-                        study={study && study}
+                        study={study}
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
@@ -89,7 +89,7 @@ const StudyDetails = () => {
             case 3:
                 return (
                     <ParticipantComponent
-                        study={study && study}
+                        study={study}
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
@@ -117,7 +117,7 @@ const StudyDetails = () => {
                 <Promt hasChanged={hasChanged} />
                 {!studyResponse.loading && study ? (
                     <StudyComponentFull
-                        study={study && study}
+                        study={study}
                         newStudy={newStudy}
                         setNewStudy={setNewStudy}
                         setLoading={studyResponse.setLoading}

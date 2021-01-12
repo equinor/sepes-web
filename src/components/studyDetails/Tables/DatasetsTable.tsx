@@ -69,7 +69,7 @@ const DatasetsTable = (props: any) => {
                                                         }
                                                     >
                                                         {index === row.sandboxDatasets.length - 1
-                                                            ? sandbox.sandboxName && sandbox.sandboxName
+                                                            ? sandbox && sandbox.sandboxName
                                                             : sandbox.sandboxName && sandbox.sandboxName + ', '}
                                                     </Link>
                                                 );
