@@ -11,7 +11,7 @@ const options = [
     { displayValue: '4', key: '4' }
 ];
 test('renders dropdown component', () => {
-    const mockCallBack = jest.fn();
+    //const mockCallBack = jest.fn();
     const { getByText } = render(
         <CoreDevDropdown
             label="Template"
