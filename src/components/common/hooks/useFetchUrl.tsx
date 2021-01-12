@@ -5,7 +5,7 @@ import * as notify from '../../common/notify';
 
 const cache = {};
 
-const useFetchUrl = (url: string, setter, condition?) => {
+const useFetchUrl = (url: string, setter, condition?, shouldCache = true) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
@@ -16,7 +16,7 @@ const useFetchUrl = (url: string, setter, condition?) => {
         if (condition !== undefined && condition === false) return;
         if (!url) return;
 
-        if (cache[url] && !updateCache[url]) {
+        if (shouldCache && cache[url] && !updateCache[url]) {
             const dataCached = cache[url];
             setter(dataCached);
             setIntialValue(dataCached);

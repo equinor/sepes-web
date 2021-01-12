@@ -27,7 +27,12 @@ const Dataset: React.FC<datasetProps> = ({
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
-    const availableDatasetsResponse = useFetchUrl(getAvailableDatasetsUrl(sandboxId), setAvailableDatasets);
+    const availableDatasetsResponse = useFetchUrl(
+        getAvailableDatasetsUrl(sandboxId),
+        setAvailableDatasets,
+        true,
+        false
+    );
     const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});
 
     const handleCheck = (evt: any, dataset: AvailableDatasetObj) => {
@@ -35,7 +40,8 @@ const Dataset: React.FC<datasetProps> = ({
         setUpdateCache({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
-            [getDatasetsInSandboxUrl(sandboxId)]: true
+            [getDatasetsInSandboxUrl(sandboxId)]: true,
+            [getAvailableDatasetsUrl(sandboxId)]: true
         });
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
