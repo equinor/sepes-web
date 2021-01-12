@@ -35,7 +35,8 @@ const Dataset: React.FC<datasetProps> = ({
         setUpdateCache({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
-            [getDatasetsInSandboxUrl(sandboxId)]: true
+            [getDatasetsInSandboxUrl(sandboxId)]: true,
+            [getAvailableDatasetsUrl(sandboxId)]: true
         });
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
