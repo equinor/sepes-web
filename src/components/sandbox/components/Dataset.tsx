@@ -27,7 +27,12 @@ const Dataset: React.FC<datasetProps> = ({
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
-    const availableDatasetsResponse = useFetchUrl(getAvailableDatasetsUrl(sandboxId), setAvailableDatasets);
+    const availableDatasetsResponse = useFetchUrl(
+        getAvailableDatasetsUrl(sandboxId),
+        setAvailableDatasets,
+        true,
+        false
+    );
     const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});
 
     const handleCheck = (evt: any, dataset: AvailableDatasetObj) => {
