@@ -64,11 +64,6 @@ export const StyledTitle = styled.div`
     font-weight: 500;
 `;
 
-const DividerWrapper = styled.div<{ width?: string }>`
-    width: ${(props: any) => (props.width ? props.width : '90%')};
-    margin: 0 auto;
-`;
-
 export const Dot = styled.span<{ color?: string }>`
     height: 14px;
     width: 14px;

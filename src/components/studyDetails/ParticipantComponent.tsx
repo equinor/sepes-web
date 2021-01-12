@@ -235,7 +235,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             </SearchWrapper>
             <TableWrapper>
                 <ParticipantTable
-                    participants={study.participants && study.participants}
+                    participants={study && study.participants}
                     removeParticipant={removeParticipant}
                     editMode
                     permissions={study.permissions}
