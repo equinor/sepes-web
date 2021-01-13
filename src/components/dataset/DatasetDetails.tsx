@@ -224,7 +224,7 @@ const DatasetDetails = (props: any) => {
     };
 
     return !showEditDataset ? (
-        !datasetResponse.loading && !dataset.id ? (
+        !datasetResponse.loading && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
         ) : (
             <OuterWrapper>
