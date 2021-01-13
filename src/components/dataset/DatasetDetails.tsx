@@ -77,6 +77,7 @@ const DatasetDetails = (props: any) => {
     const studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -175,6 +176,7 @@ const DatasetDetails = (props: any) => {
 
     const deleteDataset = () => {
         setLoading(true);
+        setDatasetDeleteInProgress(true);
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
@@ -228,7 +230,7 @@ const DatasetDetails = (props: any) => {
             <NotFound />
         ) : (
             <OuterWrapper>
-                {loading && <LoadingFull />}
+                {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
                 {userClickedDelete && (
                     <DeleteResourceComponent
                         ResourceName={dataset?.name}
@@ -402,7 +404,7 @@ const DatasetDetails = (props: any) => {
                             </div>
                         </RightWrapper>
                     ) : (
-                        <LoadingFull />
+                        <LoadingFull noTimeout={datasetDeleteInProgress} />
                     )}
                 </Wrapper>
             </OuterWrapper>
