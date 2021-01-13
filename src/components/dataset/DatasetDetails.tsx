@@ -189,7 +189,6 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
-        //_files = setFilesStatus(_files, false);
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
@@ -205,12 +204,6 @@ const DatasetDetails = (props: any) => {
                     });
             });
         }
-    };
-
-    const setFilesStatus = (files: any, status: boolean) => {
-        return files.forEach((element) => {
-            element.uploaded = status;
-        });
     };
 
     const removeFile = (i: number, file: any): void => {
