@@ -25,6 +25,10 @@ const LoadingWrapper = styled.div`
     align-items: center;
 `;
 
+const divStyle = {
+    gridAutoColumns: 'minmax(1%,500px)'
+};
+
 const { TabList, Tab } = Tabs;
 
 const StudyDetails = () => {
@@ -136,7 +140,7 @@ const StudyDetails = () => {
                 {!newStudy && (
                     <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                            <TabList>
+                            <TabList style={divStyle}>
                                 <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                                 <Tab data-cy="datasets_tab">Data sets</Tab>
                                 <Tab data-cy="sandbox_tab">Sandboxes</Tab>
