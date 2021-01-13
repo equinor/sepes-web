@@ -20,9 +20,11 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 20px 20px minmax(299px, 1fr);
+    grid-template-rows: 20px minmax(299px, 1fr);
     grid-gap: 23px;
 `;
+// Might have to change back when general datasets is added back
+// grid-template-rows: 20px 20px minmax(299px, 1fr);
 
 const TableWrapper = styled.div`
     margin-top: 32px;
