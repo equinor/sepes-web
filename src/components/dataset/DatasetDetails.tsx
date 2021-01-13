@@ -61,7 +61,7 @@ const RightWrapper = styled.div`
 
 const AttachmentWrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr 196px 16px;
+    grid-template-columns: 1fr 96px 32px;
     grid-gap: 0 8px;
 `;
 
@@ -106,7 +106,7 @@ const DatasetDetails = (props: any) => {
         return keyCount++;
     };
 
-    const uploadFiles = (formData: any): void => {
+    const uploadFiles = (formData: any) => {
         setPercentComplete(0);
         updateOnNextVisit();
         if (!checkUrlIfGeneralDataset()) {
@@ -189,6 +189,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        //_files = setFilesStatus(_files, false);
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
@@ -204,6 +205,12 @@ const DatasetDetails = (props: any) => {
                     });
             });
         }
+    };
+
+    const setFilesStatus = (files: any, status: boolean) => {
+        return files.forEach((element) => {
+            element.uploaded = status;
+        });
     };
 
     const removeFile = (i: number, file: any): void => {
@@ -278,13 +285,19 @@ const DatasetDetails = (props: any) => {
                                         <AttachmentWrapper key={getKey()}>
                                             <div>{file.name}</div>
                                             <div>{bytesToMB(file.size) + ' '} MB</div>
-                                            <Icon
+                                            <Button
+                                                variant="ghost_icon"
                                                 onClick={() => removeFile(i, file)}
-                                                color="#007079"
-                                                name="delete_forever"
-                                                size={24}
-                                                style={{ cursor: 'pointer' }}
-                                            />
+                                                style={{ marginTop: '-8px' }}
+                                                disabled={!(percentComplete === 0 || percentComplete === 100)}
+                                            >
+                                                <Icon
+                                                    color="#007079"
+                                                    name="delete_forever"
+                                                    size={24}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                            </Button>
                                         </AttachmentWrapper>
                                     );
                                 })}
