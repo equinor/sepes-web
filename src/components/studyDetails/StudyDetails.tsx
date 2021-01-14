@@ -60,11 +60,9 @@ const StudyDetails = () => {
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
     const permissions = useContext(Permissions);
-    useEffect(() => {
-        //setActiveTab(parseInt(Cookies.get(id)));
-    }, []);
 
     const changeComponent = () => {
         Cookies.remove(id);
@@ -131,10 +129,11 @@ const StudyDetails = () => {
                         cache={studyResponse.cache}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        setDeleteStudyInProgress={setDeleteStudyInProgress}
                     />
                 ) : (
                     <LoadingWrapper>
-                        <LoadingFull />
+                        <LoadingFull noTimeout={deleteStudyInProgress} />
                     </LoadingWrapper>
                 )}
                 {!newStudy && (

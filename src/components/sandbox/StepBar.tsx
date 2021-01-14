@@ -52,6 +52,7 @@ type StepBarProps = {
     setResources: any;
     setLoading: any;
     setNewPhase: any;
+    setDeleteSandboxInProgress: any;
 };
 
 const getSteps = () => {
@@ -94,7 +95,8 @@ const StepBar: React.FC<StepBarProps> = ({
     userClickedDelete,
     setUserClickedDelete,
     setLoading,
-    setNewPhase
+    setNewPhase,
+    setDeleteSandboxInProgress
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -173,12 +175,14 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
+        setDeleteSandboxInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             setLoading(false);
             if (result.Message) {
+                setDeleteSandboxInProgress(false);
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
             history.push('/studies/' + studyId);
