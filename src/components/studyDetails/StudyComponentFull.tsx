@@ -134,6 +134,7 @@ type StudyComponentFullProps = {
     cache: any;
     setUpdateCache: any;
     updateCache: any;
+    setDeleteStudyInProgress: any;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -146,13 +147,13 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     setHasChanged,
     cache,
     setUpdateCache,
-    updateCache
+    updateCache,
+    setDeleteStudyInProgress
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
     const [editMode, setEditMode] = useState<boolean>(newStudy);
-    const [displayDeleteStudy, setDisplayDeleteStudy] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState<string>('');
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
@@ -204,12 +205,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const deleteThisStudy = (): void => {
+        setDeleteStudyInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         deleteStudy(study.id).then((result: any) => {
             setLoading(false);
             if (result.Message) {
+                setDeleteStudyInProgress(true);
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
                 history.push('/');
@@ -510,7 +513,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     data-cy="study_options"
                                     id="menuButton"
                                     aria-labelledby="menuButton"
-                                    aria-expanded={displayDeleteStudy}
+                                    aria-expanded={isOpen}
                                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                                 >
                                     <Icon color="#007079" name="settings" size={16} />
