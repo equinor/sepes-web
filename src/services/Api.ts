@@ -7,7 +7,8 @@ import {
     ParticipantObj,
     VmObj,
     resultsAndLearningsObj,
-    CalculateNameObj
+    CalculateNameObj,
+    VmUsernameObj
 } from '../components/common/interfaces';
 
 //Study
@@ -169,6 +170,10 @@ export const getVirtualMachineForSandbox = async (sandboxId: string) => {
 
 export const getVmName = async (input: CalculateNameObj) => {
     return apiRequestWithToken('api/virtualmachines/calculateName', 'POST', input);
+};
+
+export const validateVmUsername = async (username: VmUsernameObj) => {
+    return apiRequestWithToken('api/virtualmachines/validateUsername', 'POST', username);
 };
 
 export const getVirtualMachineSizes = async (sandboxId: string) => {
