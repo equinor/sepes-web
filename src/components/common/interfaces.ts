@@ -149,3 +149,9 @@ export interface OperatingSystemObj {
 export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
 }
+
+export interface CalculateNameObj {
+    studyName: string;
+    sandboxName: string;
+    userSuffix: string;
+}

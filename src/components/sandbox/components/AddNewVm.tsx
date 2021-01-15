@@ -4,7 +4,7 @@ import { info_circle } from '@equinor/eds-icons';
 import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { VmObj } from '../../common/interfaces';
+import { CalculateNameObj, VmObj } from '../../common/interfaces';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
 import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
@@ -194,7 +194,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             setActualVmName('');
             return;
         }
-        getVmName(sandbox?.studyName, sandbox?.name, value).then((result: any) => {
+        const calculateName: CalculateNameObj = {
+            studyName: sandbox.studyName,
+            sandboxName: sandbox?.name,
+            userSuffix: value
+        };
+        getVmName(calculateName).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
             } else {
