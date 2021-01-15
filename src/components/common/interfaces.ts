@@ -149,3 +149,7 @@ export interface OperatingSystemObj {
 export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
 }
+
+export interface VmUsernameObj {
+    username: string;
+}
