@@ -38,7 +38,7 @@ const StudyDetails = () => {
         name: '',
         vendor: '',
         wbsCode: '',
-        restricted: true,
+        restricted: false,
         description: '',
         logoUrl: '',
         id: '',
