@@ -150,6 +150,12 @@ export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
 }
 
+
+export interface CalculateNameObj {
+    studyName: string;
+    sandboxName: string;
+    userSuffix: string;
+}
 export interface VmUsernameObj {
     username: string;
 }
