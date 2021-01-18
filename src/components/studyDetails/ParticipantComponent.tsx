@@ -72,7 +72,10 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (!result.Message && isSubscribed) {
-                if (user.getAccount().userName === participant.userName) {
+                const participantsWithuserid = study.participants.filter(
+                    (part: any) => part.userId === participant.userId
+                );
+                if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
                     history.push('/');
                 }
             } else {
