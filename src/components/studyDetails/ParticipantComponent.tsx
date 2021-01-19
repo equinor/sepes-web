@@ -13,6 +13,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
+import _ from 'lodash';
 
 const icons = {
     close
@@ -56,8 +57,47 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [role, setRole] = useState<string>('');
     const rolesResponse = useFetchUrl('lookup/studyroles', setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [searchParticipants, setSearchParticipants] = useState<boolean>(false);
     const user = useContext(UserConfig);
     const history = useHistory();
+
+    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+
+    // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
+    useEffect(() => {
+        const { cb, delay } = debounce;
+        if (cb) {
+            const timeout = setTimeout(cb, delay);
+            return () => clearTimeout(timeout);
+        }
+    }, [debounce]);
+
+    const loadOptions = (value: string, callback: any) => {
+        setDebounce({
+            cb: async () => {
+                api.getParticipantList(value || 'a').then((result: any) => {
+                    if (!result.Message) {
+                        let temp = result.map((user) => {
+                            return {
+                                label: `${user.fullName} (${user.emailAddress})`,
+                                value: user.objectId,
+                                emailAddress: user.emailAddress,
+                                source: user.source,
+                                objectId: user.objectId,
+                                name: user.fullName,
+                                databaseId: user.databaseId
+                            };
+                        });
+                        callback(temp);
+                    } else {
+                        console.log('err');
+                        //notify.show('danger', '500');
+                    }
+                });
+            },
+            delay: 500 // ms
+        });
+    };
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -127,28 +167,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         return tempRoles;
     };
 
-    const getParticipants = (inputValue: string, callback: any): void => {
-        api.getParticipantList(inputValue || 'a').then((result: any) => {
-            if (!result.Message) {
-                let temp = result.map((user) => {
-                    return {
-                        label: `${user.fullName} (${user.emailAddress})`,
-                        value: user.objectId,
-                        emailAddress: user.emailAddress,
-                        source: user.source,
-                        objectId: user.objectId,
-                        name: user.fullName,
-                        databaseId: user.databaseId
-                    };
-                });
-                callback(temp);
-            } else {
-                console.log('err');
-                //notify.show('danger', '500');
-            }
-        });
-    };
-
     const selectParticipant = (row: any) => {
         setText(row.label);
         setParticipantNotSelected(false);
@@ -204,7 +222,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             onInputChange={handleInputChange}
                             disabled={study.permissions && !study.permissions.addRemoveParticipant}
                             loadOptions={
-                                study.permissions && study.permissions.addRemoveParticipant ? getParticipants : null
+                                study.permissions && study.permissions.addRemoveParticipant ? loadOptions : null
                             }
                         />
                     </div>
