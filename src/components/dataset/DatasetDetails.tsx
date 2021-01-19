@@ -193,14 +193,17 @@ const DatasetDetails = (props: any) => {
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
+            let filesHandledCount = 0;
             await _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                     .then((blob) => {
+                        filesHandledCount++;
                         _formData.append(`files`, blob);
                     })
                     .then(() => {
-                        console.log('_formData');
-                        uploadFiles(_formData, previousFiles);
+                        if (filesHandledCount === _files.length) {
+                            uploadFiles(_formData, previousFiles);
+                        }
                     });
             });
         }
