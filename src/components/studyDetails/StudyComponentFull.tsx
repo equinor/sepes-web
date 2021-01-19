@@ -501,7 +501,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             />
                         </DescriptioTextfieldnWrapper>
                     )}
-                    <RightWrapper editMode={editMode}>
+                    <div>
                         {editMode && !newStudy && (
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
@@ -530,46 +530,48 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 </Menu>
                             </div>
                         )}
-                        <div>
-                            {!showImagePicker && (
-                                <PictureWrapper editMode={editMode}>
-                                    <CustomLogoComponent logoUrl={logoUrl} />{' '}
-                                </PictureWrapper>
-                            )}
-                            {editMode && (
-                                <>
-                                    <div>
-                                        {showImagePicker && (
-                                            <PictureWrapper editMode={editMode}>
-                                                <AddImageAndCompressionContainer
-                                                    setImageUrl={setImageUrl}
-                                                    imageUrl={imageUrl}
-                                                />
-                                            </PictureWrapper>
-                                        )}
-                                        <Button
-                                            onClick={() => {
-                                                setShowImagePicker(!showImagePicker);
-                                                setImageUrl('');
-                                            }}
-                                            variant="outlined"
-                                            style={{ margin: '16px 0 20px 56px' }}
-                                        >
-                                            Change logo
-                                        </Button>
-                                        <SaveCancelWrapper>
-                                            <Button data-cy="create_study" onClick={() => handleSave()}>
-                                                {newStudy ? 'Create' : 'Save'}
+                        <RightWrapper editMode={editMode}>
+                            <div>
+                                {!showImagePicker && (
+                                    <PictureWrapper editMode={editMode}>
+                                        <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                    </PictureWrapper>
+                                )}
+                                {editMode && (
+                                    <>
+                                        <div>
+                                            {showImagePicker && (
+                                                <PictureWrapper editMode={editMode}>
+                                                    <AddImageAndCompressionContainer
+                                                        setImageUrl={setImageUrl}
+                                                        imageUrl={imageUrl}
+                                                    />
+                                                </PictureWrapper>
+                                            )}
+                                            <Button
+                                                onClick={() => {
+                                                    setShowImagePicker(!showImagePicker);
+                                                    setImageUrl('');
+                                                }}
+                                                variant="outlined"
+                                                style={{ margin: '16px 0 20px 56px' }}
+                                            >
+                                                Change logo
                                             </Button>
-                                            <Button variant="outlined" onClick={() => handleCancel()}>
-                                                Cancel
-                                            </Button>
-                                        </SaveCancelWrapper>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </RightWrapper>
+                                            <SaveCancelWrapper>
+                                                <Button data-cy="create_study" onClick={() => handleSave()}>
+                                                    {newStudy ? 'Create' : 'Save'}
+                                                </Button>
+                                                <Button variant="outlined" onClick={() => handleCancel()}>
+                                                    Cancel
+                                                </Button>
+                                            </SaveCancelWrapper>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </RightWrapper>
+                    </div>
                 </Wrapper>
             ) : (
                 <Loading />
