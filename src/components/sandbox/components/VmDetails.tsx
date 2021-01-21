@@ -12,7 +12,7 @@ import {
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/types';
-import { SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;
 
@@ -35,10 +35,10 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
+    getResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    sandbox: SandboxObj;
 };
 
 const ipMethod = [
@@ -82,7 +82,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    sandbox
+    getResources
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -125,7 +125,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
                 } else {
-                    //notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 }
             });
@@ -208,6 +207,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
         setVms(tempsVms);
+        getResources();
     };
 
     const saveRule = (rules: any) => {
@@ -217,6 +217,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
+                getResources();
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
@@ -349,6 +350,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 permissions={permissions}
                 setUpdateCache={setUpdateCache}
                 updateCache={updateCache}
+                getResources={getResources}
             />
             <div>
                 <Table style={{ width: '100%' }}>
@@ -419,6 +421,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             placeholder="IP"
                                                             data-cy="vm_rule_ip"
                                                             disabled={!permissions.editInboundRules}
+                                                            variant={
+                                                                checkIfValidIp(rule.ip) || rule.ip === ''
+                                                                    ? 'default'
+                                                                    : 'error'
+                                                            }
                                                         />
                                                     </Tooltip>
                                                 )}

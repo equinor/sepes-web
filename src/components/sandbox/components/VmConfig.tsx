@@ -17,6 +17,7 @@ type VmConfigProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
     resources: any;
+    getResources: any;
     loadingSandbox: boolean;
     permissions: SandboxPermissions;
     setUpdateCache: any;
@@ -27,6 +28,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     showAddNewVm,
     sandbox,
     resources,
+    getResources,
     loadingSandbox,
     permissions,
     setUpdateCache,
@@ -106,6 +108,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         os={os}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        getResources={getResources}
                     />
                 ) : (
                     <div />
@@ -119,10 +122,10 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
                         resources={resources}
+                        getResources={getResources}
                         permissions={permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        sandbox={sandbox}
                     />
                 );
         }

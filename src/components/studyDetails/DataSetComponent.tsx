@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
-import { addStudyDataset, unlinkStudyDataset } from '../../services/Api';
+import { getDatasetList, addStudyDataset, removeStudyDataset, unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
@@ -20,9 +20,11 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 20px 20px minmax(299px, 1fr);
+    grid-template-rows: 20px minmax(299px, 1fr);
     grid-gap: 23px;
 `;
+// Might have to change back when general datasets is added back
+// grid-template-rows: 20px 20px minmax(299px, 1fr);
 
 const TableWrapper = styled.div`
     margin-top: 32px;

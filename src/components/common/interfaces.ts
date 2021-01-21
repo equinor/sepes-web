@@ -55,6 +55,19 @@ export interface DatasetObj {
     added?: boolean;
     studyId?: string;
     storageAccountLink?: string;
+    permissions?: DatasetPermissionObj;
+}
+
+export interface DatasetPermissionObj {
+    deleteDataset: boolean;
+    editDataset: boolean;
+}
+
+export interface AvailableDatasetObj {
+    datasetId: string;
+    name: string;
+    classification: string;
+    addedToSandbox: boolean;
 }
 
 export interface SandboxCreateObj {
@@ -68,6 +81,7 @@ export interface SandboxObj {
     deleted: boolean;
     region: string;
     resources: [];
+    datasets: [];
     studyId: string;
     technicalContactEmail: string;
     technicalContactName: string;
@@ -134,4 +148,14 @@ export interface OperatingSystemObj {
 
 export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
+}
+
+
+export interface CalculateNameObj {
+    studyName: string;
+    sandboxName: string;
+    userSuffix: string;
+}
+export interface VmUsernameObj {
+    username: string;
 }

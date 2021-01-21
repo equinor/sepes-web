@@ -4,8 +4,8 @@ import { info_circle } from '@equinor/eds-icons';
 import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { VmObj } from '../../common/interfaces';
-import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
+import { VmObj, VmUsernameObj, CalculateNameObj } from '../../common/interfaces';
+import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
 import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
     padding: 16px;
     width: 400px;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     grid-gap: 24px;
     padding-bottom: 196px;
 `;
@@ -69,6 +69,7 @@ type AddNewVmProps = {
     os?: OperatingSystemObj;
     setUpdateCache: any;
     updateCache: any;
+    getResources: any;
 };
 
 const limits = {
@@ -92,7 +93,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     setActiveTab,
     os,
     setUpdateCache,
-    updateCache
+    updateCache,
+    getResources
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [vm, setVm] = useState<VmObj>({
@@ -108,7 +110,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         dataDisks: []
     });
     const [actualVmName, setActualVmName] = useState<string>('');
+    const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
     const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
+    const [usernameHelpText, setUsernameHelptText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<any>([]);
     const width = '400px';
@@ -126,6 +130,15 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     useEffect(() => {
         calculateVmPrice();
     }, [vm.dataDisks, vm.operatingSystem, vm.size]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            validateUsername(vm.username);
+        }, 500);
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [vm.username]);
 
     const handleDropdownChange = (value, name: string): void => {
         if (name === 'dataDisks') {
@@ -158,6 +171,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
+                getResources();
                 let vmsList: any = [...vms];
                 vmsList.push(result);
                 setVms(vmsList);
@@ -191,10 +205,37 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             setActualVmName('');
             return;
         }
-        getVmName(sandbox?.studyName, sandbox?.name, value).then((result: any) => {
+        const calculateName: CalculateNameObj = {
+            studyName: sandbox.studyName,
+            sandboxName: sandbox?.name,
+            userSuffix: value
+        };
+        getVmName(calculateName).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
             } else {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            }
+        });
+    };
+
+    const validateUsername = (value: string) => {
+        if (value === '') {
+            setUsernameIsValid(false);
+            return;
+        }
+        const username: VmUsernameObj = { username: value };
+        validateVmUsername(username).then((result: any) => {
+            if (result) {
+                setUsernameIsValid(result.isValid);
+                if (!result.isValid) {
+                    setUsernameHelptText(result.errorMessage);
+                    //notify.show('danger', '500', result.errorMessage);
+                } else {
+                    setUsernameHelptText('');
+                }
+            } else {
+                setUsernameIsValid(false);
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
         });
@@ -209,7 +250,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             vm.name !== '' &&
             vm.operatingSystem !== '' &&
             vm.size !== '' &&
-            vm.dataDisks.length > 0
+            vm.dataDisks.length > 0 &&
+            usernameIsValid
         ) {
             return false;
         }
@@ -236,69 +278,96 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         setFilter(currentFilter);
     };
 
+    const returnPasswordVariant = () => {
+        if (vm.password === '') {
+            return 'default';
+        }
+        if (passwordValidate(vm.password)) {
+            return 'success';
+        }
+        return 'error';
+    };
+
+    const returnUsernameVariant = () => {
+        if (vm.username === '' || usernameIsValid === undefined) {
+            return 'default';
+        }
+        if (usernameIsValid) {
+            return 'success';
+        }
+        return 'error';
+    };
+
     return (
         <Wrapper>
-            <TextField
-                id="textfield1"
-                placeholder="Name"
-                onChange={(e: any) => {
-                    handleChange('name', e.target.value);
-                }}
-                value={vm.name}
-                autoComplete="off"
-                label="Name"
-                meta={returnLimitMeta(20, vm.name)}
-                data-cy="vm_name"
-                inputIcon={
-                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                        <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} color="#6F6F6F" />
-                        </Tooltip>
-                    </div>
-                }
-            />
             <div>
-                <Label>Actual VM name</Label>
-                <Typography variant="h6">{actualVmName || '-'}</Typography>
+                <TextField
+                    id="textfield1"
+                    placeholder="Name"
+                    onChange={(e: any) => {
+                        handleChange('name', e.target.value);
+                    }}
+                    value={vm.name}
+                    autoComplete="off"
+                    label="Name"
+                    meta={returnLimitMeta(20, vm.name)}
+                    data-cy="vm_name"
+                    inputIcon={
+                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                            <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                                <Icon name="info_circle" size={24} color="#6F6F6F" />
+                            </Tooltip>
+                        </div>
+                    }
+                />
+                <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+                    <Label>Actual VM name</Label>
+                    <Typography variant="h6">{actualVmName || '-'}</Typography>
+                </div>
+                <TextField
+                    id="textfield2"
+                    autoComplete="off"
+                    placeholder="Username"
+                    onChange={(e: any) => handleChange('username', e.target.value)}
+                    value={vm.username}
+                    label="Username"
+                    meta="(required)"
+                    data-cy="vm_username"
+                    variant={returnUsernameVariant()}
+                    helperText={usernameHelpText}
+                    inputIcon={
+                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                            <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                                <Icon name="info_circle" size={24} color="#6F6F6F" />
+                            </Tooltip>
+                        </div>
+                    }
+                />
+                <div style={{ marginTop: '24px' }}>
+                    <TextField
+                        id="textfield3"
+                        autoComplete="off"
+                        placeholder="Password"
+                        type="password"
+                        onChange={(e: any) => handleChange('password', e.target.value)}
+                        value={vm.password}
+                        label="Password"
+                        meta="(required)"
+                        data-cy="vm_password"
+                        variant={returnPasswordVariant()}
+                        inputIcon={
+                            <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                                <Tooltip
+                                    title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
+                                    placement={'right'}
+                                >
+                                    <Icon name="info_circle" size={24} color="#6F6F6F" />
+                                </Tooltip>
+                            </div>
+                        }
+                    />
+                </div>
             </div>
-            <TextField
-                id="textfield2"
-                autoComplete="off"
-                placeholder="Username"
-                onChange={(e: any) => handleChange('username', e.target.value)}
-                value={vm.username}
-                label="Username"
-                meta="(required)"
-                data-cy="vm_username"
-                inputIcon={
-                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                        <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
-                            <Icon name="info_circle" size={24} color="#6F6F6F" />
-                        </Tooltip>
-                    </div>
-                }
-            />
-            <TextField
-                id="textfield3"
-                autoComplete="off"
-                placeholder="Password"
-                type="password"
-                onChange={(e: any) => handleChange('password', e.target.value)}
-                value={vm.password}
-                label="Password"
-                meta="(required)"
-                data-cy="vm_password"
-                inputIcon={
-                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                        <Tooltip
-                            title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                            placement={'right'}
-                        >
-                            <Icon name="info_circle" size={24} color="#6F6F6F" />
-                        </Tooltip>
-                    </div>
-                }
-            />
             <SizeFilterWrapper>
                 <UnstyledList>
                     <HardWareReqWrapper>Hardware requirements</HardWareReqWrapper>

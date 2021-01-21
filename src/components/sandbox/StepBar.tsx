@@ -13,6 +13,7 @@ import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/types';
+let set = require('lodash/set');
 
 const { MenuItem } = Menu;
 
@@ -43,14 +44,15 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     sandbox: SandboxObj;
+    setSandbox: any;
     updateCache: any;
     setUpdateCache: any;
     userClickedDelete: any;
     setUserClickedDelete: any;
     setResources: any;
-    resources: any;
     setLoading: any;
     setNewPhase: any;
+    setDeleteSandboxInProgress: any;
 };
 
 const getSteps = () => {
@@ -78,6 +80,7 @@ const getSteps = () => {
 };
 
 let resourcesFailed = false;
+const interval = 20000; //20 seconds
 
 const StepBar: React.FC<StepBarProps> = ({
     step,
@@ -85,6 +88,7 @@ const StepBar: React.FC<StepBarProps> = ({
     studyId,
     sandboxId,
     sandbox,
+    setSandbox,
     updateCache,
     setUpdateCache,
     setResources,
@@ -92,7 +96,7 @@ const StepBar: React.FC<StepBarProps> = ({
     setUserClickedDelete,
     setLoading,
     setNewPhase,
-    resources
+    setDeleteSandboxInProgress
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -108,7 +112,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 if (!userClickedDelete && !resourcesFailed) {
                     getResources();
                 }
-            }, 20000);
+            }, interval);
         } catch (e) {
             console.log(e);
         }
@@ -171,12 +175,14 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
+        setDeleteSandboxInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             setLoading(false);
             if (result.Message) {
+                setDeleteSandboxInProgress(false);
                 notify.show('danger', '500', result.Message, result.RequestId);
             }
             history.push('/studies/' + studyId);
@@ -193,6 +199,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 setNewPhase(0);
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
+                setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
                 setNewPhase(1);
             }
         });
@@ -202,8 +209,8 @@ const StepBar: React.FC<StepBarProps> = ({
         if (sandbox.permissions && !sandbox.permissions.increasePhase) {
             return 'You do not have permission to make this sandbox Available';
         }
-        if (!allResourcesOk) {
-            return 'All resources must have status OK and atleast one VM and Data set';
+        if (!allResourcesOk || sandbox.datasets.length === 0) {
+            return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
         }
         return '';
     };
@@ -268,6 +275,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                         !(
                                             sandbox.permissions &&
                                             sandbox.permissions.increasePhase &&
+                                            sandbox.datasets.length > 0 &&
                                             !makeAvailableInProgress &&
                                             allResourcesOk
                                         )

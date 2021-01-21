@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import StudyComponentFull from './StudyComponentFull';
 import { StudyObj } from '../common/interfaces';
-import { useHistory } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 const study: StudyObj = {
@@ -18,10 +17,10 @@ const study: StudyObj = {
     participants: [],
     sandboxes: []
 };
-let loading = false;
+/* eslint-disable no-undef */
+const loading = false;
 const mockFunc = (id: string) => {};
 test('renders StudyComponent full component with edit study', () => {
-    const mockCallBack = jest.fn();
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
@@ -57,11 +56,10 @@ test('renders StudyComponent full component with edit study', () => {
 });
 
 test('renders StudyComponent full component with new study', () => {
-    const mockCallBack = jest.fn();
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
-            <StudyComponentFull study={{}} newStudy={true} />
+            <StudyComponentFull study={{}} newStudy />
         </Router>
     );
     let linkElement = getByText('Create');

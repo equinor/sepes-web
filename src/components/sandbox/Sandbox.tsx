@@ -10,6 +10,7 @@ import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
+import { deleteFileInDataset, getResourceStatus } from '../../services/Api';
 
 const Wrapper = styled.div`
     display: grid;
@@ -24,12 +25,12 @@ type SandboxProps = {};
 const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
-
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
         region: '',
         resources: [],
+        datasets: [],
         studyId: '',
         technicalContactEmail: '',
         technicalContactName: '',
@@ -50,6 +51,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>(
         (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
@@ -65,6 +67,16 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             setNewPhase(sandbox.currentPhase);
         }
     }, [SandboxResponse.loading, sandbox.currentPhase]);
+
+    const getResources = () => {
+        getResourceStatus(sandboxId).then((result: any) => {
+            if (result && (result.errors || result.Message)) {
+                console.log('Err');
+            } else {
+                setResources(result);
+            }
+        });
+    };
 
     const setNewPhase = (phase: any) => {
         setStep(phase);
@@ -85,6 +97,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         permissions={sandbox.permissions}
+                        sandbox={sandbox}
+                        setSandbox={setSandbox}
                     />
                 );
         }
@@ -93,9 +107,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     return !SandboxResponse.notFound ? (
         step !== undefined ? (
             <Wrapper>
-                {SandboxResponse.loading && <LoadingFull />}
+                {SandboxResponse.loading && <LoadingFull noTimeout={deleteSandboxInProgress} />}
                 <StepBar
-                    sandbox={sandbox && sandbox}
+                    sandbox={sandbox}
+                    setSandbox={setSandbox}
                     step={step}
                     setStep={setStep}
                     studyId={studyId}
@@ -105,9 +120,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     setUserClickedDelete={setUserClickedDelete}
                     userClickedDelete={userClickedDelete}
                     setResources={setResources}
-                    resources={resources}
                     setLoading={SandboxResponse.setLoading}
                     setNewPhase={setNewPhase}
+                    setDeleteSandboxInProgress={setDeleteSandboxInProgress}
                 />
                 {returnStepComponent()}
                 {(step === 0 || step === 1) && (
@@ -115,6 +130,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         sandbox={sandbox}
                         showAddNewVm={sandbox.permissions && sandbox.permissions.update}
                         resources={resources}
+                        getResources={getResources}
                         loadingSandbox={SandboxResponse.loading}
                         permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}
@@ -123,7 +139,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                 )}
             </Wrapper>
         ) : (
-            <LoadingFull />
+            <LoadingFull noTimeout={deleteSandboxInProgress} />
         )
     ) : (
         <NotFound />

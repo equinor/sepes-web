@@ -150,7 +150,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             </Button>
         </Wrapper>
     ) : (
-        <LoadingFull />
+        <LoadingFull noTimeout />
     );
 };
 

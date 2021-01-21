@@ -6,7 +6,9 @@ import {
     SandboxCreateObj,
     ParticipantObj,
     VmObj,
-    resultsAndLearningsObj
+    resultsAndLearningsObj,
+    CalculateNameObj,
+    VmUsernameObj
 } from '../components/common/interfaces';
 
 //Study
@@ -166,11 +168,12 @@ export const getVirtualMachineForSandbox = async (sandboxId: string) => {
     return apiRequestWithToken('api/virtualmachines/forsandbox/' + sandboxId, 'GET');
 };
 
-export const getVmName = async (studyName: any, sandboxname: any, userSuffix: string) => {
-    return apiRequestWithToken(
-        'api/virtualmachines/calculateName/' + studyName + '/' + sandboxname + '/' + userSuffix,
-        'GET'
-    );
+export const getVmName = async (input: CalculateNameObj) => {
+    return apiRequestWithToken('api/virtualmachines/calculateName', 'POST', input);
+};
+
+export const validateVmUsername = async (username: VmUsernameObj) => {
+    return apiRequestWithToken('api/virtualmachines/validateUsername', 'POST', username);
 };
 
 export const getVirtualMachineSizes = async (sandboxId: string) => {
@@ -190,7 +193,7 @@ export const getVirtualMachineExtended = async (vmId: string) => {
 };
 
 export const getVirtualMachineCost = async (sandboxId: string, vm: any) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedprice', 'POST', vm);
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/calculatedVmprice', 'POST', vm);
 };
 
 export const createVirtualMachineRule = async (rule: any, vmId: string) => {

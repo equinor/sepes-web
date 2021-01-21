@@ -27,6 +27,7 @@ import {
     getStudyByIdUrl
 } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
+import axios from 'axios';
 
 const icons = {
     arrow_back,
@@ -61,7 +62,7 @@ const RightWrapper = styled.div`
 
 const AttachmentWrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr 196px 16px;
+    grid-template-columns: 1fr 96px 32px;
     grid-gap: 0 8px;
 `;
 
@@ -72,21 +73,23 @@ const checkUrlIfGeneralDataset = () => {
     return false;
 };
 
-interface passedProps {
-    pathname: string;
-    canEditStudySpecificDataset: boolean;
-}
+let cancelToken = axios.CancelToken;
+let source = cancelToken.source();
 
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
-        name: ''
+        name: '',
+        permissions: {
+            deleteDataset: false,
+            editDataset: false
+        }
     });
-    const location = useLocation<passedProps>();
     useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
@@ -108,18 +111,18 @@ const DatasetDetails = (props: any) => {
         return keyCount++;
     };
 
-    const uploadFiles = (formData: any): void => {
+    const uploadFiles = (formData: any, previousFiles: any) => {
         setPercentComplete(0);
         updateOnNextVisit();
         if (!checkUrlIfGeneralDataset()) {
-            postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
+            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
             });
         } else {
             datasetId = studyId;
-            postFile('api/datasets/' + datasetId + '/files', formData).then((result: any) => {
+            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
                 if (result.Message) {
                     console.log('err', result);
                 }
@@ -127,35 +130,29 @@ const DatasetDetails = (props: any) => {
         }
     };
 
-    const postFile = async (url, files: any) => {
+    const postFile = async (url, files: any, previousFiles: any) => {
         return new Promise(() => {
             myMSALObj
                 .acquireTokenSilent(loginRequest)
                 .then((tokenResponse: any) => {
                     if (tokenResponse.accessToken) {
                         const bearer = `Bearer ${tokenResponse.accessToken}`;
-                        var xhr = new XMLHttpRequest();
-                        xhr.upload.addEventListener(
-                            'progress',
-                            (evt) => {
-                                if (evt.lengthComputable) {
-                                    const percentCalculated = (evt.loaded / evt.total) * 100;
-                                    setPercentComplete(percentCalculated);
-                                }
-                            },
-                            false
-                        );
-                        xhr.open('POST', `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`);
-                        xhr.setRequestHeader('Authorization', bearer);
-                        xhr.send(files);
 
-                        xhr.onreadystatechange = function () {
-                            // Call a function when the state changes.
-                            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                                // Request finished. Do processing here.
-                                return this.response;
+                        axios({
+                            headers: { Authorization: bearer },
+                            method: 'post',
+                            url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
+                            data: files,
+                            onUploadProgress: (p) => {
+                                const percentCalculated = Math.floor((p.loaded * 100) / p.total);
+                                setPercentComplete(percentCalculated);
+                            },
+                            cancelToken: source.token
+                        }).catch((thrown) => {
+                            if (axios.isCancel(thrown)) {
+                                setFiles(previousFiles);
                             }
-                        };
+                        });
                     }
 
                     // Callback code here
@@ -177,6 +174,7 @@ const DatasetDetails = (props: any) => {
 
     const deleteDataset = () => {
         setLoading(true);
+        setDatasetDeleteInProgress(true);
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
@@ -191,18 +189,23 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        const previousFiles = [...files];
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
-            _files.forEach(async (file) => {
+            let filesHandledCount = 0;
+            await _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                     .then((blob) => {
+                        filesHandledCount++;
                         _formData.append(`files`, blob);
                     })
                     .then(() => {
-                        uploadFiles(_formData);
+                        if (filesHandledCount === _files.length) {
+                            uploadFiles(_formData, previousFiles);
+                        }
                     });
             });
         }
@@ -226,11 +229,11 @@ const DatasetDetails = (props: any) => {
     };
 
     return !showEditDataset ? (
-        !datasetResponse.loading && !dataset.id ? (
+        !datasetResponse.loading && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
         ) : (
             <OuterWrapper>
-                {loading && <LoadingFull />}
+                {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
                 {userClickedDelete && (
                     <DeleteResourceComponent
                         ResourceName={dataset?.name}
@@ -264,14 +267,37 @@ const DatasetDetails = (props: any) => {
                         )}
                         <Dropzone
                             onDrop={(event: File[]) => handleFileDrop(event)}
-                            disabled={location.state && !location.state.canEditStudySpecificDataset}
+                            disabled={
+                                !(
+                                    dataset.permissions?.editDataset &&
+                                    (percentComplete === 0 || percentComplete === 100)
+                                )
+                            }
                         />
                         {percentComplete > 0 && (
-                            <LinearProgress
-                                style={{ marginTop: '8px' }}
-                                value={percentComplete}
-                                variant="determinate"
-                            />
+                            <div style={{ display: 'flex' }}>
+                                <LinearProgress
+                                    style={{ marginTop: '16px' }}
+                                    value={percentComplete}
+                                    variant="determinate"
+                                />
+                                <Button
+                                    onClick={() => {
+                                        source.cancel();
+                                        setPercentComplete(0);
+
+                                        cancelToken = axios.CancelToken;
+                                        source = cancelToken.source();
+                                    }}
+                                    style={{ float: 'right', padding: '4px' }}
+                                    variant="ghost_icon"
+                                    disabled={percentComplete === 0 || percentComplete === 100}
+                                >
+                                    {percentComplete === 0 || percentComplete === 100
+                                        ? EquinorIcon('check', '', 24)
+                                        : EquinorIcon('clear', '', 24)}
+                                </Button>
+                            </div>
                         )}
                         <div style={{ paddingTop: '8px' }}>
                             {files &&
@@ -280,13 +306,19 @@ const DatasetDetails = (props: any) => {
                                         <AttachmentWrapper key={getKey()}>
                                             <div>{file.name}</div>
                                             <div>{bytesToMB(file.size) + ' '} MB</div>
-                                            <Icon
+                                            <Button
+                                                variant="ghost_icon"
                                                 onClick={() => removeFile(i, file)}
-                                                color="#007079"
-                                                name="delete_forever"
-                                                size={24}
-                                                style={{ cursor: 'pointer' }}
-                                            />
+                                                style={{ marginTop: '-8px' }}
+                                                disabled={!(percentComplete === 0 || percentComplete === 100)}
+                                            >
+                                                <Icon
+                                                    color="#007079"
+                                                    name="delete_forever"
+                                                    size={24}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                            </Button>
                                         </AttachmentWrapper>
                                     );
                                 })}
@@ -347,7 +379,7 @@ const DatasetDetails = (props: any) => {
                                         title={
                                             !(
                                                 permissions.canEdit_PreApproved_Datasets ||
-                                                (location.state && location.state.canEditStudySpecificDataset)
+                                                dataset.permissions?.editDataset
                                             )
                                                 ? 'You do not have permission to edit metadata'
                                                 : ''
@@ -362,7 +394,7 @@ const DatasetDetails = (props: any) => {
                                             disabled={
                                                 !(
                                                     permissions.canEdit_PreApproved_Datasets ||
-                                                    (location.state && location.state.canEditStudySpecificDataset)
+                                                    dataset.permissions?.editDataset
                                                 )
                                             }
                                         >
@@ -376,7 +408,7 @@ const DatasetDetails = (props: any) => {
                                             title={
                                                 !(
                                                     permissions.canEdit_PreApproved_Datasets ||
-                                                    (location.state && location.state.canEditStudySpecificDataset)
+                                                    dataset.permissions?.editDataset
                                                 )
                                                     ? 'You do not have permission to edit metadata'
                                                     : ''
@@ -392,7 +424,7 @@ const DatasetDetails = (props: any) => {
                                                 disabled={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        (location.state && location.state.canEditStudySpecificDataset)
+                                                        dataset.permissions?.deleteDataset
                                                     )
                                                 }
                                             >
@@ -404,7 +436,7 @@ const DatasetDetails = (props: any) => {
                             </div>
                         </RightWrapper>
                     ) : (
-                        <LoadingFull />
+                        <LoadingFull noTimeout={datasetDeleteInProgress} />
                     )}
                 </Wrapper>
             </OuterWrapper>
