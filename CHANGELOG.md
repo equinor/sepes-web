@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/equinor/sepes-web/compare/0.1.9...0.1.10) (2021-01-21)
+
+
+### Bug Fixes
+
+* **dataset:** bug where notfound page displayed for a second before general dataset. (not study specifi) ([6ce3b20](https://github.com/equinor/sepes-web/commit/6ce3b20a8e20017b64d5f4e3476ed2659696916c)), closes [#455](https://github.com/equinor/sepes-web/issues/455)
+* **dataset:** disable the create button when the location field is not filled out ([844f90d](https://github.com/equinor/sepes-web/commit/844f90d07694b3041fb76e5e414b55c3b8e7bbc1)), closes [#441](https://github.com/equinor/sepes-web/issues/441)
+* **participants:** delay search so that the user can finish typing before making an api call ([#474](https://github.com/equinor/sepes-web/issues/474)) ([22971d6](https://github.com/equinor/sepes-web/commit/22971d6b03feeb4a049951f59c55115af02b6223)), closes [#467](https://github.com/equinor/sepes-web/issues/467)
+* **participants:** issue where removing yourself as a participant redirected you even though you still had other roles active in Sepes ([c654553](https://github.com/equinor/sepes-web/commit/c65455346a2c5cfc9798b34c182b50fe50ec034b)), closes [#466](https://github.com/equinor/sepes-web/issues/466)
+* **sandbox:** add password validation input so it is easier for the user to know the password is valid or not. Also fixed an issue where an 8 character long password was valid, when the minimum should be 12 ([6458b5b](https://github.com/equinor/sepes-web/commit/6458b5b4bfd91f452ca4cbc1b3f05852b78f75a7)), closes [#427](https://github.com/equinor/sepes-web/issues/427)
+* **sandbox:** dataset list not automatically refreshed when a new dataset was added to the study ([212398a](https://github.com/equinor/sepes-web/commit/212398a2f00317ae4ca86beefb9634eee0be0166)), closes [#452](https://github.com/equinor/sepes-web/issues/452)
+* **sandbox:** dataset list not updating when going out and back into a sandbox ([7495d41](https://github.com/equinor/sepes-web/commit/7495d41182491f15f6bc78b2cbd0d025b566e39e)), closes [#449](https://github.com/equinor/sepes-web/issues/449)
+* **sandbox:** disable make available button if there is no data set added to the sandbox ([7d2cbc2](https://github.com/equinor/sepes-web/commit/7d2cbc2c88ba0b757a121018e883f9b01e9c2f7c)), closes [#432](https://github.com/equinor/sepes-web/issues/432)
+* **sandbox:** error when clicking checkbox very fast could make the state of the checkbox false ([5d9d029](https://github.com/equinor/sepes-web/commit/5d9d029d53294119ccc4bad3561f646c22330be0)), closes [#433](https://github.com/equinor/sepes-web/issues/433)
+* **sandbox:** update sandbox resource list on user actions and not only on a set interval ([e5bab90](https://github.com/equinor/sepes-web/commit/e5bab90b8b15052a19a91f4ec1d86db74f2c4e70)), closes [#430](https://github.com/equinor/sepes-web/issues/430)
+* **study:** checkbox for hidden/not hidden should default to be not hidden ([#472](https://github.com/equinor/sepes-web/issues/472)) ([efdc005](https://github.com/equinor/sepes-web/commit/efdc0055bc8b4f3f9dac791ad1383963272f545c)), closes [#469](https://github.com/equinor/sepes-web/issues/469)
+* **study:** fixed some margins on resize ([12bdc3c](https://github.com/equinor/sepes-web/commit/12bdc3c7e88c40232f18e112ee5d66535b3799fe))
+* **study:** increase max width of tabs so they fill out the window with normal resolutions ([c3f735c](https://github.com/equinor/sepes-web/commit/c3f735ca72cafee40b3de133c727472d0209806c))
+* **study:** increase white space when many datasets are added to a study ([a9335be](https://github.com/equinor/sepes-web/commit/a9335be2636dd6be0607fe4f28d30e87680b9a63)), closes [#457](https://github.com/equinor/sepes-web/issues/457)
+* **study:** moved settings wheel to top right corner ([973a902](https://github.com/equinor/sepes-web/commit/973a902cbbe60b711247b039b149e714d1bb1d05)), closes [#464](https://github.com/equinor/sepes-web/issues/464)
+* **vm:** issue caused when writing question mark in the study name as a part of the vm name. ([#473](https://github.com/equinor/sepes-web/issues/473)) ([95f1985](https://github.com/equinor/sepes-web/commit/95f1985454588bb0fae90b43823f88e926f7837a)), closes [#468](https://github.com/equinor/sepes-web/issues/468)
+* **vm:** updated to new endpoint for getting cost of vm ([dadbcfe](https://github.com/equinor/sepes-web/commit/dadbcfe274990c5397caed033a85f6df9f1ee896))
+* **vm:** validate username. Some username is not allowed and will not show a text explaining which names are not allowed ([#471](https://github.com/equinor/sepes-web/issues/471)) ([a48a578](https://github.com/equinor/sepes-web/commit/a48a5787718bd71c31998b9475a7237c58f7fdde)), closes [#470](https://github.com/equinor/sepes-web/issues/470)
+* general codeql warnings and notes ([8606a8b](https://github.com/equinor/sepes-web/commit/8606a8b71e2b878ee15a0444851f942622e9c60d))
+* issue with permission when going to next phase in a sandbox. Open internet should be disabled for everyone except for admins ([1fe5631](https://github.com/equinor/sepes-web/commit/1fe56315990da16444aaa5faeaae0a38bb47383f))
+* loading screen on deleting resources now display immediately aft… ([#463](https://github.com/equinor/sepes-web/issues/463)) ([cf58270](https://github.com/equinor/sepes-web/commit/cf582700758bc76bba76117e26cd9d027c53477e)), closes [#462](https://github.com/equinor/sepes-web/issues/462)
+
 ### [0.1.9](https://github.com/equinor/sepes-web/compare/0.1.8...0.1.9) (2021-01-05)
 
 
