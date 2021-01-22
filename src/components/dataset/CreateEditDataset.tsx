@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, DropdownObj } from '../common/interfaces';
+import { DatasetObj, DropdownObj, DatasetPermissionObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
     editStudySpecificDataset,
@@ -87,6 +87,7 @@ type CreateEditDatasetProps = {
     setShowEditDataset: (value: any) => void;
     editingDataset: boolean;
     cache: any;
+    permissions: DatasetPermissionObj;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
@@ -94,7 +95,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     setDatasetFromDetails,
     setShowEditDataset,
     editingDataset,
-    cache
+    cache,
+    permissions
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const datasetId = window.location.pathname.split('/')[4];
@@ -108,7 +110,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
-    const permissions = useContext(Permissions);
+    const generalDatasetpermissions = useContext(Permissions);
     const location = useLocation<passedProps>();
 
     useEffect(() => {
@@ -165,13 +167,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         [getStudyByIdUrl(studyId)]: true,
                         [getDatasetsInStudyUrl(studyId)]: true
                     });
-                    history.push({
-                        pathname: '/studies/' + studyId + '/datasets/' + result.id,
-                        state: {
-                            canCreateStudySpecificDataset: location.state.canCreateStudySpecificDataset,
-                            canEditStudySpecificDataset: location.state.canEditStudySpecificDataset
-                        }
-                    });
+                    history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -275,8 +271,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return permissions.canEdit_PreApproved_Datasets ||
-        (location.state && location.state.canCreateStudySpecificDataset) ? (
+    return (checkUrlIfGeneralDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
+        (permissions && permissions.editDataset) ||
+        (location && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>

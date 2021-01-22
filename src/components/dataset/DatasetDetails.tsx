@@ -448,6 +448,7 @@ const DatasetDetails = (props: any) => {
             setShowEditDataset={setShowEditDataset}
             editingDataset
             cache={datasetResponse.cache}
+            permissions={dataset.permissions}
         />
     );
 };
