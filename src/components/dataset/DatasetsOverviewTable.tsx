@@ -72,7 +72,10 @@ type DatasetsOverviewTableProps = {
 const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets, permissions }) => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
-    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({ name: '' });
+    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({
+        name: '',
+        permissions: { editDataset: false, deleteDataset: false }
+    });
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>(
         Cookies.get('checkedColumns')
             ? JSON.parse(Cookies.get('checkedColumns'))

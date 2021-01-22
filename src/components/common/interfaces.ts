@@ -55,7 +55,7 @@ export interface DatasetObj {
     added?: boolean;
     studyId?: string;
     storageAccountLink?: string;
-    permissions?: DatasetPermissionObj;
+    permissions: DatasetPermissionObj;
 }
 
 export interface DatasetPermissionObj {
@@ -149,7 +149,6 @@ export interface OperatingSystemObj {
 export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
 }
-
 
 export interface CalculateNameObj {
     studyName: string;
