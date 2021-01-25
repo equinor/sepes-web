@@ -8,7 +8,7 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, deleteStudy, putStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateResourceName } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
@@ -224,7 +224,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setHasChanged(false);
         setUserPressedCreate(true);
-        if (checkRequiredFieldsArNotNull()) {
+        if (!validateUserInputs()) {
             return;
         }
         if (imageUrl) {
@@ -289,16 +289,20 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         }
     };
 
-    const checkRequiredFieldsArNotNull = (): boolean => {
+    const validateUserInputs = (): boolean => {
+        let result = true;
+        if (!validateResourceName(studyOnChange.name)) {
+            result = false;
+        }
         if (
             studyOnChange.name === '' ||
             studyOnChange === undefined ||
             studyOnChange.vendor === '' ||
             studyOnChange.vendor === undefined
         ) {
-            return true;
+            result = false;
         }
-        return false;
+        return result;
     };
 
     const handleCancel = () => {
@@ -381,6 +385,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
+                                    inputIcon={
+                                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                                            <Tooltip
+                                                title="The value must be between 3 and 20 characters long"
+                                                placement={'right'}
+                                            >
+                                                <Icon name="info_circle" size={24} color="#6F6F6F" />
+                                            </Tooltip>
+                                        </div>
+                                    }
                                 />
                                 <TextField
                                     id="textfield2"
@@ -559,7 +573,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 Change logo
                                             </Button>
                                             <SaveCancelWrapper>
-                                                <Button data-cy="create_study" onClick={() => handleSave()}>
+                                                <Button
+                                                    data-cy="create_study"
+                                                    onClick={() => handleSave()}
+                                                    disabled={!validateUserInputs()}
+                                                >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>
                                                 <Button variant="outlined" onClick={() => handleCancel()}>

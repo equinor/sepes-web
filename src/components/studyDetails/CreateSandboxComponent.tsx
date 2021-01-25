@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, TextField } from '@equinor/eds-core-react';
+import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
-import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, validateResourceName } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -74,8 +74,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         });
     };
 
-    const checkRequiredFieldsAreNotEmpty = () => {
-        if (!sandbox.name || !sandbox.region) {
+    const validateUserInput = () => {
+        if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name)) {
             return false;
         }
         return true;
@@ -84,7 +84,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
-        if (!checkRequiredFieldsAreNotEmpty()) {
+        if (!validateUserInput()) {
             return;
         }
         const studyId = window.location.pathname.split('/')[2];
@@ -115,6 +115,13 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 data-cy="sandbox_name"
                 autoComplete="off"
                 autoFocus
+                inputIcon={
+                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
+                        <Tooltip title="The value must be between 3 and 20 characters long" placement="left">
+                            <Icon name="info_circle" size={24} color="#6F6F6F" />
+                        </Tooltip>
+                    </div>
+                }
             />
             <Label>
                 <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot
@@ -144,7 +151,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 style={{ width: '76px', margin: '8px 0 8px auto' }}
                 onClick={() => CreateSandbox()}
                 data-cy="create_actual_sandbox"
-                disabled={!checkRequiredFieldsAreNotEmpty()}
+                disabled={!validateUserInput()}
             >
                 Create
             </Button>

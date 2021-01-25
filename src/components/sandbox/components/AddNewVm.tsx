@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers';
+import { passwordValidate, returnLimitMeta, roundUp, validateResourceName } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { VmObj, VmUsernameObj, CalculateNameObj } from '../../common/interfaces';
@@ -241,9 +241,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         });
     };
 
-    const checkIfButtonDisabled = () => {
+    const validateUserInput = () => {
         if (loading) {
-            return true;
+            return false;
         }
         if (
             passwordValidate(vm.password) &&
@@ -251,11 +251,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             vm.operatingSystem !== '' &&
             vm.size !== '' &&
             vm.dataDisks.length > 0 &&
-            usernameIsValid
+            usernameIsValid &&
+            validateResourceName(vm.name)
         ) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
     const filterSizes = (sizes: any) => {
@@ -314,7 +315,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     data-cy="vm_name"
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                            <Tooltip title="The value must be between 3 and 20 characters long" placement={'right'}>
                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                             </Tooltip>
                         </div>
@@ -440,14 +441,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             </div>
             <div>
                 <Tooltip
-                    title={checkIfButtonDisabled() && !loading ? 'Please fill out all required fields' : ''}
+                    title={!validateUserInput() && !loading ? 'Please fill out all required fields' : ''}
                     placement="right"
                 >
                     <Button
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"
                         onClick={createVm}
-                        disabled={checkIfButtonDisabled()}
+                        disabled={!validateUserInput()}
                     >
                         {loading ? <DotProgress variant="green" /> : 'Create'}
                     </Button>
