@@ -117,7 +117,8 @@ export const validateResourceName = (name: string): boolean => {
     if (name === '') {
         return false;
     }
+    const nameWithoutSpaces = name.split(' ').join('');
     const onlyLettersAndNumbers = /^[a-zA-Z0-9]+$/;
     const limit = /(?=.{3,123})/;
-    return onlyLettersAndNumbers.test(name) && limit.test(name);
+    return onlyLettersAndNumbers.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };
