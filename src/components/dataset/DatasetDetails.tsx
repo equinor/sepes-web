@@ -1,8 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress } from '@equinor/eds-core-react';
-import { DatasetObj } from '../common/interfaces';
-import { deleteFileInDataset, removeStudyDataset } from '../../services/Api';
+import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
+import {
+    deleteFileInDataset,
+    getStudySpecificDatasetFiles,
+    getStudySpecificDatasetResources,
+    removeStudyDataset
+} from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
@@ -28,6 +33,7 @@ import {
 } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
 import axios from 'axios';
+import { resourceStatus, resourceType } from '../common/types';
 
 const icons = {
     arrow_back,
@@ -75,6 +81,7 @@ const checkUrlIfGeneralDataset = () => {
 
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
+const interval = 15000;
 
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
@@ -83,29 +90,102 @@ const DatasetDetails = (props: any) => {
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
+        storageAccountLink: '',
         permissions: {
             deleteDataset: false,
             editDataset: false
         }
     });
+
     useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
+    const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
+        dataset.storageAccountLink !== '' || false
+    );
+    /*
     const datasetResponse = useFetchUrl(
         isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId),
         setFiles,
         !isStandard
     );
+    */
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
+    const [datasetResources, setDatasetResources] = useState<any>([]);
+
     let keyCount: number = 0;
+
+    useEffect(() => {
+        getDatasetResources();
+        let timer: any;
+        try {
+            timer = setInterval(async () => {
+                getDatasetResources();
+            }, interval);
+        } catch (e) {
+            console.log(e);
+        }
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (datasetStorageAccountIsReady) {
+            getDatasetFiles();
+        }
+    }, [datasetStorageAccountIsReady]);
+
+    const getDatasetResources = () => {
+        if (!checkUrlIfGeneralDataset()) {
+            getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
+                if (result && (result.errors || result.Message)) {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log('Err');
+                } else {
+                    setDatasetResources(result);
+                    checkStatusOfStorageAccount(result);
+                }
+            });
+        }
+    };
+
+    const getDatasetFiles = () => {
+        if (!checkUrlIfGeneralDataset()) {
+            setLoadingFiles(true);
+            getStudySpecificDatasetFiles(datasetId).then((result: any) => {
+                setLoadingFiles(false);
+                if (result && (result.errors || result.Message)) {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log('Err');
+                } else {
+                    setFiles(result);
+                }
+            });
+        }
+    };
+
+    const checkStatusOfStorageAccount = (resources: any) => {
+        let res = false;
+        if (!resources) {
+            return res;
+        }
+        resources.map((resource: DatasetResourcesObj, i: number) => {
+            if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
+                res = true;
+            }
+        });
+        setDatasetStorageAccountIsReady(res);
+    };
 
     const getKey = () => {
         return keyCount++;
@@ -229,7 +309,7 @@ const DatasetDetails = (props: any) => {
     };
 
     return !showEditDataset ? (
-        !datasetResponse.loading && !dataset.id && datasetResponse.notFound ? (
+        !loadingFiles && !dataset.id && loadingFiles ? (
             <NotFound />
         ) : (
             <OuterWrapper>
@@ -270,7 +350,8 @@ const DatasetDetails = (props: any) => {
                             disabled={
                                 !(
                                     dataset.permissions?.editDataset &&
-                                    (percentComplete === 0 || percentComplete === 100)
+                                    (percentComplete === 0 || percentComplete === 100) &&
+                                    datasetStorageAccountIsReady
                                 )
                             }
                         />
@@ -324,7 +405,7 @@ const DatasetDetails = (props: any) => {
                                 })}
                         </div>
                     </div>
-                    {!datasetResponse.loading ? (
+                    {!loadingFiles ? (
                         <RightWrapper>
                             <div>
                                 <Label>Storage account</Label>
@@ -447,7 +528,6 @@ const DatasetDetails = (props: any) => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
-            cache={datasetResponse.cache}
             permissions={dataset.permissions}
         />
     );
