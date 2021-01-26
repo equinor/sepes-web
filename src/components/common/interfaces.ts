@@ -164,4 +164,5 @@ export interface DatasetResourcesObj {
     retryLink: string;
     status: string;
     type: string;
+    linkToExternalSystem: string;
 }

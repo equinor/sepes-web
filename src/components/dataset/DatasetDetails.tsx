@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     deleteFileInDataset,
@@ -81,7 +81,7 @@ const checkUrlIfGeneralDataset = () => {
 
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
-const interval = 15000;
+const interval = 7000;
 
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
@@ -93,14 +93,14 @@ const DatasetDetails = (props: any) => {
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
-        storageAccountLink: '',
+        storageAccountLink: undefined,
         permissions: {
             deleteDataset: false,
             editDataset: false
         }
     });
 
-    useFetchUrl(
+    const datasetResponse = useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
     );
@@ -109,38 +109,35 @@ const DatasetDetails = (props: any) => {
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
-    /*
-    const datasetResponse = useFetchUrl(
-        isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId),
-        setFiles,
-        !isStandard
-    );
-    */
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
-    const [datasetResources, setDatasetResources] = useState<any>([]);
-
     let keyCount: number = 0;
 
     useEffect(() => {
-        getDatasetResources();
         let timer: any;
         try {
             timer = setInterval(async () => {
-                getDatasetResources();
+                if (dataset.storageAccountLink === '' || dataset.storageAccountLink === null) {
+                    getDatasetResources();
+                }
             }, interval);
         } catch (e) {
             console.log(e);
         }
+
         return () => {
             clearInterval(timer);
         };
-    }, []);
+    }, [dataset.storageAccountLink]);
 
     useEffect(() => {
-        if (datasetStorageAccountIsReady) {
+        if (
+            dataset.storageAccountLink !== '' &&
+            dataset.storageAccountLink !== undefined &&
+            dataset.storageAccountLink !== null
+        ) {
             getDatasetFiles();
         }
     }, [datasetStorageAccountIsReady]);
@@ -152,7 +149,6 @@ const DatasetDetails = (props: any) => {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 } else {
-                    setDatasetResources(result);
                     checkStatusOfStorageAccount(result);
                 }
             });
@@ -182,6 +178,11 @@ const DatasetDetails = (props: any) => {
         resources.map((resource: DatasetResourcesObj, i: number) => {
             if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
                 res = true;
+                setDataset({ ...dataset, storageAccountLink: resource.linkToExternalSystem });
+                const dataCache = isStandard
+                    ? getStandardDatasetUrl(studyId)
+                    : getStudySpecificDatasetUrl(datasetId, studyId);
+                setUpdateCache({ ...updateCache, [dataCache]: true });
             }
         });
         setDatasetStorageAccountIsReady(res);
@@ -351,7 +352,7 @@ const DatasetDetails = (props: any) => {
                                 !(
                                     dataset.permissions?.editDataset &&
                                     (percentComplete === 0 || percentComplete === 100) &&
-                                    datasetStorageAccountIsReady
+                                    dataset.storageAccountLink
                                 )
                             }
                         />
@@ -405,14 +406,18 @@ const DatasetDetails = (props: any) => {
                                 })}
                         </div>
                     </div>
-                    {!loadingFiles ? (
+                    {!datasetResponse.loading ? (
                         <RightWrapper>
                             <div>
                                 <Label>Storage account</Label>
-                                <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
-                                    <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
-                                    {EquinorIcon('external_link', '#007079', 24)}
-                                </a>
+                                {dataset?.storageAccountLink ? (
+                                    <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
+                                        <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
+                                        {EquinorIcon('external_link', '#007079', 24)}
+                                    </a>
+                                ) : (
+                                    <DotProgress variant="green" />
+                                )}
                             </div>
                             <div>
                                 <Label>Location</Label>

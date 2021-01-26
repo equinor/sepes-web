@@ -77,7 +77,7 @@ export const getDataset = async (datasetId: string, studyId: string) => {
 };
 
 export const getStudySpecificDatasetResources = async (datasetId: string, studyId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific/' + datasetId + '/resources', 'GET');
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId + '/resources', 'GET');
 };
 
 export const getStudySpecificDatasetFiles = async (datasetId: string) => {
