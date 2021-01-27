@@ -18,9 +18,11 @@ export const Permissions = React.createContext<GeneralPermissions>({
     datasetAdmin: false,
     sponsor: false
 });
-
+console.log('Sepes is starting up');
 const renderApp = (user) => {
+    console.log('Render App');
     getPermissions().then((result: any) => {
+        console.log('Received user permissions');
         if (!result.Message) {
             return ReactDOM.render(
                 <React.StrictMode>
