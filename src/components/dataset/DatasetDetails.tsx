@@ -348,6 +348,9 @@ const DatasetDetails = (props: any) => {
                         )}
                         <Dropzone
                             onDrop={(event: File[]) => handleFileDrop(event)}
+                            loading={
+                                dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null ? false : true
+                            }
                             disabled={
                                 !(
                                     dataset.permissions?.editDataset &&

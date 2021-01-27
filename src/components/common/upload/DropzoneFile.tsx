@@ -28,8 +28,9 @@ interface props {
     onDrop: any;
     accept?: string;
     disabled?: boolean;
+    loading?: boolean;
 }
-const Dropzone = ({ onDrop, accept, disabled }: props) => {
+const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
     // Initializing useDropzone hooks with options
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -60,7 +61,13 @@ const Dropzone = ({ onDrop, accept, disabled }: props) => {
                     <div className="dropzone-content">
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>
-                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                            {!loading ? (
+                                <>
+                                    Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                                </>
+                            ) : (
+                                'File upload will be available when the storage account is ready'
+                            )}
                         </div>
                     </div>
                 )}
