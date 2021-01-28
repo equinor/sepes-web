@@ -351,7 +351,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 </Typography>
                 <div style={{ float: 'right' }}>{returnControlButtons()}</div>
             </div>
-            <Stepper activeStep={step} alternativeLabel nonLinear>
+            <Stepper activeStep={step} alternativeLabel nonLinear color="red">
                 {steps.map((stepL: any, index) => {
                     const stepProps = {};
                     const labelProps: any = {};

@@ -356,14 +356,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 <Table style={{ width: '100%' }}>
                     <Head>
                         <Row>
-                            <Cell as="th" scope="col">
-                                Inbound rules
-                            </Cell>
-                            <Cell style={{ width: '220px' }} as="th" scope="col" />
-                            <Cell as="th" scope="col" />
-                            <Cell style={{ width: '220px' }} as="th" scope="col" />
-                            <Cell as="th" scope="col" />
-                            <Cell as="th" scope="col" />
+                            <Cell scope="col">Inbound rules</Cell>
+                            <Cell style={{ width: '220px' }} scope="col" />
+                            <Cell scope="col" />
+                            <Cell style={{ width: '220px' }} scope="col" />
+                            <Cell scope="col" />
+                            <Cell scope="col" />
                         </Row>
                     </Head>
                     <Body>
@@ -516,10 +514,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 <Table style={{ width: '100%', marginTop: '24px' }}>
                     <Head>
                         <Row>
-                            <Cell as="th" scope="col">
-                                Outbound rules
-                            </Cell>
-                            <Cell as="th" scope="col" />
+                            <Cell scope="col">Outbound rules</Cell>
+                            <Cell scope="col" />
                         </Row>
                     </Head>
                     <Body>

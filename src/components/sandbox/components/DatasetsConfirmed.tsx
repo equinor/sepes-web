@@ -3,6 +3,7 @@ import { Table } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getDatasetsInSandboxUrl } from '../../../services/ApiCallStrings';
+import '../../../styles/Table.scss';
 const { Body, Row, Cell, Head } = Table;
 
 type SandboxConfirmedProps = {
@@ -16,17 +17,15 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
                 <Row>
-                    <Cell as="th" scope="col">
-                        Data sets in sandbox
-                    </Cell>
-                    <Cell as="th" scope="col" />
+                    <Cell scope="col">Data sets in sandbox</Cell>
+                    <Cell scope="col" />
                 </Row>
             </Head>
             <Body>
                 {datasetsConfirmed.length > 0 ? (
                     datasetsConfirmed.map((dataset: any, index: number) => {
                         return (
-                            <Row key={index}>
+                            <Row key={index} id="tableRowNoPointer">
                                 <Cell>
                                     {EquinorIcon('check', '#007079', 24)}
                                     <span style={{ marginLeft: '32px' }}>{dataset.name}</span>
@@ -36,7 +35,7 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
                         );
                     })
                 ) : (
-                    <Row key={1}>
+                    <Row key={1} id="tableRowNoPointer">
                         <Cell>{datasetsConfirmedResponse.loading ? 'loading...' : 'No data sets in sandbox'}</Cell>
                         <Cell style={{ width: '32px' }}>{''}</Cell>
                     </Row>
