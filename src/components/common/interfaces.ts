@@ -158,3 +158,11 @@ export interface CalculateNameObj {
 export interface VmUsernameObj {
     username: string;
 }
+
+export interface DatasetResourcesObj {
+    name: string;
+    retryLink: string;
+    status: string;
+    type: string;
+    linkToExternalSystem: string;
+}

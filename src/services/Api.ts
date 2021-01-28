@@ -76,7 +76,19 @@ export const getDataset = async (datasetId: string, studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET');
 };
 
+export const getStudySpecificDatasetResources = async (datasetId: string, studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId + '/resources', 'GET');
+};
+
+export const getStudySpecificDatasetFiles = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+};
+
 //Standard dataset
+
+export const getStandardDatasetFiles = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+};
 
 export const getStandardDataset = async (datasetId: string) => {
     return apiRequestWithToken('api/datasets/' + datasetId, 'GET');

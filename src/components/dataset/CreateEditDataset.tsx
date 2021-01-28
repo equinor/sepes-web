@@ -86,7 +86,6 @@ type CreateEditDatasetProps = {
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
     editingDataset: boolean;
-    cache: any;
     permissions: DatasetPermissionObj;
 };
 
@@ -95,7 +94,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     setDatasetFromDetails,
     setShowEditDataset,
     editingDataset,
-    cache,
     permissions
 }) => {
     const studyId = window.location.pathname.split('/')[2];
@@ -211,8 +209,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, 'datasets/': true });
-                    cache[getStandardDatasetUrl(studyId)] = result;
+                    setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
+                    //cache[getStandardDatasetUrl(studyId)] = result;
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {

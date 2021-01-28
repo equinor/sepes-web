@@ -1,8 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress } from '@equinor/eds-core-react';
-import { DatasetObj } from '../common/interfaces';
-import { deleteFileInDataset, removeStudyDataset } from '../../services/Api';
+import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress } from '@equinor/eds-core-react';
+import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
+import {
+    deleteFileInDataset,
+    getStudySpecificDatasetFiles,
+    getStudySpecificDatasetResources,
+    removeStudyDataset
+} from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
@@ -28,6 +33,7 @@ import {
 } from '../../services/ApiCallStrings';
 import NotFound from '../common/NotFound';
 import axios from 'axios';
+import { resourceStatus, resourceType } from '../common/types';
 
 const icons = {
     arrow_back,
@@ -75,6 +81,7 @@ const checkUrlIfGeneralDataset = () => {
 
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
+const interval = 7000;
 
 const DatasetDetails = (props: any) => {
     let datasetId = window.location.pathname.split('/')[4];
@@ -83,29 +90,103 @@ const DatasetDetails = (props: any) => {
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
+        storageAccountLink: undefined,
         permissions: {
             deleteDataset: false,
             editDataset: false
         }
     });
-    useFetchUrl(
+
+    const datasetResponse = useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const datasetResponse = useFetchUrl(
-        isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId),
-        setFiles,
-        !isStandard
+    const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
+        dataset.storageAccountLink !== '' || false
     );
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
     let keyCount: number = 0;
+
+    useEffect(() => {
+        let timer: any;
+        try {
+            timer = setInterval(async () => {
+                if (dataset.storageAccountLink === '' || dataset.storageAccountLink === null) {
+                    getDatasetResources();
+                }
+            }, interval);
+        } catch (e) {
+            console.log(e);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, [dataset.storageAccountLink]);
+
+    useEffect(() => {
+        if (
+            dataset.storageAccountLink !== '' &&
+            dataset.storageAccountLink !== undefined &&
+            dataset.storageAccountLink !== null
+        ) {
+            getDatasetFiles();
+        }
+    }, [datasetStorageAccountIsReady]);
+
+    const getDatasetResources = () => {
+        if (!checkUrlIfGeneralDataset()) {
+            getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
+                if (result && (result.errors || result.Message)) {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log('Err');
+                } else {
+                    checkStatusOfStorageAccount(result);
+                }
+            });
+        }
+    };
+
+    const getDatasetFiles = () => {
+        if (!checkUrlIfGeneralDataset()) {
+            setLoadingFiles(true);
+            getStudySpecificDatasetFiles(datasetId).then((result: any) => {
+                setLoadingFiles(false);
+                if (result && (result.errors || result.Message)) {
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                    console.log('Err');
+                } else {
+                    setFiles(result);
+                }
+            });
+        }
+    };
+
+    const checkStatusOfStorageAccount = (resources: any) => {
+        let res = false;
+        if (!resources) {
+            return res;
+        }
+        resources.map((resource: DatasetResourcesObj, i: number) => {
+            if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
+                res = true;
+                setDataset({ ...dataset, storageAccountLink: resource.linkToExternalSystem });
+                const dataCache = isStandard
+                    ? getStandardDatasetUrl(studyId)
+                    : getStudySpecificDatasetUrl(datasetId, studyId);
+                setUpdateCache({ ...updateCache, [dataCache]: true });
+            }
+        });
+        setDatasetStorageAccountIsReady(res);
+    };
 
     const getKey = () => {
         return keyCount++;
@@ -229,7 +310,7 @@ const DatasetDetails = (props: any) => {
     };
 
     return !showEditDataset ? (
-        !datasetResponse.loading && !dataset.id && datasetResponse.notFound ? (
+        !loadingFiles && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
         ) : (
             <OuterWrapper>
@@ -267,10 +348,14 @@ const DatasetDetails = (props: any) => {
                         )}
                         <Dropzone
                             onDrop={(event: File[]) => handleFileDrop(event)}
+                            loading={
+                                dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null ? false : true
+                            }
                             disabled={
                                 !(
                                     dataset.permissions?.editDataset &&
-                                    (percentComplete === 0 || percentComplete === 100)
+                                    (percentComplete === 0 || percentComplete === 100) &&
+                                    dataset.storageAccountLink
                                 )
                             }
                         />
@@ -328,10 +413,14 @@ const DatasetDetails = (props: any) => {
                         <RightWrapper>
                             <div>
                                 <Label>Storage account</Label>
-                                <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
-                                    <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
-                                    {EquinorIcon('external_link', '#007079', 24)}
-                                </a>
+                                {dataset?.storageAccountLink ? (
+                                    <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
+                                        <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
+                                        {EquinorIcon('external_link', '#007079', 24)}
+                                    </a>
+                                ) : (
+                                    <DotProgress variant="green" />
+                                )}
                             </div>
                             <div>
                                 <Label>Location</Label>
@@ -447,7 +536,6 @@ const DatasetDetails = (props: any) => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
-            cache={datasetResponse.cache}
             permissions={dataset.permissions}
         />
     );
