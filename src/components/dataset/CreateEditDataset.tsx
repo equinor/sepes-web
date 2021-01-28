@@ -179,7 +179,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setUpdateCache({
                         ...updateCache,
                         [getStudyByIdUrl(studyId)]: true,
-                        [getStudySpecificDatasetUrl(result.Id, studyId)]: true
+                        [getStudySpecificDatasetUrl(result.id, result.studyId)]: true
                     });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -210,7 +210,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 if (result && !result.Message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
-                    //cache[getStandardDatasetUrl(studyId)] = result;
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
