@@ -42,7 +42,7 @@ type VmDetailsProps = {
 };
 
 const ipMethod = [
-    { displayValue: 'current personal IP', key: '1' },
+    { displayValue: 'Current personal IP', key: '1' },
     { displayValue: 'Custom', key: '2' }
 ];
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -9,6 +9,7 @@ const { Body, Row, Cell, Head } = Table;
 
 const DatasetsTable = (props: any) => {
     const { editMode, datasets } = props;
+    const [mouseHoverSandbox, setMouseHoverSandbox] = useState<boolean>(false);
     const history = useHistory();
     const returnCell = (row: any, value: string, type: 'text' | 'icon') => {
         //This means it is a study specific dataset
@@ -23,9 +24,12 @@ const DatasetsTable = (props: any) => {
             </Cell>
         );
     };
+    useEffect(() => {
+        return () => setMouseHoverSandbox(false);
+    }, []);
 
     const redirectOnCellClick = (row: any) => {
-        if (row.studyId) {
+        if (row.studyId && !mouseHoverSandbox) {
             history.push('/studies/' + props.studyId + '/datasets/' + row.id);
         }
     };
@@ -61,6 +65,8 @@ const DatasetsTable = (props: any) => {
                                                             '/sandboxes/' +
                                                             sandbox.sandboxId
                                                         }
+                                                        onMouseOver={() => setMouseHoverSandbox(true)}
+                                                        onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
                                                         {index === row.sandboxDatasets.length - 1
                                                             ? sandbox && sandbox.sandboxName
