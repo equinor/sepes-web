@@ -310,7 +310,7 @@ const DatasetDetails = (props: any) => {
     };
 
     return !showEditDataset ? (
-        !loadingFiles && !dataset.id && loadingFiles ? (
+        !loadingFiles && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
         ) : (
             <OuterWrapper>
