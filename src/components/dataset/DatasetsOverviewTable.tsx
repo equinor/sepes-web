@@ -133,11 +133,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
 
     const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {
         if (header) {
-            return checker ? (
-                <Cell as="th" scope="col">
-                    {fieldName || ''}
-                </Cell>
-            ) : null;
+            return checker ? <Cell scope="col">{fieldName || ''}</Cell> : null;
         }
         return checker ? <Cell>{fieldName || '-'}</Cell> : null;
     };

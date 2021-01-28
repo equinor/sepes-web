@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { chevron_right } from '@equinor/eds-icons';
 import { Link } from 'react-router-dom';
+import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -33,10 +34,8 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                 <Head>
                     <Row>
-                        <Cell as="th" scope="col">
-                            Sandbox
-                        </Cell>
-                        <Cell style={{ width: '10px' }} as="th" scope="col">
+                        <Cell scope="col">Sandbox</Cell>
+                        <Cell style={{ width: '10px' }} scope="col">
                             {''}
                         </Cell>
                     </Row>
@@ -44,13 +43,13 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
                 <Body>
                     {sandboxes && sandboxes.length > 0 ? (
                         sandboxes.map((row) => (
-                            <Row key={row.id}>
+                            <Row key={row.id} id="tableRow">
                                 {returnCell(row.name, row.id, 'text')}
                                 {returnCell('', row.id, 'icon')}
                             </Row>
                         ))
                     ) : (
-                        <Row key={1}>
+                        <Row key={1} id="tableRow">
                             <Cell>No sandboxes added</Cell>
                             <Cell>{''}</Cell>
                         </Row>

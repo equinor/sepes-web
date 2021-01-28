@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import ResourceItemComponent from './ResourceItemComponent';
+import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -10,16 +11,14 @@ const Dataset = (props: any) => {
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
                 <Row>
-                    <Cell as="th" scope="col">
-                        Resources
-                    </Cell>
+                    <Cell scope="col">Resources</Cell>
                 </Row>
             </Head>
             <Body>
                 {resources ? (
                     resources.map((resource: any, i: number) => {
                         return (
-                            <Row key={i}>
+                            <Row key={i} id="tableRowNoPointer">
                                 <Cell>
                                     <ResourceItemComponent
                                         name={resource.name}

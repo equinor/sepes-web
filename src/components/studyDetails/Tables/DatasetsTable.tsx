@@ -1,25 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import { EquinorIcon } from '../../common/StyledComponents';
+import { useHistory } from 'react-router-dom';
+import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
 
 const DatasetsTable = (props: any) => {
     const { editMode, datasets } = props;
+    const [mouseHoverSandbox, setMouseHoverSandbox] = useState<boolean>(false);
+    const history = useHistory();
     const returnCell = (row: any, value: string, type: 'text' | 'icon') => {
         //This means it is a study specific dataset
         if (row.studyId) {
-            return (
-                <Cell>
-                    <Link
-                        style={{ color: '#000000', cursor: 'pointer' }}
-                        to={'/studies/' + props.studyId + '/datasets/' + row.id}
-                    >
-                        {type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}
-                    </Link>
-                </Cell>
-            );
+            return <Cell>{type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}</Cell>;
         }
         return (
             <Cell>
@@ -29,21 +24,24 @@ const DatasetsTable = (props: any) => {
             </Cell>
         );
     };
+    useEffect(() => {
+        return () => setMouseHoverSandbox(false);
+    }, []);
+
+    const redirectOnCellClick = (row: any) => {
+        if (row.studyId && !mouseHoverSandbox) {
+            history.push('/studies/' + props.studyId + '/datasets/' + row.id);
+        }
+    };
 
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                 <Head>
                     <Row>
-                        <Cell as="th" scope="col">
-                            Dataset
-                        </Cell>
-                        {editMode && (
-                            <Cell as="th" scope="col">
-                                Sandboxes
-                            </Cell>
-                        )}
-                        <Cell style={{ width: '10px' }} as="th" scope="col">
+                        <Cell scope="col">Dataset</Cell>
+                        {editMode && <Cell scope="col">Sandboxes</Cell>}
+                        <Cell style={{ width: '10px' }} scope="col">
                             {''}
                         </Cell>
                     </Row>
@@ -51,7 +49,7 @@ const DatasetsTable = (props: any) => {
                 <Body>
                     {datasets && datasets.length > 0 ? (
                         datasets.map((row) => (
-                            <Row key={row.id}>
+                            <Row key={row.id} onClick={() => redirectOnCellClick(row)} id="tableRow">
                                 {returnCell(row, row.name, 'text')}
                                 {editMode && (
                                     <Cell>
@@ -67,6 +65,8 @@ const DatasetsTable = (props: any) => {
                                                             '/sandboxes/' +
                                                             sandbox.sandboxId
                                                         }
+                                                        onMouseOver={() => setMouseHoverSandbox(true)}
+                                                        onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
                                                         {index === row.sandboxDatasets.length - 1
                                                             ? sandbox && sandbox.sandboxName

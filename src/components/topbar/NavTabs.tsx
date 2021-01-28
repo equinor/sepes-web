@@ -32,12 +32,13 @@ const NavTabs = (props: any) => {
 
     return (
         <Wrapper>
-            <Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
+            {/*<Tabs activeTab={getActiveTab()} onChange={(e: any) => redirect(e)} variant="fullWidth">
                 <TabList>
                     <Tab>Studies</Tab>
-                    {/*<Tab disabled={!permissions.canRead_PreApproved_Datasets}>Data sets</Tab>*/}
+                    <Tab disabled={!permissions.canRead_PreApproved_Datasets}>Data sets</Tab>
                 </TabList>
             </Tabs>
+        */}
         </Wrapper>
     );
 };

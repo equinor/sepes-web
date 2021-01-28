@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Checkbox } from '@equinor/eds-core-react';
+import '../../../styles/Table.scss';
 const { Body, Row, Cell, Head } = Table;
 
 type DatasetProps = {
@@ -12,13 +13,11 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
                 <Head>
                     <Row>
-                        <Cell as="th" scope="col">
-                            Data set restrictions
-                        </Cell>
+                        <Cell scope="col">Data set restrictions</Cell>
                     </Row>
                 </Head>
                 <Body>
-                    <Row key={1}>
+                    <Row key={1} id="tableRowNoPointer">
                         <Cell>
                             Restricted data - Outbound internet traffic cannot be opened. Strict inbound rules. Data
                             traffic will be suspended if exceeding 500 MB
