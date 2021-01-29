@@ -141,7 +141,7 @@ const DatasetDetails = (props: any) => {
         ) {
             getDatasetFiles();
         }
-    }, [datasetStorageAccountIsReady]);
+    }, [datasetStorageAccountIsReady, dataset]);
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
