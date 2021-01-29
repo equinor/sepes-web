@@ -53,24 +53,24 @@ const DatasetsTable = (props: any) => {
                                 {returnCell(row, row.name, 'text')}
                                 {editMode && (
                                     <Cell>
-                                        {row.sandboxDatasets &&
-                                            row.sandboxDatasets.map((sandbox: any, index: number) => {
+                                        {row.sandboxes &&
+                                            row.sandboxes.map((sandbox: any, index: number) => {
                                                 return (
                                                     <Link
-                                                        key={sandbox.sandboxId}
+                                                        key={sandbox.id}
                                                         style={{ color: '#000000', cursor: 'pointer' }}
                                                         to={
                                                             '/studies/' +
                                                             props.studyId +
                                                             '/sandboxes/' +
-                                                            sandbox.sandboxId
+                                                            sandbox.id
                                                         }
                                                         onMouseOver={() => setMouseHoverSandbox(true)}
                                                         onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
-                                                        {index === row.sandboxDatasets.length - 1
-                                                            ? sandbox && sandbox.sandboxName
-                                                            : sandbox.sandboxName && sandbox.sandboxName + ', '}
+                                                        {index === row.sandboxes.length - 1
+                                                            ? sandbox && sandbox.name
+                                                            : sandbox.name && sandbox.name + ', '}
                                                     </Link>
                                                 );
                                             })}
