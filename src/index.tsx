@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
+import NoApi from './components/common/NoApi';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -18,12 +19,10 @@ export const Permissions = React.createContext<GeneralPermissions>({
     datasetAdmin: false,
     sponsor: false
 });
-console.log('Sepes is starting up');
-const renderApp = (user) => {
-    console.log('Render App');
-    getPermissions().then((result: any) => {
-        console.log('Received user permissions');
-        if (!result.Message) {
+
+const renderApp = async (user) => {
+    await getPermissions().then((result: any) => {
+        if (result && result.admin) {
             return ReactDOM.render(
                 <React.StrictMode>
                     <UserConfig.Provider value={user}>
@@ -34,9 +33,8 @@ const renderApp = (user) => {
                 </React.StrictMode>,
                 document.getElementById('root')
             );
-        } else {
-            console.log('err: ', result.Message);
         }
+        return ReactDOM.render(<NoApi />, document.getElementById('root'));
     });
 };
 
