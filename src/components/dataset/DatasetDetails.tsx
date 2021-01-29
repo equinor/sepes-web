@@ -113,6 +113,7 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
+    const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -176,6 +177,7 @@ const DatasetDetails = (props: any) => {
             return res;
         }
         resources.map((resource: DatasetResourcesObj, i: number) => {
+            setStorageAccountStatus(resource.status);
             if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
                 res = true;
                 setDataset({ ...dataset, storageAccountLink: resource.linkToExternalSystem });
@@ -419,7 +421,9 @@ const DatasetDetails = (props: any) => {
                                         {EquinorIcon('external_link', '#007079', 24)}
                                     </a>
                                 ) : (
-                                    <DotProgress variant="green" />
+                                    <Tooltip title={storageAccountStatus} placement="top">
+                                        <DotProgress variant="green" />
+                                    </Tooltip>
                                 )}
                             </div>
                             <div>
