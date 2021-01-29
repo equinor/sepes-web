@@ -102,10 +102,6 @@ export const updateStandardDataset = async (datsetId: string, dataset?: DatasetO
     return apiRequestWithToken('api/datasets/' + datsetId, 'PUT', dataset);
 };
 
-export const getStandardDatasets = async () => {
-    return apiRequestWithToken('api/datasets/', 'GET');
-};
-
 export const getParticipantList = async (search: string) => {
     return apiRequestWithToken('api/participants/?search=' + search, 'GET');
 };
