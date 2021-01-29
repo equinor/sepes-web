@@ -10,7 +10,7 @@ const icons = {
 };
 Icon.add(icons);
 
-const ChooseImgdiv = styled.div`
+const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     height: 128px;
     display: flex;
     margin-top: 40px;
@@ -20,6 +20,7 @@ const ChooseImgdiv = styled.div`
     cursor: pointer;
     box-sizing: border-box;
     background: #ffffff;
+    background: ${(props: any) => (props.dragActive ? '#deedee' : '#ffffff')};
     @media (max-width: 700px) {
         width: 95%;
     }
@@ -49,6 +50,7 @@ const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
                 opacity: disabled ? 0.5 : 1,
                 pointerEvents: disabled ? 'none' : 'initial'
             }}
+            dragActive={isDragActive}
         >
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
