@@ -9,7 +9,7 @@ import {
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
@@ -256,6 +256,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
             return true;
         }
+        if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
+            return true;
+        }
         return false;
     };
 
@@ -359,7 +362,14 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         meta=""
                         type="number"
                         style={{ width: '312px', backgroundColor: '#FFFFFF' }}
-                        onChange={(e: any) => handleChange('dataId', e.target.value)}
+                        onChange={(e: any) => {
+                            e.target.value < 0 || e.target.value === ''
+                                ? setDataset({ ...dataset, ['dataId']: undefined })
+                                : setDataset({
+                                      ...dataset,
+                                      dataId: parseInt(e.target.value)
+                                  });
+                        }}
                         value={dataset?.dataId?.toString()}
                         data-cy="dataset_dataId"
                         autoComplete="off"
