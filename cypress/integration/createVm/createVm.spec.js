@@ -47,7 +47,7 @@ describe('Create vm', () => {
         cy.contains('Open').click();
         cy.get('[data-cy=dataset_dataId]').type(1);
         cy.get('[data-cy=dataset_save]').click();
-        cy.wait(25000);
+        cy.wait(2000);
         cy.get('[data-cy=dataset_back_to_study]').click();
     });
     it('clicks sandbox tab', () => {
@@ -86,7 +86,7 @@ describe('Create vm', () => {
         cy.get('[data-cy=vm_add_rule]').click();
         cy.wait(1000);
         cy.get('[data-cy=vm_rule_description]').type('cy rule description');
-        cy.get('[data-cy=vm_rule_ip]').type('192.168. 1.1');
+        cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
 
         cy.get('[data-cy="vm_rule_protocol"]').click();
         cy.contains('HTTP').click();
