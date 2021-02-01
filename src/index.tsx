@@ -22,7 +22,7 @@ export const Permissions = React.createContext<GeneralPermissions>({
 
 const renderApp = async (user) => {
     await getPermissions().then((result: any) => {
-        if (result && result.admin) {
+        if (result && result.admin !== undefined) {
             return ReactDOM.render(
                 <React.StrictMode>
                     <UserConfig.Provider value={user}>
