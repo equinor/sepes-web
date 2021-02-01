@@ -220,7 +220,18 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         }
     };
 
-    const handleChange = (columName: string, value: string) => {
+    const handleChange = (columName: string, value: any) => {
+        if (columName === 'dataId') {
+            if (value < 0 || value === '') {
+                setDataset({ ...dataset, ['dataId']: undefined });
+            } else {
+                setDataset({
+                    ...dataset,
+                    dataId: parseInt(value)
+                });
+            }
+            return;
+        }
         setHasChanged(true);
         setDataset({
             ...dataset,
@@ -362,14 +373,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         meta=""
                         type="number"
                         style={{ width: '312px', backgroundColor: '#FFFFFF' }}
-                        onChange={(e: any) => {
-                            e.target.value < 0 || e.target.value === ''
-                                ? setDataset({ ...dataset, ['dataId']: undefined })
-                                : setDataset({
-                                      ...dataset,
-                                      dataId: parseInt(e.target.value)
-                                  });
-                        }}
+                        onChange={(e: any) => handleChange('dataId', e.target.value)}
                         value={dataset?.dataId?.toString()}
                         data-cy="dataset_dataId"
                         autoComplete="off"
