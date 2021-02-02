@@ -38,6 +38,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         template: '',
         id: sandboxId,
         currentPhase: undefined,
+        linkToCostAnalysis: '',
         studyName: '',
         permissions: {
             delete: false,
@@ -83,6 +84,10 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
     };
 
+    const setNewCostanalysisLink = (link: any) => {
+        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].linkToCostAnalysis = link;
+    };
+
     const returnStepComponent = () => {
         switch (step) {
             case 1:
@@ -123,6 +128,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     setLoading={SandboxResponse.setLoading}
                     setNewPhase={setNewPhase}
                     setDeleteSandboxInProgress={setDeleteSandboxInProgress}
+                    setNewCostanalysisLink={setNewCostanalysisLink}
                 />
                 {returnStepComponent()}
                 {(step === 0 || step === 1) && (
