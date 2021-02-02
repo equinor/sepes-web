@@ -75,7 +75,7 @@ describe('Create study', () => {
         cy.contains('Open').click();
         cy.get('[data-cy=dataset_dataId]').type(1);
         cy.get('[data-cy=dataset_save]').click();
-        cy.wait(25000);
+        cy.wait(2000);
         cy.get('[data-cy=dataset_edit]').click();
     });
 
