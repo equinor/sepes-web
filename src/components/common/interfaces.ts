@@ -157,6 +157,7 @@ export interface CalculateNameObj {
 }
 export interface VmUsernameObj {
     username: string;
+    operativeSystemType: string;
 }
 
 export interface DatasetResourcesObj {
