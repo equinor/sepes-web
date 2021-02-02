@@ -67,7 +67,7 @@ type AddNewVmProps = {
     setActiveTab: any;
     sizes?: SizeObj;
     disks?: DropdownObj;
-    os?: OperatingSystemObj;
+    os?: any;
     setUpdateCache: any;
     updateCache: any;
     getResources: any;
@@ -139,7 +139,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [vm.username]);
+    }, [vm.username, vm.operatingSystem]);
 
     const handleDropdownChange = (value, name: string): void => {
         if (name === 'dataDisks') {
@@ -225,7 +225,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             setUsernameIsValid(false);
             return;
         }
-        const username: VmUsernameObj = { username: value };
+
+        let operatingSystemType = '';
+        os.forEach((operatingSystem: OperatingSystemObj) => {
+            if (operatingSystem.key === vm.operatingSystem) {
+                operatingSystemType = operatingSystem.category;
+            }
+        });
+        const username: VmUsernameObj = { username: value, operativeSystemType: operatingSystemType };
         validateVmUsername(username).then((result: any) => {
             if (result) {
                 setUsernameIsValid(result.isValid);
@@ -326,6 +333,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     <Label>Actual VM name</Label>
                     <Typography variant="h6">{actualVmName || '-'}</Typography>
                 </div>
+                <CoreDevDropdown
+                    label="Operating system"
+                    options={os}
+                    width={width}
+                    onChange={handleDropdownChange}
+                    name="operatingSystem"
+                    data-cy="vm_operatingSystem"
+                    meta="(required)"
+                    useOverflow
+                    style={{ marginBottom: '24px' }}
+                    tabIndex={0}
+                />
                 <TextField
                     id="textfield2"
                     autoComplete="off"
@@ -336,6 +355,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     meta="(required)"
                     data-cy="vm_username"
                     variant={returnUsernameVariant()}
+                    disabled={!vm.operatingSystem}
                     helperText={usernameHelpText}
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
@@ -407,17 +427,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 onChange={handleDropdownChange}
                 name="size"
                 data-cy="vm_size"
-                meta="(required)"
-                useOverflow
-                tabIndex={0}
-            />
-            <CoreDevDropdown
-                label="Operating system"
-                options={os}
-                width={width}
-                onChange={handleDropdownChange}
-                name="operatingSystem"
-                data-cy="vm_operatingSystem"
                 meta="(required)"
                 useOverflow
                 tabIndex={0}

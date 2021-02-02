@@ -140,6 +140,10 @@ export const getResourceStatus = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
 };
 
+export const getSandboxCostAnalysis = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/costanalysis', 'GET');
+};
+
 export const makeAvailable = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId + '/nextPhase', 'POST');
 };

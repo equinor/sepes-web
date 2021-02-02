@@ -9,7 +9,7 @@ import {
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
@@ -220,7 +220,18 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         }
     };
 
-    const handleChange = (columName: string, value: string) => {
+    const handleChange = (columName: string, value: any) => {
+        if (columName === 'dataId') {
+            if (value < 0 || value === '') {
+                setDataset({ ...dataset, ['dataId']: undefined });
+            } else {
+                setDataset({
+                    ...dataset,
+                    dataId: parseInt(value)
+                });
+            }
+            return;
+        }
         setHasChanged(true);
         setDataset({
             ...dataset,
@@ -254,6 +265,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     const checkForInputErrors = () => {
         if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
+            return true;
+        }
+        if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
             return true;
         }
         return false;
