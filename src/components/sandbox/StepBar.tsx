@@ -7,7 +7,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
+import { deleteSandbox, getResourceStatus, makeAvailable, getSandboxCostAnalysis } from '../../services/Api';
 import * as notify from '../common/notify';
 import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -53,6 +53,7 @@ type StepBarProps = {
     setLoading: any;
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
+    setNewCostanalysisLink: any;
 };
 
 const getSteps = () => {
@@ -96,7 +97,8 @@ const StepBar: React.FC<StepBarProps> = ({
     setUserClickedDelete,
     setLoading,
     setNewPhase,
-    setDeleteSandboxInProgress
+    setDeleteSandboxInProgress,
+    setNewCostanalysisLink
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -148,8 +150,22 @@ const StepBar: React.FC<StepBarProps> = ({
             if (resource.type === resourceType.virtualMachine) {
                 hasVm = true;
             }
+            if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
+                getCostAnalysisLinkToSandbox();
+            }
         });
         setAllResourcesOk(res && hasVm);
+    };
+
+    const getCostAnalysisLinkToSandbox = () => {
+        getSandboxCostAnalysis(sandboxId).then((result: any) => {
+            if (result && result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+            } else {
+                setNewCostanalysisLink(result);
+                setSandbox({ ...sandbox, linkToCostAnalysis: result });
+            }
+        });
     };
 
     const [state, setState] = React.useState<{
@@ -364,24 +380,37 @@ const StepBar: React.FC<StepBarProps> = ({
                     );
                 })}
             </Stepper>
-            <div style={{ float: 'right' }}>
-                <a
-                    href={sandbox.linkToCostAnalysis}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                        color: '#007079',
-                        fontSize: '22px',
-                        margin: '0 0 0 16px',
-                        display: 'inline-block',
-                        float: 'right'
-                    }}
+
+            <div style={{ marginLeft: 'auto' }}>
+                <Tooltip
+                    title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource groups is ready'}
+                    placement="left"
                 >
-                    <Typography style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }} variant="h2">
-                        Cost analysis
-                    </Typography>
-                    {EquinorIcon('external_link', '#007079', 24, () => {}, true)}
-                </a>
+                    <a
+                        href={sandbox.linkToCostAnalysis}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            color: '#007079',
+                            fontSize: '22px',
+                            margin: '0 0 0 16px',
+                            display: 'inline-block',
+                            float: 'right'
+                        }}
+                    >
+                        <Typography
+                            style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
+                            variant="h2"
+                        >
+                            Cost analysis
+                        </Typography>
+                        {sandbox.linkToCostAnalysis ? (
+                            EquinorIcon('external_link', '#007079', 24, () => {}, true)
+                        ) : (
+                            <DotProgress variant="green" />
+                        )}
+                    </a>
+                </Tooltip>
             </div>
             {userClickedDelete && (
                 <DeleteResourceComponent
