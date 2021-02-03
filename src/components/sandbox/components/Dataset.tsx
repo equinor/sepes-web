@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, DatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
@@ -83,7 +83,7 @@ const Dataset: React.FC<datasetProps> = ({
                 {availableDatasets.length > 0 ? (
                     availableDatasets.map((dataset: AvailableDatasetObj) => {
                         return (
-                            <Row key={dataset.datasetId} id="tableRowNoPointer">
+                            <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                 <Cell>
                                     <div style={{ paddingTop: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
@@ -116,7 +116,7 @@ const Dataset: React.FC<datasetProps> = ({
                         );
                     })
                 ) : (
-                    <Row key="1" id="tableRowNoPointer">
+                    <Row key="1" id="tableRowNoPointerNoColor">
                         <Cell>
                             {availableDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
                         </Cell>

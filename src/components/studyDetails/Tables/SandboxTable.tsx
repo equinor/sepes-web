@@ -48,7 +48,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
                             </Row>
                         ))
                     ) : (
-                        <Row key={1} id="tableRow">
+                        <Row key={1} id="tableRowNoPointerNoColor">
                             <Cell>No sandboxes added</Cell>
                             <Cell>{''}</Cell>
                         </Row>

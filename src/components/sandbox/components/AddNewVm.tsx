@@ -113,7 +113,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     const [actualVmName, setActualVmName] = useState<string>('');
     const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
     const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
-    const [usernameHelpText, setUsernameHelptText] = useState<string>('');
+    const [usernameHelpText, setUsernameHelptText] = useState<string>(
+        'You need to pick operating system before username'
+    );
     const [loading, setLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<any>([]);
     const width = '400px';
@@ -142,6 +144,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     }, [vm.username, vm.operatingSystem]);
 
     const handleDropdownChange = (value, name: string): void => {
+        if (name === 'operatingSystem') {
+            setUsernameHelptText('');
+        }
         if (name === 'dataDisks') {
             value = [value];
         }
