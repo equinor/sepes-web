@@ -21,7 +21,7 @@
         "@types/react-router": "^5.1.7",
         "@types/react-router-dom": "^5.1.5",
         "@types/reactstrap": "^8.4.2",
-        "@types/styled-components": "^5.1.0",
+        "@types/styled-components": "^5.1.7",
         "@typescript-eslint/eslint-plugin": "^4.12.0",
         "@typescript-eslint/parser": "^4.8.2",
         "animate.css": "^4.1.0",
