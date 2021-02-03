@@ -11,13 +11,12 @@ import {
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
-import { bytesToMB } from '../common/helpers';
+import { bytesToSize } from '../common/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { loginRequest, makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
-import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -226,19 +225,17 @@ const DatasetDetails = (props: any) => {
                             method: 'post',
                             url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
                             data: files,
+                            timeout: 1000000,
                             onUploadProgress: (p) => {
                                 const percentCalculated = Math.floor((p.loaded * 100) / p.total);
                                 setPercentComplete(percentCalculated);
                             },
                             cancelToken: source.token
                         }).catch((thrown) => {
-                            if (axios.isCancel(thrown)) {
-                                setFiles(previousFiles);
-                            }
+                            console.log('error', thrown);
+                            setFiles(previousFiles);
                         });
                     }
-
-                    // Callback code here
                 })
                 .catch((error: string) => {
                     console.log(error);
@@ -392,7 +389,7 @@ const DatasetDetails = (props: any) => {
                                     return (
                                         <AttachmentWrapper key={getKey()}>
                                             <div>{file.name}</div>
-                                            <div>{bytesToMB(file.size) + ' '} MB</div>
+                                            <div>{bytesToSize(file.size)} </div>
                                             <Button
                                                 variant="ghost_icon"
                                                 onClick={() => removeFile(i, file)}

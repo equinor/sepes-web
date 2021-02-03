@@ -114,8 +114,7 @@ export const apiRequestPermissionsWithToken = async (url: string, method: string
 
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
-        baseURL: blobUrl,
-        timeout: 1000
+        baseURL: blobUrl
     });
     const response = await axiosWithBlobUrl.get('', {
         responseType: 'blob'
