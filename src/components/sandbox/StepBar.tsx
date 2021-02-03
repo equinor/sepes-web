@@ -12,7 +12,7 @@ import * as notify from '../common/notify';
 import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
-import { resourceStatus, resourceType } from '../common/types';
+import { resourceStatus, resourceType } from '../common/staticValues/types';
 let set = require('lodash/set');
 
 const { MenuItem } = Menu;

@@ -16,10 +16,10 @@ import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
-import NoAccess from '../common/NoAccess';
+import NoAccess from '../common/informationalComponents/NoAccess';
 import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/commonLinks';
+import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
     getDatasetsInStudyUrl,
     getDatasetsUrl,

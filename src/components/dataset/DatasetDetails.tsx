@@ -31,9 +31,9 @@ import {
     getStudySpecificDatasetUrl,
     getStudyByIdUrl
 } from '../../services/ApiCallStrings';
-import NotFound from '../common/NotFound';
+import NotFound from '../common/informationalComponents/NotFound';
 import axios from 'axios';
-import { resourceStatus, resourceType } from '../common/types';
+import { resourceStatus, resourceType } from '../common/staticValues/types';
 
 const icons = {
     arrow_back,
