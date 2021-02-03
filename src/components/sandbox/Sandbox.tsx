@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
-import NotFound from '../common/NotFound';
+import NotFound from '../common/informationalComponents/NotFound';
 import { deleteFileInDataset, getResourceStatus } from '../../services/Api';
 
 const Wrapper = styled.div`

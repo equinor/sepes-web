@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Label } from '../../common/StyledComponents';
 import { DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { resourceType } from '../../common/types';
+import { resourceType } from '../../common/staticValues/types';
 import { EquinorIcon } from '../../common/StyledComponents';
 
 const Wrapper = styled.div`
