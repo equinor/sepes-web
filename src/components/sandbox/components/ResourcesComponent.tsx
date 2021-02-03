@@ -18,7 +18,7 @@ const Dataset = (props: any) => {
                 {resources ? (
                     resources.map((resource: any, i: number) => {
                         return (
-                            <Row key={i} id="tableRowNoPointer">
+                            <Row key={i} id="tableRowNoPointerNoColor">
                                 <Cell>
                                     <ResourceItemComponent
                                         name={resource.name}
@@ -31,7 +31,7 @@ const Dataset = (props: any) => {
                         );
                     })
                 ) : (
-                    <Row key={1}>
+                    <Row key={1} id="tableRowNoPointerNoColor">
                         <Cell>No resources...</Cell>
                     </Row>
                 )}

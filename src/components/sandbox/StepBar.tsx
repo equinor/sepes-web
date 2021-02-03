@@ -383,7 +383,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
-                    title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource groups is ready'}
+                    title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
                     placement="left"
                 >
                     <a

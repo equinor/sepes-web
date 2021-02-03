@@ -8,6 +8,7 @@ import DatasetSearchFilter from './DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
 import DropdownFilter from '../common/customComponents/DropdownFilter';
 import useClickOutside from '../common/customComponents/useClickOutside';
+import '../../styles/Table.scss';
 import Cookies from 'js-cookie';
 
 const { Body, Row, Cell, Head } = Table;
@@ -316,7 +317,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                     </Row>
                     {datasets &&
                         applyFilter().map((row: DatasetObj) => (
-                            <Row key={row.id} onClick={() => handleOnclick(row)} style={{ cursor: 'pointer' }}>
+                            <Row key={row.id} onClick={() => handleOnclick(row)} id="tableRow">
                                 {returnCell(checkedColums.name, row.name)}
                                 {returnCell(checkedColums.sourceSystem, row.sourceSystem)}
                                 {returnCell(checkedColums.areaL2, row.areaL2)}

@@ -17,7 +17,7 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
                     </Row>
                 </Head>
                 <Body>
-                    <Row key={1} id="tableRowNoPointer">
+                    <Row key={1} id="tableRowNoPointerNoColor">
                         <Cell>
                             Restricted data - Outbound internet traffic cannot be opened. Strict inbound rules. Data
                             traffic will be suspended if exceeding 500 MB
