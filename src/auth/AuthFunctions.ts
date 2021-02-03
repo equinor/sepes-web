@@ -71,6 +71,47 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
     });
 };
 
+export const apiRequestPermissionsWithToken = async (url: string, method: string, body?: any) => {
+    return new Promise((resolve, reject) => {
+        const post = async (accessToken) => {
+            try {
+                const headers = makeHeaders(accessToken);
+                const options = {
+                    method,
+                    headers: headers,
+                    body: JSON.stringify(body)
+                };
+                return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
+                    .then((response) => {
+                        return response.text();
+                    })
+                    .then((responseData) => {
+                        return resolve(responseData ? JSON.parse(responseData) : {});
+                    });
+            } catch (error) {
+                return resolve(error);
+            }
+        };
+
+        if (cyToken) {
+            post(cyToken);
+        } else {
+            myMSALObj
+                .acquireTokenSilent(loginRequest)
+                .then((tokenResponse: any) => {
+                    if (!tokenResponse.accessToken) {
+                        signInRedirect();
+                    }
+                    post(tokenResponse.accessToken);
+                })
+                .catch((error: string) => {
+                    myMSALObj.acquireTokenRedirect(loginRequest);
+                    console.log(error);
+                });
+        }
+    });
+};
+
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
         baseURL: blobUrl,

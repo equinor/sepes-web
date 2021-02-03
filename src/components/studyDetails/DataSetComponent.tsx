@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
-import { getDatasetList, addStudyDataset, removeStudyDataset, unlinkStudyDataset } from '../../services/Api';
+import { addStudyDataset, removeStudyDataset, unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';

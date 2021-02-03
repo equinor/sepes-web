@@ -72,7 +72,10 @@ type DatasetsOverviewTableProps = {
 const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets, permissions }) => {
     const history = useHistory();
     const [toggle, setToggle] = useState(false);
-    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({ name: '' });
+    const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({
+        name: '',
+        permissions: { editDataset: false, deleteDataset: false }
+    });
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>(
         Cookies.get('checkedColumns')
             ? JSON.parse(Cookies.get('checkedColumns'))
@@ -130,11 +133,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
 
     const returnCell = (checker: any, fieldName?: string | number, header?: boolean) => {
         if (header) {
-            return checker ? (
-                <Cell as="th" scope="col">
-                    {fieldName || ''}
-                </Cell>
-            ) : null;
+            return checker ? <Cell scope="col">{fieldName || ''}</Cell> : null;
         }
         return checker ? <Cell>{fieldName || '-'}</Cell> : null;
     };

@@ -10,7 +10,7 @@ const icons = {
 };
 Icon.add(icons);
 
-const ChooseImgdiv = styled.div`
+const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     height: 128px;
     display: flex;
     margin-top: 40px;
@@ -20,6 +20,7 @@ const ChooseImgdiv = styled.div`
     cursor: pointer;
     box-sizing: border-box;
     background: #ffffff;
+    background: ${(props: any) => (props.dragActive ? '#deedee' : '#ffffff')};
     @media (max-width: 700px) {
         width: 95%;
     }
@@ -28,8 +29,9 @@ interface props {
     onDrop: any;
     accept?: string;
     disabled?: boolean;
+    loading?: boolean;
 }
-const Dropzone = ({ onDrop, accept, disabled }: props) => {
+const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
     // Initializing useDropzone hooks with options
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -48,6 +50,7 @@ const Dropzone = ({ onDrop, accept, disabled }: props) => {
                 opacity: disabled ? 0.5 : 1,
                 pointerEvents: disabled ? 'none' : 'initial'
             }}
+            dragActive={isDragActive}
         >
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
@@ -60,7 +63,13 @@ const Dropzone = ({ onDrop, accept, disabled }: props) => {
                     <div className="dropzone-content">
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>
-                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                            {!loading ? (
+                                <>
+                                    Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                                </>
+                            ) : (
+                                'File upload will be available when the storage account is ready'
+                            )}
                         </div>
                     </div>
                 )}

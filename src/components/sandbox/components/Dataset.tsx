@@ -5,6 +5,7 @@ import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getAvailableDatasetsUrl, getDatasetsInSandboxUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
+import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -74,19 +75,15 @@ const Dataset: React.FC<datasetProps> = ({
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
                 <Row>
-                    <Cell as="th" scope="col">
-                        Data sets in sandbox
-                    </Cell>
-                    <Cell as="th" scope="col">
-                        {''}
-                    </Cell>
+                    <Cell scope="col">Data sets in sandbox</Cell>
+                    <Cell scope="col">{''}</Cell>
                 </Row>
             </Head>
             <Body>
                 {availableDatasets.length > 0 ? (
                     availableDatasets.map((dataset: AvailableDatasetObj) => {
                         return (
-                            <Row key={dataset.datasetId}>
+                            <Row key={dataset.datasetId} id="tableRowNoPointer">
                                 <Cell>
                                     <div style={{ paddingTop: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
@@ -119,7 +116,7 @@ const Dataset: React.FC<datasetProps> = ({
                         );
                     })
                 ) : (
-                    <Row key="1">
+                    <Row key="1" id="tableRowNoPointer">
                         <Cell>
                             {availableDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
                         </Cell>

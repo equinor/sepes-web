@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, DropdownObj } from '../common/interfaces';
+import { DatasetObj, DropdownObj, DatasetPermissionObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
     editStudySpecificDataset,
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
@@ -86,7 +86,7 @@ type CreateEditDatasetProps = {
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
     editingDataset: boolean;
-    cache: any;
+    permissions: DatasetPermissionObj;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
@@ -94,7 +94,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     setDatasetFromDetails,
     setShowEditDataset,
     editingDataset,
-    cache
+    permissions
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const datasetId = window.location.pathname.split('/')[4];
@@ -108,7 +108,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
-    const permissions = useContext(Permissions);
+    const generalDatasetpermissions = useContext(Permissions);
     const location = useLocation<passedProps>();
 
     useEffect(() => {
@@ -165,13 +165,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         [getStudyByIdUrl(studyId)]: true,
                         [getDatasetsInStudyUrl(studyId)]: true
                     });
-                    history.push({
-                        pathname: '/studies/' + studyId + '/datasets/' + result.id,
-                        state: {
-                            canCreateStudySpecificDataset: location.state.canCreateStudySpecificDataset,
-                            canEditStudySpecificDataset: location.state.canEditStudySpecificDataset
-                        }
-                    });
+                    history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     console.log('Err');
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -185,7 +179,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setUpdateCache({
                         ...updateCache,
                         [getStudyByIdUrl(studyId)]: true,
-                        [getStudySpecificDatasetUrl(result.Id, studyId)]: true
+                        [getStudySpecificDatasetUrl(result.id, result.studyId)]: true
                     });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
@@ -215,8 +209,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 setLoading(false);
                 if (result && !result.Message) {
                     setHasChanged(false);
-                    setUpdateCache({ ...updateCache, 'datasets/': true });
-                    cache[getStandardDatasetUrl(studyId)] = result;
+                    setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
@@ -227,7 +220,18 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         }
     };
 
-    const handleChange = (columName: string, value: string) => {
+    const handleChange = (columName: string, value: any) => {
+        if (columName === 'dataId') {
+            if (value < 0 || value === '') {
+                setDataset({ ...dataset, ['dataId']: undefined });
+            } else {
+                setDataset({
+                    ...dataset,
+                    dataId: parseInt(value)
+                });
+            }
+            return;
+        }
         setHasChanged(true);
         setDataset({
             ...dataset,
@@ -263,6 +267,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
             return true;
         }
+        if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
+            return true;
+        }
         return false;
     };
 
@@ -275,8 +282,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return permissions.canEdit_PreApproved_Datasets ||
-        (location.state && location.state.canCreateStudySpecificDataset) ? (
+    return (checkUrlIfGeneralDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
+        (permissions && permissions.editDataset) ||
+        (location && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>

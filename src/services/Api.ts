@@ -1,4 +1,4 @@
-import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile, apiRequestPermissionsWithToken } from '../auth/AuthFunctions';
 import {
     StudyObj,
     DatasetObj,
@@ -76,7 +76,19 @@ export const getDataset = async (datasetId: string, studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET');
 };
 
+export const getStudySpecificDatasetResources = async (datasetId: string, studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId + '/resources', 'GET');
+};
+
+export const getStudySpecificDatasetFiles = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+};
+
 //Standard dataset
+
+export const getStandardDatasetFiles = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+};
 
 export const getStandardDataset = async (datasetId: string) => {
     return apiRequestWithToken('api/datasets/' + datasetId, 'GET');
@@ -88,10 +100,6 @@ export const createStandardDataset = async (dataset?: DatasetObj) => {
 
 export const updateStandardDataset = async (datsetId: string, dataset?: DatasetObj) => {
     return apiRequestWithToken('api/datasets/' + datsetId, 'PUT', dataset);
-};
-
-export const getStandardDatasets = async () => {
-    return apiRequestWithToken('api/datasets/', 'GET');
 };
 
 export const getParticipantList = async (search: string) => {
@@ -130,6 +138,10 @@ export const deleteSandbox = async (sandboxId: string) => {
 
 export const getResourceStatus = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
+};
+
+export const getSandboxCostAnalysis = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/costanalysis', 'GET');
 };
 
 export const makeAvailable = async (sandboxId: string) => {
@@ -221,7 +233,7 @@ export const getStudyRoles = async () => {
 //Permission
 
 export const getPermissions = async () => {
-    return apiRequestWithToken('api/permissions', 'GET');
+    return apiRequestPermissionsWithToken('api/permissions', 'GET');
 };
 
 // Files

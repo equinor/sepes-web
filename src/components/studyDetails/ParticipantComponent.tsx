@@ -250,7 +250,12 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         />
                     </Tooltip>
                 </div>
-                <Button variant="outlined" disabled={checkIfButtonDisabled()} onClick={addParticipant}>
+                <Button
+                    variant="outlined"
+                    disabled={checkIfButtonDisabled()}
+                    onClick={addParticipant}
+                    style={{ width: '136px' }}
+                >
                     {rolesResponse.loading ? <DotProgress variant="green" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>

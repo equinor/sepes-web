@@ -8,7 +8,6 @@ type StudyComponentFullProps = {
 
 const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) => {
     const [showLoading, setShowLoading] = useState<boolean>(noTimeout);
-    console.log(noTimeout);
 
     useEffect(() => {
         const timer = setTimeout(function () {

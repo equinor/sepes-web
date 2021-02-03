@@ -55,7 +55,7 @@ export interface DatasetObj {
     added?: boolean;
     studyId?: string;
     storageAccountLink?: string;
-    permissions?: DatasetPermissionObj;
+    permissions: DatasetPermissionObj;
 }
 
 export interface DatasetPermissionObj {
@@ -150,7 +150,6 @@ export interface resultsAndLearningsObj {
     resultsAndLearnings: string;
 }
 
-
 export interface CalculateNameObj {
     studyName: string;
     sandboxName: string;
@@ -158,4 +157,13 @@ export interface CalculateNameObj {
 }
 export interface VmUsernameObj {
     username: string;
+    operativeSystemType: string;
+}
+
+export interface DatasetResourcesObj {
+    name: string;
+    retryLink: string;
+    status: string;
+    type: string;
+    linkToExternalSystem: string;
 }

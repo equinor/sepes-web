@@ -26,7 +26,7 @@ const LoadingWrapper = styled.div`
 `;
 
 const divStyle = {
-    gridAutoColumns: 'minmax(1%,500px)'
+    gridAutoColumns: 'minmax(1%,800px)'
 };
 
 const { TabList, Tab } = Tabs;
@@ -144,7 +144,6 @@ const StudyDetails = () => {
                                 <Tab data-cy="datasets_tab">Data sets</Tab>
                                 <Tab data-cy="sandbox_tab">Sandboxes</Tab>
                                 <Tab>Participants</Tab>
-                                <Tab style={{ borderRadius: '4px' }}>Study defaults</Tab>
                             </TabList>
                         </Tabs>
                         <div style={{ padding: '16px' }}>{changeComponent()}</div>
