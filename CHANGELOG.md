@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/equinor/sepes-web/compare/0.1.12...0.1.13) (2021-02-03)
+
+
+### Bug Fixes
+
+* add a "unable to reach api" page if the api can not be reached ([3370893](https://github.com/equinor/sepes-web/commit/3370893b37e924c9cbfbfc780a62ad1a326698c8)), closes [#502](https://github.com/equinor/sepes-web/issues/502)
+* unable to reach api component displayed if you are not admin ([13ddc2c](https://github.com/equinor/sepes-web/commit/13ddc2c22551e6f953c400afecd036697f939f1b))
+* upgrade @azure/storage-blob from 12.1.2 to 12.3.0 ([#518](https://github.com/equinor/sepes-web/issues/518)) ([11d3e5e](https://github.com/equinor/sepes-web/commit/11d3e5ebaf8a830bebb16ab9af5f00a7402c6bc2))
+* upgrade @types/node from 12.12.37 to 12.19.12 ([d5b301a](https://github.com/equinor/sepes-web/commit/d5b301ad7f02921b30eb32baa9dbddddb375c079))
+* upgrade @types/react from 16.9.34 to 16.14.2 ([#521](https://github.com/equinor/sepes-web/issues/521)) ([681eed1](https://github.com/equinor/sepes-web/commit/681eed18762e4460fcc39530fddef9b3b9b944f4))
+* upgrade @types/styled-components from 5.1.0 to 5.1.7 ([6d9b949](https://github.com/equinor/sepes-web/commit/6d9b9491289cd0a7b1f0389b2ae829fa126b5349))
+* upgrade @typescript-eslint/eslint-plugin from 4.8.2 to 4.12.0 ([#520](https://github.com/equinor/sepes-web/issues/520)) ([2291918](https://github.com/equinor/sepes-web/commit/22919181703103f84a0ed4fb30354ac63445c716))
+* upgrade @typescript-eslint/parser from 4.8.2 to 4.12.0 ([7238368](https://github.com/equinor/sepes-web/commit/7238368cd170ce995441b0a9122d4b88184ea069))
+* upgrade msal from 1.3.0 to 1.4.4 ([#528](https://github.com/equinor/sepes-web/issues/528)) ([2b3ae76](https://github.com/equinor/sepes-web/commit/2b3ae769e2dc718cfacc795dadb22cee8065aa9b))
+* **dataset:** add tooltip with status of the storage account ([c190221](https://github.com/equinor/sepes-web/commit/c19022155c8935193f84225ca204594b0e5d6d54)), closes [#504](https://github.com/equinor/sepes-web/issues/504)
+* **dataset:** cache issue when editing a dataset and going back ([d34cb63](https://github.com/equinor/sepes-web/commit/d34cb63624e84a63c47bf5bf0724fb5606502680))
+* **dataset:** dragging a file into the dropzone now changes the color of that component. Easier to know you are dropping it in the correct place ([b19cd4e](https://github.com/equinor/sepes-web/commit/b19cd4ec4bdebc7dd9c3e443cb72486b1dd669e2)), closes [#511](https://github.com/equinor/sepes-web/issues/511)
+* **sandbox:** automatically update cost analysis link when resource group is ready ([bb56422](https://github.com/equinor/sepes-web/commit/bb56422fb692eb223c39c103ce8ed920fe8da355)), closes [#524](https://github.com/equinor/sepes-web/issues/524)
+* upgrade styled-components from 5.1.0 to 5.2.1 ([9e90e00](https://github.com/equinor/sepes-web/commit/9e90e00494f55369229886e657ddf697450b2f5a))
+* **dataset:** files uploaded not showing ([57f168b](https://github.com/equinor/sepes-web/commit/57f168bd450c3908455088bf4ce78ef2fb021d78))
+* **dataset:** much shorter redirect time for creating a dataset. Now … ([#496](https://github.com/equinor/sepes-web/issues/496)) ([9a509bc](https://github.com/equinor/sepes-web/commit/9a509bc9ce5489d2f3bfb69b089083c4e9bcb960))
+* **dataset:** Validate datasetId and do not allow anything but whole … ([#522](https://github.com/equinor/sepes-web/issues/522)) ([eab3d3e](https://github.com/equinor/sepes-web/commit/eab3d3eb82bb4730171cfde1820bd64323523e09)), closes [#516](https://github.com/equinor/sepes-web/issues/516)
+* **study:** now supporting a much lighter dto from backend ([#510](https://github.com/equinor/sepes-web/issues/510)) ([ea4ee75](https://github.com/equinor/sepes-web/commit/ea4ee757f4a6c7f27c1a96db597b17b1d4bfa94b))
+* **vm:** users now have to pick os before picking a usernames. This is because what usernames is allowed is affected by operating system ([aba5bd9](https://github.com/equinor/sepes-web/commit/aba5bd983d0accec9f989c2119883e4c0e370aa2)), closes [#481](https://github.com/equinor/sepes-web/issues/481)
+* add table hover color and make entire rows clickable ([da017f3](https://github.com/equinor/sepes-web/commit/da017f31f273dfb42dbbca99ae557b19a8c35deb))
+* issue where space were not allowed for study, sandbox and vm name ([b267018](https://github.com/equinor/sepes-web/commit/b267018fc89588762b47a544c8191510f6bcd962))
+* make entire sandbox cell in a study clickable ([bb2faed](https://github.com/equinor/sepes-web/commit/bb2faedb143ced555ed83c7c184f4cae95eb079b)), closes [#506](https://github.com/equinor/sepes-web/issues/506)
+* make name of sandbox, vm and study names required to have a length of minimum 3 and consist of only letters and numbers ([71f0ac7](https://github.com/equinor/sepes-web/commit/71f0ac737589009cc94f8e4d54ff9ec89bf74a55))
+* package.json & package-lock.json to reduce vulnerabilities ([d58643d](https://github.com/equinor/sepes-web/commit/d58643d5d619069ad92be530919de3c1884c300c))
+* package.json & package-lock.json to reduce vulnerabilities ([285cfd6](https://github.com/equinor/sepes-web/commit/285cfd62d32231a89ce9a4100ecc45122bb1de22))
+* remove study defaults tab, remove top bar until datasets functuinality comes back, fixed spelling error, increase margin for Hardware Requirements ([fc58571](https://github.com/equinor/sepes-web/commit/fc58571a00b8466c62e85e0814f1d21c77d1c185))
+* **dataset:** edit meta data for dataset displayed the "you do not have access" screen when the user had access ([e65bd13](https://github.com/equinor/sepes-web/commit/e65bd13b8b36848913ccca5e201d981da3c94b76)), closes [#480](https://github.com/equinor/sepes-web/issues/480)
+* **participants:** added fixed width of add participant button ([625b349](https://github.com/equinor/sepes-web/commit/625b3497657d9a8443ddac3588d8b0bf649aa79c)), closes [#482](https://github.com/equinor/sepes-web/issues/482)
+
 ### [0.1.12](https://github.com/equinor/sepes-web/compare/0.1.11...0.1.12) (2021-01-27)
 
 ### [0.1.11](https://github.com/equinor/sepes-web/compare/0.1.10...0.1.11) (2021-01-26)
