@@ -33,7 +33,7 @@ const SureToProceed: React.FC<SureToProceedComponentProps> = ({ setUserClickedBu
     return (
         <Scrim>
             <Wrapper ref={wrapperRef}>
-                <Typography variant="h4">Sure you want to procced with {type}?</Typography>
+                <Typography variant="h4">Are you sure you want to procced with {type}?</Typography>
                 <div>
                     <Button onClick={() => setUserClickedButton(false)} variant="outlined">
                         Cancel
