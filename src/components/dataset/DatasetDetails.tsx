@@ -33,6 +33,7 @@ import {
 import NotFound from '../common/informationalComponents/NotFound';
 import axios from 'axios';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
+import { uploadFile } from '../../services/BlobStorage';
 
 const icons = {
     arrow_back,
@@ -279,8 +280,9 @@ const DatasetDetails = (props: any) => {
             await _files.forEach(async (file) => {
                 await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                     .then((blob) => {
-                        filesHandledCount++;
-                        _formData.append(`files`, blob);
+                        // filesHandledCount++;
+                        //_formData.append(`files`, blob);
+                        uploadFile(file.name, blob);
                     })
                     .then(() => {
                         if (filesHandledCount === _files.length) {
