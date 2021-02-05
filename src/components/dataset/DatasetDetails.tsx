@@ -4,6 +4,7 @@ import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress } from '
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     deleteFileInDataset,
+    getDatasetSasToken,
     getStudySpecificDatasetFiles,
     getStudySpecificDatasetResources,
     removeStudyDataset
@@ -113,6 +114,8 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
+    const [filesHandled, setFilesHandled] = useState<any>(0);
+    const [totalFiles, setTotalFiles] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -276,19 +279,34 @@ const DatasetDetails = (props: any) => {
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
-            let filesHandledCount = 0;
-            await _files.forEach(async (file) => {
-                await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
-                    .then((blob) => {
-                        // filesHandledCount++;
-                        //_formData.append(`files`, blob);
-                        uploadFile(file.name, blob);
-                    })
-                    .then(() => {
-                        if (filesHandledCount === _files.length) {
-                            uploadFiles(_formData, previousFiles);
-                        }
+            setTotalFiles(_files.length);
+            getDatasetSasToken(datasetId).then((result: any) => {
+                if (result && !result.Message) {
+                    let filesHandledCount = 0;
+                    _files.forEach(async (file) => {
+                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                            .then((blob) => {
+                                filesHandledCount++;
+                                setFilesHandled(filesHandledCount);
+                                //_formData.append(`files`, blob);
+                                try {
+                                    uploadFile(result, file.name, blob, file.size, setPercentComplete);
+                                } catch (ex) {
+                                    console.log(ex);
+                                    setFiles(previousFiles);
+                                }
+                            })
+                            .then(() => {
+                                if (filesHandledCount === _files.length) {
+                                    // uploadFiles(_formData, previousFiles);
+                                }
+                            });
                     });
+                } else {
+                    setFiles(previousFiles);
+                    console.log('Err');
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                }
             });
         }
     };
@@ -367,6 +385,9 @@ const DatasetDetails = (props: any) => {
                                     value={percentComplete}
                                     variant="determinate"
                                 />
+                                <div style={{ padding: '8px' }}>
+                                    {filesHandled}/{totalFiles}
+                                </div>
                                 <Button
                                     onClick={() => {
                                         source.cancel();
