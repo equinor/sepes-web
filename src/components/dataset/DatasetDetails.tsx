@@ -92,6 +92,7 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
         storageAccountLink: undefined,
@@ -133,6 +134,7 @@ const DatasetDetails = (props: any) => {
 
         return () => {
             clearInterval(timer);
+            setIsSubscribed(false);
         };
     }, [dataset.storageAccountLink]);
 
@@ -142,8 +144,10 @@ const DatasetDetails = (props: any) => {
             dataset.storageAccountLink !== undefined &&
             dataset.storageAccountLink !== null
         ) {
+            setIsSubscribed(true);
             getDatasetFiles();
         }
+        return () => setIsSubscribed(false);
     }, [datasetStorageAccountIsReady, dataset]);
 
     const getDatasetResources = () => {
@@ -167,7 +171,7 @@ const DatasetDetails = (props: any) => {
                 if (result && (result.errors || result.Message)) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
-                } else {
+                } else if (isSubscribed) {
                     setFiles(result);
                 }
             });
@@ -273,6 +277,9 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        if (checkIfFileAlreadyIsUploaded(_files)) {
+            return;
+        }
         const previousFiles = [...files];
         const tempFiles = [...files];
         tempFiles.push(..._files);
@@ -309,6 +316,11 @@ const DatasetDetails = (props: any) => {
                 }
             });
         }
+    };
+
+    const checkIfFileAlreadyIsUploaded = (_files): boolean => {
+        let res = files.filter((file: any) => _files.some((incomingFile) => file.name === incomingFile.name));
+        return res.length > 0;
     };
 
     const removeFile = (i: number, file: any): void => {

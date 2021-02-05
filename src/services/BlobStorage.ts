@@ -56,16 +56,14 @@ async function blobToString(blob) {
 }
 */
 
-export const uploadFile = async (blobUri: string, blobName: string, data: any, totalSize: any, setPercentComplete) => {
+export const uploadFile = (blobUri: string, blobName: string, data: any, totalSize: any, setPercentComplete) => {
     if (blobUri) {
         const blobServiceClient = new BlobServiceClient(blobUri);
         const containerClient = blobServiceClient.getContainerClient('files');
         const blockBlobClient = containerClient.getBlockBlobClient(blobName);
         blockBlobClient.uploadBrowserData(data, {
             onProgress: (progress: TransferProgressEvent) => {
-                console.log(progress.loadedBytes);
                 const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
-                console.log(percentCalculated);
                 setPercentComplete(percentCalculated);
             }
         });
