@@ -26,7 +26,7 @@
         "@typescript-eslint/parser": "^4.8.2",
         "animate.css": "^4.1.0",
         "axios": "^0.21.1",
-        "bootstrap": "^4.4.1",
+        "bootstrap": "^4.5.3",
         "browser-image-compression": "^1.0.12",
         "commitizen": "^4.2.2",
         "copy-to-clipboard": "^3.3.1",
