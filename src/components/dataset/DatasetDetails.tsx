@@ -470,7 +470,9 @@ const DatasetDetails = (props: any) => {
                                         );
                                     })
                                 ) : (
-                                    <div style={{ textAlign: 'center' }}>No files uploaded yet.</div>
+                                    <div style={{ textAlign: 'center' }}>
+                                        {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
+                                    </div>
                                 )
                             ) : (
                                 <div style={{ textAlign: 'center' }}>
