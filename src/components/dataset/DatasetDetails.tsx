@@ -1,6 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress } from '@equinor/eds-core-react';
+import {
+    Typography,
+    Icon,
+    Button,
+    Tooltip,
+    LinearProgress,
+    DotProgress,
+    CircularProgress
+} from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     deleteFileInDataset,
@@ -85,7 +93,7 @@ let source = cancelToken.source();
 const interval = 7000;
 
 const DatasetDetails = (props: any) => {
-    let datasetId = window.location.pathname.split('/')[4];
+    const datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
@@ -150,6 +158,10 @@ const DatasetDetails = (props: any) => {
         return () => setIsSubscribed(false);
     }, [datasetStorageAccountIsReady, dataset]);
 
+    useEffect(() => {
+        return () => setIsSubscribed(false);
+    }, []);
+
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
             getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
@@ -164,14 +176,14 @@ const DatasetDetails = (props: any) => {
     };
 
     const getDatasetFiles = () => {
-        if (!checkUrlIfGeneralDataset()) {
+        if (!checkUrlIfGeneralDataset() && isSubscribed) {
             setLoadingFiles(true);
             getStudySpecificDatasetFiles(datasetId).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
-                } else if (isSubscribed) {
+                } else if (result && isSubscribed) {
                     setFiles(result);
                 }
             });
@@ -200,7 +212,7 @@ const DatasetDetails = (props: any) => {
     const getKey = () => {
         return keyCount++;
     };
-
+    /*
     const uploadFiles = (formData: any, previousFiles: any) => {
         setPercentComplete(0);
         updateOnNextVisit();
@@ -219,6 +231,7 @@ const DatasetDetails = (props: any) => {
             });
         }
     };
+    
 
     const postFile = async (url, files: any, previousFiles: any) => {
         return new Promise(() => {
@@ -250,6 +263,7 @@ const DatasetDetails = (props: any) => {
                 });
         });
     };
+    */
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
@@ -277,9 +291,12 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
-        if (checkIfFileAlreadyIsUploaded(_files)) {
+        _files = checkIfFileAlreadyIsUploaded(_files);
+
+        if (_files.length === 0) {
             return;
         }
+
         const previousFiles = [...files];
         const tempFiles = [...files];
         tempFiles.push(..._files);
@@ -318,9 +335,19 @@ const DatasetDetails = (props: any) => {
         }
     };
 
-    const checkIfFileAlreadyIsUploaded = (_files): boolean => {
-        let res = files.filter((file: any) => _files.some((incomingFile) => file.name === incomingFile.name));
-        return res.length > 0;
+    const checkIfFileAlreadyIsUploaded = (_files) => {
+        //const res = files.filter((file: any) => _files.some((incomingFile) => file.name === incomingFile.name));
+        // let res = _files.filter((file: any) => files.some((incomingFile) => file.name === incomingFile.name));
+        let newArray: any = [];
+        _files.forEach((file: File) => {
+            const res = files
+                .map((e) => {
+                    return e.name;
+                })
+                .indexOf(file.name);
+            if (res === -1) newArray.push(file);
+        });
+        return newArray;
     };
 
     const removeFile = (i: number, file: any): void => {
@@ -419,28 +446,38 @@ const DatasetDetails = (props: any) => {
                             </div>
                         )}
                         <div style={{ paddingTop: '8px' }}>
-                            {files &&
-                                files.map((file: any, i: number) => {
-                                    return (
-                                        <AttachmentWrapper key={getKey()}>
-                                            <div>{file.name}</div>
-                                            <div>{bytesToSize(file.size)} </div>
-                                            <Button
-                                                variant="ghost_icon"
-                                                onClick={() => removeFile(i, file)}
-                                                style={{ marginTop: '-8px' }}
-                                                disabled={!(percentComplete === 0 || percentComplete === 100)}
-                                            >
-                                                <Icon
-                                                    color="#007079"
-                                                    name="delete_forever"
-                                                    size={24}
-                                                    style={{ cursor: 'pointer' }}
-                                                />
-                                            </Button>
-                                        </AttachmentWrapper>
-                                    );
-                                })}
+                            {!loadingFiles ? (
+                                files.length > 0 ? (
+                                    files.map((file: any, i: number) => {
+                                        return (
+                                            <AttachmentWrapper key={getKey()}>
+                                                <div>{file.name}</div>
+                                                <div>{bytesToSize(file.size)} </div>
+                                                <Button
+                                                    variant="ghost_icon"
+                                                    onClick={() => removeFile(i, file)}
+                                                    style={{ marginTop: '-8px' }}
+                                                    disabled={!(percentComplete === 0 || percentComplete === 100)}
+                                                >
+                                                    <Icon
+                                                        color="#007079"
+                                                        name="delete_forever"
+                                                        size={24}
+                                                        style={{ cursor: 'pointer' }}
+                                                    />
+                                                </Button>
+                                            </AttachmentWrapper>
+                                        );
+                                    })
+                                ) : (
+                                    <div style={{ textAlign: 'center' }}>No files uploaded yet.</div>
+                                )
+                            ) : (
+                                <div style={{ textAlign: 'center' }}>
+                                    <DotProgress variant="green" />
+                                    <div>Loading files..</div>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {!datasetResponse.loading ? (

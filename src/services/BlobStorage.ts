@@ -1,6 +1,7 @@
-import { Observable, Subscriber } from 'rxjs';
 import { TransferProgressEvent } from '@azure/core-http';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { BlockBlobClient } from '@azure/storage-blob';
+import { AbortSignalLike, AbortController } from '@azure/abort-controller';
 //import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 const { BlobServiceClient } = require('@azure/storage-blob');
 /*
@@ -56,11 +57,36 @@ async function blobToString(blob) {
 }
 */
 
+const listener = (e: any) => {
+    console.log(e);
+    //e.abort();
+    console.log('aaaaaaaaaaaaa');
+    if (e.key === 'Escape') {
+        console.log('aaaaaaaaaaaaa');
+    }
+};
+
 export const uploadFile = (blobUri: string, blobName: string, data: any, totalSize: any, setPercentComplete) => {
     if (blobUri) {
         const blobServiceClient = new BlobServiceClient(blobUri);
         const containerClient = blobServiceClient.getContainerClient('files');
-        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+        //let test: AbortSignalLike = { addEventListener: listener, aborted: false, removeEventListener: () => {} };
+        //test.aborted();
+        //let test:addEventListener('abort', listener)
+        /*
+        const controller = new AbortController();
+        controller.signal.addEventListener('abort', function () {
+            controller.abort();
+            console.log('Download aborted');
+        });
+        uploadData(controller, blockBlobClient, setPercentComplete, data, totalSize);
+
+        // at some point later
+        controller.abort();
+        //controller.signal;
+        console.log('aborted', controller.signal);
+        */
         blockBlobClient.uploadBrowserData(data, {
             onProgress: (progress: TransferProgressEvent) => {
                 const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
@@ -68,6 +94,16 @@ export const uploadFile = (blobUri: string, blobName: string, data: any, totalSi
             }
         });
     }
+};
+
+const uploadData = async (abortSignal, blockBlobClient: BlockBlobClient, setPercentComplete, data, totalSize) => {
+    await blockBlobClient.uploadBrowserData(data, {
+        onProgress: (progress: TransferProgressEvent) => {
+            const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
+            setPercentComplete(percentCalculated);
+        },
+        abortSignal
+    });
 };
 
 /*
