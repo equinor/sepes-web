@@ -12,7 +12,7 @@ import { lineBreak } from '../common/helpers';
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 9fr 400px;
-
+    grid-template-rows: 436px;
     width: 100%;
     grid-gap: 16px;
     margin-top: 24px;
