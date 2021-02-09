@@ -84,6 +84,10 @@ export const getStudySpecificDatasetFiles = async (datasetId: string) => {
     return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
 };
 
+export const getDatasetSasToken = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/saskey', 'GET');
+};
+
 //Standard dataset
 
 export const getStandardDatasetFiles = async (datasetId: string) => {
