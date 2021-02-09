@@ -333,8 +333,6 @@ const DatasetDetails = (props: any) => {
     };
 
     const checkIfFileAlreadyIsUploaded = (_files) => {
-        //const res = files.filter((file: any) => _files.some((incomingFile) => file.name === incomingFile.name));
-        // let res = _files.filter((file: any) => files.some((incomingFile) => file.name === incomingFile.name));
         let newArray: any = [];
         _files.forEach((file: File) => {
             const res = files
