@@ -1,14 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-    Typography,
-    Icon,
-    Button,
-    Tooltip,
-    LinearProgress,
-    DotProgress,
-    CircularProgress
-} from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     deleteFileInDataset,
@@ -88,8 +80,8 @@ const checkUrlIfGeneralDataset = () => {
     return false;
 };
 let controller = new AbortController();
-let cancelToken = axios.CancelToken;
-let source = cancelToken.source();
+//let cancelToken = axios.CancelToken;
+//let source = cancelToken.source();
 const interval = 7000;
 
 const DatasetDetails = (props: any) => {
@@ -116,6 +108,7 @@ const DatasetDetails = (props: any) => {
         setDataset
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
+    const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
     const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
@@ -163,10 +156,6 @@ const DatasetDetails = (props: any) => {
     useEffect(() => {
         return () => setIsSubscribed(false);
     }, []);
-
-    useEffect(() => {
-        console.log(percentComplete);
-    }, [percentComplete]);
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -356,6 +345,11 @@ const DatasetDetails = (props: any) => {
                 .indexOf(file.name);
             if (res === -1) newArray.push(file);
         });
+
+        if (_files.length !== newArray.length) {
+            setDuplicateFiles(true);
+        }
+
         return newArray;
     };
 
@@ -426,32 +420,47 @@ const DatasetDetails = (props: any) => {
                                 )
                             }
                         />
-                        {percentComplete > 0 && (
-                            <div style={{ display: 'flex' }}>
-                                <LinearProgress
-                                    style={{ marginTop: '16px' }}
-                                    value={percentComplete}
-                                    variant="determinate"
-                                />
-                                <div style={{ padding: '8px' }}>
-                                    {filesHandled}/{totalFiles}
-                                </div>
-                                <Button
-                                    onClick={() => {
-                                        controller.abort();
-                                        setFiles(prevFiles);
-                                        setPercentComplete(0);
-                                        controller = new AbortController();
+                        {duplicateFiles && (
+                            <div>
+                                <Chip
+                                    variant="active"
+                                    onDelete={() => {
+                                        setDuplicateFiles(false);
                                     }}
-                                    style={{ float: 'right', padding: '4px' }}
-                                    variant="ghost_icon"
-                                    disabled={percentComplete === 0 || percentComplete === 100}
+                                    style={{ marginLeft: 'auto' }}
                                 >
-                                    {percentComplete === 0 || percentComplete === 100
-                                        ? EquinorIcon('check', '', 24)
-                                        : EquinorIcon('clear', '', 24)}
-                                </Button>
+                                    Already uploaded files are skipped
+                                </Chip>
                             </div>
+                        )}
+                        {percentComplete > 0 && (
+                            <>
+                                <div style={{ display: 'flex' }}>
+                                    <LinearProgress
+                                        style={{ marginTop: '16px' }}
+                                        value={percentComplete}
+                                        variant="determinate"
+                                    />
+                                    <div style={{ padding: '8px' }}>
+                                        {filesHandled}/{totalFiles}
+                                    </div>
+                                    <Button
+                                        onClick={() => {
+                                            controller.abort();
+                                            setFiles(prevFiles);
+                                            setPercentComplete(0);
+                                            controller = new AbortController();
+                                        }}
+                                        style={{ float: 'right', padding: '4px' }}
+                                        variant="ghost_icon"
+                                        disabled={percentComplete === 0 || percentComplete === 100}
+                                    >
+                                        {percentComplete === 0 || percentComplete === 100
+                                            ? EquinorIcon('check', '', 24)
+                                            : EquinorIcon('clear', '', 24)}
+                                    </Button>
+                                </div>
+                            </>
                         )}
                         <div style={{ paddingTop: '8px' }}>
                             {!loadingFiles ? (
