@@ -87,7 +87,7 @@ const checkUrlIfGeneralDataset = () => {
     }
     return false;
 };
-
+let controller = new AbortController();
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
 const interval = 7000;
@@ -100,6 +100,7 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
+    const [loadingSasToken, setLoadingSasToken] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -116,6 +117,7 @@ const DatasetDetails = (props: any) => {
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
+    const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
@@ -161,6 +163,10 @@ const DatasetDetails = (props: any) => {
     useEffect(() => {
         return () => setIsSubscribed(false);
     }, []);
+
+    useEffect(() => {
+        console.log(percentComplete);
+    }, [percentComplete]);
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -298,13 +304,16 @@ const DatasetDetails = (props: any) => {
         }
 
         const previousFiles = [...files];
+        setPrevFiles(previousFiles);
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
             setTotalFiles(_files.length);
+            setLoadingSasToken(true);
             getDatasetSasToken(datasetId).then((result: any) => {
+                setLoadingSasToken(false);
                 if (result && !result.Message) {
                     let filesHandledCount = 0;
                     _files.forEach(async (file) => {
@@ -314,7 +323,7 @@ const DatasetDetails = (props: any) => {
                                 setFilesHandled(filesHandledCount);
                                 //_formData.append(`files`, blob);
                                 try {
-                                    uploadFile(result, file.name, blob, file.size, setPercentComplete);
+                                    uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
@@ -429,11 +438,10 @@ const DatasetDetails = (props: any) => {
                                 </div>
                                 <Button
                                     onClick={() => {
-                                        source.cancel();
+                                        controller.abort();
+                                        setFiles(prevFiles);
                                         setPercentComplete(0);
-
-                                        cancelToken = axios.CancelToken;
-                                        source = cancelToken.source();
+                                        controller = new AbortController();
                                     }}
                                     style={{ float: 'right', padding: '4px' }}
                                     variant="ghost_icon"
@@ -588,7 +596,8 @@ const DatasetDetails = (props: any) => {
                                                 disabled={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        dataset.permissions?.deleteDataset
+                                                        dataset.permissions?.deleteDataset ||
+                                                        !loadingSasToken
                                                     )
                                                 }
                                             >

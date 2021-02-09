@@ -1,7 +1,8 @@
 import { TransferProgressEvent } from '@azure/core-http';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { BlockBlobClient } from '@azure/storage-blob';
+import { BlockBlobClient, BlockBlobParallelUploadOptions } from '@azure/storage-blob';
 import { AbortSignalLike, AbortController } from '@azure/abort-controller';
+import { type } from 'os';
 //import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 const { BlobServiceClient } = require('@azure/storage-blob');
 /*
@@ -57,42 +58,64 @@ async function blobToString(blob) {
 }
 */
 
-const listener = (e: any) => {
-    console.log(e);
-    //e.abort();
-    console.log('aaaaaaaaaaaaa');
-    if (e.key === 'Escape') {
-        console.log('aaaaaaaaaaaaa');
-    }
-};
-
-export const uploadFile = (blobUri: string, blobName: string, data: any, totalSize: any, setPercentComplete) => {
+export const uploadFile = async (
+    blobUri: string,
+    blobName: string,
+    data: any,
+    totalSize: any,
+    setPercentComplete,
+    controller: any
+) => {
     if (blobUri) {
         const blobServiceClient = new BlobServiceClient(blobUri);
         const containerClient = blobServiceClient.getContainerClient('files');
         const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+        //let test2: AbortSignalLike = { addEventListener: listener, aborted: false, removeEventListener: () => {} };
+        //let test: BlockBlobParallelUploadOptions = { abortSignal: test2 };
+        //test.abortSignal()
+        //let test3 = AbortSignal: type: 'abort', addEventListener('abort', test2), }
         //let test: AbortSignalLike = { addEventListener: listener, aborted: false, removeEventListener: () => {} };
         //test.aborted();
         //let test:addEventListener('abort', listener)
+
+        //const controller = new AbortController();
         /*
-        const controller = new AbortController();
         controller.signal.addEventListener('abort', function () {
             controller.abort();
             console.log('Download aborted');
         });
-        uploadData(controller, blockBlobClient, setPercentComplete, data, totalSize);
+        //uploadData(controller.signal, blockBlobClient, setPercentComplete, data, totalSize);
 
         // at some point later
-        controller.abort();
+        try {
+            controller.abort();
+        } catch (error) {
+            console.log(error);
+            console.log('abortaaaa');
+        }
+        
         //controller.signal;
         console.log('aborted', controller.signal);
         */
-        blockBlobClient.uploadBrowserData(data, {
-            onProgress: (progress: TransferProgressEvent) => {
-                const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
-                setPercentComplete(percentCalculated);
+
+        try {
+            await blockBlobClient.uploadBrowserData(data, {
+                onProgress: (progress: TransferProgressEvent) => {
+                    const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
+                    setPercentComplete(percentCalculated);
+                },
+                abortSignal: controller.signal
+            });
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Downloading the shopping list failed');
             }
-        });
+        }
+        //controller.abort();
     }
 };
 
