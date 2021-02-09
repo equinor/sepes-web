@@ -167,3 +167,8 @@ export interface DatasetResourcesObj {
     type: string;
     linkToExternalSystem: string;
 }
+
+export interface DatasetClassificationObj {
+    classification: string;
+    restrictionDisplayText: string;
+}

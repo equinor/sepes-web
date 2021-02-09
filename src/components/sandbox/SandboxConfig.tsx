@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { DatasetClassificationObj, SandboxObj, SandboxPermissions } from '../common/interfaces';
 import Dataset from './components/Dataset';
 import PolicyComponent from './components/PolicyComponent';
 import ResourcesComponent from './components/ResourcesComponent';
@@ -52,6 +52,10 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     setSandbox,
     sandbox
 }) => {
+    const [sandboxDatasetRestriction, setSandboxDatasetRestriction] = useState<DatasetClassificationObj>({
+        classification: '',
+        restrictionDisplayText: ''
+    });
     return (
         <Wrapper>
             <InfoWrapper>
@@ -62,9 +66,10 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     permissions={permissions}
                     setSandbox={setSandbox}
                     sandbox={sandbox}
+                    setSandboxDatasetRestriction={setSandboxDatasetRestriction}
                 />
                 <PolictyComponentWrapper>
-                    <PolicyComponent displayCheckbox />
+                    <PolicyComponent displayCheckbox sandboxDatasetRestriction={sandboxDatasetRestriction} />
                 </PolictyComponentWrapper>
                 <ResourcesComponent resources={resources} />
             </InfoWrapper>

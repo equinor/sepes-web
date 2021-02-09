@@ -1,13 +1,15 @@
 import React from 'react';
 import { Table, Checkbox } from '@equinor/eds-core-react';
 import '../../../styles/Table.scss';
+import { DatasetClassificationObj } from '../../common/interfaces';
 const { Body, Row, Cell, Head } = Table;
 
 type DatasetProps = {
     displayCheckbox?: boolean;
+    sandboxDatasetRestriction?: DatasetClassificationObj;
 };
 
-const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
+const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandboxDatasetRestriction }) => {
     return (
         <>
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
@@ -18,10 +20,7 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
                 </Head>
                 <Body>
                     <Row key={1} id="tableRowNoPointerNoColor">
-                        <Cell>
-                            Restricted data - Outbound internet traffic cannot be opened. Strict inbound rules. Data
-                            traffic will be suspended if exceeding 500 MB
-                        </Cell>
+                        <Cell>{sandboxDatasetRestriction?.restrictionDisplayText}</Cell>
                     </Row>
                 </Body>
             </Table>

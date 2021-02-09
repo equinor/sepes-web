@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, DatasetClassificationObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
@@ -16,6 +16,7 @@ type datasetProps = {
     permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
+    setSandboxDatasetRestriction: any;
 };
 
 const Dataset: React.FC<datasetProps> = ({
@@ -24,7 +25,8 @@ const Dataset: React.FC<datasetProps> = ({
     setUpdateCache,
     permissions,
     setSandbox,
-    sandbox
+    sandbox,
+    setSandboxDatasetRestriction
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
@@ -51,6 +53,12 @@ const Dataset: React.FC<datasetProps> = ({
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 } else {
+                    const restriction: DatasetClassificationObj = {
+                        classification: result.classification,
+                        restrictionDisplayText: result.restrictionDisplayText
+                    };
+                    console.log(restriction);
+                    setSandboxDatasetRestriction(restriction);
                     let tempDatasets: any = sandbox.datasets;
                     tempDatasets.push(dataset.datasetId);
                     setSandbox({ ...sandbox, datasets: tempDatasets });
@@ -71,6 +79,14 @@ const Dataset: React.FC<datasetProps> = ({
         }
     };
 
+    useEffect(() => {
+        const restriction: DatasetClassificationObj = {
+            classification: availableDatasets.classification,
+            restrictionDisplayText: availableDatasets.restrictionDisplayText
+        };
+        setSandboxDatasetRestriction(restriction);
+    }, [availableDatasets]);
+
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
@@ -80,8 +96,8 @@ const Dataset: React.FC<datasetProps> = ({
                 </Row>
             </Head>
             <Body>
-                {availableDatasets.length > 0 ? (
-                    availableDatasets.map((dataset: AvailableDatasetObj) => {
+                {availableDatasets.availableDatasets && availableDatasets.availableDatasets.length > 0 ? (
+                    availableDatasets.availableDatasets.map((dataset: AvailableDatasetObj) => {
                         return (
                             <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                 <Cell>
