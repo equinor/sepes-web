@@ -16,7 +16,7 @@ import { bytesToSize } from '../common/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
-import { loginRequest, makeFileBlobFromUrl } from '../../auth/AuthFunctions';
+import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
@@ -24,7 +24,6 @@ import { EquinorIcon } from '../common/StyledComponents';
 import { useHistory } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
-import myMSALObj from '../../auth/AuthConfig';
 import {
     getDatasetsFilesUrl,
     getStandardDatasetUrl,
@@ -32,7 +31,6 @@ import {
     getStudyByIdUrl
 } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
-import axios from 'axios';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
 
@@ -299,6 +297,7 @@ const DatasetDetails = (props: any) => {
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
+            setPercentComplete(1);
             setTotalFiles(_files.length);
             setLoadingSasToken(true);
             getDatasetSasToken(datasetId).then((result: any) => {
