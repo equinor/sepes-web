@@ -53,15 +53,13 @@ const Dataset: React.FC<datasetProps> = ({
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 } else {
-                    const restriction: DatasetClassificationObj = {
-                        classification: result.classification,
-                        restrictionDisplayText: result.restrictionDisplayText
-                    };
-                    console.log(restriction);
-                    setSandboxDatasetRestriction(restriction);
                     let tempDatasets: any = sandbox.datasets;
                     tempDatasets.push(dataset.datasetId);
-                    setSandbox({ ...sandbox, datasets: tempDatasets });
+                    setSandbox({
+                        ...sandbox,
+                        datasets: tempDatasets,
+                        restrictionDisplayText: result.restrictionDisplayText
+                    });
                 }
             });
         } else {
@@ -73,7 +71,11 @@ const Dataset: React.FC<datasetProps> = ({
                 } else {
                     let tempDatasets: any = sandbox.datasets;
                     tempDatasets.splice(tempDatasets.indexOf(dataset.datasetId), 1);
-                    setSandbox({ ...sandbox, datasets: tempDatasets });
+                    setSandbox({
+                        ...sandbox,
+                        datasets: tempDatasets,
+                        restrictionDisplayText: result.restrictionDisplayText
+                    });
                 }
             });
         }
@@ -96,8 +98,8 @@ const Dataset: React.FC<datasetProps> = ({
                 </Row>
             </Head>
             <Body>
-                {availableDatasets.availableDatasets && availableDatasets.availableDatasets.length > 0 ? (
-                    availableDatasets.availableDatasets.map((dataset: AvailableDatasetObj) => {
+                {availableDatasets.datasets && availableDatasets.datasets.length > 0 ? (
+                    availableDatasets.datasets.map((dataset: AvailableDatasetObj) => {
                         return (
                             <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                 <Cell>

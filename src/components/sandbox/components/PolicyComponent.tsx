@@ -1,15 +1,15 @@
 import React from 'react';
 import { Table, Checkbox } from '@equinor/eds-core-react';
 import '../../../styles/Table.scss';
-import { DatasetClassificationObj } from '../../common/interfaces';
+import { SandboxObj } from '../../common/interfaces';
 const { Body, Row, Cell, Head } = Table;
 
 type DatasetProps = {
     displayCheckbox?: boolean;
-    sandboxDatasetRestriction?: DatasetClassificationObj;
+    sandbox: SandboxObj;
 };
 
-const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandboxDatasetRestriction }) => {
+const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
     return (
         <>
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
@@ -20,7 +20,7 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandboxDatasetRestri
                 </Head>
                 <Body>
                     <Row key={1} id="tableRowNoPointerNoColor">
-                        <Cell>{sandboxDatasetRestriction?.restrictionDisplayText}</Cell>
+                        <Cell>{sandbox.restrictionDisplayText}</Cell>
                     </Row>
                 </Body>
             </Table>

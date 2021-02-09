@@ -4,10 +4,11 @@ import PolicyComponent from './components/PolicyComponent';
 import ResourcesComponent from './components/ResourcesComponent';
 import { EquinorIcon } from '../common/StyledComponents';
 import DatasetConfirmed from './components/DatasetsConfirmed';
+import { SandboxObj } from '../common/interfaces';
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: auto auto;
+    grid-template-rows: 0px auto;
     grid-gap: 32px;
     border-radius: 4px;
     background-color: #ffffff;
@@ -25,25 +26,23 @@ const ResourceWrapper = styled.div`
 
 type ExecutionProps = {
     resources: any;
-    sandboxId;
+    sandbox: SandboxObj;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandboxId }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
     return (
         <Wrapper>
+            <span style={{ padding: '16px' }}>
+                {EquinorIcon('mood_very_happy', '#007079', 24)} Data is now available in storage account
+            </span>
             <ResourceWrapper>
                 <div>
-                    <span>
-                        {EquinorIcon('mood_very_happy', '#007079', 24)} Data is now available in storage account
-                    </span>
-                    <div style={{ marginTop: '8px' }}>
-                        <DatasetConfirmed sandboxId={sandboxId} />
-                    </div>
+                    <DatasetConfirmed sandbox={sandbox} />
                 </div>
-                <div style={{ marginTop: '32px' }}>
-                    <PolicyComponent />
+                <div>
+                    <PolicyComponent sandbox={sandbox} />
                 </div>
-                <div style={{ marginTop: '32px' }}>
+                <div>
                     <ResourcesComponent resources={resources} />
                 </div>
             </ResourceWrapper>

@@ -92,6 +92,7 @@ export interface SandboxObj {
     permissions: SandboxPermissions;
     linkToCostAnalysis?: string;
     currentPhase: number | undefined;
+    restrictionDisplayText: string;
 }
 
 export interface SandboxPermissions {

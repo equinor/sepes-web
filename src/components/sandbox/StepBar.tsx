@@ -219,6 +219,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
+                setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
                 setNewPhase(1);
             }
         });

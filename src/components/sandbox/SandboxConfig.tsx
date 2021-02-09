@@ -41,6 +41,7 @@ type SandboxConfigProps = {
     permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
+    setSandboxDatasetRestriction: any;
 };
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
@@ -50,12 +51,9 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     setUpdateCache,
     permissions,
     setSandbox,
-    sandbox
+    sandbox,
+    setSandboxDatasetRestriction
 }) => {
-    const [sandboxDatasetRestriction, setSandboxDatasetRestriction] = useState<DatasetClassificationObj>({
-        classification: '',
-        restrictionDisplayText: ''
-    });
     return (
         <Wrapper>
             <InfoWrapper>
@@ -69,7 +67,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     setSandboxDatasetRestriction={setSandboxDatasetRestriction}
                 />
                 <PolictyComponentWrapper>
-                    <PolicyComponent displayCheckbox sandboxDatasetRestriction={sandboxDatasetRestriction} />
+                    <PolicyComponent displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
                 <ResourcesComponent resources={resources} />
             </InfoWrapper>
