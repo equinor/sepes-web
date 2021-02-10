@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/equinor/sepes-web/compare/0.1.13...0.1.14) (2021-02-10)
+
+
+### Bug Fixes
+
+* **dataset:** file upload now uploads directly to azure blob storage ([#545](https://github.com/equinor/sepes-web/issues/545)) ([52b956f](https://github.com/equinor/sepes-web/commit/52b956f6560abffdd9513f24be61daa906a2535e))
+* **homepage:** changed height of text box to a static height ([df10c02](https://github.com/equinor/sepes-web/commit/df10c02f2aee140fb48843885228c9e642a40941))
+* **homepage:** Updated text describing what Sepes is ([222189d](https://github.com/equinor/sepes-web/commit/222189d784091c3b199873f41b54ea0280b8e8ea)), closes [#544](https://github.com/equinor/sepes-web/issues/544)
+* add general error screen if permissions api call receives an error. Also refactor structure of common files ([af06deb](https://github.com/equinor/sepes-web/commit/af06deb74c5907f0fd2d6da7b0edcb71eb4c98cf)), closes [#538](https://github.com/equinor/sepes-web/issues/538)
+* remove hover color and point on tables where it makes sense. Fix… ([#540](https://github.com/equinor/sepes-web/issues/540)) ([043cc46](https://github.com/equinor/sepes-web/commit/043cc465013996a5dfd31d5723eee83a624bedd1))
+* remove step 3 and 4 from sandbox stepper. Change text when clicking make available in sandbox ([6ff8fc5](https://github.com/equinor/sepes-web/commit/6ff8fc5069cfabcae08cfcbbb4d7d521ade11ce8))
+* upgrade @fortawesome/fontawesome-free from 5.13.0 to 5.15.2 ([d041458](https://github.com/equinor/sepes-web/commit/d0414586968620b02383845411059b024bb18f85))
+* upgrade @material-ui/core from 4.10.0 to 4.11.2 ([dfebada](https://github.com/equinor/sepes-web/commit/dfebada42b3e79b3fe0137603507b1bf7dd924a9))
+* upgrade @types/react-router from 5.1.7 to 5.1.11 ([4b4da6a](https://github.com/equinor/sepes-web/commit/4b4da6a063491a215ce55502fdccdc126de8f96a))
+* upgrade @types/reactstrap from 8.4.2 to 8.7.1 ([#536](https://github.com/equinor/sepes-web/issues/536)) ([ae97696](https://github.com/equinor/sepes-web/commit/ae97696feb7270c31dddddcce581f94ab387e028))
+* upgrade @typescript-eslint/parser from 4.12.0 to 4.14.0 ([77f08e0](https://github.com/equinor/sepes-web/commit/77f08e0b9ffa3b3c8ba717ed4acd17f6f86f4a48))
+* upgrade bootstrap from 4.4.1 to 4.5.3 ([367a892](https://github.com/equinor/sepes-web/commit/367a892b1965c43f2220653dc71163fcb34cbb13))
+* upgrade commitizen from 4.1.3 to 4.2.2 ([36167d2](https://github.com/equinor/sepes-web/commit/36167d2255c83c365631fc8caefcb7d004c43868))
+* **dataset:** timeout of upload of large files. Also if a file upload is cancelled because of an api error, it is now removed from the list of files in the dataset. Size of files is now displayed in appropriate sizes. ([383f971](https://github.com/equinor/sepes-web/commit/383f971f3f8a3d3ea2a2fbeffced1dc8c679e29c)), closes [#541](https://github.com/equinor/sepes-web/issues/541) [#537](https://github.com/equinor/sepes-web/issues/537)
+* upgrade react-dropzone from 11.0.1 to 11.2.4 ([d8614d8](https://github.com/equinor/sepes-web/commit/d8614d8f794e75dfc6c0193a1cd354458259298c))
+* upgrade reactstrap from 8.4.1 to 8.8.1 ([b6d8796](https://github.com/equinor/sepes-web/commit/b6d879625b42ec075ba83308b1003254341753b0))
+
 ### [0.1.13](https://github.com/equinor/sepes-web/compare/0.1.12...0.1.13) (2021-02-03)
 
 
