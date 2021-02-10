@@ -61,7 +61,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const permissions = useContext(Permissions);
-    const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
+    //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
     const removeDataset = (row: any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
@@ -75,7 +75,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
-            datasetsResponse.setLoading(false);
+            //datasetsResponse.setLoading(false);
         });
     };
 
@@ -89,7 +89,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             }
         });
     };
-
+    /*
     const addDatasetToStudy = (row: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true, [getDatasetsInStudyUrl(study.id)]: true });
         setIsOpen(false);
@@ -107,7 +107,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             });
         }
     };
-
+    
     const checkIfDatasetIsAlreadyAdded = (id: string) => {
         let elementExist = false;
         study.datasets &&
@@ -118,7 +118,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             });
         return elementExist;
     };
-
+*/
     return (
         <Wrapper>
             {/*<Bar>*/}
