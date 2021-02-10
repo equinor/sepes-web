@@ -4,7 +4,12 @@ import { AvailableDatasetObj, DatasetClassificationObj, SandboxObj, SandboxPermi
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
-import { getAvailableDatasetsUrl, getDatasetsInSandboxUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
+import {
+    getAvailableDatasetsUrl,
+    getDatasetsInSandboxUrl,
+    getSandboxByIdUrl,
+    getStudyByIdUrl
+} from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
@@ -44,7 +49,8 @@ const Dataset: React.FC<datasetProps> = ({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
             [getDatasetsInSandboxUrl(sandboxId)]: true,
-            [getAvailableDatasetsUrl(sandboxId)]: true
+            [getAvailableDatasetsUrl(sandboxId)]: true,
+            [getSandboxByIdUrl(sandboxId)]: true
         });
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
