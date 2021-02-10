@@ -59,10 +59,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
             undefined
     );
-    const [sandboxDatasetRestriction, setSandboxDatasetRestriction] = useState<DatasetClassificationObj>({
-        classification: '',
-        restrictionDisplayText: ''
-    });
+
     useEffect(() => {
         if (
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
@@ -109,7 +106,6 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         permissions={sandbox.permissions}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
-                        setSandboxDatasetRestriction={setSandboxDatasetRestriction}
                     />
                 );
         }

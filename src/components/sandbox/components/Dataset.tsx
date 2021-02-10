@@ -21,7 +21,6 @@ type datasetProps = {
     permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
-    setSandboxDatasetRestriction: any;
 };
 
 const Dataset: React.FC<datasetProps> = ({
@@ -30,8 +29,7 @@ const Dataset: React.FC<datasetProps> = ({
     setUpdateCache,
     permissions,
     setSandbox,
-    sandbox,
-    setSandboxDatasetRestriction
+    sandbox
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
@@ -86,7 +84,7 @@ const Dataset: React.FC<datasetProps> = ({
             });
         }
     };
-
+    /*
     useEffect(() => {
         const restriction: DatasetClassificationObj = {
             classification: availableDatasets.classification,
@@ -94,6 +92,7 @@ const Dataset: React.FC<datasetProps> = ({
         };
         setSandboxDatasetRestriction(restriction);
     }, [availableDatasets]);
+    */
 
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>

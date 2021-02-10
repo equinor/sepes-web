@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { DatasetClassificationObj, SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj, SandboxPermissions } from '../common/interfaces';
 import Dataset from './components/Dataset';
 import PolicyComponent from './components/PolicyComponent';
 import ResourcesComponent from './components/ResourcesComponent';
@@ -41,7 +41,6 @@ type SandboxConfigProps = {
     permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
-    setSandboxDatasetRestriction: any;
 };
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
@@ -51,8 +50,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     setUpdateCache,
     permissions,
     setSandbox,
-    sandbox,
-    setSandboxDatasetRestriction
+    sandbox
 }) => {
     return (
         <Wrapper>
@@ -64,7 +62,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     permissions={permissions}
                     setSandbox={setSandbox}
                     sandbox={sandbox}
-                    setSandboxDatasetRestriction={setSandboxDatasetRestriction}
                 />
                 <PolictyComponentWrapper>
                     <PolicyComponent displayCheckbox sandbox={sandbox} />

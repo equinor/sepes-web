@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Checkbox } from '@equinor/eds-core-react';
+import { Table } from '@equinor/eds-core-react';
 import '../../../styles/Table.scss';
 import { SandboxObj } from '../../common/interfaces';
 const { Body, Row, Cell, Head } = Table;
