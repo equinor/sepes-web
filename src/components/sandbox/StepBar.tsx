@@ -67,7 +67,11 @@ const getSteps = () => {
             label: 'Data sets available',
             description:
                 'Data sets become available in the sandbox, and you can now work your magic. Data set restrictions are applied.'
-        },
+        }
+    ];
+};
+/*
+,
         {
             label: 'Data retention',
             description:
@@ -77,8 +81,7 @@ const getSteps = () => {
             label: 'Decommission sandbox',
             description: 'Resources shuts down. Data will be removed according to your data retention  choices.'
         }
-    ];
-};
+*/
 
 let resourcesFailed = false;
 const interval = 20000; //20 seconds
@@ -374,7 +377,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 
                     return (
-                        <Step key={index}>
+                        <Step key={index} style={{ padding: '0 96px 0 96px' }}>
                             <StepLabel {...labelProps}>{stepL.label}</StepLabel>
                         </Step>
                     );
@@ -424,7 +427,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 <SureToProceed
                     setUserClickedButton={setUserClickedMakeAvailable}
                     onClick={makeThisSandboxAvailable}
-                    type="making this sandbox available"
+                    type="making the selected data sets available to this sandbox"
                 />
             )}
         </Wrapper>
