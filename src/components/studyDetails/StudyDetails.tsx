@@ -9,13 +9,13 @@ import { Tabs } from '@equinor/eds-core-react';
 import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
-import NoAccess from '../common/NoAccess';
+import NoAccess from '../common/informationalComponents/NoAccess';
 import { StudyObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
-import NotFound from '../common/NotFound';
+import NotFound from '../common/informationalComponents/NotFound';
 
 const LoadingWrapper = styled.div`
     height: 196px;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import { ParticipantObj, StudyPermissions } from '../../common/interfaces';
-import { studyOwner } from '../../common/Roles';
+import { studyOwner } from '../../common/staticValues/Roles';
 import useWindowDimensions from '../../common/hooks/useWindowDimensions';
 import '../../../styles/Table.scss';
 

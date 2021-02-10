@@ -11,7 +11,7 @@ import {
     getVirtualMachineRule
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
-import { resourceStatus, resourceType } from '../../common/types';
+import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 const { Body, Row, Cell, Head } = Table;

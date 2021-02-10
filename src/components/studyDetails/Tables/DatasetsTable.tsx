@@ -59,12 +59,7 @@ const DatasetsTable = (props: any) => {
                                                     <Link
                                                         key={sandbox.id}
                                                         style={{ color: '#000000', cursor: 'pointer' }}
-                                                        to={
-                                                            '/studies/' +
-                                                            props.studyId +
-                                                            '/sandboxes/' +
-                                                            sandbox.id
-                                                        }
+                                                        to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.id}
                                                         onMouseOver={() => setMouseHoverSandbox(true)}
                                                         onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
@@ -80,7 +75,7 @@ const DatasetsTable = (props: any) => {
                             </Row>
                         ))
                     ) : (
-                        <Row key={1}>
+                        <Row key={1} id="tableRowNoPointerNoColor">
                             <Cell>No datasets added</Cell>
                             {editMode && <Cell></Cell>}
                             <Cell>{''}</Cell>

@@ -35,7 +35,7 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
                         );
                     })
                 ) : (
-                    <Row key={1} id="tableRowNoPointer">
+                    <Row key={1} id="tableRowNoPointerNoColor">
                         <Cell>{datasetsConfirmedResponse.loading ? 'loading...' : 'No data sets in sandbox'}</Cell>
                         <Cell style={{ width: '32px' }}>{''}</Cell>
                     </Row>

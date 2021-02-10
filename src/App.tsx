@@ -9,7 +9,7 @@ import Datasets from './components/dataset/Datasets';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import Sandbox from './components/sandbox/Sandbox';
 import './styles/app.scss';
-import NotFound from './components/common/NotFound';
+import NotFound from './components/common/informationalComponents/NotFound';
 
 interface IContextProps {
     updateCache: any;

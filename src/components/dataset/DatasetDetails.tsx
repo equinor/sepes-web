@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     deleteFileInDataset,
+    getDatasetSasToken,
     getStudySpecificDatasetFiles,
     getStudySpecificDatasetResources,
     removeStudyDataset
@@ -11,29 +12,27 @@ import {
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
 import { Label } from '../common/StyledComponents';
-import { bytesToMB } from '../common/helpers';
+import { bytesToSize } from '../common/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
-import { loginRequest, makeFileBlobFromUrl } from '../../auth/AuthFunctions';
+import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
-import { useLocation } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
 import { EquinorIcon } from '../common/StyledComponents';
 import { useHistory } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
-import myMSALObj from '../../auth/AuthConfig';
 import {
     getDatasetsFilesUrl,
     getStandardDatasetUrl,
     getStudySpecificDatasetUrl,
     getStudyByIdUrl
 } from '../../services/ApiCallStrings';
-import NotFound from '../common/NotFound';
-import axios from 'axios';
-import { resourceStatus, resourceType } from '../common/types';
+import NotFound from '../common/informationalComponents/NotFound';
+import { resourceStatus, resourceType } from '../common/staticValues/types';
+import { uploadFile } from '../../services/BlobStorage';
 
 const icons = {
     arrow_back,
@@ -78,19 +77,21 @@ const checkUrlIfGeneralDataset = () => {
     }
     return false;
 };
-
-let cancelToken = axios.CancelToken;
-let source = cancelToken.source();
+let controller = new AbortController();
+//let cancelToken = axios.CancelToken;
+//let source = cancelToken.source();
 const interval = 7000;
 
 const DatasetDetails = (props: any) => {
-    let datasetId = window.location.pathname.split('/')[4];
+    const datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
+    const [loadingSasToken, setLoadingSasToken] = useState<boolean>(false);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
         storageAccountLink: undefined,
@@ -105,7 +106,9 @@ const DatasetDetails = (props: any) => {
         setDataset
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
+    const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
+    const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
@@ -113,6 +116,8 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [percentComplete, setPercentComplete] = useState<any>(0);
+    const [filesHandled, setFilesHandled] = useState<any>(0);
+    const [totalFiles, setTotalFiles] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -130,6 +135,7 @@ const DatasetDetails = (props: any) => {
 
         return () => {
             clearInterval(timer);
+            setIsSubscribed(false);
         };
     }, [dataset.storageAccountLink]);
 
@@ -139,9 +145,15 @@ const DatasetDetails = (props: any) => {
             dataset.storageAccountLink !== undefined &&
             dataset.storageAccountLink !== null
         ) {
+            setIsSubscribed(true);
             getDatasetFiles();
         }
+        return () => setIsSubscribed(false);
     }, [datasetStorageAccountIsReady, dataset]);
+
+    useEffect(() => {
+        return () => setIsSubscribed(false);
+    }, []);
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -157,14 +169,14 @@ const DatasetDetails = (props: any) => {
     };
 
     const getDatasetFiles = () => {
-        if (!checkUrlIfGeneralDataset()) {
+        if (!checkUrlIfGeneralDataset() && isSubscribed) {
             setLoadingFiles(true);
             getStudySpecificDatasetFiles(datasetId).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
-                } else {
+                } else if (result && isSubscribed) {
                     setFiles(result);
                 }
             });
@@ -193,7 +205,7 @@ const DatasetDetails = (props: any) => {
     const getKey = () => {
         return keyCount++;
     };
-
+    /*
     const uploadFiles = (formData: any, previousFiles: any) => {
         setPercentComplete(0);
         updateOnNextVisit();
@@ -212,6 +224,7 @@ const DatasetDetails = (props: any) => {
             });
         }
     };
+    
 
     const postFile = async (url, files: any, previousFiles: any) => {
         return new Promise(() => {
@@ -226,25 +239,24 @@ const DatasetDetails = (props: any) => {
                             method: 'post',
                             url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
                             data: files,
+                            timeout: 1000000,
                             onUploadProgress: (p) => {
                                 const percentCalculated = Math.floor((p.loaded * 100) / p.total);
                                 setPercentComplete(percentCalculated);
                             },
                             cancelToken: source.token
                         }).catch((thrown) => {
-                            if (axios.isCancel(thrown)) {
-                                setFiles(previousFiles);
-                            }
+                            console.log('error', thrown);
+                            setFiles(previousFiles);
                         });
                     }
-
-                    // Callback code here
                 })
                 .catch((error: string) => {
                     console.log(error);
                 });
         });
     };
+    */
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
@@ -272,26 +284,70 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        _files = checkIfFileAlreadyIsUploaded(_files);
+
+        if (_files.length === 0) {
+            return;
+        }
+
         const previousFiles = [...files];
+        setPrevFiles(previousFiles);
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
         let _formData = new FormData();
         if (_files.length) {
-            let filesHandledCount = 0;
-            await _files.forEach(async (file) => {
-                await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
-                    .then((blob) => {
-                        filesHandledCount++;
-                        _formData.append(`files`, blob);
-                    })
-                    .then(() => {
-                        if (filesHandledCount === _files.length) {
-                            uploadFiles(_formData, previousFiles);
-                        }
+            setPercentComplete(1);
+            setTotalFiles(_files.length);
+            setLoadingSasToken(true);
+            getDatasetSasToken(datasetId).then((result: any) => {
+                setLoadingSasToken(false);
+                if (result && !result.Message) {
+                    let filesHandledCount = 0;
+                    _files.forEach(async (file) => {
+                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                            .then((blob) => {
+                                filesHandledCount++;
+                                setFilesHandled(filesHandledCount);
+                                //_formData.append(`files`, blob);
+                                try {
+                                    uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
+                                } catch (ex) {
+                                    console.log(ex);
+                                    setFiles(previousFiles);
+                                }
+                            })
+                            .then(() => {
+                                if (filesHandledCount === _files.length) {
+                                    // uploadFiles(_formData, previousFiles);
+                                }
+                            });
                     });
+                } else {
+                    setFiles(previousFiles);
+                    console.log('Err');
+                    notify.show('danger', '500', result.Message, result.RequestId);
+                }
             });
         }
+    };
+
+    const checkIfFileAlreadyIsUploaded = (_files) => {
+        let newArray: any = [];
+        _files.forEach((file: File) => {
+            const res = files
+                .map((e) => {
+                    return e.name;
+                })
+                .indexOf(file.name);
+            if (res === -1) newArray.push(file);
+        });
+
+        if (_files.length !== newArray.length) {
+            setDuplicateFiles(true);
+        }
+
+        return newArray;
     };
 
     const removeFile = (i: number, file: any): void => {
@@ -361,54 +417,83 @@ const DatasetDetails = (props: any) => {
                                 )
                             }
                         />
-                        {percentComplete > 0 && (
-                            <div style={{ display: 'flex' }}>
-                                <LinearProgress
-                                    style={{ marginTop: '16px' }}
-                                    value={percentComplete}
-                                    variant="determinate"
-                                />
-                                <Button
-                                    onClick={() => {
-                                        source.cancel();
-                                        setPercentComplete(0);
-
-                                        cancelToken = axios.CancelToken;
-                                        source = cancelToken.source();
+                        {duplicateFiles && (
+                            <div>
+                                <Chip
+                                    variant="active"
+                                    onDelete={() => {
+                                        setDuplicateFiles(false);
                                     }}
-                                    style={{ float: 'right', padding: '4px' }}
-                                    variant="ghost_icon"
-                                    disabled={percentComplete === 0 || percentComplete === 100}
+                                    style={{ marginLeft: 'auto' }}
                                 >
-                                    {percentComplete === 0 || percentComplete === 100
-                                        ? EquinorIcon('check', '', 24)
-                                        : EquinorIcon('clear', '', 24)}
-                                </Button>
+                                    Already uploaded files are skipped
+                                </Chip>
                             </div>
                         )}
+                        {percentComplete > 0 && (
+                            <>
+                                <div style={{ display: 'flex' }}>
+                                    <LinearProgress
+                                        style={{ marginTop: '16px' }}
+                                        value={percentComplete}
+                                        variant="determinate"
+                                    />
+                                    <div style={{ padding: '8px' }}>
+                                        {filesHandled}/{totalFiles}
+                                    </div>
+                                    <Button
+                                        onClick={() => {
+                                            controller.abort();
+                                            setFiles(prevFiles);
+                                            setPercentComplete(0);
+                                            controller = new AbortController();
+                                        }}
+                                        style={{ float: 'right', padding: '4px' }}
+                                        variant="ghost_icon"
+                                        disabled={percentComplete === 0 || percentComplete === 100}
+                                    >
+                                        {percentComplete === 0 || percentComplete === 100
+                                            ? EquinorIcon('check', '', 24)
+                                            : EquinorIcon('clear', '', 24)}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
                         <div style={{ paddingTop: '8px' }}>
-                            {files &&
-                                files.map((file: any, i: number) => {
-                                    return (
-                                        <AttachmentWrapper key={getKey()}>
-                                            <div>{file.name}</div>
-                                            <div>{bytesToMB(file.size) + ' '} MB</div>
-                                            <Button
-                                                variant="ghost_icon"
-                                                onClick={() => removeFile(i, file)}
-                                                style={{ marginTop: '-8px' }}
-                                                disabled={!(percentComplete === 0 || percentComplete === 100)}
-                                            >
-                                                <Icon
-                                                    color="#007079"
-                                                    name="delete_forever"
-                                                    size={24}
-                                                    style={{ cursor: 'pointer' }}
-                                                />
-                                            </Button>
-                                        </AttachmentWrapper>
-                                    );
-                                })}
+                            {!loadingFiles ? (
+                                files.length > 0 ? (
+                                    files.map((file: any, i: number) => {
+                                        return (
+                                            <AttachmentWrapper key={getKey()}>
+                                                <div>{file.name}</div>
+                                                <div>{bytesToSize(file.size)} </div>
+                                                <Button
+                                                    variant="ghost_icon"
+                                                    onClick={() => removeFile(i, file)}
+                                                    style={{ marginTop: '-8px' }}
+                                                    disabled={!(percentComplete === 0 || percentComplete === 100)}
+                                                >
+                                                    <Icon
+                                                        color="#007079"
+                                                        name="delete_forever"
+                                                        size={24}
+                                                        style={{ cursor: 'pointer' }}
+                                                    />
+                                                </Button>
+                                            </AttachmentWrapper>
+                                        );
+                                    })
+                                ) : (
+                                    <div style={{ textAlign: 'center' }}>
+                                        {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
+                                    </div>
+                                )
+                            ) : (
+                                <div style={{ textAlign: 'center' }}>
+                                    <DotProgress variant="green" />
+                                    <div>Loading files..</div>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {!datasetResponse.loading ? (
@@ -517,7 +602,8 @@ const DatasetDetails = (props: any) => {
                                                 disabled={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        dataset.permissions?.deleteDataset
+                                                        dataset.permissions?.deleteDataset ||
+                                                        !loadingSasToken
                                                     )
                                                 }
                                             >
