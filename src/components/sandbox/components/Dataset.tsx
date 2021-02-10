@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, DatasetClassificationObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
@@ -84,15 +84,6 @@ const Dataset: React.FC<datasetProps> = ({
             });
         }
     };
-    /*
-    useEffect(() => {
-        const restriction: DatasetClassificationObj = {
-            classification: availableDatasets.classification,
-            restrictionDisplayText: availableDatasets.restrictionDisplayText
-        };
-        setSandboxDatasetRestriction(restriction);
-    }, [availableDatasets]);
-    */
 
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
