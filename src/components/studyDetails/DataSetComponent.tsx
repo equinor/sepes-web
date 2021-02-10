@@ -1,17 +1,17 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
-import { Link, useHistory } from 'react-router-dom';
-import { addStudyDataset, removeStudyDataset, unlinkStudyDataset } from '../../services/Api';
+import { useHistory } from 'react-router-dom';
+import { unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
-import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
+//import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
 import * as notify from '../common/notify';
-import { Permissions } from '../../index';
-import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getDatasetsInStudyUrl, getDatasetsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+//import { Permissions } from '../../index';
+//import useFetchUrl from '../common/hooks/useFetchUrl';
+import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const icons = {
     close
@@ -32,7 +32,7 @@ const TableWrapper = styled.div`
         margin-top: 64px;
     }
 `;
-
+/*
 const Bar = styled.div`
     display: grid;
     grid-template-columns: 1fr 0.3fr 296px;
@@ -48,6 +48,7 @@ const Bar = styled.div`
         grid-gap: 8px;
     }
 `;
+*/
 
 type StudyComponentFullProps = {
     study: StudyObj;
@@ -58,10 +59,10 @@ type StudyComponentFullProps = {
 
 const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const history = useHistory();
-    const [datasetsList, setDatasetsList] = useState<any>([]);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const permissions = useContext(Permissions);
-    const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
+    //const [datasetsList, setDatasetsList] = useState<any>([]);
+    //const [isOpen, setIsOpen] = useState<boolean>(false);
+    //const permissions = useContext(Permissions);
+    //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
     const removeDataset = (row: any) => {
         const studyId = window.location.pathname.split('/')[2];
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
@@ -75,7 +76,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }
-            datasetsResponse.setLoading(false);
+            //datasetsResponse.setLoading(false);
         });
     };
 
@@ -89,7 +90,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             }
         });
     };
-
+    /*
     const addDatasetToStudy = (row: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true, [getDatasetsInStudyUrl(study.id)]: true });
         setIsOpen(false);
@@ -107,7 +108,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             });
         }
     };
-
+    
     const checkIfDatasetIsAlreadyAdded = (id: string) => {
         let elementExist = false;
         study.datasets &&
@@ -118,7 +119,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             });
         return elementExist;
     };
-
+*/
     return (
         <Wrapper>
             {/*<Bar>*/}

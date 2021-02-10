@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { SandboxObj } from '../common/interfaces';
+import { DatasetClassificationObj, SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
@@ -40,6 +40,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         currentPhase: undefined,
         linkToCostAnalysis: '',
         studyName: '',
+        restrictionDisplayText: '',
         permissions: {
             delete: false,
             editInboundRules: false,
@@ -58,6 +59,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
             undefined
     );
+
     useEffect(() => {
         if (
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
@@ -91,7 +93,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandboxId={sandboxId} />;
+                return <Execution resources={resources} sandbox={sandbox} />;
             case 2:
                 return <div></div>;
             default:
