@@ -78,8 +78,8 @@ const checkUrlIfGeneralDataset = () => {
     return false;
 };
 let controller = new AbortController();
-//let cancelToken = axios.CancelToken;
-//let source = cancelToken.source();
+let controllerFiles = new AbortController();
+let controllerSas = new AbortController();
 const interval = 7000;
 
 const DatasetDetails = (props: any) => {
@@ -90,7 +90,6 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
-    const [loadingSasToken, setLoadingSasToken] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -152,7 +151,10 @@ const DatasetDetails = (props: any) => {
     }, [datasetStorageAccountIsReady, dataset]);
 
     useEffect(() => {
-        return () => setIsSubscribed(false);
+        return () => {
+            controllerFiles.abort();
+            controllerFiles = new AbortController();
+        };
     }, []);
 
     const getDatasetResources = () => {
@@ -171,7 +173,7 @@ const DatasetDetails = (props: any) => {
     const getDatasetFiles = () => {
         if (!checkUrlIfGeneralDataset() && isSubscribed) {
             setLoadingFiles(true);
-            getStudySpecificDatasetFiles(datasetId).then((result: any) => {
+            getStudySpecificDatasetFiles(datasetId, controllerFiles.signal).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
                     notify.show('danger', '500', result.Message, result.RequestId);
@@ -188,7 +190,7 @@ const DatasetDetails = (props: any) => {
         if (!resources) {
             return res;
         }
-        resources.map((resource: DatasetResourcesObj, i: number) => {
+        resources.map((resource: DatasetResourcesObj) => {
             setStorageAccountStatus(resource.status);
             if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
                 res = true;
@@ -268,6 +270,8 @@ const DatasetDetails = (props: any) => {
     };
 
     const deleteDataset = () => {
+        controllerFiles.abort();
+        controllerFiles = new AbortController();
         setLoading(true);
         setDatasetDeleteInProgress(true);
         setUserClickedDelete(false);
@@ -284,6 +288,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
 
         if (_files.length === 0) {
@@ -295,33 +300,23 @@ const DatasetDetails = (props: any) => {
         const tempFiles = [...files];
         tempFiles.push(..._files);
         setFiles(tempFiles);
-        let _formData = new FormData();
         if (_files.length) {
             setPercentComplete(1);
             setTotalFiles(_files.length);
-            setLoadingSasToken(true);
-            getDatasetSasToken(datasetId).then((result: any) => {
-                setLoadingSasToken(false);
+            getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
                 if (result && !result.Message) {
                     let filesHandledCount = 0;
                     _files.forEach(async (file) => {
-                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
-                            .then((blob) => {
-                                filesHandledCount++;
-                                setFilesHandled(filesHandledCount);
-                                //_formData.append(`files`, blob);
-                                try {
-                                    uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
-                                } catch (ex) {
-                                    console.log(ex);
-                                    setFiles(previousFiles);
-                                }
-                            })
-                            .then(() => {
-                                if (filesHandledCount === _files.length) {
-                                    // uploadFiles(_formData, previousFiles);
-                                }
-                            });
+                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name).then((blob) => {
+                            filesHandledCount++;
+                            setFilesHandled(filesHandledCount);
+                            try {
+                                uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
+                            } catch (ex) {
+                                console.log(ex);
+                                setFiles(previousFiles);
+                            }
+                        });
                     });
                 } else {
                     setFiles(previousFiles);
@@ -444,9 +439,11 @@ const DatasetDetails = (props: any) => {
                                     <Button
                                         onClick={() => {
                                             controller.abort();
+                                            controllerSas.abort();
                                             setFiles(prevFiles);
                                             setPercentComplete(0);
                                             controller = new AbortController();
+                                            controllerSas = new AbortController();
                                         }}
                                         style={{ float: 'right', padding: '4px' }}
                                         variant="ghost_icon"
@@ -601,9 +598,9 @@ const DatasetDetails = (props: any) => {
                                                 data-cy="dataset_delete"
                                                 disabled={
                                                     !(
-                                                        permissions.canEdit_PreApproved_Datasets ||
-                                                        dataset.permissions?.deleteDataset ||
-                                                        !loadingSasToken
+                                                        (permissions.canEdit_PreApproved_Datasets &&
+                                                            checkUrlIfGeneralDataset()) ||
+                                                        dataset.permissions?.deleteDataset
                                                     )
                                                 }
                                             >
