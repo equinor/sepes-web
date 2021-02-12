@@ -22,6 +22,7 @@ type VmConfigProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    controller: AbortController;
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
@@ -32,7 +33,8 @@ const VmConfig: React.FC<VmConfigProps> = ({
     loadingSandbox,
     permissions,
     setUpdateCache,
-    updateCache
+    updateCache,
+    controller
 }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
@@ -59,7 +61,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     }, [permissions]);
 
     const getVmSizes = () => {
-        getVirtualMachineSizes(sandbox.id).then((result: any) => {
+        getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
             if (result && !result.Message) {
                 setSizes(result);
             } else {
@@ -70,7 +72,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     };
 
     const getVmDisks = () => {
-        getVirtualMachineDisks().then((result: any) => {
+        getVirtualMachineDisks(controller.signal).then((result: any) => {
             if (result && !result.Message) {
                 setDisks(result);
             } else {
@@ -81,7 +83,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     };
 
     const getVms = () => {
-        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
+        getVirtualMachineOperatingSystems(sandbox.id, controller.signal).then((result: any) => {
             if (result && !result.Message) {
                 setOs(result);
             } else {
