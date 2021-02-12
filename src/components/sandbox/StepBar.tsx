@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -24,6 +24,12 @@ const Wrapper = styled.div`
     border-radius: 4px;
     padding: 16px;
     background-color: #ffffff;
+`;
+
+const TopWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 64px 1fr 1fr;
+    grid-gap: 0px;
 `;
 
 const BtnTwoWrapper = styled.div`
@@ -362,14 +368,22 @@ const StepBar: React.FC<StepBarProps> = ({
     };
     return (
         <Wrapper>
-            <div>
-                <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                    {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
+            <div style={{ display: 'flex' }}>
+                <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 0px' }}>
+                    <Button variant="ghost_icon">
+                        <Icon
+                            style={{ marginBottom: '' }}
+                            color="#007079"
+                            name="chevron_left"
+                            size={24}
+                            title="chevron_left"
+                        />
+                    </Button>
                 </Link>
-                <Typography style={{ display: 'inline-block', marginLeft: '16px' }} variant="h2">
+                <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
                     {sandbox && sandbox.name}
                 </Typography>
-                <div style={{ float: 'right' }}>{returnControlButtons()}</div>
+                <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
             </div>
             <Stepper activeStep={step} alternativeLabel nonLinear color="red">
                 {steps.map((stepL: any, index) => {
@@ -385,7 +399,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 })}
             </Stepper>
 
-            <div style={{ marginLeft: 'auto' }}>
+            <div style={{ marginLeft: 'auto', marginBottom: '-12px' }}>
                 <Tooltip
                     title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
                     placement="left"
