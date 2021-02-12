@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -365,17 +365,22 @@ const StepBar: React.FC<StepBarProps> = ({
         <>
             {makeAvailableInProgress && <LoadingFull noTimeout />}
             <Wrapper>
-                <div>
-                    <Link
-                        to={'/studies/' + studyId}
-                        style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
-                    >
-                        {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
+                <div style={{ display: 'flex' }}>
+                    <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px' }}>
+                        <Button variant="ghost_icon">
+                            <Icon
+                                style={{ marginBottom: '' }}
+                                color="#007079"
+                                name="chevron_left"
+                                size={24}
+                                title="chevron_left"
+                            />
+                        </Button>
                     </Link>
-                    <Typography style={{ display: 'inline-block', marginLeft: '16px' }} variant="h2">
+                    <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
                         {sandbox && sandbox.name}
                     </Typography>
-                    <div style={{ float: 'right' }}>{returnControlButtons()}</div>
+                    <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
                 </div>
                 <Stepper activeStep={step} alternativeLabel nonLinear color="red">
                     {steps.map((stepL: any, index) => {
