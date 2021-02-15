@@ -22,6 +22,8 @@ const Wrapper = styled.div`
 
 type SandboxProps = {};
 
+let controller = new AbortController();
+
 const Sandbox: React.FC<SandboxProps> = ({}) => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
@@ -61,6 +63,13 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     );
 
     useEffect(() => {
+        return () => {
+            controller.abort();
+            controller = new AbortController();
+        };
+    }, []);
+
+    useEffect(() => {
         if (
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase
@@ -72,7 +81,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     }, [SandboxResponse.loading, sandbox.currentPhase]);
 
     const getResources = () => {
-        getResourceStatus(sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 console.log('Err');
             } else {
@@ -131,6 +140,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     setNewPhase={setNewPhase}
                     setDeleteSandboxInProgress={setDeleteSandboxInProgress}
                     setNewCostanalysisLink={setNewCostanalysisLink}
+                    controller={controller}
                 />
                 {returnStepComponent()}
                 {(step === 0 || step === 1) && (
@@ -143,6 +153,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        controller={controller}
                     />
                 )}
             </Wrapper>

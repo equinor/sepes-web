@@ -55,6 +55,7 @@ type StepBarProps = {
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
     setNewCostanalysisLink: any;
+    controller: AbortController;
 };
 
 const getSteps = () => {
@@ -102,7 +103,8 @@ const StepBar: React.FC<StepBarProps> = ({
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
-    setNewCostanalysisLink
+    setNewCostanalysisLink,
+    controller
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -129,7 +131,7 @@ const StepBar: React.FC<StepBarProps> = ({
     }, [userClickedDelete]);
 
     const getResources = () => {
-        getResourceStatus(sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);

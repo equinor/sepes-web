@@ -103,7 +103,9 @@ const DatasetDetails = (props: any) => {
 
     const datasetResponse = useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
-        setDataset
+        setDataset,
+        undefined,
+        controller
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);

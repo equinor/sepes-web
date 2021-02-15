@@ -31,6 +31,8 @@ const divStyle = {
 
 const { TabList, Tab } = Tabs;
 
+let controller = new AbortController();
+
 const StudyDetails = () => {
     const id = window.location.pathname.split('/')[2];
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
@@ -61,8 +63,15 @@ const StudyDetails = () => {
     const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
-    const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
+    const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const permissions = useContext(Permissions);
+
+    useEffect(() => {
+        return () => {
+            controller.abort();
+            controller = new AbortController();
+        };
+    }, []);
 
     const changeComponent = () => {
         Cookies.remove(id);
@@ -106,6 +115,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        controller={controller}
                     />
                 );
         }
