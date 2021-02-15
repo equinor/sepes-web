@@ -54,7 +54,7 @@ const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
         >
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
-                {isDragActive ? (
+                {isDragActive && !disabled ? (
                     <div className="dropzone-content">
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>Drop here</div>
@@ -65,7 +65,13 @@ const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
                         <div>
                             {!loading ? (
                                 <>
-                                    Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                                    {!disabled ? (
+                                        <>
+                                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                                        </>
+                                    ) : (
+                                        'You do not have access to upload'
+                                    )}
                                 </>
                             ) : (
                                 'File upload will be available when the storage account is ready'

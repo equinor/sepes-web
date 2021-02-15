@@ -421,21 +421,23 @@ const DatasetDetails = (props: any) => {
                                     Back to datasets
                                 </Link>
                             )}
-                            <Dropzone
-                                onDrop={(event: File[]) => handleFileDrop(event)}
-                                loading={
-                                    dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null
-                                        ? false
-                                        : true
-                                }
-                                disabled={
-                                    !(
-                                        dataset.permissions?.editDataset &&
-                                        (percentComplete === 0 || percentComplete === 100) &&
-                                        dataset.storageAccountLink
-                                    )
-                                }
-                            />
+                            {!datasetResponse.loading && (
+                                <Dropzone
+                                    onDrop={(event: File[]) => handleFileDrop(event)}
+                                    loading={
+                                        dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null
+                                            ? false
+                                            : true
+                                    }
+                                    disabled={
+                                        !(
+                                            dataset.permissions?.editDataset &&
+                                            (percentComplete === 0 || percentComplete === 100) &&
+                                            dataset.storageAccountLink
+                                        )
+                                    }
+                                />
+                            )}
                             {duplicateFiles && (
                                 <div>
                                     <Chip
