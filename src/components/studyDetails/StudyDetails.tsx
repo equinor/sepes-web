@@ -16,6 +16,7 @@ import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
+import { useLocation } from 'react-router-dom';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -32,6 +33,10 @@ const divStyle = {
 const { TabList, Tab } = Tabs;
 
 let controller = new AbortController();
+
+interface passedProps {
+    userCameFromHome: boolean;
+}
 
 const StudyDetails = () => {
     const id = window.location.pathname.split('/')[2];
@@ -60,9 +65,17 @@ const StudyDetails = () => {
         }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
-    const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
+    const location = useLocation<passedProps>();
+    const [activeTab, setActiveTab] = useState<number>(
+        location.state && location.state.userCameFromHome ? 0 : parseInt(Cookies.get(id)) || 0
+    );
+    if (location.state) {
+        window.history.replaceState(null, '');
+    }
+
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
+
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const permissions = useContext(Permissions);
 
