@@ -385,6 +385,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
+                                    autoFocus
                                     inputIcon={
                                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                             <Tooltip
