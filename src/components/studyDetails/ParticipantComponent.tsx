@@ -22,7 +22,7 @@ Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 0.1fr minmax(305px, 1fr);
+    grid-template-rows: 0.1fr minmax(264px, 1fr);
     width: 100%;
     grid-gap: 10px;
 `;
@@ -37,7 +37,7 @@ const SearchWrapper = styled.div`
 `;
 
 const TableWrapper = styled.div`
-    margin-top: 16px;
+    margin-top: 7px;
 `;
 
 type ParicipantComponentProps = {
