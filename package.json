@@ -3,7 +3,7 @@
     "version": "0.1.6",
     "private": true,
     "dependencies": {
-        "@azure/storage-blob": "^12.3.0",
+        "@azure/storage-blob": "^12.4.0",
         "@equinor/eds-core-react": "^0.8.4",
         "@fortawesome/fontawesome-free": "^5.15.2",
         "@fortawesome/fontawesome-svg-core": "^1.2.28",
