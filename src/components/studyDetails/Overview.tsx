@@ -60,13 +60,12 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     };
 
     const handleSave = () => {
+        setHasChanged(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true });
         res.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
-            if (result && !result.Message) {
-                setHasChanged(false);
-            } else {
+            if (result && result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
             }

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { lock, lock_open } from '@equinor/eds-icons';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
+import { useHistory } from 'react-router-dom';
 
 const icons = {
     lock,
@@ -26,6 +27,7 @@ const Wrapper = styled.div`
     padding: 16px;
     min-width:120px;
     margin: 0 0px 16px 32px;
+    cursor: pointer;
     background-color: #ffffff;
     @media (max-width: 385px) {
       grid-template-columns: minmax(116px,200px) 1fr;
@@ -64,26 +66,25 @@ type StudyComponentProps = {
 const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
     const { name, description, restricted, id, vendor, logoUrl } = study;
     const url = '/studies/' + id;
+    const history = useHistory();
 
     return (
-        <Link to={url} style={{ color: 'black', textDecoration: 'none' }}>
-            <Wrapper>
-                <LogoTitleWrapper>
-                    <CustomLogoComponent logoUrl={logoUrl} />
+        <Wrapper onClick={() => history.push({ pathname: url, state: { userCameFromHome: true } })}>
+            <LogoTitleWrapper>
+                <CustomLogoComponent logoUrl={logoUrl} />
+                <div>
+                    <Typography variant="h6">{name}</Typography>
+                    <SmallText>{vendor}</SmallText>
                     <div>
-                        <Typography variant="h6">{name}</Typography>
-                        <SmallText>{vendor}</SmallText>
-                        <div>
-                            <SmallText>
-                                {restricted ? 'Hidden' : 'Not hidden'}
-                                <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
-                            </SmallText>
-                        </div>
+                        <SmallText>
+                            {restricted ? 'Hidden' : 'Not hidden'}
+                            <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
+                        </SmallText>
                     </div>
-                </LogoTitleWrapper>
-                <div>{description}</div>
-            </Wrapper>
-        </Link>
+                </div>
+            </LogoTitleWrapper>
+            <div>{description}</div>
+        </Wrapper>
     );
 };
 
