@@ -92,6 +92,7 @@ export interface SandboxObj {
     permissions: SandboxPermissions;
     linkToCostAnalysis?: string;
     currentPhase: number | undefined;
+    restrictionDisplayText: string;
 }
 
 export interface SandboxPermissions {
@@ -166,4 +167,9 @@ export interface DatasetResourcesObj {
     status: string;
     type: string;
     linkToExternalSystem: string;
+}
+
+export interface DatasetClassificationObj {
+    classification: string;
+    restrictionDisplayText: string;
 }

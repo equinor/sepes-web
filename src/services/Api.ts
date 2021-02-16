@@ -80,8 +80,12 @@ export const getStudySpecificDatasetResources = async (datasetId: string, studyI
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId + '/resources', 'GET');
 };
 
-export const getStudySpecificDatasetFiles = async (datasetId: string) => {
-    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+export const getStudySpecificDatasetFiles = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET', undefined, signal);
+};
+
+export const getDatasetSasToken = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/saskey', 'GET', undefined, signal);
 };
 
 //Standard dataset
@@ -136,8 +140,8 @@ export const deleteSandbox = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId, 'DELETE');
 };
 
-export const getResourceStatus = async (sandboxId: string) => {
-    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
+export const getResourceStatus = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET', undefined, signal);
 };
 
 export const getSandboxCostAnalysis = async (sandboxId: string) => {
@@ -188,16 +192,16 @@ export const validateVmUsername = async (username: VmUsernameObj) => {
     return apiRequestWithToken('api/virtualmachines/validateUsername', 'POST', username);
 };
 
-export const getVirtualMachineSizes = async (sandboxId: string) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/sizes', 'GET');
+export const getVirtualMachineSizes = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/sizes', 'GET', undefined, signal);
 };
 
-export const getVirtualMachineDisks = async () => {
-    return apiRequestWithToken('api/virtualmachines/disks', 'GET');
+export const getVirtualMachineDisks = async (signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/disks', 'GET', undefined, signal);
 };
 
-export const getVirtualMachineOperatingSystems = async (sandboxId: string) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET');
+export const getVirtualMachineOperatingSystems = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET', undefined, signal);
 };
 
 export const getVirtualMachineExtended = async (vmId: string) => {

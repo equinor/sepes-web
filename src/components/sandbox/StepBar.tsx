@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress, Tooltip } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -13,6 +13,7 @@ import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
+import LoadingFull from '../common/LoadingComponentFullscreen';
 let set = require('lodash/set');
 
 const { MenuItem } = Menu;
@@ -54,6 +55,7 @@ type StepBarProps = {
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
     setNewCostanalysisLink: any;
+    controller: AbortController;
 };
 
 const getSteps = () => {
@@ -67,7 +69,11 @@ const getSteps = () => {
             label: 'Data sets available',
             description:
                 'Data sets become available in the sandbox, and you can now work your magic. Data set restrictions are applied.'
-        },
+        }
+    ];
+};
+/*
+,
         {
             label: 'Data retention',
             description:
@@ -77,8 +83,7 @@ const getSteps = () => {
             label: 'Decommission sandbox',
             description: 'Resources shuts down. Data will be removed according to your data retention  choices.'
         }
-    ];
-};
+*/
 
 let resourcesFailed = false;
 const interval = 20000; //20 seconds
@@ -98,7 +103,8 @@ const StepBar: React.FC<StepBarProps> = ({
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
-    setNewCostanalysisLink
+    setNewCostanalysisLink,
+    controller
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -125,7 +131,7 @@ const StepBar: React.FC<StepBarProps> = ({
     }, [userClickedDelete]);
 
     const getResources = () => {
-        getResourceStatus(sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 resourcesFailed = true;
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -216,6 +222,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 notify.show('danger', '500', result.Message, result.RequestId);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
+                setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
                 setNewPhase(1);
             }
         });
@@ -357,77 +364,88 @@ const StepBar: React.FC<StepBarProps> = ({
         }
     };
     return (
-        <Wrapper>
-            <div>
-                <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                    {EquinorIcon('arrow_back', '#007079', 24, () => {}, true)}
-                </Link>
-                <Typography style={{ display: 'inline-block', marginLeft: '16px' }} variant="h2">
-                    {sandbox && sandbox.name}
-                </Typography>
-                <div style={{ float: 'right' }}>{returnControlButtons()}</div>
-            </div>
-            <Stepper activeStep={step} alternativeLabel nonLinear color="red">
-                {steps.map((stepL: any, index) => {
-                    const stepProps = {};
-                    const labelProps: any = {};
-                    labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
+        <>
+            {makeAvailableInProgress && <LoadingFull noTimeout />}
+            <Wrapper>
+                <div style={{ display: 'flex' }}>
+                    <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px' }}>
+                        <Button variant="ghost_icon">
+                            <Icon
+                                style={{ marginBottom: '' }}
+                                color="#007079"
+                                name="chevron_left"
+                                size={24}
+                                title="chevron_left"
+                            />
+                        </Button>
+                    </Link>
+                    <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
+                        {sandbox && sandbox.name}
+                    </Typography>
+                    <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
+                </div>
+                <Stepper activeStep={step} alternativeLabel nonLinear color="red">
+                    {steps.map((stepL: any, index) => {
+                        const stepProps = {};
+                        const labelProps: any = {};
+                        labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 
-                    return (
-                        <Step key={index}>
-                            <StepLabel {...labelProps}>{stepL.label}</StepLabel>
-                        </Step>
-                    );
-                })}
-            </Stepper>
+                        return (
+                            <Step key={index} style={{ padding: '0 96px 0 96px' }}>
+                                <StepLabel {...labelProps}>{stepL.label}</StepLabel>
+                            </Step>
+                        );
+                    })}
+                </Stepper>
 
-            <div style={{ marginLeft: 'auto' }}>
-                <Tooltip
-                    title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
-                    placement="left"
-                >
-                    <a
-                        href={sandbox.linkToCostAnalysis}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            color: '#007079',
-                            fontSize: '22px',
-                            margin: '0 0 0 16px',
-                            display: 'inline-block',
-                            float: 'right'
-                        }}
+                <div style={{ marginLeft: 'auto' }}>
+                    <Tooltip
+                        title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
+                        placement="left"
                     >
-                        <Typography
-                            style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
-                            variant="h2"
+                        <a
+                            href={sandbox.linkToCostAnalysis}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: '#007079',
+                                fontSize: '22px',
+                                margin: '0 0 0 16px',
+                                display: 'inline-block',
+                                float: 'right'
+                            }}
                         >
-                            Cost analysis
-                        </Typography>
-                        {sandbox.linkToCostAnalysis ? (
-                            EquinorIcon('external_link', '#007079', 24, () => {}, true)
-                        ) : (
-                            <DotProgress variant="green" />
-                        )}
-                    </a>
-                </Tooltip>
-            </div>
-            {userClickedDelete && (
-                <DeleteResourceComponent
-                    ResourceName={sandbox.name}
-                    setUserClickedDelete={setUserClickedDelete}
-                    onClick={deleteThisSandbox}
-                    type="sandbox"
-                />
-            )}
-            {userClickedMakeAvailable && (
-                <SureToProceed
-                    setUserClickedButton={setUserClickedMakeAvailable}
-                    onClick={makeThisSandboxAvailable}
-                    type="making this sandbox available"
-                />
-            )}
-        </Wrapper>
+                            <Typography
+                                style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
+                                variant="h2"
+                            >
+                                Cost analysis
+                            </Typography>
+                            {sandbox.linkToCostAnalysis ? (
+                                EquinorIcon('external_link', '#007079', 24, () => {}, true)
+                            ) : (
+                                <DotProgress variant="green" />
+                            )}
+                        </a>
+                    </Tooltip>
+                </div>
+                {userClickedDelete && (
+                    <DeleteResourceComponent
+                        ResourceName={sandbox.name}
+                        setUserClickedDelete={setUserClickedDelete}
+                        onClick={deleteThisSandbox}
+                        type="sandbox"
+                    />
+                )}
+                {userClickedMakeAvailable && (
+                    <SureToProceed
+                        setUserClickedButton={setUserClickedMakeAvailable}
+                        onClick={makeThisSandboxAvailable}
+                        type="making the selected data sets available to this sandbox"
+                    />
+                )}
+            </Wrapper>
+        </>
     );
 };
 

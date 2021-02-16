@@ -40,16 +40,18 @@ type OverviewProps = {
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
+    controller: AbortController;
 };
 
-const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCache, updateCache }) => {
+const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCache, updateCache, controller }) => {
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const res = useFetchUrl(
         getResultsAndLearningsUrl(study.id),
         setResultsAndLearnings,
-        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        controller
     );
 
     const handleChange = (evt) => {
