@@ -381,6 +381,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     data-cy="vm_rule_description"
                                                     disabled={!permissions.editInboundRules}
                                                     autoComplete="off"
+                                                    autoFocus
                                                 />
                                             </Cell>
                                             <Cell>
