@@ -32,12 +32,12 @@ const BtnTwoWrapper = styled.div`
     grid-template-columns: 160px 160px;
     grid-gap: 8px;
 `;
-
+/*
 const BtnThreeWrapper = styled.div`
     display: grid;
     grid-template-columns: 160px 160px 160px;
     grid-gap: 8px;
-`;
+`;*/
 
 type StepBarProps = {
     setStep: (value: any) => void;
@@ -386,7 +386,6 @@ const StepBar: React.FC<StepBarProps> = ({
                 </div>
                 <Stepper activeStep={step} alternativeLabel nonLinear color="red">
                     {steps.map((stepL: any, index) => {
-                        const stepProps = {};
                         const labelProps: any = {};
                         labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 

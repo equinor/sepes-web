@@ -52,7 +52,7 @@ const Label = styled.p`
     font-weight: 400;
     line-height: 1.333em;
 `;
-
+/*
 const Meta = styled.div`
     margin-left: auto;
     height: 16px;
@@ -65,6 +65,7 @@ const Meta = styled.div`
     font-weight: 400;
     line-height: 1.333em;
 `;
+*/
 
 const CoreDevDropdown = (props: any): JSX.Element => {
     let { options, label, meta } = props;
