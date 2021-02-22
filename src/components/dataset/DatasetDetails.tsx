@@ -34,6 +34,7 @@ import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
+import LinearProgressComponent from './LinearProgressComponent';
 
 const icons = {
     arrow_back,
@@ -82,6 +83,10 @@ let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
+let percentComplete2 = {};
+
+let progressArray: any = [];
+//let progressArray: any = [];
 
 const DatasetDetails = (props: any) => {
     const datasetId = window.location.pathname.split('/')[4];
@@ -91,6 +96,7 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
+    const [fileUploadInProgress, setFileUploadInProgress] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -118,7 +124,9 @@ const DatasetDetails = (props: any) => {
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    const [percentComplete, setPercentComplete] = useState<any>(0);
+    //const [percentComplete, setPercentComplete] = useState<any>({});
+    const [percentComplete, setPercentComplete] = useState<any>(progressArray);
+    const [percentUpdater, setPercentUpdater] = useState<any>(0);
     const [filesHandled, setFilesHandled] = useState<any>(0);
     const [totalFiles, setTotalFiles] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
@@ -164,12 +172,19 @@ const DatasetDetails = (props: any) => {
             controller = new AbortController();
         };
     }, []);
-
+    /*
     useEffect(() => {
         if (percentComplete === 0 || percentComplete === 100) {
             setHasChanged(false);
+            setFileUploadInProgress(false);
+        } else if (percentComplete.length === 0) {
+            setFileUploadInProgress(false);
+            setHasChanged(false);
+        } else {
+            setFileUploadInProgress(true);
         }
-    }, [percentComplete]);
+    }, [percentComplete, percentComplete2, setPercentComplete]);
+    */
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -300,8 +315,67 @@ const DatasetDetails = (props: any) => {
             }
         });
     };
+    /*
+    const uploadFile3 = async (
+        blobUri: string,
+        blobName: string,
+        data: any,
+        totalSize: any,
+        setPercentComplete: any,
+        percentComplete: any,
+        controller: any,
+        progressArray: any
+    ) => {
+        const blobServiceClient = new BlobServiceClient(blobUri);
+        const containerClient = blobServiceClient.getContainerClient('files');
+        const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+        try {
+            blockBlobClient.uploadBrowserData(data, {
+                onProgress: (progress: TransferProgressEvent) => {
+                    const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
+                    if (percentCalculated > 0) {
+                        let filePercent = {
+                            blobName: blobName,
+                            percent: percentCalculated
+                        };
+
+                        var index = progressArray.findIndex((x: any) => x.blobName == blobName);
+
+                        index === -1
+                            ? progressArray.push(filePercent)
+                            : (progressArray[index].percent = percentCalculated);
+                    }
+                    setPercentComplete3(progressArray);
+                    setPercentUpdater(percentCalculated);
+                },
+                abortSignal: controller.signal
+            });
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Uploading file failed');
+            }
+        }
+    };
+    */
+
+    const setFilesProgressToOnePercent = (_files: any) => {
+        _files.forEach(async (file: any) => {
+            let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
+            progressArray.push(filePercent);
+        });
+        setPercentComplete(progressArray);
+        setPercentUpdater(1);
+    };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        //progressArray = [];
+
+        setFileUploadInProgress(true);
         setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
 
@@ -315,22 +389,79 @@ const DatasetDetails = (props: any) => {
         tempFiles.push(..._files);
         setFiles(tempFiles);
         if (_files.length) {
-            setPercentComplete(1);
+            //setPercentComplete(1);
+            setFilesProgressToOnePercent(_files);
             setTotalFiles(_files.length);
             getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
                 if (result && !result.Message) {
                     let filesHandledCount = 0;
                     _files.forEach(async (file) => {
-                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name).then((blob) => {
-                            filesHandledCount++;
-                            setFilesHandled(filesHandledCount);
-                            try {
-                                uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
-                            } catch (ex) {
+                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                            .then((blob) => {
+                                filesHandledCount++;
+                                setFilesHandled(filesHandledCount);
+                                try {
+                                    uploadFile(
+                                        result,
+                                        file.name,
+                                        blob,
+                                        file.size,
+                                        setPercentComplete,
+                                        controller,
+                                        progressArray,
+                                        setPercentUpdater
+                                    );
+                                    /*
+                                if (result && 1 === 2) {
+                                    const blobServiceClient = new BlobServiceClient(result);
+                                    const containerClient = blobServiceClient.getContainerClient('files');
+                                    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(
+                                        file.name
+                                    );
+
+                                    try {
+                                        blockBlobClient.uploadBrowserData(blob, {
+                                            onProgress: (progress: TransferProgressEvent) => {
+                                                const percentCalculated = Math.floor(
+                                                    (progress.loadedBytes * 100) / file.size
+                                                );
+                                                if (percentCalculated > 0) {
+                                                    let filePercent = {
+                                                        blobName: file.name,
+                                                        percent: percentCalculated
+                                                    };
+
+                                                    var index = progressArray.findIndex(
+                                                        (x: any) => x.blobName == file.name
+                                                    );
+
+                                                    index === -1
+                                                        ? progressArray.push(filePercent)
+                                                        : (progressArray[index].percent = percentCalculated);
+                                                }
+                                                setPercentComplete3(progressArray);
+                                                setTest(percentCalculated);
+                                            },
+                                            abortSignal: controller.signal
+                                        });
+                                    } catch (e) {
+                                        if (e.name === 'AbortError') {
+                                            // abort was called on our abortSignal
+                                            console.log('Operation was aborted by the user');
+                                        } else {
+                                            // some other error occurred 🤷‍♂️
+                                            console.log('Uploading file failed');
+                                        }
+                                    }
+                                }*/
+                                } catch (ex) {
+                                    console.log(ex);
+                                    setFiles(previousFiles);
+                                }
+                            })
+                            .catch((ex) => {
                                 console.log(ex);
-                                setFiles(previousFiles);
-                            }
-                        });
+                            });
                     });
                 } else {
                     setFiles(previousFiles);
@@ -360,11 +491,41 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (i: number, file: any): void => {
-        setPercentComplete(0);
+        try {
+            controller.abort();
+            //controllerSas.abort();
+            controller = new AbortController();
+            //controllerSas = new AbortController();
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Uploading file failed');
+            }
+        }
+
+        //setPercentComplete(0);
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
+        const index = progressArray.findIndex((x) => x.blobName === file.name);
+        console.log(progressArray);
+        //progressArray[index].controller.abort();
+
+        if (index !== -1) {
+            if (progressArray[index] && progressArray[index].percent === 1) {
+                controllerSas.abort();
+                controllerSas = new AbortController();
+                return;
+            } else if (progressArray[index].percent < 100) {
+                console.log('abort');
+                progressArray[index].controller.abort();
+                return;
+            }
+        }
         deleteFileInDataset(datasetId, file.name).then((result: any) => {
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -374,6 +535,31 @@ const DatasetDetails = (props: any) => {
 
     const returnField = (fieldName) => {
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
+    };
+
+    const returnPercentForFile = (blobName: string) => {
+        //const percent = percentComplete.filter((file: any) => file.name === blobName);
+        const percent = percentComplete.filter((progress: any) => progress.blobName === blobName);
+
+        if (percent.length > 0) {
+            return percent[0].percent;
+        }
+
+        //console.log(percentComplete2, blobName);
+        //setPercentComplete(blobName);
+        //return percentComplete2[blobName];
+        return 0;
+    };
+
+    const checkIfDeleteIsEnabled = (_file): boolean => {
+        const index = progressArray.findIndex((x: any) => x.blobName === _file.name);
+        if (index === -1) {
+            return false;
+        }
+        if (progressArray[index].percent === 1) {
+            return true;
+        }
+        return false;
     };
 
     return !showEditDataset ? (
@@ -429,13 +615,7 @@ const DatasetDetails = (props: any) => {
                                             ? false
                                             : true
                                     }
-                                    disabled={
-                                        !(
-                                            dataset.permissions?.editDataset &&
-                                            (percentComplete === 0 || percentComplete === 100) &&
-                                            dataset.storageAccountLink
-                                        )
-                                    }
+                                    disabled={!(dataset.permissions?.editDataset && dataset.storageAccountLink)}
                                 />
                             )}
                             {duplicateFiles && (
@@ -451,7 +631,7 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            {percentComplete > 0 && (
+                            {/*percentComplete > 0 && (
                                 <>
                                     <div style={{ display: 'flex' }}>
                                         <LinearProgress
@@ -467,43 +647,59 @@ const DatasetDetails = (props: any) => {
                                                 controller.abort();
                                                 controllerSas.abort();
                                                 setFiles(prevFiles);
-                                                setPercentComplete(0);
+                                                //setPercentComplete(0);
                                                 controller = new AbortController();
                                                 controllerSas = new AbortController();
                                             }}
                                             style={{ float: 'right', padding: '4px' }}
                                             variant="ghost_icon"
-                                            disabled={percentComplete === 0 || percentComplete === 100}
+                                            disabled={percentComplete.length !== 0}
                                         >
-                                            {percentComplete === 0 || percentComplete === 100
+                                            {percentComplete.length === 0
                                                 ? EquinorIcon('check', '', 24)
                                                 : EquinorIcon('clear', '', 24)}
                                         </Button>
                                     </div>
                                 </>
-                            )}
+                                            )*/}
                             <div style={{ paddingTop: '8px' }}>
                                 {!loadingFiles ? (
                                     files.length > 0 ? (
                                         files.map((file: any, i: number) => {
                                             return (
-                                                <AttachmentWrapper key={getKey()}>
-                                                    <div>{file.name}</div>
-                                                    <div>{bytesToSize(file.size)} </div>
-                                                    <Button
-                                                        variant="ghost_icon"
-                                                        onClick={() => removeFile(i, file)}
-                                                        style={{ marginTop: '-8px' }}
-                                                        disabled={!(percentComplete === 0 || percentComplete === 100)}
-                                                    >
-                                                        <Icon
-                                                            color="#007079"
-                                                            name="delete_forever"
-                                                            size={24}
-                                                            style={{ cursor: 'pointer' }}
-                                                        />
-                                                    </Button>
-                                                </AttachmentWrapper>
+                                                <div>
+                                                    <AttachmentWrapper key={getKey()}>
+                                                        <div>{file.name}</div>
+                                                        <div>{bytesToSize(file.size)} </div>
+                                                        <Button
+                                                            variant="ghost_icon"
+                                                            onClick={() => removeFile(i, file)}
+                                                            style={{ marginTop: '-8px' }}
+                                                            disabled={checkIfDeleteIsEnabled(file)}
+                                                        >
+                                                            <Icon
+                                                                color="#007079"
+                                                                name="delete_forever"
+                                                                size={24}
+                                                                style={{ cursor: 'pointer' }}
+                                                            />
+                                                        </Button>
+                                                    </AttachmentWrapper>
+
+                                                    <LinearProgressComponent
+                                                        percentComplete={percentUpdater}
+                                                        blobName={file.name}
+                                                    />
+
+                                                    {progressArray.length > 0 &&
+                                                        returnPercentForFile(file.name) > 0 && (
+                                                            <LinearProgress
+                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                                value={returnPercentForFile(file.name)}
+                                                                variant="determinate"
+                                                            />
+                                                        )}
+                                                </div>
                                             );
                                         })
                                     ) : (
