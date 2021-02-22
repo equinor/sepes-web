@@ -186,6 +186,22 @@ const DatasetDetails = (props: any) => {
     }, [percentComplete, percentComplete2, setPercentComplete]);
     */
 
+    useEffect(() => {
+        const filesInProgress = percentComplete.filter((x) => x.percent > 0 && x.percent < 100);
+        if (filesInProgress.length > 0) {
+            setHasChanged(true);
+        } else {
+            setHasChanged(false);
+        }
+    }, [percentComplete, percentUpdater]);
+
+    useEffect(() => {
+        return () => {
+            cancelAllDownloads();
+            progressArray = [];
+        };
+    }, []);
+
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
             getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
@@ -373,8 +389,6 @@ const DatasetDetails = (props: any) => {
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
-        //progressArray = [];
-
         setFileUploadInProgress(true);
         setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
@@ -389,7 +403,6 @@ const DatasetDetails = (props: any) => {
         tempFiles.push(..._files);
         setFiles(tempFiles);
         if (_files.length) {
-            //setPercentComplete(1);
             setFilesProgressToOnePercent(_files);
             setTotalFiles(_files.length);
             getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
@@ -506,23 +519,24 @@ const DatasetDetails = (props: any) => {
             }
         }
 
-        //setPercentComplete(0);
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
         const index = progressArray.findIndex((x) => x.blobName === file.name);
-        console.log(progressArray);
-        //progressArray[index].controller.abort();
 
         if (index !== -1) {
-            if (progressArray[index] && progressArray[index].percent === 1) {
+            const progressItem = progressArray[index];
+            if (progressItem && progressItem.percent === 1) {
                 controllerSas.abort();
                 controllerSas = new AbortController();
+                progressArray.splice(index, 1);
+                setPercentComplete(progressArray);
                 return;
-            } else if (progressArray[index].percent < 100) {
-                console.log('abort');
-                progressArray[index].controller.abort();
+            } else if (progressItem.percent < 100) {
+                progressItem.controller.abort();
+                progressArray.splice(index, 1);
+                setPercentComplete(progressArray);
                 return;
             }
         }
@@ -537,21 +551,26 @@ const DatasetDetails = (props: any) => {
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
     };
 
+    const cancelAllDownloads = () => {
+        progressArray.forEach((file: any) => {
+            file.controller.abort();
+        });
+    };
+
     const returnPercentForFile = (blobName: string) => {
-        //const percent = percentComplete.filter((file: any) => file.name === blobName);
         const percent = percentComplete.filter((progress: any) => progress.blobName === blobName);
 
         if (percent.length > 0) {
             return percent[0].percent;
         }
 
-        //console.log(percentComplete2, blobName);
-        //setPercentComplete(blobName);
-        //return percentComplete2[blobName];
         return 0;
     };
 
     const checkIfDeleteIsEnabled = (_file): boolean => {
+        if (!dataset.permissions.editDataset) {
+            return true;
+        }
         const index = progressArray.findIndex((x: any) => x.blobName === _file.name);
         if (index === -1) {
             return false;
@@ -631,37 +650,6 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            {/*percentComplete > 0 && (
-                                <>
-                                    <div style={{ display: 'flex' }}>
-                                        <LinearProgress
-                                            style={{ marginTop: '16px' }}
-                                            value={percentComplete}
-                                            variant="determinate"
-                                        />
-                                        <div style={{ padding: '8px' }}>
-                                            {filesHandled}/{totalFiles}
-                                        </div>
-                                        <Button
-                                            onClick={() => {
-                                                controller.abort();
-                                                controllerSas.abort();
-                                                setFiles(prevFiles);
-                                                //setPercentComplete(0);
-                                                controller = new AbortController();
-                                                controllerSas = new AbortController();
-                                            }}
-                                            style={{ float: 'right', padding: '4px' }}
-                                            variant="ghost_icon"
-                                            disabled={percentComplete.length !== 0}
-                                        >
-                                            {percentComplete.length === 0
-                                                ? EquinorIcon('check', '', 24)
-                                                : EquinorIcon('clear', '', 24)}
-                                        </Button>
-                                    </div>
-                                </>
-                                            )*/}
                             <div style={{ paddingTop: '8px' }}>
                                 {!loadingFiles ? (
                                     files.length > 0 ? (
