@@ -34,7 +34,6 @@ import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
-import LinearProgressComponent from './LinearProgressComponent';
 
 const icons = {
     arrow_back,
