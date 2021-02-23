@@ -22,7 +22,7 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/reactstrap": "^8.7.1",
         "@types/styled-components": "^5.1.7",
-        "@typescript-eslint/eslint-plugin": "^4.14.0",
+        "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",
         "animate.css": "^4.1.1",
         "axios": "^0.21.1",
@@ -80,7 +80,7 @@
     "devDependencies": {
         "@cypress/code-coverage": "^3.7.5",
         "@cypress/instrument-cra": "^1.1.1",
-        "@typescript-eslint/eslint-plugin": "^4.14.0",
+        "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.1",
         "cypress": "^4.6.0",
         "cypress-dark": "^1.7.14",
