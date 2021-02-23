@@ -83,7 +83,6 @@ export const uploadFile = async (
     blobName: string,
     data: any,
     totalSize: any,
-    setPercentComplete: any,
     abortArray: any,
     setFiles: any,
     progressArray: any
@@ -131,8 +130,6 @@ export const uploadFile = async (
                             }
                         }
                     }
-
-                    setPercentComplete(abortArray);
                 },
                 abortSignal: abortArray[index] && abortArray[index].controller.signal
             })

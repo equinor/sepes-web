@@ -120,8 +120,6 @@ const DatasetDetails = (props: any) => {
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    const [percentComplete, setPercentComplete] = useState<any>(abortArray);
-    //const [percentUpdater, setPercentUpdater] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -154,18 +152,7 @@ const DatasetDetails = (props: any) => {
         }
         return () => setIsSubscribed(false);
     }, [datasetStorageAccountIsReady, dataset]);
-    /*
-    useEffect(() => {
-        return () => {
-            //Aborts the getting files call
-            controllerFiles.abort();
-            controllerFiles = new AbortController();
-            //Abort any files currently being uploaded
-            controller.abort();
-            controller = new AbortController();
-        };
-    }, []);
-*/
+
     useEffect(() => {
         const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
 
@@ -267,7 +254,6 @@ const DatasetDetails = (props: any) => {
             let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
             abortArray.push(filePercent);
         });
-        setPercentComplete(abortArray);
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
@@ -297,18 +283,7 @@ const DatasetDetails = (props: any) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
                                 try {
-                                    uploadFile(
-                                        result,
-                                        file.name,
-                                        blob,
-                                        file.size,
-                                        setPercentComplete,
-                                        abortArray,
-                                        setFiles,
-                                        progressArray
-                                    ).then(() => {
-                                        setPercentComplete(abortArray);
-                                    });
+                                    uploadFile(result, file.name, blob, file.size, abortArray, setFiles, progressArray);
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
@@ -378,7 +353,6 @@ const DatasetDetails = (props: any) => {
                     controllerSas.abort();
                     controllerSas = new AbortController();
                     abortArray.splice(index, 1);
-                    setPercentComplete(abortArray);
                     return;
                 } catch (error) {
                     console.log(error);
@@ -391,7 +365,6 @@ const DatasetDetails = (props: any) => {
                 }
 
                 abortArray.splice(index, 1);
-                setPercentComplete(abortArray);
                 return;
             }
         }
