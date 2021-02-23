@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
-import { Link } from 'react-router-dom';
 import { lock, lock_open } from '@equinor/eds-icons';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';

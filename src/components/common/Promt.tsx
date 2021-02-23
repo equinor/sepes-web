@@ -17,9 +17,10 @@ const TempButtonWrapper = styled.div`
 type PromptProps = {
     hasChanged: boolean;
     fallBackAddress?: string;
+    customText?: string;
 };
 
-const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress }) => {
+const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText }) => {
     const history = useHistory();
     const [visibleScrim, setVisibleScrim] = useState<boolean>(false);
     const [confirmedNavigation, setConfirmedNavigation] = useState<boolean>(false);
@@ -48,7 +49,7 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress }) => {
                         <Title>Unsaved changes</Title>
                         <CustomContent scrollable={false}>
                             Are you sure you want to leave this page? <br />
-                            All unsaved changes will be lost.
+                            {customText || 'All unsaved changes will be lost.'}
                         </CustomContent>
                         <span style={{ marginLeft: 'auto' }}>
                             <Actions>
