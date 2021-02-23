@@ -154,7 +154,7 @@ const DatasetDetails = (props: any) => {
         }
         return () => setIsSubscribed(false);
     }, [datasetStorageAccountIsReady, dataset]);
-
+    /*
     useEffect(() => {
         return () => {
             //Aborts the getting files call
@@ -165,7 +165,7 @@ const DatasetDetails = (props: any) => {
             controller = new AbortController();
         };
     }, []);
-
+*/
     useEffect(() => {
         const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
 
@@ -174,7 +174,7 @@ const DatasetDetails = (props: any) => {
         } else {
             setHasChanged(false);
         }
-    }, [percentComplete]);
+    }, [files, progressArray]);
 
     useEffect(() => {
         return () => {
@@ -374,13 +374,22 @@ const DatasetDetails = (props: any) => {
         if (index !== -1) {
             const progressItem = abortArray[index];
             if (progressItem && progressItem.percent === 1) {
-                controllerSas.abort();
-                controllerSas = new AbortController();
-                abortArray.splice(index, 1);
-                setPercentComplete(abortArray);
-                return;
+                try {
+                    controllerSas.abort();
+                    controllerSas = new AbortController();
+                    abortArray.splice(index, 1);
+                    setPercentComplete(abortArray);
+                    return;
+                } catch (error) {
+                    console.log(error);
+                }
             } else if (progressItem.percent < 100) {
-                progressItem.controller.abort();
+                try {
+                    progressItem.controller.abort();
+                } catch (error) {
+                    console.log(error);
+                }
+
                 abortArray.splice(index, 1);
                 setPercentComplete(abortArray);
                 return;
@@ -398,8 +407,19 @@ const DatasetDetails = (props: any) => {
     };
 
     const cancelAllDownloads = () => {
+        try {
+            controllerSas.abort();
+            controllerSas = new AbortController();
+        } catch (error) {
+            console.log(error);
+        }
+
         abortArray.forEach((file: any) => {
-            file.controller.abort();
+            try {
+                file.controller.abort();
+            } catch (ex) {
+                console.log(ex);
+            }
         });
     };
 
@@ -425,6 +445,7 @@ const DatasetDetails = (props: any) => {
                 <Prompt
                     hasChanged={hasChanged}
                     fallBackAddress={!checkUrlIfGeneralDataset() ? '/studies/' + studyId : undefined}
+                    customText="All downloads will cancel"
                 />
                 <OuterWrapper>
                     {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}

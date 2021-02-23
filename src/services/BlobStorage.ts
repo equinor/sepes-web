@@ -95,47 +95,52 @@ export const uploadFile = async (
     try {
         const index = abortArray.findIndex((x: any) => x.blobName === blobName);
 
-        blockBlobClient.uploadBrowserData(data, {
-            onProgress: (progress: TransferProgressEvent) => {
-                let percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
-                if (percentCalculated < 1) {
-                    percentCalculated = 1;
-                }
-                let index2 = findWithAttr(progressArray, 'name', blobName);
-                if (percentCalculated >= 0) {
-                    let temp: any = [...progressArray];
-                    if (index2 === -1) {
-                        let modfiedBlob = data;
-                        modfiedBlob.percent = percentCalculated;
-                        temp.push(modfiedBlob);
-                        progressArray.push(modfiedBlob);
-                    } else if (temp[index2] && temp) {
-                        progressArray[index2].percent = percentCalculated;
-                        temp[index2].percent = percentCalculated;
+        blockBlobClient
+            .uploadBrowserData(data, {
+                onProgress: (progress: TransferProgressEvent) => {
+                    let percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
+                    if (percentCalculated < 1) {
+                        percentCalculated = 1;
                     }
+                    let index2 = findWithAttr(progressArray, 'name', blobName);
+                    if (percentCalculated >= 0) {
+                        let temp: any = [...progressArray];
+                        if (index2 === -1) {
+                            let modfiedBlob = data;
+                            modfiedBlob.percent = percentCalculated;
+                            temp.push(modfiedBlob);
+                            progressArray.push(modfiedBlob);
+                        } else if (temp[index2] && temp) {
+                            progressArray[index2].percent = percentCalculated;
+                            temp[index2].percent = percentCalculated;
+                        }
 
-                    setFiles(temp);
+                        setFiles(temp);
 
-                    const filePercent = {
-                        blobName,
-                        percent: percentCalculated,
-                        controller: new AbortController()
-                    };
+                        const filePercent = {
+                            blobName,
+                            percent: percentCalculated,
+                            controller: new AbortController()
+                        };
 
-                    if (index === -1) {
-                        abortArray.push(filePercent);
-                    } else {
-                        if (abortArray[index]) {
-                            abortArray[index].percent = percentCalculated;
+                        if (index === -1) {
+                            abortArray.push(filePercent);
+                        } else {
+                            if (abortArray[index]) {
+                                abortArray[index].percent = percentCalculated;
+                            }
                         }
                     }
-                }
 
-                setPercentComplete(abortArray);
-            },
-            abortSignal: abortArray[index] && abortArray[index].controller.signal
-        });
+                    setPercentComplete(abortArray);
+                },
+                abortSignal: abortArray[index] && abortArray[index].controller.signal
+            })
+            .catch(() => {
+                //Do nothing
+            });
     } catch (e) {
+        console.log('abort');
         if (e.name === 'AbortError') {
             // abort was called on our abortSignal
             console.log('Operation was aborted by the user');
