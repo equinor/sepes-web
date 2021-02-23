@@ -391,7 +391,9 @@ const StepBar: React.FC<StepBarProps> = ({
 
                         return (
                             <Step key={index} style={{ padding: '0 96px 0 96px' }}>
-                                <StepLabel {...labelProps}>{stepL.label}</StepLabel>
+                                <StepLabel {...labelProps}>
+                                    <span style={{ textAlign: 'center' }}>{stepL.label}</span>
+                                </StepLabel>
                             </Step>
                         );
                     })}
