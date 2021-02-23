@@ -255,7 +255,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const validateUserInput = () => {
-        if (loading) {
+        if (loading || !vmEstimatedCost) {
             return false;
         }
         if (
