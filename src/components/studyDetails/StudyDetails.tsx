@@ -108,6 +108,7 @@ const StudyDetails = () => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         disabled={study.permissions && !study.permissions.addRemoveSandbox}
+                        study={study}
                     />
                 );
             case 3:
