@@ -83,10 +83,9 @@ let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
-let percentComplete2 = {};
 
+let abortArray: any = [];
 let progressArray: any = [];
-//let progressArray: any = [];
 
 const DatasetDetails = (props: any) => {
     const datasetId = window.location.pathname.split('/')[4];
@@ -96,7 +95,6 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
-    const [fileUploadInProgress, setFileUploadInProgress] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -117,18 +115,14 @@ const DatasetDetails = (props: any) => {
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    //const [percentComplete, setPercentComplete] = useState<any>({});
-    const [percentComplete, setPercentComplete] = useState<any>(progressArray);
-    const [percentUpdater, setPercentUpdater] = useState<any>(0);
-    const [filesHandled, setFilesHandled] = useState<any>(0);
-    const [totalFiles, setTotalFiles] = useState<any>(0);
+    const [percentComplete, setPercentComplete] = useState<any>(abortArray);
+    //const [percentUpdater, setPercentUpdater] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -172,33 +166,21 @@ const DatasetDetails = (props: any) => {
             controller = new AbortController();
         };
     }, []);
-    /*
-    useEffect(() => {
-        if (percentComplete === 0 || percentComplete === 100) {
-            setHasChanged(false);
-            setFileUploadInProgress(false);
-        } else if (percentComplete.length === 0) {
-            setFileUploadInProgress(false);
-            setHasChanged(false);
-        } else {
-            setFileUploadInProgress(true);
-        }
-    }, [percentComplete, percentComplete2, setPercentComplete]);
-    */
 
     useEffect(() => {
-        const filesInProgress = percentComplete.filter((x) => x.percent > 0 && x.percent < 100);
+        const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
+
         if (filesInProgress.length > 0) {
             setHasChanged(true);
         } else {
             setHasChanged(false);
         }
-    }, [percentComplete, percentUpdater]);
+    }, [percentComplete]);
 
     useEffect(() => {
         return () => {
             cancelAllDownloads();
-            progressArray = [];
+            abortArray = [];
         };
     }, []);
 
@@ -225,6 +207,7 @@ const DatasetDetails = (props: any) => {
                     console.log('Err');
                 } else if (result && isSubscribed) {
                     setFiles(result);
+                    progressArray = result;
                 }
             });
         }
@@ -252,58 +235,6 @@ const DatasetDetails = (props: any) => {
     const getKey = () => {
         return keyCount++;
     };
-    /*
-    const uploadFiles = (formData: any, previousFiles: any) => {
-        setPercentComplete(0);
-        updateOnNextVisit();
-        if (!checkUrlIfGeneralDataset()) {
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        } else {
-            datasetId = studyId;
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        }
-    };
-    
-
-    const postFile = async (url, files: any, previousFiles: any) => {
-        return new Promise(() => {
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (tokenResponse.accessToken) {
-                        const bearer = `Bearer ${tokenResponse.accessToken}`;
-
-                        axios({
-                            headers: { Authorization: bearer },
-                            method: 'post',
-                            url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
-                            data: files,
-                            timeout: 1000000,
-                            onUploadProgress: (p) => {
-                                const percentCalculated = Math.floor((p.loaded * 100) / p.total);
-                                setPercentComplete(percentCalculated);
-                            },
-                            cancelToken: source.token
-                        }).catch((thrown) => {
-                            console.log('error', thrown);
-                            setFiles(previousFiles);
-                        });
-                    }
-                })
-                .catch((error: string) => {
-                    console.log(error);
-                });
-        });
-    };
-    */
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
@@ -331,88 +262,41 @@ const DatasetDetails = (props: any) => {
             }
         });
     };
-    /*
-    const uploadFile3 = async (
-        blobUri: string,
-        blobName: string,
-        data: any,
-        totalSize: any,
-        setPercentComplete: any,
-        percentComplete: any,
-        controller: any,
-        progressArray: any
-    ) => {
-        const blobServiceClient = new BlobServiceClient(blobUri);
-        const containerClient = blobServiceClient.getContainerClient('files');
-        const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-        try {
-            blockBlobClient.uploadBrowserData(data, {
-                onProgress: (progress: TransferProgressEvent) => {
-                    const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
-                    if (percentCalculated > 0) {
-                        let filePercent = {
-                            blobName: blobName,
-                            percent: percentCalculated
-                        };
-
-                        var index = progressArray.findIndex((x: any) => x.blobName == blobName);
-
-                        index === -1
-                            ? progressArray.push(filePercent)
-                            : (progressArray[index].percent = percentCalculated);
-                    }
-                    setPercentComplete3(progressArray);
-                    setPercentUpdater(percentCalculated);
-                },
-                abortSignal: controller.signal
-            });
-        } catch (e) {
-            if (e.name === 'AbortError') {
-                // abort was called on our abortSignal
-                console.log('Operation was aborted by the user');
-            } else {
-                // some other error occurred 🤷‍♂️
-                console.log('Uploading file failed');
-            }
-        }
-    };
-    */
 
     const setFilesProgressToOnePercent = (_files: any) => {
         _files.forEach(async (file: any) => {
             let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
-            progressArray.push(filePercent);
+            abortArray.push(filePercent);
         });
-        setPercentComplete(progressArray);
-        setPercentUpdater(1);
+        setPercentComplete(abortArray);
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
-        setFileUploadInProgress(true);
         setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
 
         if (_files.length === 0) {
             return;
         }
+
         setHasChanged(true);
         const previousFiles = [...files];
-        setPrevFiles(previousFiles);
         const tempFiles = [...files];
         tempFiles.push(..._files);
+
+        _files.forEach((_file: any) => {
+            _file.percent = 1;
+            progressArray.push(_file);
+        });
+
         setFiles(tempFiles);
         if (_files.length) {
             setFilesProgressToOnePercent(_files);
-            setTotalFiles(_files.length);
             getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
                 if (result && !result.Message) {
-                    let filesHandledCount = 0;
                     _files.forEach(async (file) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
-                                filesHandledCount++;
-                                setFilesHandled(filesHandledCount);
                                 try {
                                     uploadFile(
                                         result,
@@ -420,53 +304,12 @@ const DatasetDetails = (props: any) => {
                                         blob,
                                         file.size,
                                         setPercentComplete,
-                                        controller,
-                                        progressArray,
-                                        setPercentUpdater
-                                    );
-                                    /*
-                                if (result && 1 === 2) {
-                                    const blobServiceClient = new BlobServiceClient(result);
-                                    const containerClient = blobServiceClient.getContainerClient('files');
-                                    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(
-                                        file.name
-                                    );
-
-                                    try {
-                                        blockBlobClient.uploadBrowserData(blob, {
-                                            onProgress: (progress: TransferProgressEvent) => {
-                                                const percentCalculated = Math.floor(
-                                                    (progress.loadedBytes * 100) / file.size
-                                                );
-                                                if (percentCalculated > 0) {
-                                                    let filePercent = {
-                                                        blobName: file.name,
-                                                        percent: percentCalculated
-                                                    };
-
-                                                    var index = progressArray.findIndex(
-                                                        (x: any) => x.blobName == file.name
-                                                    );
-
-                                                    index === -1
-                                                        ? progressArray.push(filePercent)
-                                                        : (progressArray[index].percent = percentCalculated);
-                                                }
-                                                setPercentComplete3(progressArray);
-                                                setTest(percentCalculated);
-                                            },
-                                            abortSignal: controller.signal
-                                        });
-                                    } catch (e) {
-                                        if (e.name === 'AbortError') {
-                                            // abort was called on our abortSignal
-                                            console.log('Operation was aborted by the user');
-                                        } else {
-                                            // some other error occurred 🤷‍♂️
-                                            console.log('Uploading file failed');
-                                        }
-                                    }
-                                }*/
+                                        abortArray,
+                                        setFiles,
+                                        progressArray
+                                    ).then(() => {
+                                        setPercentComplete(abortArray);
+                                    });
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
@@ -523,20 +366,24 @@ const DatasetDetails = (props: any) => {
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
-        const index = progressArray.findIndex((x) => x.blobName === file.name);
+        const index = abortArray.findIndex((x) => x.blobName === file.name);
+        const progIndex = progressArray.findIndex((x) => x.name === file.name);
+        if (progIndex !== -1) {
+            progressArray.splice(progIndex, 1);
+        }
 
         if (index !== -1) {
-            const progressItem = progressArray[index];
+            const progressItem = abortArray[index];
             if (progressItem && progressItem.percent === 1) {
                 controllerSas.abort();
                 controllerSas = new AbortController();
-                progressArray.splice(index, 1);
-                setPercentComplete(progressArray);
+                abortArray.splice(index, 1);
+                setPercentComplete(abortArray);
                 return;
             } else if (progressItem.percent < 100) {
                 progressItem.controller.abort();
-                progressArray.splice(index, 1);
-                setPercentComplete(progressArray);
+                abortArray.splice(index, 1);
+                setPercentComplete(abortArray);
                 return;
             }
         }
@@ -552,26 +399,16 @@ const DatasetDetails = (props: any) => {
     };
 
     const cancelAllDownloads = () => {
-        progressArray.forEach((file: any) => {
+        abortArray.forEach((file: any) => {
             file.controller.abort();
         });
-    };
-
-    const returnPercentForFile = (blobName: string) => {
-        const percent = percentComplete.filter((progress: any) => progress.blobName === blobName);
-
-        if (percent.length > 0) {
-            return percent[0].percent;
-        }
-
-        return 0;
     };
 
     const checkIfDeleteIsEnabled = (_file): boolean => {
         if (!dataset.permissions.editDataset) {
             return true;
         }
-        const index = progressArray.findIndex((x: any) => x.blobName === _file.name);
+        const index = progressArray.findIndex((x: any) => x.name === _file.name);
         if (index === -1) {
             return false;
         }
@@ -655,8 +492,8 @@ const DatasetDetails = (props: any) => {
                                     files.length > 0 ? (
                                         files.map((file: any, i: number) => {
                                             return (
-                                                <div>
-                                                    <AttachmentWrapper key={getKey()}>
+                                                <div key={file.name}>
+                                                    <AttachmentWrapper>
                                                         <div>{file.name}</div>
                                                         <div>{bytesToSize(file.size)} </div>
                                                         <Button
@@ -673,20 +510,23 @@ const DatasetDetails = (props: any) => {
                                                             />
                                                         </Button>
                                                     </AttachmentWrapper>
+                                                    {file.percent && (
+                                                        <LinearProgress
+                                                            style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                            value={file.percent && file.percent}
+                                                            variant="determinate"
+                                                        />
+                                                    )}
 
-                                                    <LinearProgressComponent
-                                                        percentComplete={percentUpdater}
-                                                        blobName={file.name}
-                                                    />
-
-                                                    {progressArray.length > 0 &&
-                                                        returnPercentForFile(file.name) > 0 && (
+                                                    {/*percentComplete.length > 0 && returnPercentForFile(file.name) > 0 && (
+                                                        <>
                                                             <LinearProgress
                                                                 style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                                value={returnPercentForFile(file.name)}
+                                                                value={file.percent && file.percent}
                                                                 variant="determinate"
                                                             />
-                                                        )}
+                                                        </>
+                                                    )*/}
                                                 </div>
                                             );
                                         })

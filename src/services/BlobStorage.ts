@@ -69,38 +69,71 @@ export const uploadFile2 = async (
     }
 };
 */
+const findWithAttr = (array, attr, value) => {
+    for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
+            return i;
+        }
+    }
+    return -1;
+};
+
 export const uploadFile = async (
     blobUri: string,
     blobName: string,
     data: any,
     totalSize: any,
     setPercentComplete: any,
-    controller: any,
-    progressArray: any,
-    percentUpdater
+    abortArray: any,
+    setFiles: any,
+    progressArray: any
 ) => {
     const blobServiceClient = new BlobServiceClient(blobUri);
     const containerClient = blobServiceClient.getContainerClient('files');
     const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
 
     try {
-        const index = progressArray.findIndex((x: any) => x.blobName === blobName);
+        const index = abortArray.findIndex((x: any) => x.blobName === blobName);
+
         blockBlobClient.uploadBrowserData(data, {
             onProgress: (progress: TransferProgressEvent) => {
-                const percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
-                if (percentCalculated > 1) {
+                let percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
+                if (percentCalculated < 1) {
+                    percentCalculated = 1;
+                }
+                let index2 = findWithAttr(progressArray, 'name', blobName);
+                if (percentCalculated >= 0) {
+                    let temp: any = [...progressArray];
+                    if (index2 === -1) {
+                        let modfiedBlob = data;
+                        modfiedBlob.percent = percentCalculated;
+                        temp.push(modfiedBlob);
+                        progressArray.push(modfiedBlob);
+                    } else if (temp[index2] && temp) {
+                        progressArray[index2].percent = percentCalculated;
+                        temp[index2].percent = percentCalculated;
+                    }
+
+                    setFiles(temp);
+
                     const filePercent = {
                         blobName,
                         percent: percentCalculated,
                         controller: new AbortController()
                     };
 
-                    index === -1 ? progressArray.push(filePercent) : (progressArray[index].percent = percentCalculated);
+                    if (index === -1) {
+                        abortArray.push(filePercent);
+                    } else {
+                        if (abortArray[index]) {
+                            abortArray[index].percent = percentCalculated;
+                        }
+                    }
                 }
-                setPercentComplete(progressArray);
-                percentUpdater(percentCalculated);
+
+                setPercentComplete(abortArray);
             },
-            abortSignal: progressArray[index] && progressArray[index].controller.signal
+            abortSignal: abortArray[index] && abortArray[index].controller.signal
         });
     } catch (e) {
         if (e.name === 'AbortError') {
