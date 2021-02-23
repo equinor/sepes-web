@@ -14,6 +14,7 @@ import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
+import '../../../styles/Table.scss';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -369,7 +370,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                             vm.rules.map((rule: any, ruleNumber: number) => {
                                 return (
                                     rule.direction === 0 && (
-                                        <Row key={getKey()}>
+                                        <Row key={getKey()} id="tableRowNoPointerNoColor">
                                             <Cell>
                                                 <TextField
                                                     id={getKey()}
@@ -484,7 +485,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 );
                             })
                         ) : (
-                            <Row>
+                            <Row id="tableRowNoPointerNoColor">
                                 <Cell style={{ width: '220px' }}>No inbound rules added</Cell>
                                 <Cell />
                                 <Cell />
@@ -514,13 +515,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 </div>
                 <Table style={{ width: '100%', marginTop: '24px' }}>
                     <Head>
-                        <Row>
+                        <Row id="tableRowNoPointerNoColor">
                             <Cell scope="col">Outbound rules</Cell>
                             <Cell scope="col" />
                         </Row>
                     </Head>
                     <Body>
-                        <Row key={1}>
+                        <Row key={1} id="tableRowNoPointerNoColor">
                             <Cell>Outbound internet traffic is currently {returnOpenClosed('text')}</Cell>
                             <Cell>
                                 <Button
