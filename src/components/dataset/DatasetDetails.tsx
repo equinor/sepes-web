@@ -83,6 +83,9 @@ let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
 
+let abortArray: any = [];
+let progressArray: any = [];
+
 const DatasetDetails = (props: any) => {
     const datasetId = window.location.pathname.split('/')[4];
     const studyId = window.location.pathname.split('/')[2];
@@ -111,16 +114,14 @@ const DatasetDetails = (props: any) => {
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    const [percentComplete, setPercentComplete] = useState<any>(0);
-    const [filesHandled, setFilesHandled] = useState<any>(0);
-    const [totalFiles, setTotalFiles] = useState<any>(0);
+    const [percentComplete, setPercentComplete] = useState<any>(abortArray);
+    //const [percentUpdater, setPercentUpdater] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -166,10 +167,21 @@ const DatasetDetails = (props: any) => {
     }, []);
 
     useEffect(() => {
-        if (percentComplete === 0 || percentComplete === 100) {
+        const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
+
+        if (filesInProgress.length > 0) {
+            setHasChanged(true);
+        } else {
             setHasChanged(false);
         }
     }, [percentComplete]);
+
+    useEffect(() => {
+        return () => {
+            cancelAllDownloads();
+            abortArray = [];
+        };
+    }, []);
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -194,6 +206,7 @@ const DatasetDetails = (props: any) => {
                     console.log('Err');
                 } else if (result && isSubscribed) {
                     setFiles(result);
+                    progressArray = result;
                 }
             });
         }
@@ -221,58 +234,6 @@ const DatasetDetails = (props: any) => {
     const getKey = () => {
         return keyCount++;
     };
-    /*
-    const uploadFiles = (formData: any, previousFiles: any) => {
-        setPercentComplete(0);
-        updateOnNextVisit();
-        if (!checkUrlIfGeneralDataset()) {
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        } else {
-            datasetId = studyId;
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        }
-    };
-    
-
-    const postFile = async (url, files: any, previousFiles: any) => {
-        return new Promise(() => {
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (tokenResponse.accessToken) {
-                        const bearer = `Bearer ${tokenResponse.accessToken}`;
-
-                        axios({
-                            headers: { Authorization: bearer },
-                            method: 'post',
-                            url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
-                            data: files,
-                            timeout: 1000000,
-                            onUploadProgress: (p) => {
-                                const percentCalculated = Math.floor((p.loaded * 100) / p.total);
-                                setPercentComplete(percentCalculated);
-                            },
-                            cancelToken: source.token
-                        }).catch((thrown) => {
-                            console.log('error', thrown);
-                            setFiles(previousFiles);
-                        });
-                    }
-                })
-                .catch((error: string) => {
-                    console.log(error);
-                });
-        });
-    };
-    */
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
@@ -301,6 +262,14 @@ const DatasetDetails = (props: any) => {
         });
     };
 
+    const setFilesProgressToOnePercent = (_files: any) => {
+        _files.forEach(async (file: any) => {
+            let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
+            abortArray.push(filePercent);
+        });
+        setPercentComplete(abortArray);
+    };
+
     const handleFileDrop = async (_files: File[]): Promise<void> => {
         setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
@@ -308,29 +277,46 @@ const DatasetDetails = (props: any) => {
         if (_files.length === 0) {
             return;
         }
+
         setHasChanged(true);
         const previousFiles = [...files];
-        setPrevFiles(previousFiles);
         const tempFiles = [...files];
         tempFiles.push(..._files);
+
+        _files.forEach((_file: any) => {
+            _file.percent = 1;
+            progressArray.push(_file);
+        });
+
         setFiles(tempFiles);
         if (_files.length) {
-            setPercentComplete(1);
-            setTotalFiles(_files.length);
+            setFilesProgressToOnePercent(_files);
             getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
                 if (result && !result.Message) {
-                    let filesHandledCount = 0;
                     _files.forEach(async (file) => {
-                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name).then((blob) => {
-                            filesHandledCount++;
-                            setFilesHandled(filesHandledCount);
-                            try {
-                                uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
-                            } catch (ex) {
+                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                            .then((blob) => {
+                                try {
+                                    uploadFile(
+                                        result,
+                                        file.name,
+                                        blob,
+                                        file.size,
+                                        setPercentComplete,
+                                        abortArray,
+                                        setFiles,
+                                        progressArray
+                                    ).then(() => {
+                                        setPercentComplete(abortArray);
+                                    });
+                                } catch (ex) {
+                                    console.log(ex);
+                                    setFiles(previousFiles);
+                                }
+                            })
+                            .catch((ex) => {
                                 console.log(ex);
-                                setFiles(previousFiles);
-                            }
-                        });
+                            });
                     });
                 } else {
                     setFiles(previousFiles);
@@ -360,11 +346,46 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (i: number, file: any): void => {
-        setPercentComplete(0);
+        try {
+            controller.abort();
+            //controllerSas.abort();
+            controller = new AbortController();
+            //controllerSas = new AbortController();
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Uploading file failed');
+            }
+        }
+
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
+        const index = abortArray.findIndex((x) => x.blobName === file.name);
+        const progIndex = progressArray.findIndex((x) => x.name === file.name);
+        if (progIndex !== -1) {
+            progressArray.splice(progIndex, 1);
+        }
+
+        if (index !== -1) {
+            const progressItem = abortArray[index];
+            if (progressItem && progressItem.percent === 1) {
+                controllerSas.abort();
+                controllerSas = new AbortController();
+                abortArray.splice(index, 1);
+                setPercentComplete(abortArray);
+                return;
+            } else if (progressItem.percent < 100) {
+                progressItem.controller.abort();
+                abortArray.splice(index, 1);
+                setPercentComplete(abortArray);
+                return;
+            }
+        }
         deleteFileInDataset(datasetId, file.name).then((result: any) => {
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -374,6 +395,26 @@ const DatasetDetails = (props: any) => {
 
     const returnField = (fieldName) => {
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
+    };
+
+    const cancelAllDownloads = () => {
+        abortArray.forEach((file: any) => {
+            file.controller.abort();
+        });
+    };
+
+    const checkIfDeleteIsEnabled = (_file): boolean => {
+        if (!dataset.permissions.editDataset) {
+            return true;
+        }
+        const index = progressArray.findIndex((x: any) => x.name === _file.name);
+        if (index === -1) {
+            return false;
+        }
+        if (progressArray[index].percent === 1) {
+            return true;
+        }
+        return false;
     };
 
     return !showEditDataset ? (
@@ -429,13 +470,7 @@ const DatasetDetails = (props: any) => {
                                             ? false
                                             : true
                                     }
-                                    disabled={
-                                        !(
-                                            dataset.permissions?.editDataset &&
-                                            (percentComplete === 0 || percentComplete === 100) &&
-                                            dataset.storageAccountLink
-                                        )
-                                    }
+                                    disabled={!(dataset.permissions?.editDataset && dataset.storageAccountLink)}
                                 />
                             )}
                             {duplicateFiles && (
@@ -451,59 +486,47 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            {percentComplete > 0 && (
-                                <>
-                                    <div style={{ display: 'flex' }}>
-                                        <LinearProgress
-                                            style={{ marginTop: '16px' }}
-                                            value={percentComplete}
-                                            variant="determinate"
-                                        />
-                                        <div style={{ padding: '8px' }}>
-                                            {filesHandled}/{totalFiles}
-                                        </div>
-                                        <Button
-                                            onClick={() => {
-                                                controller.abort();
-                                                controllerSas.abort();
-                                                setFiles(prevFiles);
-                                                setPercentComplete(0);
-                                                controller = new AbortController();
-                                                controllerSas = new AbortController();
-                                            }}
-                                            style={{ float: 'right', padding: '4px' }}
-                                            variant="ghost_icon"
-                                            disabled={percentComplete === 0 || percentComplete === 100}
-                                        >
-                                            {percentComplete === 0 || percentComplete === 100
-                                                ? EquinorIcon('check', '', 24)
-                                                : EquinorIcon('clear', '', 24)}
-                                        </Button>
-                                    </div>
-                                </>
-                            )}
                             <div style={{ paddingTop: '8px' }}>
                                 {!loadingFiles ? (
                                     files.length > 0 ? (
                                         files.map((file: any, i: number) => {
                                             return (
-                                                <AttachmentWrapper key={getKey()}>
-                                                    <div>{file.name}</div>
-                                                    <div>{bytesToSize(file.size)} </div>
-                                                    <Button
-                                                        variant="ghost_icon"
-                                                        onClick={() => removeFile(i, file)}
-                                                        style={{ marginTop: '-8px' }}
-                                                        disabled={!(percentComplete === 0 || percentComplete === 100)}
-                                                    >
-                                                        <Icon
-                                                            color="#007079"
-                                                            name="delete_forever"
-                                                            size={24}
-                                                            style={{ cursor: 'pointer' }}
+                                                <div key={file.name}>
+                                                    <AttachmentWrapper>
+                                                        <div>{file.name}</div>
+                                                        <div>{bytesToSize(file.size)} </div>
+                                                        <Button
+                                                            variant="ghost_icon"
+                                                            onClick={() => removeFile(i, file)}
+                                                            style={{ marginTop: '-8px' }}
+                                                            disabled={checkIfDeleteIsEnabled(file)}
+                                                        >
+                                                            <Icon
+                                                                color="#007079"
+                                                                name="delete_forever"
+                                                                size={24}
+                                                                style={{ cursor: 'pointer' }}
+                                                            />
+                                                        </Button>
+                                                    </AttachmentWrapper>
+                                                    {file.percent && (
+                                                        <LinearProgress
+                                                            style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                            value={file.percent && file.percent}
+                                                            variant="determinate"
                                                         />
-                                                    </Button>
-                                                </AttachmentWrapper>
+                                                    )}
+
+                                                    {/*percentComplete.length > 0 && returnPercentForFile(file.name) > 0 && (
+                                                        <>
+                                                            <LinearProgress
+                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                                value={file.percent && file.percent}
+                                                                variant="determinate"
+                                                            />
+                                                        </>
+                                                    )*/}
+                                                </div>
                                             );
                                         })
                                     ) : (
