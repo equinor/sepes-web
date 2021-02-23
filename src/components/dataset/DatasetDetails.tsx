@@ -120,8 +120,6 @@ const DatasetDetails = (props: any) => {
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    const [percentComplete, setPercentComplete] = useState<any>(abortArray);
-    //const [percentUpdater, setPercentUpdater] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -156,17 +154,6 @@ const DatasetDetails = (props: any) => {
     }, [datasetStorageAccountIsReady, dataset]);
 
     useEffect(() => {
-        return () => {
-            //Aborts the getting files call
-            controllerFiles.abort();
-            controllerFiles = new AbortController();
-            //Abort any files currently being uploaded
-            controller.abort();
-            controller = new AbortController();
-        };
-    }, []);
-
-    useEffect(() => {
         const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
 
         if (filesInProgress.length > 0) {
@@ -174,7 +161,7 @@ const DatasetDetails = (props: any) => {
         } else {
             setHasChanged(false);
         }
-    }, [percentComplete]);
+    }, [files, progressArray]);
 
     useEffect(() => {
         return () => {
@@ -267,7 +254,6 @@ const DatasetDetails = (props: any) => {
             let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
             abortArray.push(filePercent);
         });
-        setPercentComplete(abortArray);
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
@@ -297,18 +283,7 @@ const DatasetDetails = (props: any) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
                                 try {
-                                    uploadFile(
-                                        result,
-                                        file.name,
-                                        blob,
-                                        file.size,
-                                        setPercentComplete,
-                                        abortArray,
-                                        setFiles,
-                                        progressArray
-                                    ).then(() => {
-                                        setPercentComplete(abortArray);
-                                    });
+                                    uploadFile(result, file.name, blob, file.size, abortArray, setFiles, progressArray);
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
@@ -374,15 +349,22 @@ const DatasetDetails = (props: any) => {
         if (index !== -1) {
             const progressItem = abortArray[index];
             if (progressItem && progressItem.percent === 1) {
-                controllerSas.abort();
-                controllerSas = new AbortController();
-                abortArray.splice(index, 1);
-                setPercentComplete(abortArray);
-                return;
+                try {
+                    controllerSas.abort();
+                    controllerSas = new AbortController();
+                    abortArray.splice(index, 1);
+                    return;
+                } catch (error) {
+                    console.log(error);
+                }
             } else if (progressItem.percent < 100) {
-                progressItem.controller.abort();
+                try {
+                    progressItem.controller.abort();
+                } catch (error) {
+                    console.log(error);
+                }
+
                 abortArray.splice(index, 1);
-                setPercentComplete(abortArray);
                 return;
             }
         }
@@ -398,8 +380,19 @@ const DatasetDetails = (props: any) => {
     };
 
     const cancelAllDownloads = () => {
+        try {
+            controllerSas.abort();
+            controllerSas = new AbortController();
+        } catch (error) {
+            console.log(error);
+        }
+
         abortArray.forEach((file: any) => {
-            file.controller.abort();
+            try {
+                file.controller.abort();
+            } catch (ex) {
+                console.log(ex);
+            }
         });
     };
 
@@ -425,6 +418,7 @@ const DatasetDetails = (props: any) => {
                 <Prompt
                     hasChanged={hasChanged}
                     fallBackAddress={!checkUrlIfGeneralDataset() ? '/studies/' + studyId : undefined}
+                    customText="All downloads will cancel"
                 />
                 <OuterWrapper>
                     {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
