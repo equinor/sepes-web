@@ -62,6 +62,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
                     value={text}
                     data-cy="delete_resource"
                     autoComplete="off"
+                    autoFocus
                 />
                 <div>
                     <Button

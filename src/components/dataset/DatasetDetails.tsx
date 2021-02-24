@@ -33,6 +33,7 @@ import {
 import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
+import Prompt from '../common/Promt';
 
 const icons = {
     arrow_back,
@@ -78,9 +79,12 @@ const checkUrlIfGeneralDataset = () => {
     return false;
 };
 let controller = new AbortController();
-//let cancelToken = axios.CancelToken;
-//let source = cancelToken.source();
+let controllerFiles = new AbortController();
+let controllerSas = new AbortController();
 const interval = 7000;
+
+let abortArray: any = [];
+let progressArray: any = [];
 
 const DatasetDetails = (props: any) => {
     const datasetId = window.location.pathname.split('/')[4];
@@ -90,7 +94,6 @@ const DatasetDetails = (props: any) => {
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
-    const [loadingSasToken, setLoadingSasToken] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
@@ -103,21 +106,20 @@ const DatasetDetails = (props: any) => {
 
     const datasetResponse = useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
-        setDataset
+        setDataset,
+        undefined,
+        controller
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
-    const [prevFiles, setPrevFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
     const permissions = useContext(Permissions);
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
-    const [percentComplete, setPercentComplete] = useState<any>(0);
-    const [filesHandled, setFilesHandled] = useState<any>(0);
-    const [totalFiles, setTotalFiles] = useState<any>(0);
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     let keyCount: number = 0;
 
@@ -152,8 +154,27 @@ const DatasetDetails = (props: any) => {
     }, [datasetStorageAccountIsReady, dataset]);
 
     useEffect(() => {
-        return () => setIsSubscribed(false);
+        const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
+
+        if (filesInProgress.length > 0) {
+            setHasChanged(true);
+        } else {
+            setHasChanged(false);
+        }
+    }, [files, progressArray]);
+
+    useEffect(() => {
+        return () => {
+            cancelGettingFilesCall();
+            cancelAllDownloads();
+            abortArray = [];
+        };
     }, []);
+
+    const cancelGettingFilesCall = (): void => {
+        controllerFiles.abort();
+        controllerFiles = new AbortController();
+    };
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
@@ -171,13 +192,14 @@ const DatasetDetails = (props: any) => {
     const getDatasetFiles = () => {
         if (!checkUrlIfGeneralDataset() && isSubscribed) {
             setLoadingFiles(true);
-            getStudySpecificDatasetFiles(datasetId).then((result: any) => {
+            getStudySpecificDatasetFiles(datasetId, controllerFiles.signal).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
                     notify.show('danger', '500', result.Message, result.RequestId);
                     console.log('Err');
                 } else if (result && isSubscribed) {
                     setFiles(result);
+                    progressArray = result;
                 }
             });
         }
@@ -188,7 +210,7 @@ const DatasetDetails = (props: any) => {
         if (!resources) {
             return res;
         }
-        resources.map((resource: DatasetResourcesObj, i: number) => {
+        resources.map((resource: DatasetResourcesObj) => {
             setStorageAccountStatus(resource.status);
             if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
                 res = true;
@@ -205,58 +227,6 @@ const DatasetDetails = (props: any) => {
     const getKey = () => {
         return keyCount++;
     };
-    /*
-    const uploadFiles = (formData: any, previousFiles: any) => {
-        setPercentComplete(0);
-        updateOnNextVisit();
-        if (!checkUrlIfGeneralDataset()) {
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        } else {
-            datasetId = studyId;
-            postFile('api/datasets/' + datasetId + '/files', formData, previousFiles).then((result: any) => {
-                if (result.Message) {
-                    console.log('err', result);
-                }
-            });
-        }
-    };
-    
-
-    const postFile = async (url, files: any, previousFiles: any) => {
-        return new Promise(() => {
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (tokenResponse.accessToken) {
-                        const bearer = `Bearer ${tokenResponse.accessToken}`;
-
-                        axios({
-                            headers: { Authorization: bearer },
-                            method: 'post',
-                            url: `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`,
-                            data: files,
-                            timeout: 1000000,
-                            onUploadProgress: (p) => {
-                                const percentCalculated = Math.floor((p.loaded * 100) / p.total);
-                                setPercentComplete(percentCalculated);
-                            },
-                            cancelToken: source.token
-                        }).catch((thrown) => {
-                            console.log('error', thrown);
-                            setFiles(previousFiles);
-                        });
-                    }
-                })
-                .catch((error: string) => {
-                    console.log(error);
-                });
-        });
-    };
-    */
 
     const handleEditMetdata = (evt) => {
         setShowEditDataset(true);
@@ -268,6 +238,8 @@ const DatasetDetails = (props: any) => {
     };
 
     const deleteDataset = () => {
+        controllerFiles.abort();
+        controllerFiles = new AbortController();
         setLoading(true);
         setDatasetDeleteInProgress(true);
         setUserClickedDelete(false);
@@ -283,44 +255,48 @@ const DatasetDetails = (props: any) => {
         });
     };
 
+    const setFilesProgressToOnePercent = (_files: any) => {
+        _files.forEach(async (file: any) => {
+            let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
+            abortArray.push(filePercent);
+        });
+    };
+
     const handleFileDrop = async (_files: File[]): Promise<void> => {
+        setDuplicateFiles(false);
         _files = checkIfFileAlreadyIsUploaded(_files);
 
         if (_files.length === 0) {
             return;
         }
 
+        setHasChanged(true);
         const previousFiles = [...files];
-        setPrevFiles(previousFiles);
         const tempFiles = [...files];
         tempFiles.push(..._files);
+
+        _files.forEach((_file: any) => {
+            _file.percent = 1;
+            progressArray.push(_file);
+        });
+
         setFiles(tempFiles);
-        let _formData = new FormData();
         if (_files.length) {
-            setPercentComplete(1);
-            setTotalFiles(_files.length);
-            setLoadingSasToken(true);
-            getDatasetSasToken(datasetId).then((result: any) => {
-                setLoadingSasToken(false);
+            setFilesProgressToOnePercent(_files);
+            getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
                 if (result && !result.Message) {
-                    let filesHandledCount = 0;
                     _files.forEach(async (file) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
-                                filesHandledCount++;
-                                setFilesHandled(filesHandledCount);
-                                //_formData.append(`files`, blob);
                                 try {
-                                    uploadFile(result, file.name, blob, file.size, setPercentComplete, controller);
+                                    uploadFile(result, file.name, blob, file.size, abortArray, setFiles, progressArray);
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
                                 }
                             })
-                            .then(() => {
-                                if (filesHandledCount === _files.length) {
-                                    // uploadFiles(_formData, previousFiles);
-                                }
+                            .catch((ex) => {
+                                console.log(ex);
                             });
                     });
                 } else {
@@ -351,11 +327,53 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (i: number, file: any): void => {
-        setPercentComplete(0);
+        try {
+            controller.abort();
+            //controllerSas.abort();
+            controller = new AbortController();
+            //controllerSas = new AbortController();
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Uploading file failed');
+            }
+        }
+
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
+        const index = abortArray.findIndex((x) => x.blobName === file.name);
+        const progIndex = progressArray.findIndex((x) => x.name === file.name);
+        if (progIndex !== -1) {
+            progressArray.splice(progIndex, 1);
+        }
+
+        if (index !== -1) {
+            const progressItem = abortArray[index];
+            if (progressItem && progressItem.percent === 1) {
+                try {
+                    controllerSas.abort();
+                    controllerSas = new AbortController();
+                    abortArray.splice(index, 1);
+                    return;
+                } catch (error) {
+                    console.log(error);
+                }
+            } else if (progressItem.percent < 100) {
+                try {
+                    progressItem.controller.abort();
+                } catch (error) {
+                    console.log(error);
+                }
+
+                abortArray.splice(index, 1);
+                return;
+            }
+        }
         deleteFileInDataset(datasetId, file.name).then((result: any) => {
             if (result.Message) {
                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -367,221 +385,220 @@ const DatasetDetails = (props: any) => {
         return <Typography variant="h6">{fieldName || '-'}</Typography>;
     };
 
+    const cancelAllDownloads = () => {
+        try {
+            controllerSas.abort();
+            controllerSas = new AbortController();
+        } catch (error) {
+            console.log(error);
+        }
+
+        abortArray.forEach((file: any) => {
+            try {
+                file.controller.abort();
+            } catch (ex) {
+                console.log(ex);
+            }
+        });
+    };
+
+    const checkIfDeleteIsEnabled = (_file): boolean => {
+        if (!dataset.permissions.editDataset) {
+            return true;
+        }
+        const index = progressArray.findIndex((x: any) => x.name === _file.name);
+        if (index === -1) {
+            return false;
+        }
+        if (progressArray[index].percent === 1) {
+            return true;
+        }
+        return false;
+    };
+
     return !showEditDataset ? (
         !loadingFiles && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
         ) : (
-            <OuterWrapper>
-                {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
-                {userClickedDelete && (
-                    <DeleteResourceComponent
-                        ResourceName={dataset?.name}
-                        setUserClickedDelete={setUserClickedDelete}
-                        onClick={deleteDataset}
-                        type="dataset"
-                    />
-                )}
-                <Wrapper>
-                    <div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <Typography variant="h1">{dataset?.name}</Typography>
-                            {!checkUrlIfGeneralDataset() ? (
-                                <span>This data is only available for this study</span>
-                            ) : null}
-                        </div>
-                        {!checkUrlIfGeneralDataset() ? (
-                            <Link
-                                to={'/studies/' + studyId}
-                                style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
-                                data-cy="dataset_back_to_study"
-                            >
-                                <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
-                                Back to study
-                            </Link>
-                        ) : (
-                            <Link to={'/datasets'} style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}>
-                                <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
-                                Back to datasets
-                            </Link>
-                        )}
-                        <Dropzone
-                            onDrop={(event: File[]) => handleFileDrop(event)}
-                            loading={
-                                dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null ? false : true
-                            }
-                            disabled={
-                                !(
-                                    dataset.permissions?.editDataset &&
-                                    (percentComplete === 0 || percentComplete === 100) &&
-                                    dataset.storageAccountLink
-                                )
-                            }
+            <>
+                <Prompt
+                    hasChanged={hasChanged}
+                    fallBackAddress={!checkUrlIfGeneralDataset() ? '/studies/' + studyId : undefined}
+                    customText="All downloads will cancel"
+                />
+                <OuterWrapper>
+                    {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
+                    {userClickedDelete && (
+                        <DeleteResourceComponent
+                            ResourceName={dataset?.name}
+                            setUserClickedDelete={setUserClickedDelete}
+                            onClick={deleteDataset}
+                            type="dataset"
                         />
-                        {duplicateFiles && (
-                            <div>
-                                <Chip
-                                    variant="active"
-                                    onDelete={() => {
-                                        setDuplicateFiles(false);
-                                    }}
-                                    style={{ marginLeft: 'auto' }}
-                                >
-                                    Already uploaded files are skipped
-                                </Chip>
+                    )}
+                    <Wrapper>
+                        <div>
+                            <div style={{ marginBottom: '16px' }}>
+                                <Typography variant="h1">{dataset?.name}</Typography>
+                                {!checkUrlIfGeneralDataset() ? (
+                                    <span>This data is only available for this study</span>
+                                ) : null}
                             </div>
-                        )}
-                        {percentComplete > 0 && (
-                            <>
-                                <div style={{ display: 'flex' }}>
-                                    <LinearProgress
-                                        style={{ marginTop: '16px' }}
-                                        value={percentComplete}
-                                        variant="determinate"
-                                    />
-                                    <div style={{ padding: '8px' }}>
-                                        {filesHandled}/{totalFiles}
-                                    </div>
-                                    <Button
-                                        onClick={() => {
-                                            controller.abort();
-                                            setFiles(prevFiles);
-                                            setPercentComplete(0);
-                                            controller = new AbortController();
-                                        }}
-                                        style={{ float: 'right', padding: '4px' }}
-                                        variant="ghost_icon"
-                                        disabled={percentComplete === 0 || percentComplete === 100}
-                                    >
-                                        {percentComplete === 0 || percentComplete === 100
-                                            ? EquinorIcon('check', '', 24)
-                                            : EquinorIcon('clear', '', 24)}
-                                    </Button>
-                                </div>
-                            </>
-                        )}
-                        <div style={{ paddingTop: '8px' }}>
-                            {!loadingFiles ? (
-                                files.length > 0 ? (
-                                    files.map((file: any, i: number) => {
-                                        return (
-                                            <AttachmentWrapper key={getKey()}>
-                                                <div>{file.name}</div>
-                                                <div>{bytesToSize(file.size)} </div>
-                                                <Button
-                                                    variant="ghost_icon"
-                                                    onClick={() => removeFile(i, file)}
-                                                    style={{ marginTop: '-8px' }}
-                                                    disabled={!(percentComplete === 0 || percentComplete === 100)}
-                                                >
-                                                    <Icon
-                                                        color="#007079"
-                                                        name="delete_forever"
-                                                        size={24}
-                                                        style={{ cursor: 'pointer' }}
-                                                    />
-                                                </Button>
-                                            </AttachmentWrapper>
-                                        );
-                                    })
-                                ) : (
-                                    <div style={{ textAlign: 'center' }}>
-                                        {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
-                                    </div>
-                                )
+                            {!checkUrlIfGeneralDataset() ? (
+                                <Link
+                                    to={'/studies/' + studyId}
+                                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
+                                    data-cy="dataset_back_to_study"
+                                >
+                                    <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
+                                    Back to study
+                                </Link>
                             ) : (
-                                <div style={{ textAlign: 'center' }}>
-                                    <DotProgress variant="green" />
-                                    <div>Loading files..</div>
+                                <Link
+                                    to={'/datasets'}
+                                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
+                                >
+                                    <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
+                                    Back to datasets
+                                </Link>
+                            )}
+                            {!datasetResponse.loading && (
+                                <Dropzone
+                                    onDrop={(event: File[]) => handleFileDrop(event)}
+                                    loading={
+                                        dataset.storageAccountLink !== '' && dataset.storageAccountLink !== null
+                                            ? false
+                                            : true
+                                    }
+                                    disabled={!(dataset.permissions?.editDataset && dataset.storageAccountLink)}
+                                />
+                            )}
+                            {duplicateFiles && (
+                                <div>
+                                    <Chip
+                                        variant="active"
+                                        onDelete={() => {
+                                            setDuplicateFiles(false);
+                                        }}
+                                        style={{ marginLeft: 'auto' }}
+                                    >
+                                        Already uploaded files are skipped
+                                    </Chip>
                                 </div>
                             )}
-                        </div>
-                    </div>
-                    {!datasetResponse.loading ? (
-                        <RightWrapper>
-                            <div>
-                                <Label>Storage account</Label>
-                                {dataset?.storageAccountLink ? (
-                                    <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
-                                        <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
-                                        {EquinorIcon('external_link', '#007079', 24)}
-                                    </a>
+                            <div style={{ paddingTop: '8px' }}>
+                                {!loadingFiles ? (
+                                    files.length > 0 ? (
+                                        files.map((file: any, i: number) => {
+                                            return (
+                                                <div key={file.name}>
+                                                    <AttachmentWrapper>
+                                                        <div>{file.name}</div>
+                                                        <div>{bytesToSize(file.size)} </div>
+                                                        <Button
+                                                            variant="ghost_icon"
+                                                            onClick={() => removeFile(i, file)}
+                                                            style={{ marginTop: '-8px' }}
+                                                            disabled={checkIfDeleteIsEnabled(file)}
+                                                        >
+                                                            <Icon
+                                                                color="#007079"
+                                                                name="delete_forever"
+                                                                size={24}
+                                                                style={{ cursor: 'pointer' }}
+                                                            />
+                                                        </Button>
+                                                    </AttachmentWrapper>
+                                                    {file.percent && (
+                                                        <LinearProgress
+                                                            style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                            value={file.percent && file.percent}
+                                                            variant="determinate"
+                                                        />
+                                                    )}
+
+                                                    {/*percentComplete.length > 0 && returnPercentForFile(file.name) > 0 && (
+                                                        <>
+                                                            <LinearProgress
+                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                                value={file.percent && file.percent}
+                                                                variant="determinate"
+                                                            />
+                                                        </>
+                                                    )*/}
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div style={{ textAlign: 'center' }}>
+                                            {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
+                                        </div>
+                                    )
                                 ) : (
-                                    <Tooltip title={storageAccountStatus} placement="top">
+                                    <div style={{ textAlign: 'center' }}>
                                         <DotProgress variant="green" />
-                                    </Tooltip>
+                                        <div>Loading files..</div>
+                                    </div>
                                 )}
                             </div>
-                            <div>
-                                <Label>Location</Label>
-                                {returnField(dataset?.location)}
-                            </div>
-                            <div>
-                                <Label>Data classification</Label>
-                                {returnField(dataset?.classification)}
-                            </div>
-                            <div>
-                                <Label>LRA ID</Label>
-                                {returnField(dataset?.lraId)}
-                            </div>
-                            <div>
-                                <Label>Data ID</Label>
-                                {returnField(dataset?.dataId)}
-                            </div>
-                            <div>
-                                <Label>Source system</Label>
-                                {returnField(dataset?.sourceSystem)}
-                            </div>
-                            <div>
-                                <Label>BA data owner</Label>
-                                {returnField(dataset?.baDataOwner)}
-                            </div>
-                            <div>
-                                <Label>Asset</Label>
-                                {returnField(dataset?.asset)}
-                            </div>
-                            <div>
-                                <Label>Country of origin</Label>
-                                {returnField(dataset?.countryOfOrigin)}
-                            </div>
-                            <div>
-                                <Label>Area L1</Label>
-                                {returnField(dataset?.areaL1)}
-                            </div>
-                            <div>
-                                <Label>Area L2</Label>
-                                {returnField(dataset?.areaL2)}
-                            </div>
-                            <div>
-                                <div style={{ display: 'inline-block', marginRight: '8px' }}>
-                                    <Tooltip
-                                        title={
-                                            !(
-                                                permissions.canEdit_PreApproved_Datasets ||
-                                                dataset.permissions?.editDataset
-                                            )
-                                                ? 'You do not have permission to edit metadata'
-                                                : ''
-                                        }
-                                        placement="top"
-                                    >
-                                        <Button
-                                            style={{ width: '150px' }}
-                                            variant="outlined"
-                                            onClick={handleEditMetdata}
-                                            data-cy="dataset_edit"
-                                            disabled={
-                                                !(
-                                                    permissions.canEdit_PreApproved_Datasets ||
-                                                    dataset.permissions?.editDataset
-                                                )
-                                            }
-                                        >
-                                            Edit metadata
-                                        </Button>
-                                    </Tooltip>
+                        </div>
+                        {!datasetResponse.loading ? (
+                            <RightWrapper>
+                                <div>
+                                    <Label>Storage account</Label>
+                                    {dataset?.storageAccountLink ? (
+                                        <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
+                                            <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
+                                            {EquinorIcon('external_link', '#007079', 24)}
+                                        </a>
+                                    ) : (
+                                        <Tooltip title={storageAccountStatus} placement="top">
+                                            <DotProgress variant="green" />
+                                        </Tooltip>
+                                    )}
                                 </div>
-                                {!checkUrlIfGeneralDataset() && (
-                                    <div style={{ display: 'inline-block', marginTop: '8px' }}>
+                                <div>
+                                    <Label>Location</Label>
+                                    {returnField(dataset?.location)}
+                                </div>
+                                <div>
+                                    <Label>Data classification</Label>
+                                    {returnField(dataset?.classification)}
+                                </div>
+                                <div>
+                                    <Label>LRA ID</Label>
+                                    {returnField(dataset?.lraId)}
+                                </div>
+                                <div>
+                                    <Label>Data ID</Label>
+                                    {returnField(dataset?.dataId)}
+                                </div>
+                                <div>
+                                    <Label>Source system</Label>
+                                    {returnField(dataset?.sourceSystem)}
+                                </div>
+                                <div>
+                                    <Label>BA data owner</Label>
+                                    {returnField(dataset?.baDataOwner)}
+                                </div>
+                                <div>
+                                    <Label>Asset</Label>
+                                    {returnField(dataset?.asset)}
+                                </div>
+                                <div>
+                                    <Label>Country of origin</Label>
+                                    {returnField(dataset?.countryOfOrigin)}
+                                </div>
+                                <div>
+                                    <Label>Area L1</Label>
+                                    {returnField(dataset?.areaL1)}
+                                </div>
+                                <div>
+                                    <Label>Area L2</Label>
+                                    {returnField(dataset?.areaL2)}
+                                </div>
+                                <div>
+                                    <div style={{ display: 'inline-block', marginRight: '8px' }}>
                                         <Tooltip
                                             title={
                                                 !(
@@ -596,29 +613,59 @@ const DatasetDetails = (props: any) => {
                                             <Button
                                                 style={{ width: '150px' }}
                                                 variant="outlined"
-                                                color="danger"
-                                                onClick={() => setUserClickedDelete(true)}
-                                                data-cy="dataset_delete"
+                                                onClick={handleEditMetdata}
+                                                data-cy="dataset_edit"
                                                 disabled={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        dataset.permissions?.deleteDataset ||
-                                                        !loadingSasToken
+                                                        dataset.permissions?.editDataset
                                                     )
                                                 }
                                             >
-                                                Delete data set
+                                                Edit metadata
                                             </Button>
                                         </Tooltip>
                                     </div>
-                                )}
-                            </div>
-                        </RightWrapper>
-                    ) : (
-                        <LoadingFull noTimeout={datasetDeleteInProgress} />
-                    )}
-                </Wrapper>
-            </OuterWrapper>
+                                    {!checkUrlIfGeneralDataset() && (
+                                        <div style={{ display: 'inline-block', marginTop: '8px' }}>
+                                            <Tooltip
+                                                title={
+                                                    !(
+                                                        permissions.canEdit_PreApproved_Datasets ||
+                                                        dataset.permissions?.editDataset
+                                                    )
+                                                        ? 'You do not have permission to edit metadata'
+                                                        : ''
+                                                }
+                                                placement="top"
+                                            >
+                                                <Button
+                                                    style={{ width: '150px' }}
+                                                    variant="outlined"
+                                                    color="danger"
+                                                    onClick={() => setUserClickedDelete(true)}
+                                                    data-cy="dataset_delete"
+                                                    disabled={
+                                                        !(
+                                                            (permissions.canEdit_PreApproved_Datasets &&
+                                                                checkUrlIfGeneralDataset()) ||
+                                                            dataset.permissions?.deleteDataset
+                                                        )
+                                                    }
+                                                >
+                                                    Delete data set
+                                                </Button>
+                                            </Tooltip>
+                                        </div>
+                                    )}
+                                </div>
+                            </RightWrapper>
+                        ) : (
+                            <LoadingFull noTimeout={datasetDeleteInProgress} />
+                        )}
+                    </Wrapper>
+                </OuterWrapper>
+            </>
         )
     ) : (
         <CreateEditDataset

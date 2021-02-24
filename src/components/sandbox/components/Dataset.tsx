@@ -4,7 +4,12 @@ import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../commo
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
-import { getAvailableDatasetsUrl, getDatasetsInSandboxUrl, getStudyByIdUrl } from '../../../services/ApiCallStrings';
+import {
+    getAvailableDatasetsUrl,
+    getDatasetsInSandboxUrl,
+    getSandboxByIdUrl,
+    getStudyByIdUrl
+} from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
@@ -42,7 +47,8 @@ const Dataset: React.FC<datasetProps> = ({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
             [getDatasetsInSandboxUrl(sandboxId)]: true,
-            [getAvailableDatasetsUrl(sandboxId)]: true
+            [getAvailableDatasetsUrl(sandboxId)]: true,
+            [getSandboxByIdUrl(sandboxId)]: true
         });
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
@@ -53,7 +59,11 @@ const Dataset: React.FC<datasetProps> = ({
                 } else {
                     let tempDatasets: any = sandbox.datasets;
                     tempDatasets.push(dataset.datasetId);
-                    setSandbox({ ...sandbox, datasets: tempDatasets });
+                    setSandbox({
+                        ...sandbox,
+                        datasets: tempDatasets,
+                        restrictionDisplayText: result.restrictionDisplayText
+                    });
                 }
             });
         } else {
@@ -65,7 +75,11 @@ const Dataset: React.FC<datasetProps> = ({
                 } else {
                     let tempDatasets: any = sandbox.datasets;
                     tempDatasets.splice(tempDatasets.indexOf(dataset.datasetId), 1);
-                    setSandbox({ ...sandbox, datasets: tempDatasets });
+                    setSandbox({
+                        ...sandbox,
+                        datasets: tempDatasets,
+                        restrictionDisplayText: result.restrictionDisplayText
+                    });
                 }
             });
         }
@@ -80,8 +94,8 @@ const Dataset: React.FC<datasetProps> = ({
                 </Row>
             </Head>
             <Body>
-                {availableDatasets.length > 0 ? (
-                    availableDatasets.map((dataset: AvailableDatasetObj) => {
+                {availableDatasets.datasets && availableDatasets.datasets.length > 0 ? (
+                    availableDatasets.datasets.map((dataset: AvailableDatasetObj) => {
                         return (
                             <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                 <Cell>

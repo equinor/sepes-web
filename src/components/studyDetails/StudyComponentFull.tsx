@@ -234,13 +234,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
-
+    const studyDeleteEnabled = study.sandboxes && study.sandboxes.length > 0;
     const optionsTemplate = (
         <>
-            <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="study_delete">
-                <Icon name="delete_forever" color="red" size={24} />
-                <span style={{ color: 'red' }}>Delete study</span>
-            </MenuItem>
+            <Tooltip
+                title={studyDeleteEnabled ? 'Deleting study is disabled when there is a sandbox in it' : ''}
+                placement="left"
+                open={studyDeleteEnabled}
+            >
+                <MenuItem
+                    onClick={() => setUserClickedDelete(true)}
+                    data-cy="study_delete"
+                    disabled={studyDeleteEnabled}
+                >
+                    <Icon name="delete_forever" color="red" size={24} />
+                    <span style={{ color: 'red' }}>Delete study</span>
+                </MenuItem>
+            </Tooltip>
         </>
     );
 
@@ -385,6 +395,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
+                                    autoFocus
                                     inputIcon={
                                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                             <Tooltip

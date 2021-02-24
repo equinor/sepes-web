@@ -10,12 +10,13 @@ import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
-import { StudyObj } from '../common/interfaces';
+import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
+import { useLocation } from 'react-router-dom';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -30,6 +31,12 @@ const divStyle = {
 };
 
 const { TabList, Tab } = Tabs;
+
+let controller = new AbortController();
+
+interface passedProps {
+    userCameFromHome: boolean;
+}
 
 const StudyDetails = () => {
     const id = window.location.pathname.split('/')[2];
@@ -58,11 +65,35 @@ const StudyDetails = () => {
         }
     });
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
-    const [activeTab, setActiveTab] = useState<number>(parseInt(Cookies.get(id)) || 0);
+    const location = useLocation<passedProps>();
+    const [activeTab, setActiveTab] = useState<number>(
+        location.state && location.state.userCameFromHome ? 0 : parseInt(Cookies.get(id)) || 0
+    );
+    if (location.state) {
+        window.history.replaceState(null, '');
+    }
+
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
-    const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false);
+
+    const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
+
+    const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
+    const resultsAndLearningsResponse = useFetchUrl(
+        getResultsAndLearningsUrl(study.id),
+        setResultsAndLearnings,
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        controller
+    );
+
     const permissions = useContext(Permissions);
+
+    useEffect(() => {
+        return () => {
+            controller.abort();
+            controller = new AbortController();
+        };
+    }, []);
 
     const changeComponent = () => {
         Cookies.remove(id);
@@ -86,6 +117,7 @@ const StudyDetails = () => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         disabled={study.permissions && !study.permissions.addRemoveSandbox}
+                        study={study}
                     />
                 );
             case 3:
@@ -104,8 +136,9 @@ const StudyDetails = () => {
                     <Overview
                         study={study}
                         setHasChanged={setHasChanged}
-                        setUpdateCache={setUpdateCache}
-                        updateCache={updateCache}
+                        setResultsAndLearnings={setResultsAndLearnings}
+                        resultsAndLearnings={resultsAndLearnings}
+                        resultsAndLearningsResponse={resultsAndLearningsResponse}
                     />
                 );
         }

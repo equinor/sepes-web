@@ -29,7 +29,7 @@ const makeHeaders = (accessToken: any, acceptHeader?: string) => {
     return headers;
 };
 
-export const apiRequestWithToken = async (url: string, method: string, body?: any) => {
+export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
     return new Promise((resolve, reject) => {
         const post = async (accessToken) => {
             try {
@@ -37,7 +37,8 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                 const options = {
                     method,
                     headers: headers,
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(body),
+                    signal
                 };
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
                     .then((response) => {
