@@ -10,11 +10,11 @@ import Promt from '../common/Promt';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
-import { StudyObj } from '../common/interfaces';
+import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
 
@@ -77,6 +77,15 @@ const StudyDetails = () => {
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
 
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
+
+    const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
+    const resultsAndLearningsResponse = useFetchUrl(
+        getResultsAndLearningsUrl(study.id),
+        setResultsAndLearnings,
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        controller
+    );
+
     const permissions = useContext(Permissions);
 
     useEffect(() => {
@@ -127,9 +136,9 @@ const StudyDetails = () => {
                     <Overview
                         study={study}
                         setHasChanged={setHasChanged}
-                        setUpdateCache={setUpdateCache}
-                        updateCache={updateCache}
-                        controller={controller}
+                        setResultsAndLearnings={setResultsAndLearnings}
+                        resultsAndLearnings={resultsAndLearnings}
+                        resultsAndLearningsResponse={resultsAndLearningsResponse}
                     />
                 );
         }

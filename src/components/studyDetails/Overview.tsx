@@ -38,21 +38,20 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 type OverviewProps = {
     study: StudyObj;
     setHasChanged: any;
-    setUpdateCache: any;
-    updateCache: any;
-    controller: AbortController;
+    setResultsAndLearnings: any;
+    resultsAndLearnings: any;
+    resultsAndLearningsResponse: any;
 };
 
-const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCache, updateCache, controller }) => {
+const Overview: React.FC<OverviewProps> = ({
+    study,
+    setHasChanged,
+    setResultsAndLearnings,
+    resultsAndLearnings,
+    resultsAndLearningsResponse
+}) => {
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const res = useFetchUrl(
-        getResultsAndLearningsUrl(study.id),
-        setResultsAndLearnings,
-        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
-        controller
-    );
 
     const handleChange = (evt) => {
         setHasChanged(true);
@@ -61,8 +60,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
 
     const handleSave = () => {
         setHasChanged(false);
-        setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true });
-        res.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
+        resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
             if (result && result.Message) {
@@ -75,7 +73,7 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const handleCancel = () => {
         if (editMode) {
             setHasChanged(false);
-            setResultsAndLearnings(res.intialValue || { resultsAndLearnings: '' });
+            setResultsAndLearnings(resultsAndLearningsResponse.intialValue || { resultsAndLearnings: '' });
         }
     };
 
