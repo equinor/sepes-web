@@ -72,7 +72,9 @@ const Overview: React.FC<OverviewProps> = ({
     const handleCancel = () => {
         if (editMode) {
             setHasChanged(false);
-            setResultsAndLearnings(resultsAndLearningsResponse.intialValue || { resultsAndLearnings: '' });
+            setResultsAndLearnings(
+                resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] || { resultsAndLearnings: '' }
+            );
         }
     };
 
