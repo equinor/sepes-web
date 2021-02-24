@@ -165,10 +165,16 @@ const DatasetDetails = (props: any) => {
 
     useEffect(() => {
         return () => {
+            cancelGettingFilesCall();
             cancelAllDownloads();
             abortArray = [];
         };
     }, []);
+
+    const cancelGettingFilesCall = (): void => {
+        controllerFiles.abort();
+        controllerFiles = new AbortController();
+    };
 
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
