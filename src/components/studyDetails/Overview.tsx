@@ -3,14 +3,13 @@ import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
-import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
+import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
-import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin-top: 8px;
