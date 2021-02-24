@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, SandboxPermissions } from '../../common/interfaces';
+import {
+    SandboxObj,
+    SizeObj,
+    DropdownObj,
+    OperatingSystemObj,
+    SandboxPermissions,
+    VmObj
+} from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
@@ -11,6 +18,7 @@ import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { bytesToMB } from '../../common/helpers';
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {
@@ -48,6 +56,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
         if (vms.length > 0 && !showAddNewVm) {
             setActiveTab(1);
         }
+        checkIfAnyVmsHasOpenInternet();
     }, [vms]);
 
     useEffect(() => {
@@ -59,6 +68,19 @@ const VmConfig: React.FC<VmConfigProps> = ({
         }
         return () => setIsSubscribed(false);
     }, [permissions]);
+
+    const checkIfAnyVmsHasOpenInternet = () => {
+        let result = false;
+        vms.forEach((vm: VmObj) => {
+            console.log(vm);
+            if (vm.rules) {
+                vm.rules.forEach((rule: any) => {
+                    console.log(rule);
+                });
+            }
+        });
+        return result;
+    };
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
