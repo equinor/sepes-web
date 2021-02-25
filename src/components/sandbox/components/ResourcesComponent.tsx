@@ -15,7 +15,7 @@ const Dataset = (props: any) => {
                 </Row>
             </Head>
             <Body>
-                {resources ? (
+                {resources && Array.isArray(resources) ? (
                     resources.map((resource: any, i: number) => {
                         return (
                             <Row key={i} id="tableRowNoPointerNoColor">
