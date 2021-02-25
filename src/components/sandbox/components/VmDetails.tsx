@@ -203,7 +203,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             temp[indexHasChanged].hasChanged = _hasChanged;
         }
         setHasChangedVmRules(temp);
-        console.log(temp, indexHasChanged);
     };
 
     const checkIfVmRulesHasChanged = () => {
