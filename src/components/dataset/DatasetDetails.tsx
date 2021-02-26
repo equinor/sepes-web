@@ -121,7 +121,6 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
-    let keyCount: number = 0;
 
     useEffect(() => {
         let timer: any;
@@ -207,7 +206,7 @@ const DatasetDetails = (props: any) => {
 
     const checkStatusOfStorageAccount = (resources: any) => {
         let res = false;
-        if (!resources) {
+        if (!resources && !Array.isArray(resources)) {
             return res;
         }
         resources.map((resource: DatasetResourcesObj) => {
@@ -224,11 +223,7 @@ const DatasetDetails = (props: any) => {
         setDatasetStorageAccountIsReady(res);
     };
 
-    const getKey = () => {
-        return keyCount++;
-    };
-
-    const handleEditMetdata = (evt) => {
+    const handleEditMetdata = () => {
         setShowEditDataset(true);
     };
 
