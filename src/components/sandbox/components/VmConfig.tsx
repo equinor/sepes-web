@@ -89,7 +89,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
             }
         });
         setVmsWithOpenInternet(result);
-        console.log(result);
         return result;
     };
 
