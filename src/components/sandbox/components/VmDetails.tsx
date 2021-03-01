@@ -254,6 +254,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const saveRule = (rules: any) => {
         updateHasChanged(false);
+        setOutboundRuleChanged(false);
         createVirtualMachineRule(rules, vm.id).then((result: any) => {
             if (result && !result.Message) {
                 const tempsVms: any = [...vms];
