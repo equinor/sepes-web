@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button, Tooltip } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -16,6 +16,7 @@ import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 import '../../../styles/Table.scss';
 import Prompt from '../../common/Promt';
+import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -41,6 +42,8 @@ type VmDetailsProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    setVmSaved: any;
+    vmSaved: any;
 };
 
 const ipMethod = [
@@ -84,10 +87,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources
+    getResources,
+
+    setVmSaved,
+    vmSaved
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
     const studyId = window.location.pathname.split('/')[2];
@@ -140,6 +147,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const resetRules = () => {
+        setOutboundRuleChanged(false);
         setHasChanged(false);
         updateHasChanged(false);
         getVirtualMachineRule(vm.id).then((result: any) => {
@@ -236,6 +244,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const addOutBoundRule = () => {
         updateHasChanged(true);
+        setOutboundRuleChanged(true);
         const newRules: any = [...vm.rules];
         const tempsVms: any = [...vms];
         const outboundRule = newRules.find((rule: any) => rule.direction === 1);
@@ -244,7 +253,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
         setVms(tempsVms);
-        getResources();
+        //getResources();
     };
 
     const saveRule = (rules: any) => {
@@ -255,6 +264,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
                 getResources();
+                setVmSaved(true);
             } else {
                 notify.show('danger', '500', result.Message, result.RequestId);
                 console.log('Err');
@@ -577,7 +587,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                         </Head>
                         <Body>
                             <Row key={1} id="tableRowNoPointerNoColor">
-                                <Cell>Outbound internet traffic is currently {returnOpenClosed('text')}</Cell>
+                                <Cell>
+                                    {outboundRuleChanged
+                                        ? 'Changed outbound internet status to:'
+                                        : 'Outbound internet traffic is currently'}{' '}
+                                    {returnOpenClosed('text')}
+                                </Cell>
                                 <Cell>
                                     <Button
                                         variant="outlined"

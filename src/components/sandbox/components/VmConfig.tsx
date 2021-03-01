@@ -31,6 +31,7 @@ type VmConfigProps = {
     setUpdateCache: any;
     updateCache: any;
     controller: AbortController;
+    setVmsWithOpenInternet: any;
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
@@ -42,7 +43,8 @@ const VmConfig: React.FC<VmConfigProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    controller
+    controller,
+    setVmsWithOpenInternet
 }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
@@ -51,13 +53,20 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
+    const [vmSaved, setVmSaved] = useState<Boolean>(false);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
             setActiveTab(1);
         }
-        checkIfAnyVmsHasOpenInternet();
     }, [vms]);
+
+    useEffect(() => {
+        if (vmSaved) {
+            checkIfAnyVmsHasOpenInternet();
+            setVmSaved(false);
+        }
+    }, [vmSaved, vms]);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -76,9 +85,15 @@ const VmConfig: React.FC<VmConfigProps> = ({
             if (vm.rules) {
                 vm.rules.forEach((rule: any) => {
                     console.log(rule);
+                    if (rule.action === 0 && rule.direction === 1) {
+                        // Disable make available
+                        result = true;
+                        //setVmsWithOpenInternet(true);
+                    }
                 });
             }
         });
+        setVmsWithOpenInternet(result);
         return result;
     };
 
@@ -150,6 +165,8 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         permissions={permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        setVmSaved={setVmSaved}
+                        vmSaved={vmSaved}
                     />
                 );
         }
