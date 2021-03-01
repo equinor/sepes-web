@@ -82,6 +82,7 @@ let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
+const intervalUpdateSas = 1740000;
 
 let abortArray: any = [];
 let progressArray: any = [];
@@ -121,6 +122,8 @@ const DatasetDetails = (props: any) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const history = useHistory();
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
+    const [sasKey, setSasKey] = useState<string>('');
+    const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
 
     useEffect(() => {
         let timer: any;
@@ -169,6 +172,31 @@ const DatasetDetails = (props: any) => {
             abortArray = [];
         };
     }, []);
+
+    useEffect(() => {
+        const timer = setInterval(async () => {
+            setSasKeyExpired(true);
+        }, intervalUpdateSas);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const getSasKey = () => {
+        return new Promise((resolve) => {
+            if (!sasKeyExpired) {
+                return resolve(sasKey);
+            }
+            getDatasetSasToken(datasetId, controllerSas.signal)
+                .then((result: any) => {
+                    setSasKeyExpired(false);
+                    setSasKey(result);
+                    return resolve(result);
+                })
+                .catch((ex: any) => {
+                    console.log(ex);
+                });
+        });
+    };
 
     const cancelGettingFilesCall = (): void => {
         controllerFiles.abort();
@@ -278,13 +306,21 @@ const DatasetDetails = (props: any) => {
         setFiles(tempFiles);
         if (_files.length) {
             setFilesProgressToOnePercent(_files);
-            getDatasetSasToken(datasetId, controllerSas.signal).then((result: any) => {
+            getSasKey().then((result: any) => {
                 if (result && !result.Message) {
                     _files.forEach(async (file) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
                                 try {
-                                    uploadFile(result, file.name, blob, file.size, abortArray, setFiles, progressArray);
+                                    uploadFile(
+                                        result || sasKey,
+                                        file.name,
+                                        blob,
+                                        file.size,
+                                        abortArray,
+                                        setFiles,
+                                        progressArray
+                                    );
                                 } catch (ex) {
                                     console.log(ex);
                                     setFiles(previousFiles);
