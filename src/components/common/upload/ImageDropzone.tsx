@@ -18,19 +18,18 @@ const AddImageAndCompressionContainer = (props: any) => {
             })
             .catch(function (error) {});
     }
-
+    //                             style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
     return (
         <div style={{ position: 'relative' }}>
-            <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} accept={'image/*'} />
             {props.imageUrl ? (
-                <img
-                    src={props.imageUrl}
-                    style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
-                    width="100%"
-                    height="100%"
-                    alt="logoUrl"
-                />
-            ) : null}
+                <div style={{ height: '125px', width: '125px' }}>
+                    <div style={{ minHeight: '125px', minWidth: '125px' }}>
+                        <img src={props.imageUrl} width="100%" height="100%" alt="logoUrl" />
+                    </div>
+                </div>
+            ) : (
+                <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} accept={'image/*'} />
+            )}
         </div>
     );
 };
