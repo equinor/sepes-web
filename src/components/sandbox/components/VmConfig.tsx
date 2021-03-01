@@ -81,14 +81,10 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const checkIfAnyVmsHasOpenInternet = () => {
         let result = false;
         vms.forEach((vm: VmObj) => {
-            console.log(vm);
             if (vm.rules) {
                 vm.rules.forEach((rule: any) => {
-                    console.log(rule);
                     if (rule.action === 0 && rule.direction === 1) {
-                        // Disable make available
                         result = true;
-                        //setVmsWithOpenInternet(true);
                     }
                 });
             }
@@ -166,7 +162,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}
-                        vmSaved={vmSaved}
                     />
                 );
         }

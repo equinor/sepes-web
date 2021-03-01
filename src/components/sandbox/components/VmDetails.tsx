@@ -43,7 +43,6 @@ type VmDetailsProps = {
     setUpdateCache: any;
     updateCache: any;
     setVmSaved: any;
-    vmSaved: any;
 };
 
 const ipMethod = [
@@ -88,9 +87,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     setUpdateCache,
     updateCache,
     getResources,
-
-    setVmSaved,
-    vmSaved
+    setVmSaved
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -253,7 +250,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
         setVms(tempsVms);
-        //getResources();
     };
 
     const saveRule = (rules: any) => {
