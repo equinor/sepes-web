@@ -18,7 +18,6 @@ import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
-import { bytesToMB } from '../../common/helpers';
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {

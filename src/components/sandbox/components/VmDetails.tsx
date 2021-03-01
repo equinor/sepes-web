@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button, Tooltip } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -16,7 +16,7 @@ import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
 import '../../../styles/Table.scss';
 import Prompt from '../../common/Promt';
-import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
