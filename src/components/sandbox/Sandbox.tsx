@@ -56,6 +56,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
+    const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>(
         (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
@@ -141,6 +142,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                     setDeleteSandboxInProgress={setDeleteSandboxInProgress}
                     setNewCostanalysisLink={setNewCostanalysisLink}
                     controller={controller}
+                    vmsWithOpenInternet={vmsWithOpenInternet}
                 />
                 {returnStepComponent()}
                 {(step === 0 || step === 1) && (
@@ -154,6 +156,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         controller={controller}
+                        setVmsWithOpenInternet={setVmsWithOpenInternet}
                     />
                 )}
             </Wrapper>
