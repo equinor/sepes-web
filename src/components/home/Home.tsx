@@ -12,10 +12,10 @@ import { lineBreak } from '../common/helpers';
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 9fr 400px;
-    grid-template-rows: 436px;
     width: 100%;
     grid-gap: 16px;
     margin-top: 24px;
+    margin-bottom: 16px;
     @media (max-width: 768px) {
         display: block;
     }
@@ -27,6 +27,7 @@ const RightWrapper = styled.div`
     padding: 16px;
     border-radius: 4px;
     margin-right: 32px;
+    height: 436px;
     text-align: center;
     min-width: 368px;
     @media (max-width: 768px) {
