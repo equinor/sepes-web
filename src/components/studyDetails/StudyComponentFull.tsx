@@ -222,6 +222,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const handleSave = () => {
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
+        setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
         if (!validateUserInputs()) {
@@ -577,6 +578,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 onClick={() => {
                                                     setShowImagePicker(!showImagePicker);
                                                     setImageUrl('');
+                                                    setStudyOnChange({ ...studyOnChange, logoUrl: '' });
                                                 }}
                                                 variant="outlined"
                                                 style={{ margin: '16px 0 20px 56px' }}
