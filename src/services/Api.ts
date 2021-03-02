@@ -123,7 +123,6 @@ export const postStudy = async (study: StudyObj, imageUrl: string) => {
 };
 
 export const putStudy = async (study: StudyObj, imageUrl: string) => {
-    console.log(imageUrl);
     return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
 };
 
