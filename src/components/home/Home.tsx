@@ -44,37 +44,35 @@ const Home = () => {
     const studies = useFetchUrl(getStudiesUrl(), setStudylist);
 
     return (
-        <>
-            <Wrapper>
-                {!studies.loading ? (
-                    <Studies studyList={studyList} />
-                ) : (
-                    <div>
-                        <LoadingFull />
-                    </div>
-                )}
-                <RightWrapper>
-                    <div style={{ textAlign: 'initial' }}>{lineBreak(sepesInfoText)}</div>
-                    <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
-                        <Tooltip
-                            title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
-                            placement="top"
+        <Wrapper>
+            {!studies.loading ? (
+                <Studies studyList={studyList} />
+            ) : (
+                <div>
+                    <LoadingFull />
+                </div>
+            )}
+            <RightWrapper>
+                <div style={{ textAlign: 'initial' }}>{lineBreak(sepesInfoText)}</div>
+                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
+                    <Tooltip
+                        title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
+                        placement="top"
+                    >
+                        <Button
+                            disabled={!permissions.canCreateStudy}
+                            data-cy="new_study"
+                            style={{ width: '336px' }}
+                            onClick={() => {
+                                history.push('/studies');
+                            }}
                         >
-                            <Button
-                                disabled={!permissions.canCreateStudy}
-                                data-cy="new_study"
-                                style={{ width: '336px' }}
-                                onClick={() => {
-                                    history.push('/studies');
-                                }}
-                            >
-                                New study
-                            </Button>
-                        </Tooltip>
-                    </div>
-                </RightWrapper>
-            </Wrapper>
-        </>
+                            New study
+                        </Button>
+                    </Tooltip>
+                </div>
+            </RightWrapper>
+        </Wrapper>
     );
 };
 

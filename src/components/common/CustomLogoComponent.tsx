@@ -5,6 +5,11 @@ const Logo = styled.img`
     max-width: 125px;
     max-height: 125px;
 `;
+
+const Wrapper = styled.div`
+    width: 125px;
+    height: 125px;
+`;
 const Dot = styled.span`
     height: 125px;
     width: 125px;
@@ -18,7 +23,13 @@ const Dot = styled.span`
 `;
 
 const CustomLogoComponent = (props: any) => {
-    return props.logoUrl ? <Logo src={props.logoUrl} alt="studyLogo" /> : <Dot>SP</Dot>;
+    return props.logoUrl ? (
+        <Wrapper>
+            <Logo src={props.logoUrl} alt="studyLogo" />
+        </Wrapper>
+    ) : (
+        <Dot>SP</Dot>
+    );
 };
 
 export default CustomLogoComponent;
