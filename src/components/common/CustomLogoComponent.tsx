@@ -23,7 +23,7 @@ const Dot = styled.span`
 `;
 
 const CustomLogoComponent = (props: any) => {
-    return props.logoUrl ? (
+    return props.logoUrl !== '' && props.logoUrl !== null ? (
         <Wrapper>
             <Logo src={props.logoUrl} alt="studyLogo" />
         </Wrapper>

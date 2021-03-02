@@ -216,8 +216,9 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
     let newStudyWithBlob: StudyObj = {
         ...study
     };
+    let fileUrl = '';
     if (imageUrl) {
-        const fileUrl = 'process.env.REACT_APP_BLOB_BASE_URL' + (await postBlob(imageUrl, study.id));
+        fileUrl = 'process.env.REACT_APP_BLOB_BASE_URL' + (await postBlob(imageUrl, study.id));
 
         newStudyWithBlob = {
             ...study,
