@@ -192,36 +192,61 @@ const DatasetDetails = (props: any) => {
         return () => clearInterval(timer);
     }, []);
 
-    const getSasKey = () => {
+    const getSasKey = (retries = 3, backoff = 300) => {
         return new Promise((resolve) => {
             if (!sasKeyExpired) {
                 return resolve(sasKey);
             }
             getDatasetSasToken(datasetId, controllerSas.signal)
                 .then((result: any) => {
+                    if (retries > 0 && result.Message) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
+
                     setSasKeyExpired(false);
                     setSasKey(result);
                     return resolve(result);
                 })
                 .catch((ex: any) => {
                     console.log(ex);
+                    if (retries > 0) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
                 });
         });
     };
 
-    const getSasKeyDelete = () => {
+    const getSasKeyDelete = (retries = 3, backoff = 300) => {
         return new Promise((resolve) => {
             if (!sasKeyDeleteExpired) {
                 return resolve(sasKeyDelete);
             }
             getDatasetSasTokenDelete(datasetId, controllerSas.signal)
                 .then((result: any) => {
+                    if (retries > 0 && result.Message) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKeyDelete(retries - 1); /* 3 */
+                        }, backoff);
+                    }
                     setSasKeyDeleteExpired(false);
                     setSasKeyDelete(result);
                     return resolve(result);
                 })
                 .catch((ex: any) => {
                     console.log(ex);
+                    if (retries > 0) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
                 });
         });
     };
