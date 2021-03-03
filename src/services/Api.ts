@@ -88,6 +88,10 @@ export const getDatasetSasToken = async (datasetId: string, signal: any) => {
     return apiRequestWithToken('api/datasets/' + datasetId + '/saskey', 'GET', undefined, signal);
 };
 
+export const getDatasetSasTokenDelete = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/saskeydelete', 'GET', undefined, signal);
+};
+
 //Standard dataset
 
 export const getStandardDatasetFiles = async (datasetId: string) => {
