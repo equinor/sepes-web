@@ -29,6 +29,7 @@ Icon.add(icons);
 
 const TitleText = styled.span`
     font-size: 28px;
+    margin-bottom: 8px;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -492,7 +493,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                         variant="outlined"
                                         data-cy="edit_study"
                                         onClick={() => setEditMode(true)}
-                                        style={{ width: '80px' }}
+                                        style={{ width: '80px', marginTop: '12px' }}
                                         disabled={study.permissions && !study.permissions.updateMetadata}
                                     >
                                         Edit

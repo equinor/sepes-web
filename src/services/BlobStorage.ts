@@ -148,4 +148,25 @@ export const uploadFile = async (
     }
 };
 
+export const deleteFile = async (blobUri: string, blobName: string) => {
+    const blobServiceClient = new BlobServiceClient(blobUri);
+    const containerClient = blobServiceClient.getContainerClient('files');
+    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    try {
+        blockBlobClient.delete().catch(() => {
+            console.log('Error deleting file(s)');
+        });
+    } catch (e) {
+        console.log('abort');
+        if (e.name === 'AbortError') {
+            // abort was called on our abortSignal
+            console.log('Operation was aborted by the user');
+        } else {
+            // some other error occurred 🤷‍♂️
+            console.log('Uploading file failed');
+        }
+    }
+};
+
 export default uploadFile;

@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
-    deleteFileInDataset,
     getDatasetSasToken,
     getStudySpecificDatasetFiles,
     getStudySpecificDatasetResources,
-    removeStudyDataset
+    removeStudyDataset,
+    getDatasetSasTokenDelete
 } from '../../services/Api';
 import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
@@ -32,7 +32,7 @@ import {
 } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
-import { uploadFile } from '../../services/BlobStorage';
+import { uploadFile, deleteFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
 
 const icons = {
@@ -83,6 +83,7 @@ let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
 const intervalUpdateSas = 1740000;
+const intervalUpdateSasDelete = 285000;
 
 let abortArray: any = [];
 let progressArray: any = [];
@@ -124,6 +125,8 @@ const DatasetDetails = (props: any) => {
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     const [sasKey, setSasKey] = useState<string>('');
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
+    const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
+    const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
 
     useEffect(() => {
         let timer: any;
@@ -181,19 +184,69 @@ const DatasetDetails = (props: any) => {
         return () => clearInterval(timer);
     }, []);
 
-    const getSasKey = () => {
+    useEffect(() => {
+        const timer = setInterval(async () => {
+            setSasKeyDeleteExpired(true);
+        }, intervalUpdateSasDelete);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const getSasKey = (retries = 3, backoff = 300) => {
         return new Promise((resolve) => {
             if (!sasKeyExpired) {
                 return resolve(sasKey);
             }
             getDatasetSasToken(datasetId, controllerSas.signal)
                 .then((result: any) => {
+                    if (retries > 0 && result.Message) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
+
                     setSasKeyExpired(false);
                     setSasKey(result);
                     return resolve(result);
                 })
                 .catch((ex: any) => {
                     console.log(ex);
+                    if (retries > 0) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
+                });
+        });
+    };
+
+    const getSasKeyDelete = (retries = 3, backoff = 300) => {
+        return new Promise((resolve) => {
+            if (!sasKeyDeleteExpired) {
+                return resolve(sasKeyDelete);
+            }
+            getDatasetSasTokenDelete(datasetId, controllerSas.signal)
+                .then((result: any) => {
+                    if (retries > 0 && result.Message) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKeyDelete(retries - 1); /* 3 */
+                        }, backoff);
+                    }
+                    setSasKeyDeleteExpired(false);
+                    setSasKeyDelete(result);
+                    return resolve(result);
+                })
+                .catch((ex: any) => {
+                    console.log(ex);
+                    if (retries > 0) {
+                        setTimeout(() => {
+                            /* 2 */
+                            return getSasKey(retries - 1); /* 3 */
+                        }, backoff);
+                    }
                 });
         });
     };
@@ -360,9 +413,7 @@ const DatasetDetails = (props: any) => {
     const removeFile = (i: number, file: any): void => {
         try {
             controller.abort();
-            //controllerSas.abort();
             controller = new AbortController();
-            //controllerSas = new AbortController();
         } catch (e) {
             if (e.name === 'AbortError') {
                 // abort was called on our abortSignal
@@ -405,11 +456,13 @@ const DatasetDetails = (props: any) => {
                 return;
             }
         }
-        deleteFileInDataset(datasetId, file.name).then((result: any) => {
-            if (result.Message) {
-                notify.show('danger', '500', result.Message, result.RequestId);
-            }
-        });
+        getSasKeyDelete()
+            .then((result: any) => {
+                deleteFile(result, file.name);
+            })
+            .catch((ex: any) => {
+                console.log(ex);
+            });
     };
 
     const returnField = (fieldName) => {
@@ -543,20 +596,10 @@ const DatasetDetails = (props: any) => {
                                                     {file.percent && (
                                                         <LinearProgress
                                                             style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                            value={file.percent && file.percent}
+                                                            value={file.percent}
                                                             variant="determinate"
                                                         />
                                                     )}
-
-                                                    {/*percentComplete.length > 0 && returnPercentForFile(file.name) > 0 && (
-                                                        <>
-                                                            <LinearProgress
-                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                                value={file.percent && file.percent}
-                                                                variant="determinate"
-                                                            />
-                                                        </>
-                                                    )*/}
                                                 </div>
                                             );
                                         })
