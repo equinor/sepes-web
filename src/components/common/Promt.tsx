@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Prompt as ReactPrompt } from 'react-router';
+import { Prompt as ReactPrompt } from 'react-router-dom';
 import { Dialog, Button, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
