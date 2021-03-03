@@ -571,7 +571,7 @@ const DatasetDetails = (props: any) => {
                                                     {file.percent && (
                                                         <LinearProgress
                                                             style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                            value={file.percent && file.percent}
+                                                            value={file.percent}
                                                             variant="determinate"
                                                         />
                                                     )}
