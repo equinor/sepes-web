@@ -83,7 +83,7 @@ let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
 const intervalUpdateSas = 1740000;
-const intervalUpdateSasDelete = 300000;
+const intervalUpdateSasDelete = 285000;
 
 let abortArray: any = [];
 let progressArray: any = [];
