@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Label } from '../../common/StyledComponents';
-import { DotProgress, Tooltip } from '@equinor/eds-core-react';
+import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceType } from '../../common/staticValues/types';
 import { EquinorIcon } from '../../common/StyledComponents';
+import { apiRequestWithToken } from '../../../auth/AuthFunctions';
+import * as notify from '../../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -20,9 +22,29 @@ type ResourceItemComponentProps = {
     linkToResource: string;
     type: string;
     status: string;
+    retryLink: string;
+    getResources: any;
 };
 
-const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({ type, status, name, linkToResource }) => {
+const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
+    type,
+    status,
+    name,
+    linkToResource,
+    retryLink,
+    getResources
+}) => {
+    const retryResource = () => {
+        apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
+            if (result && result.Message) {
+                notify.show('danger', '500', result.Message, result.RequestId);
+                console.log('Err');
+            } else {
+                getResources();
+            }
+        });
+    };
+
     return (
         <Wrapper>
             <div>
@@ -40,8 +62,17 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({ type, sta
                 )}
             </div>
             <SatusWrapper isVm={type === resourceType.virtualMachine}>
-                <Tooltip title={status} placement={'top'}>
-                    {status !== 'Ok' ? <DotProgress variant="green" /> : EquinorIcon('check', '#007079', 24)}
+                <Tooltip title={retryLink ? 'Try Again' : status} placement={'top'}>
+                    {' '}
+                    {retryLink ? (
+                        <Button variant="ghost_icon" onClick={() => retryResource()}>
+                            {EquinorIcon('refresh', '#007079', 24)}
+                        </Button>
+                    ) : status !== 'Ok' ? (
+                        <DotProgress variant="green" />
+                    ) : (
+                        EquinorIcon('check', '#007079', 24)
+                    )}
                 </Tooltip>
             </SatusWrapper>
         </Wrapper>

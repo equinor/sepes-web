@@ -27,9 +27,10 @@ const ResourceWrapper = styled.div`
 type ExecutionProps = {
     resources: any;
     sandbox: SandboxObj;
+    getResources: any;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources }) => {
     return (
         <Wrapper>
             <span style={{ padding: '16px' }}>
@@ -43,7 +44,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
                     <PolicyComponent sandbox={sandbox} />
                 </div>
                 <div>
-                    <ResourcesComponent resources={resources} />
+                    <ResourcesComponent resources={resources} getResources={getResources} />
                 </div>
             </ResourceWrapper>
         </Wrapper>

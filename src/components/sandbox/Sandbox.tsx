@@ -103,7 +103,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandbox={sandbox} />;
+                return <Execution resources={resources} sandbox={sandbox} getResources={getResources} />;
             case 2:
                 return <div></div>;
             default:
@@ -116,6 +116,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         permissions={sandbox.permissions}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
+                        getResources={getResources}
                     />
                 );
         }
