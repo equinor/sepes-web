@@ -270,6 +270,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     if (imageUrl && newStudy.id) {
                         putStudy(newStudy, imageUrl).then((result: any) => {
                             if (result && !result.Message) {
+                                setStudy(result);
                                 setHasChanged(false);
                             } else {
                                 notify.show('danger', '500', result.Message, result.RequestId);
