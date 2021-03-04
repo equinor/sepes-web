@@ -1,21 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
-import { lock, lock_open } from '@equinor/eds-icons';
+import { visibility, visibility_off } from '@equinor/eds-icons';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
 
 const icons = {
-    lock,
-    lock_open
+    visibility,
+    visibility_off
 };
 Icon.add(icons);
 
 const SmallText = styled.div`
     font-size: 10px;
     display: inline-block;
-    width: 72px;
+    width: 76px;
 `;
 
 const Wrapper = styled.div`
@@ -77,7 +77,12 @@ const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
                     <div>
                         <SmallText>
                             {restricted ? 'Hidden' : 'Not hidden'}
-                            <Icon color="#007079" name={restricted ? 'lock' : 'lock_open'} size={24} />
+                            <Icon
+                                color="#007079"
+                                name={restricted ? 'visibility_off' : 'visibility'}
+                                size={16}
+                                style={{ marginLeft: '4px' }}
+                            />
                         </SmallText>
                     </div>
                 </div>

@@ -56,6 +56,7 @@ type StepBarProps = {
     setDeleteSandboxInProgress: any;
     setNewCostanalysisLink: any;
     controller: AbortController;
+    vmsWithOpenInternet: any;
 };
 
 const getSteps = () => {
@@ -104,7 +105,8 @@ const StepBar: React.FC<StepBarProps> = ({
     setNewPhase,
     setDeleteSandboxInProgress,
     setNewCostanalysisLink,
-    controller
+    controller,
+    vmsWithOpenInternet
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -300,7 +302,8 @@ const StepBar: React.FC<StepBarProps> = ({
                                             sandbox.permissions.increasePhase &&
                                             sandbox.datasets.length > 0 &&
                                             !makeAvailableInProgress &&
-                                            allResourcesOk
+                                            allResourcesOk &&
+                                            !vmsWithOpenInternet
                                         )
                                     }
                                 >

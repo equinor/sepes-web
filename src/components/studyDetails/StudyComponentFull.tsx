@@ -29,6 +29,7 @@ Icon.add(icons);
 
 const TitleText = styled.span`
     font-size: 28px;
+    margin-bottom: 8px;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -222,6 +223,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const handleSave = () => {
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
+        setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
         if (!validateUserInputs()) {
@@ -268,6 +270,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     if (imageUrl && newStudy.id) {
                         putStudy(newStudy, imageUrl).then((result: any) => {
                             if (result && !result.Message) {
+                                setStudy(result);
                                 setHasChanged(false);
                             } else {
                                 notify.show('danger', '500', result.Message, result.RequestId);
@@ -399,7 +402,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     inputIcon={
                                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                             <Tooltip
-                                                title="The value must be between 3 and 20 characters long"
+                                                title="The value must be between 3 and 20 characters long (A-Z)"
                                                 placement={'right'}
                                             >
                                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
@@ -491,7 +494,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                         variant="outlined"
                                         data-cy="edit_study"
                                         onClick={() => setEditMode(true)}
-                                        style={{ width: '80px' }}
+                                        style={{ width: '80px', marginTop: '12px' }}
                                         disabled={study.permissions && !study.permissions.updateMetadata}
                                     >
                                         Edit
@@ -577,6 +580,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 onClick={() => {
                                                     setShowImagePicker(!showImagePicker);
                                                     setImageUrl('');
+                                                    setStudyOnChange({ ...studyOnChange, logoUrl: '' });
                                                 }}
                                                 variant="outlined"
                                                 style={{ margin: '16px 0 20px 56px' }}

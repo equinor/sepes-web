@@ -132,6 +132,7 @@ export interface VmObj {
     extendedInfo?: any;
     linkToExternalSystem: string;
     dataDisks: string[];
+    rules?: any;
 }
 
 export interface SizeObj {
