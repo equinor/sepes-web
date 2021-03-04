@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/equinor/sepes-web/compare/0.1.15...0.1.16) (2021-03-04)
+
+
+### Features
+
+* **study:** users can now remove logo from study ([#658](https://github.com/equinor/sepes-web/issues/658)) ([ab423ef](https://github.com/equinor/sepes-web/commit/ab423ef72f4e3164f0684d733c975f53837eb561)), closes [#651](https://github.com/equinor/sepes-web/issues/651)
+
+
+### Bug Fixes
+
+* **study:** logo did not show on create ([#673](https://github.com/equinor/sepes-web/issues/673)) ([3c906cc](https://github.com/equinor/sepes-web/commit/3c906cc50f18f999bb03b02138ee53e911cd8edc))
+* upgrade @typescript-eslint/eslint-plugin from 4.14.2 to 4.15.0 ([#665](https://github.com/equinor/sepes-web/issues/665)) ([a5595d4](https://github.com/equinor/sepes-web/commit/a5595d4a14e92a5b2961cf62a17e0c9a7398b4d8))
+* upgrade reactstrap from 8.8.1 to 8.9.0 ([#626](https://github.com/equinor/sepes-web/issues/626)) ([99fb609](https://github.com/equinor/sepes-web/commit/99fb60925f6e58f7d84a2791fe00c5085f2514e3))
+* **dataset:** Improve delete file requests ([#661](https://github.com/equinor/sepes-web/issues/661)) ([c0724f4](https://github.com/equinor/sepes-web/commit/c0724f47420dce74a8f47c17a23b32d2e9b6729e)), closes [#660](https://github.com/equinor/sepes-web/issues/660)
+* **homepage:** issue with margin ([d8ebc06](https://github.com/equinor/sepes-web/commit/d8ebc064033ded15f2d9cb3c8b82bd291285f815)), closes [#657](https://github.com/equinor/sepes-web/issues/657)
+* error when mapping the resource array. Probably when the api call failed ([5b83c8a](https://github.com/equinor/sepes-web/commit/5b83c8aefb03ae675cc9a1a3541eaf0877ec3b1a)), closes [#636](https://github.com/equinor/sepes-web/issues/636)
+* upgrade @typescript-eslint/parser from 4.14.2 to 4.15.0 ([2bbf0c2](https://github.com/equinor/sepes-web/commit/2bbf0c2be6d829bd8c71aa9bd3e4130947f434ed))
+* **logo:** issue when uplading a transparent logo to a study. ([be30743](https://github.com/equinor/sepes-web/commit/be30743cdb1667dc448e588e66eebb805d8359f3)), closes [#649](https://github.com/equinor/sepes-web/issues/649)
+* specify that only A-Z characters are allowed in study and sandbox name ([826f0e8](https://github.com/equinor/sepes-web/commit/826f0e8a5f859bdd4766140e2f07c7ef50787f3a)), closes [#600](https://github.com/equinor/sepes-web/issues/600)
+* **dataset:** cache sas token for some times to speed up file upload ([26eaf6b](https://github.com/equinor/sepes-web/commit/26eaf6b1241f47495fbc3bfae7bbea2b1dedb1b6)), closes [#646](https://github.com/equinor/sepes-web/issues/646)
+* **logos:** fixed issue where logos got stretched out when they were not perfect squares ([50d9f6f](https://github.com/equinor/sepes-web/commit/50d9f6f7b9d2595c53c6128d7fb57707de5859cb)), closes [#641](https://github.com/equinor/sepes-web/issues/641)
+* **sandbox:** Disable make available when there is a VM with open int… ([#632](https://github.com/equinor/sepes-web/issues/632)) ([568841e](https://github.com/equinor/sepes-web/commit/568841eb7ee248f826604ccafa15d81d64b8d546))
+* **studyList:** change icon for hidden/not hidden study ([534adc8](https://github.com/equinor/sepes-web/commit/534adc8e57130ea8dc0ed04e73e4e636524f8419)), closes [#640](https://github.com/equinor/sepes-web/issues/640)
+* **vm:** issue with vm rules state ([#642](https://github.com/equinor/sepes-web/issues/642)) ([86654f8](https://github.com/equinor/sepes-web/commit/86654f80b791b06aad8bf7aa5dc847cca43f287b)), closes [#635](https://github.com/equinor/sepes-web/issues/635)
+* upgrade @azure/storage-blob from 12.4.0 to 12.4.1 ([5c981d9](https://github.com/equinor/sepes-web/commit/5c981d958153a9d6b47976645db3ebac609ffe96))
+* upgrade bootstrap from 4.5.3 to 4.6.0 ([3a80baa](https://github.com/equinor/sepes-web/commit/3a80baa9b4dfa4b6a6534a74d909ea6a27f33520))
+* upgrade commitizen from 4.2.2 to 4.2.3 ([0648659](https://github.com/equinor/sepes-web/commit/06486594542ba566ad8ebdb07bbdbf6a08401755))
+* upgrade react-dropzone from 11.2.4 to 11.3.0 ([f6c46e0](https://github.com/equinor/sepes-web/commit/f6c46e00cdfb1b27bfe707cd3dd428ffc6e7b47f))
+
 ### [0.1.15](https://github.com/equinor/sepes-web/compare/0.1.14...0.1.15) (2021-02-24)
 
 
