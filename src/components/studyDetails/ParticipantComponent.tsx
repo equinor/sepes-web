@@ -252,7 +252,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     onClick={addParticipant}
                     style={{ width: '136px' }}
                 >
-                    {rolesResponse.loading ? <DotProgress variant="green" /> : 'Add participant'}
+                    {rolesResponse.loading ? <DotProgress color="primary" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>
             <TableWrapper>

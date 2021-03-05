@@ -242,14 +242,24 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const optionsTemplate = (
         <>
-            <MenuItem
-                onClick={() => setUserClickedDelete(true)}
-                data-cy="sandbox_delete"
-                disabled={sandbox.permissions && !sandbox.permissions.delete}
+            <Tooltip
+                title={
+                    sandbox.permissions && !sandbox.permissions.delete
+                        ? 'You do not have access to delete this sandbox'
+                        : ''
+                }
+                placement="left"
+                open={sandbox.permissions && !sandbox.permissions.delete}
             >
-                {EquinorIcon('delete_forever', 'red', 24)}
-                <span style={{ color: 'red' }}>Delete sandbox</span>
-            </MenuItem>
+                <MenuItem
+                    onClick={() => setUserClickedDelete(true)}
+                    data-cy="sandbox_delete"
+                    disabled={sandbox.permissions && !sandbox.permissions.delete}
+                >
+                    {EquinorIcon('delete_forever', 'red', 24)}
+                    <span style={{ color: 'red' }}>Delete sandbox</span>
+                </MenuItem>
+            </Tooltip>
         </>
     );
 
@@ -265,7 +275,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
-                    More options
+                    <span style={{ marginLeft: '0' }}>More options</span>
                     {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu
@@ -309,11 +319,11 @@ const StepBar: React.FC<StepBarProps> = ({
                                 >
                                     {makeAvailableInProgress ? (
                                         <div>
-                                            <DotProgress variant="green" />
+                                            <DotProgress color="primary" />
                                         </div>
                                     ) : (
                                         <>
-                                            <span>Make available</span>
+                                            <span style={{ marginLeft: '0' }}>Make available</span>
                                             {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
                                         </>
                                     )}
@@ -428,7 +438,7 @@ const StepBar: React.FC<StepBarProps> = ({
                             {sandbox.linkToCostAnalysis ? (
                                 EquinorIcon('external_link', '#007079', 24, () => {}, true)
                             ) : (
-                                <DotProgress variant="green" />
+                                <DotProgress color="primary" />
                             )}
                         </a>
                     </Tooltip>

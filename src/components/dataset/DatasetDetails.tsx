@@ -610,7 +610,7 @@ const DatasetDetails = (props: any) => {
                                     )
                                 ) : (
                                     <div style={{ textAlign: 'center' }}>
-                                        <DotProgress variant="green" />
+                                        <DotProgress color="primary" />
                                         <div>Loading files..</div>
                                     </div>
                                 )}
@@ -627,7 +627,7 @@ const DatasetDetails = (props: any) => {
                                         </a>
                                     ) : (
                                         <Tooltip title={storageAccountStatus} placement="top">
-                                            <DotProgress variant="green" />
+                                            <DotProgress color="primary" />
                                         </Tooltip>
                                     )}
                                 </div>
