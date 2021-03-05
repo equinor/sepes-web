@@ -242,14 +242,24 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const optionsTemplate = (
         <>
-            <MenuItem
-                onClick={() => setUserClickedDelete(true)}
-                data-cy="sandbox_delete"
-                disabled={sandbox.permissions && !sandbox.permissions.delete}
+            <Tooltip
+                title={
+                    sandbox.permissions && !sandbox.permissions.delete
+                        ? 'You do not have access to delete this sandbox'
+                        : ''
+                }
+                placement="left"
+                open={sandbox.permissions && !sandbox.permissions.delete}
             >
-                {EquinorIcon('delete_forever', 'red', 24)}
-                <span style={{ color: 'red' }}>Delete sandbox</span>
-            </MenuItem>
+                <MenuItem
+                    onClick={() => setUserClickedDelete(true)}
+                    data-cy="sandbox_delete"
+                    disabled={sandbox.permissions && !sandbox.permissions.delete}
+                >
+                    {EquinorIcon('delete_forever', 'red', 24)}
+                    <span style={{ color: 'red' }}>Delete sandbox</span>
+                </MenuItem>
+            </Tooltip>
         </>
     );
 

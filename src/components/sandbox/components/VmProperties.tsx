@@ -164,20 +164,27 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
                                 <ItemText>Reset password</ItemText>
                             </Item>
-                            <Item
-                                color="#EB0000"
-                                style={{
-                                    opacity: permissions.update ? 1 : 0.5,
-                                    pointerEvents: permissions.update ? 'initial' : 'none'
-                                }}
-                                onClick={() => {
-                                    setUserClickedDelete(true);
-                                }}
-                                data-cy="vm_delete"
+                            <Tooltip
+                                title={permissions.update ? '' : 'You do not have access to delete VMs'}
+                                placement="right"
+                                open={!permissions.update}
                             >
-                                {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}
-                                <ItemText>Delete virtual machine</ItemText>
-                            </Item>
+                                <Item
+                                    color="#EB0000"
+                                    style={{
+                                        opacity: permissions.update ? 1 : 0.5,
+                                        pointerEvents: permissions.update ? 'initial' : 'none',
+                                        width: '240px'
+                                    }}
+                                    onClick={() => {
+                                        setUserClickedDelete(true);
+                                    }}
+                                    data-cy="vm_delete"
+                                >
+                                    {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}
+                                    <ItemText>Delete virtual machine</ItemText>
+                                </Item>
+                            </Tooltip>
                         </MoreActionsWrapper>
                     )}
                 </Button>
