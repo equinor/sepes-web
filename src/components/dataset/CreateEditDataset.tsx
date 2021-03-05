@@ -282,7 +282,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return (checkUrlIfGeneralDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
+    return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
         (permissions && permissions.editDataset) ||
         (location && location.state.canCreateStudySpecificDataset) ? (
         <>
@@ -389,7 +389,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     </StyledLink>
                     <SaveCancelWrapper>
                         <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
-                            {loading ? <DotProgress variant="green" /> : 'Save'}
+                            {loading ? <DotProgress color="primary" /> : 'Save'}
                         </Button>
                         <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">
                             Cancel
