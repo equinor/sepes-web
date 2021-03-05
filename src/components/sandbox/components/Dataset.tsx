@@ -107,7 +107,7 @@ const Dataset: React.FC<datasetProps> = ({
                                                         ? ''
                                                         : 'You do not have access to update data sets in sandbox'
                                                 }
-                                                placement="top"
+                                                placement="right"
                                             >
                                                 <Checkbox
                                                     defaultChecked={dataset.addedToSandbox}
