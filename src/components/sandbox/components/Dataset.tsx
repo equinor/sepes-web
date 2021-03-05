@@ -54,7 +54,7 @@ const Dataset: React.FC<datasetProps> = ({
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     let tempDatasets: any = sandbox.datasets;
@@ -70,7 +70,7 @@ const Dataset: React.FC<datasetProps> = ({
             deleteDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     let tempDatasets: any = sandbox.datasets;
