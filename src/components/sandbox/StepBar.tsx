@@ -309,7 +309,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                 >
                                     {makeAvailableInProgress ? (
                                         <div>
-                                            <DotProgress variant="green" />
+                                            <DotProgress color="primary" />
                                         </div>
                                     ) : (
                                         <>
@@ -428,7 +428,7 @@ const StepBar: React.FC<StepBarProps> = ({
                             {sandbox.linkToCostAnalysis ? (
                                 EquinorIcon('external_link', '#007079', 24, () => {}, true)
                             ) : (
-                                <DotProgress variant="green" />
+                                <DotProgress color="primary" />
                             )}
                         </a>
                     </Tooltip>
