@@ -465,7 +465,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         onClick={createVm}
                         disabled={!validateUserInput()}
                     >
-                        {loading ? <DotProgress variant="green" /> : 'Create'}
+                        {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>
                 </Tooltip>
             </div>

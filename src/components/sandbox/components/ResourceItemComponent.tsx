@@ -69,7 +69,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                             {EquinorIcon('refresh', '#007079', 24)}
                         </Button>
                     ) : status !== 'Ok' ? (
-                        <DotProgress variant="green" />
+                        <DotProgress color="primary" />
                     ) : (
                         EquinorIcon('check', '#007079', 24)
                     )}
