@@ -20,12 +20,16 @@ export const acquireTokenSilent = async () => {
 
 const cyToken = localStorage.getItem('cyToken');
 
-const makeHeaders = (accessToken: any, acceptHeader?: string) => {
+const makeHeaders = (accessToken: any, acceptHeader?: string, skipSettingContentType?: boolean) => {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
     headers.append('Authorization', bearer);
-    headers.append('Content-Type', 'application/json');
+   
     headers.append('Accept', acceptHeader ? acceptHeader : 'application/json');
+
+    if(!skipSettingContentType){
+        headers.append('Content-Type', 'application/json');
+    }
     return headers;
 };
 
@@ -124,53 +128,6 @@ export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     return new File([response.data], fileName);
 };
 
-const makeBlobFromUrl = async (blobUrl: string) => {
-    const axiosWithBlobUrl = axios.create({
-        baseURL: blobUrl,
-        timeout: 1000
-    });
-    const response = await axiosWithBlobUrl.get('', {
-        responseType: 'blob'
-    });
-    const imageFile = new File([response.data], 'image.' + response.headers['content-type'].split('/')[1]);
-    const formData = new FormData();
-    formData.append('image', imageFile);
-    return formData;
-};
-// Posts the image separately before the piece is posted to the API, returns URL of the uploaded file
-export const postBlob = async (imageUrl: string, studyId: string) => {
-    const imageFile = await makeBlobFromUrl(imageUrl);
-    return new Promise((resolve, reject) => {
-        myMSALObj
-            .acquireTokenSilent(loginRequest)
-            .then((tokenResponse: any) => {
-                if (tokenResponse.accessToken) {
-                    const headers = new Headers();
-                    const bearer = `Bearer ${tokenResponse.accessToken}`;
-
-                    headers.append('Authorization', bearer);
-                    const options = {
-                        method: 'PUT',
-                        headers: headers,
-                        body: imageFile
-                    };
-
-                    return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + 'api/studies/' + studyId + '/logo', options)
-                        .then((response) => response.json())
-                        .then((responseData) => {
-                            return resolve(responseData);
-                        })
-                        .catch((error) => console.log(error));
-                }
-
-                // Callback code here
-            })
-            .catch((error: string) => {
-                console.log(error);
-            });
-    });
-};
-
 export const postFile = async (url, files: any) => {
     return new Promise((resolve, reject) => {
         myMSALObj
@@ -212,31 +169,21 @@ export const postFile = async (url, files: any) => {
     });
 };
 
-export const postputStudy = async (study: StudyObj, url: any, method: string, imageUrl: string) => {
-    let newStudyWithBlob: StudyObj = {
-        ...study
-    };
-    let fileUrl = '';
-    if (imageUrl) {
-        fileUrl = 'process.env.REACT_APP_BLOB_BASE_URL' + (await postBlob(imageUrl, study.id));
 
-        newStudyWithBlob = {
-            ...study,
-            logoUrl: fileUrl
-        };
-        console.log('Fileurl:');
-        console.log(fileUrl);
-    }
+
+export const postputStudy = async (study: StudyObj, imageUrl: string, url: any, method: string) => {
+
+    var requestBody = await createStudyRequestBody(study, imageUrl);
 
     return new Promise((resolve, reject) => {
         const post = async (accessToken) => {
-            console.log('post request made to Graph API at: ' + new Date().toString());
-            try {
-                const headers = makeHeaders(accessToken);
+        
+            try {               
+                const headers = makeHeaders(accessToken, undefined, true);
                 const options = {
                     method,
                     headers: headers,
-                    body: JSON.stringify(newStudyWithBlob)
+                    body: requestBody
                 };
                 return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
                     .then((response) => response.json())
@@ -265,6 +212,40 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
                 });
         }
     });
+};
+
+const createStudyRequestBody = async (study: StudyObj, blobUrl: string) => {  
+
+    let studyRequestPart =  {
+        name: study.name,
+        description: study.description,
+        wbsCode: study.wbsCode,
+        vendor: study.vendor,
+        restricted: study.restricted,
+        deleteLogo: (!study.logoUrl && !blobUrl) ? true : false
+    };
+
+    const formData = new FormData();
+    formData.append('study', JSON.stringify(studyRequestPart));  
+
+    if(blobUrl && blobUrl != study.logoUrl){ 
+
+    const axiosWithBlobUrl = axios.create({
+        baseURL: blobUrl,
+        timeout: 1000
+    });
+
+    const response = await axiosWithBlobUrl.get('', {
+        responseType: 'blob'
+    });
+
+    const imageFile = new File([response.data], 'image.' + response.headers['content-type'].split('/')[1]);
+  
+    formData.append('image', imageFile);
+}
+
+
+    return formData;
 };
 
 function authCallback(error: any, response: any) {
