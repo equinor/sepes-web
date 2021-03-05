@@ -4,7 +4,7 @@
     "private": true,
     "dependencies": {
         "@azure/storage-blob": "^12.4.1",
-        "@equinor/eds-core-react": "^0.8.4",
+        "@equinor/eds-core-react": "^0.8.5",
         "@fortawesome/fontawesome-svg-core": "^1.2.34",
         "@fortawesome/react-fontawesome": "^0.1.14",
         "@fortawesome/fontawesome-free": "^5.15.2",
