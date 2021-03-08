@@ -98,7 +98,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
                 console.log('Err');
                 setLoading(false);
             }

@@ -90,8 +90,8 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result.Message) {
-                notify.show('danger', '500', result.Message, result.RequestId);
+            if (result && result.Message) {
+                notify.show('danger', '500', result);
             } else {
                 getResources();
             }

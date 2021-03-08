@@ -110,7 +110,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         const studyId = window.location.pathname.split('/')[2];
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (!result.Message && isSubscribed) {
+            if (result && !result.Message && isSubscribed) {
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
@@ -118,7 +118,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     history.push('/');
                 }
             } else {
-                notify.show('danger', '500', result.Message, result.requestId);
+                notify.show('danger', '500', result);
             }
             rolesResponse.setLoading(false);
         });
@@ -134,12 +134,12 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             setLoading(true);
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 setLoading(false);
-                if (!result.Message) {
+                if (result && !result.Message) {
                     let participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
                 } else {
-                    notify.show('danger', '500', result.Message, result.requestId);
+                    notify.show('danger', '500', result);
                     console.log('Err getting participants');
                 }
                 rolesResponse.setLoading(false);

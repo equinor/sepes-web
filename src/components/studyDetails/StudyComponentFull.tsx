@@ -212,9 +212,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         deleteStudy(study.id).then((result: any) => {
             setLoading(false);
-            if (result.Message) {
+            if (result && result.Message) {
                 setDeleteStudyInProgress(true);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             } else {
                 history.push('/');
             }
@@ -268,7 +268,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setStudy(newStudy);                 
                     history.push('/studies/' + result.id);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -281,7 +281,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setHasChanged(false);
                     setStudy(result);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
                 setLoading(false);

@@ -183,7 +183,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
             setLoading(false);
         });
@@ -200,7 +200,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 if (result && !result.Message) {
                     setVmEstimatedCost(result);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                 }
             });
         }
@@ -220,7 +220,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             if (result && !result.errors) {
                 setActualVmName(result);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
         });
     };
@@ -249,7 +249,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 }
             } else {
                 setUsernameIsValid(false);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
         });
     };
