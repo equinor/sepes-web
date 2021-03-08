@@ -402,21 +402,15 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         <Checkbox
                             label="High memory"
                             onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
-                            enterKeyHint="Filter memory"
                         />
                     </li>
                     <li>
-                        <Checkbox
-                            label="High GPU"
-                            onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)}
-                            enterKeyHint="Filter GPU"
-                        />
+                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
                     </li>
                     <li>
                         <Checkbox
                             label="High CPU"
                             onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
-                            enterKeyHint="Filter CPU"
                         />
                     </li>
                 </UnstyledList>
