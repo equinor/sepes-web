@@ -562,7 +562,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <div>
                                 {!showImagePicker && (
                                     <PictureWrapper editMode={editMode}>
-                                        <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                        <CustomLogoComponent logoUrl={logoUrl} center={editMode} />{' '}
                                     </PictureWrapper>
                                 )}
                                 {editMode && (
@@ -578,7 +578,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             )}
                                             <Button
                                                 onClick={() => {
-                                                    setShowImagePicker(!showImagePicker);
+                                                    if (imageUrl === '') {
+                                                        setShowImagePicker(!showImagePicker);
+                                                    }
+
                                                     setImageUrl('');
                                                     setStudyOnChange({ ...studyOnChange, logoUrl: '' });
                                                 }}

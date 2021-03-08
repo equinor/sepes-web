@@ -6,9 +6,10 @@ const Logo = styled.img`
     max-height: 125px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ center: boolean }>`
     width: 125px;
     height: 125px;
+    text-align: ${(props: any) => (props.center ? 'center' : 'end')};
 `;
 const Dot = styled.span`
     height: 125px;
@@ -22,10 +23,15 @@ const Dot = styled.span`
     font-size: 3em;
 `;
 
-const CustomLogoComponent = (props: any) => {
-    return props.logoUrl !== '' && props.logoUrl !== null ? (
-        <Wrapper>
-            <Logo src={props.logoUrl} alt="studyLogo" />
+type CustomLogoComponentProps = {
+    logoUrl: string;
+    center: boolean;
+};
+
+const CustomLogoComponent: React.FC<CustomLogoComponentProps> = ({ logoUrl, center }) => {
+    return logoUrl !== '' && logoUrl !== null ? (
+        <Wrapper center={center}>
+            <Logo src={logoUrl} alt="studyLogo" />
         </Wrapper>
     ) : (
         <Dot>SP</Dot>
