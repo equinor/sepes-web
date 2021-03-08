@@ -317,16 +317,8 @@ const StepBar: React.FC<StepBarProps> = ({
                                         )
                                     }
                                 >
-                                    {makeAvailableInProgress ? (
-                                        <div>
-                                            <DotProgress color="primary" />
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <span style={{ marginLeft: '0' }}>Make available</span>
-                                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
-                                        </>
-                                    )}
+                                    <span style={{ marginLeft: '0' }}>Make available</span>
+                                    {EquinorIcon('chevron_right', '#FFFFFF', 24, () => {}, true)}
                                 </Button>
                             </Tooltip>
                         </div>
@@ -368,7 +360,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                 setStep(0);
                             }}
                         >
-                            {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available
+                            {EquinorIcon('chevron_left', '#007079', 16, () => {}, true)}Make Available
                         </Button>
                         {returnOptionsButton()}
                     </BtnTwoWrapper>

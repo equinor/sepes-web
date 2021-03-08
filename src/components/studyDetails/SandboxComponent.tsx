@@ -68,7 +68,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                             disabled={disabled}
                             style={{ width: '200px' }}
                         >
-                            <span style={{ marginLeft: '0' }}>Create sandbox</span>
+                            <span style={{ marginLeft: '16px', marginRight: '16px' }}>Create sandbox</span>
                             {EquinorIcon('arrow_drop_down', '#007079', 24)}
                         </Button>
                     </Tooltip>
