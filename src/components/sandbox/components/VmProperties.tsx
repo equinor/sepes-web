@@ -24,9 +24,9 @@ const MoreActionsWrapper = styled.div`
     position: absolute;
     background-color: #ffffff;
     box-shadow: 0 0 4px 4px #e7e7e7;
-    width: 240px;
+    width: 296px;
     border-radius: 4px;
-    margin-top: 40px;
+    margin-top: 196px;
     display: grid;
     grid-template-rows: 1fr 1fr;
 `;
@@ -132,9 +132,9 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                             }
                             placement="top"
                         >
-                            <Button style={{ width: '216px' }} disabled={!vmProperties.linkToExternalSystem}>
-                                Open virtual machine
-                                <div style={{ marginLeft: 'auto', display: 'block' }}>
+                            <Button style={{ width: '296px' }} disabled={!vmProperties.linkToExternalSystem}>
+                                Connect to virtual machine
+                                <div style={{ marginLeft: 'auto', paddingLeft: '39px' }}>
                                     {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
                                 </div>
                             </Button>
@@ -144,12 +144,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
 
                 <Button
                     variant="outlined"
-                    style={{ marginTop: '8px', width: '216px' }}
+                    style={{ marginTop: '8px', width: '296px' }}
                     onClick={() => handleToggle()}
                     data-cy="vm_more_actions"
                 >
                     More actions
-                    <div style={{ marginLeft: 'auto' }}>
+                    <div style={{ marginLeft: 'auto', paddingLeft: '39px' }}>
                         {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
                     </div>
                     {displayMoreActions && (
@@ -174,7 +174,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                     style={{
                                         opacity: permissions.update ? 1 : 0.5,
                                         pointerEvents: permissions.update ? 'initial' : 'none',
-                                        width: '240px'
+                                        width: '296px'
                                     }}
                                     onClick={() => {
                                         setUserClickedDelete(true);

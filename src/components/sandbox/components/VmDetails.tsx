@@ -531,14 +531,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                 </Cell>
 
                                                 <Cell>
-                                                    {permissions.editInboundRules &&
-                                                        EquinorIcon(
-                                                            'clear',
-                                                            '',
-                                                            24,
-                                                            () => removeRule(ruleNumber),
-                                                            true
-                                                        )}
+                                                    {permissions.editInboundRules && (
+                                                        <Button
+                                                            variant="ghost_icon"
+                                                            onClick={() => removeRule(ruleNumber)}
+                                                        >
+                                                            {EquinorIcon('clear', '', 24)}
+                                                        </Button>
+                                                    )}
                                                 </Cell>
                                             </Row>
                                         )
