@@ -5,7 +5,7 @@ import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, deleteStudy, putStudy } from '../../services/Api';
+import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateResourceName } from '../common/helpers';
@@ -257,28 +257,15 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     );
 
     const sendStudyToApi = (study: StudyObj) => {
-        if (imageUrl) {
-            setLoading(true);
-        }
+        setLoading(true);
+
         if (newStudy) {
-            createStudy(study).then((result: any) => {
+            createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     setLoading(false);
                     let newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
-                    setStudy(newStudy);
-                    if (imageUrl && newStudy.id) {
-                        putStudy(newStudy, imageUrl).then((result: any) => {
-                            if (result && !result.Message) {
-                                setStudy(result);
-                                setHasChanged(false);
-                            } else {
-                                notify.show('danger', '500', result);
-                                console.log('Err');
-                            }
-                            setLoading(false);
-                        });
-                    }
+                    setStudy(newStudy);                 
                     history.push('/studies/' + result.id);
                 } else {
                     notify.show('danger', '500', result);
@@ -288,7 +275,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         } else {
             study.id = id;
             setStudy(studyOnChange);
-            putStudy(study, imageUrl).then((result: any) => {
+            updateStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
@@ -562,7 +549,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <div>
                                 {!showImagePicker && (
                                     <PictureWrapper editMode={editMode}>
-                                        <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                        <CustomLogoComponent logoUrl={logoUrl} center={editMode} />{' '}
                                     </PictureWrapper>
                                 )}
                                 {editMode && (
@@ -578,7 +565,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             )}
                                             <Button
                                                 onClick={() => {
-                                                    setShowImagePicker(!showImagePicker);
+                                                    if (imageUrl === '') {
+                                                        setShowImagePicker(!showImagePicker);
+                                                    }
+
                                                     setImageUrl('');
                                                     setStudyOnChange({ ...studyOnChange, logoUrl: '' });
                                                 }}

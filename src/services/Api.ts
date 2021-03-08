@@ -2,7 +2,6 @@ import { apiRequestWithToken, postputStudy, postFile, apiRequestPermissionsWithT
 import {
     StudyObj,
     DatasetObj,
-    SandboxObj,
     SandboxCreateObj,
     ParticipantObj,
     VmObj,
@@ -21,16 +20,17 @@ export const getStudy = async (id: string) => {
     return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
-export const createStudy = async (study: StudyObj) => {
-    return apiRequestWithToken('api/studies/', 'POST', study);
+export const createStudy = async (study: StudyObj, imageUrl: string) => {  
+    // return apiRequestWithToken('api/studies/', 'POST', study);
+    return postputStudy(study, imageUrl, 'api/studies/' + study.id, 'POST');
+};
+
+export const updateStudy = async (study: StudyObj, imageUrl: string) => {
+    return postputStudy(study, imageUrl, 'api/studies/' + study.id + '/details', 'PUT');
 };
 
 export const deleteStudy = async (studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId, 'DELETE');
-};
-
-export const editStudy = async (study: StudyObj, id?: string) => {
-    return apiRequestWithToken('api/studies/' + id + '/details', 'PUT', study);
 };
 
 export const getDatasetList = async () => {
@@ -122,13 +122,7 @@ export const removeStudyParticipant = async (studyId: string, userId: string, ro
     return apiRequestWithToken('api/studies/' + studyId + '/participants/' + userId + '/' + roleName, 'DELETE');
 };
 
-export const postStudy = async (study: StudyObj, imageUrl: string) => {
-    return postputStudy(study, 'api/studies/', 'POST', imageUrl);
-};
 
-export const putStudy = async (study: StudyObj, imageUrl: string) => {
-    return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
-};
 
 //Sandbox
 

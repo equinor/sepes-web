@@ -70,7 +70,7 @@ const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
     return (
         <Wrapper onClick={() => history.push({ pathname: url, state: { userCameFromHome: true } })}>
             <LogoTitleWrapper>
-                <CustomLogoComponent logoUrl={logoUrl} />
+                <CustomLogoComponent logoUrl={logoUrl} center />
                 <div>
                     <Typography variant="h6">{name}</Typography>
                     <SmallText>{vendor}</SmallText>
