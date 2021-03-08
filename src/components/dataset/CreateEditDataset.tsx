@@ -167,6 +167,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     });
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
+                    setUserPressedCreate(false);
                     console.log('Err');
                     notify.show('danger', '500', result);
                 }
@@ -184,6 +185,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
+                    setUserPressedCreate(false);
                     notify.show('danger', '500', result);
                     console.log('Err');
                 }
@@ -200,6 +202,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     });
                     history.push('/datasets/' + result.id);
                 } else {
+                    setUserPressedCreate(false);
                     notify.show('danger', '500', result);
                     console.log('Err');
                 }
@@ -213,6 +216,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
+                    setUserPressedCreate(false);
                     notify.show('danger', '500', result);
                     console.log('Err');
                 }
