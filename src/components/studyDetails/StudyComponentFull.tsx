@@ -265,7 +265,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setLoading(false);
                     let newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
-                    setStudy(newStudy);                 
+                    setStudy(newStudy);
                     history.push('/studies/' + result.id);
                 } else {
                     notify.show('danger', '500', result);
@@ -274,17 +274,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             });
         } else {
             study.id = id;
-            setStudy(studyOnChange);
+            setStudy({ ...studyOnChange, logoUrl: imageUrl });
+            setLoading(false);
             updateStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
-                    setStudy(result);
                 } else {
                     notify.show('danger', '500', result);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         }
     };
