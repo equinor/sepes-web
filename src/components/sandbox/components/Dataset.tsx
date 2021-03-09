@@ -112,7 +112,6 @@ const Dataset: React.FC<datasetProps> = ({
                                                 <Checkbox
                                                     defaultChecked={dataset.addedToSandbox}
                                                     label={dataset.name}
-                                                    enterKeyHint="Add dataset to sandbox"
                                                     disabled={
                                                         (permissions && !permissions.update) ||
                                                         addDatasetInProgress[dataset.datasetId] === true

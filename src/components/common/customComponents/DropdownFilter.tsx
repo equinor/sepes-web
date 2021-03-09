@@ -83,7 +83,6 @@ const DropdownFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, filter,
                                             name={row.displayValue}
                                             onChange={handleColumnsChange}
                                             checked={isCheckboxChecked(row.displayValue)}
-                                            enterKeyHint="Add filter"
                                         />
                                     </div>
                                 )
