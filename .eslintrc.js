@@ -39,6 +39,26 @@ module.exports = {
         'implicit-arrow-linebreak': 0,
         'jsx-curly-newline': 0,
         'no-nested-ternary': 0,
-        'no-plusplus': 0
+        'no-plusplus': 0,
+        'import/order': 0,
+        'linebreak-style': 0,
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                jsx: 'never',
+                ts: 'never',
+                tsx: 'never'
+            }
+        ]
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                moduleDirectory: ['node_modules', 'src/']
+            }
+        }
     }
 };
