@@ -22,6 +22,7 @@ type datasetProps = {
     permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
+    controller: AbortController;
 };
 
 const Dataset: React.FC<datasetProps> = ({
@@ -30,7 +31,8 @@ const Dataset: React.FC<datasetProps> = ({
     setUpdateCache,
     permissions,
     setSandbox,
-    sandbox
+    sandbox,
+    controller
 }) => {
     const studyId = window.location.pathname.split('/')[2];
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
@@ -38,6 +40,7 @@ const Dataset: React.FC<datasetProps> = ({
         getAvailableDatasetsUrl(sandboxId),
         setAvailableDatasets,
         true,
+        controller,
         false
     );
     const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});

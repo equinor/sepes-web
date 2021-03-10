@@ -117,6 +117,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         sandbox={sandbox}
                         setSandbox={setSandbox}
                         getResources={getResources}
+                        controller={controller}
                     />
                 );
         }

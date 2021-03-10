@@ -42,6 +42,7 @@ type SandboxConfigProps = {
     setSandbox: any;
     sandbox: SandboxObj;
     getResources: any;
+    controller: AbortController;
 };
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
@@ -52,7 +53,8 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     permissions,
     setSandbox,
     sandbox,
-    getResources
+    getResources,
+    controller
 }) => {
     return (
         <Wrapper>
@@ -64,6 +66,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     permissions={permissions}
                     setSandbox={setSandbox}
                     sandbox={sandbox}
+                    controller={controller}
                 />
                 <PolictyComponentWrapper>
                     <PolicyComponent displayCheckbox sandbox={sandbox} />
