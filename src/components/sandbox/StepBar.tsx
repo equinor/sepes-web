@@ -113,6 +113,8 @@ const StepBar: React.FC<StepBarProps> = ({
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
     const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
+    const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
+    const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
 
     useEffect(() => {
         getResources();
@@ -151,18 +153,24 @@ const StepBar: React.FC<StepBarProps> = ({
             return res;
         }
         let hasVm = false;
+        let noOpenInternet = true;
         resourcesIn.map((resource: any, i: number) => {
             if (resource.status !== resourceStatus.ok) {
                 res = false;
             }
             if (resource.type === resourceType.virtualMachine) {
                 hasVm = true;
+                if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
+                    noOpenInternet = false;
+                }
             }
             if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
                 getCostAnalysisLinkToSandbox();
             }
         });
-        setAllResourcesOk(res && hasVm);
+        setAnyVmWithOpenInternet(!noOpenInternet);
+        setSandboxHasVm(hasVm);
+        setAllResourcesOk(res && hasVm && noOpenInternet);
     };
 
     const getCostAnalysisLinkToSandbox = () => {
@@ -234,8 +242,17 @@ const StepBar: React.FC<StepBarProps> = ({
         if (sandbox.permissions && !sandbox.permissions.increasePhase) {
             return 'You do not have permission to make this sandbox Available';
         }
-        if (!allResourcesOk || sandbox.datasets.length === 0) {
-            return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
+        if (!sandboxHasVm) {
+            return 'You need atleast one VM in the sandbox';
+        }
+        if (anyVmWithOpenInternet) {
+            return 'One or more vms have open internet. Close before making sandbox available';
+        }
+        if (sandbox.datasets.length === 0) {
+            return 'No datasets in the sandbox';
+        }
+        if (!allResourcesOk) {
+            return 'All resources must have status OK';
         }
         return '';
     };
