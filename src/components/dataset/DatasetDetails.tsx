@@ -1,3 +1,4 @@
+/*eslint-disable consistent-return, no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
@@ -9,9 +10,7 @@ import {
     removeStudyDataset,
     getDatasetSasTokenDelete
 } from '../../services/Api';
-import { Link } from 'react-router-dom';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import { Label } from '../common/StyledComponents';
 import { bytesToSize } from '../common/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
@@ -20,8 +19,8 @@ import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
-import { EquinorIcon } from '../common/StyledComponents';
-import { useHistory } from 'react-router-dom';
+import { EquinorIcon, Label } from '../common/StyledComponents';
+import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
 import {
@@ -333,7 +332,7 @@ const DatasetDetails = (props: any) => {
 
     const setFilesProgressToOnePercent = (_files: any) => {
         _files.forEach(async (file: any) => {
-            let filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
+            const filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
             abortArray.push(filePercent);
         });
     };
@@ -393,7 +392,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const checkIfFileAlreadyIsUploaded = (_files) => {
-        let newArray: any = [];
+        const newArray: any = [];
         _files.forEach((file: File) => {
             const res = files
                 .map((e) => {
@@ -539,7 +538,7 @@ const DatasetDetails = (props: any) => {
                                 </Link>
                             ) : (
                                 <Link
-                                    to={'/datasets'}
+                                    to="/datasets"
                                     style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
                                 >
                                     <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />

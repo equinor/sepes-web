@@ -76,7 +76,7 @@ const CustomContent = (props) => {
                 </p>
                 <Tooltip title="Copy to clipboard" placement="top">
                     <CopyToClipboard text={requestId}>
-                        <Icon name="copy" size={20} color={'#007079'} className="icon" />
+                        <Icon name="copy" size={20} color="#007079" className="icon" />
                     </CopyToClipboard>
                 </Tooltip>
             </span>
@@ -105,14 +105,14 @@ export const show = (type, code, result) => {
             pauseOnHover: true,
             click: true
         },
-        width: width
+        width
     });
 };
 
 export const warning = (message) => {
     store.addNotification({
         content: (
-            <Card variant={'warning'}>
+            <Card variant="warning">
                 {/*<Typography variant="h6">Error</Typography> <br />*/}
                 <Typography variant="body_short">{message}</Typography>
             </Card>
@@ -126,6 +126,6 @@ export const warning = (message) => {
             touch: false,
             click: true
         },
-        width: width
+        width
     });
 };

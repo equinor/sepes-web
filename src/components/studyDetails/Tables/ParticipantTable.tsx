@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';

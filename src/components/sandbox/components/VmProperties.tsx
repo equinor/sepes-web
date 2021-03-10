@@ -86,7 +86,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const deleteVm = (): void => {
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
         setActiveTab(0);
-        let currentVms: any = [...vms];
+        const currentVms: any = [...vms];
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {

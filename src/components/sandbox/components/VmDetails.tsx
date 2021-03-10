@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button, Tooltip } from '@equinor/eds-core-react';
@@ -133,7 +134,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (!vm.rules) {
             getVirtualMachineRule(vm.id).then((result: any) => {
                 if (result && !result.Message) {
-                    let tempsVms: any = [...vms];
+                    const tempsVms: any = [...vms];
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
                 } else {
@@ -234,7 +235,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             name: '',
             key: getKey()
         });
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
@@ -271,25 +272,25 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const updateRule = (i: number, value: string, key: string) => {
         updateHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        const currentRules: any = [...vm.rules];
         currentRules[i][key] = value;
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const removeRule = (i: number) => {
         updateHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        const currentRules: any = [...vm.rules];
         currentRules.splice(i, 1);
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const handleDropdownChange = (key: string, i: number, value?): void => {
         updateHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        const currentRules: any = [...vm.rules];
         currentRules[i][key] = value;
         if (value === protocolOptions.HTTP) {
             currentRules[i].port = ports.HTTP;
@@ -297,21 +298,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (value === protocolOptions.HTTPS) {
             currentRules[i].port = ports.HTTPS;
         }
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const handleDropdownChangeClientIp = (value: any, name: string, ruleIndex): void => {
         updateHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        const currentRules: any = [...vm.rules];
         if (value === '1') {
             currentRules[ruleIndex][name] = true;
             currentRules[ruleIndex].ip = clientIp;
         } else {
             currentRules[ruleIndex][name] = false;
         }
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
@@ -383,9 +384,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (actionRule) {
             if (actionRule.action === 0) {
                 return type === 'text' ? ' open' : 'Close internet';
-            } else {
-                return type === 'text' ? ' closed' : 'Open internet';
             }
+            return type === 'text' ? ' closed' : 'Open internet';
         }
     };
 

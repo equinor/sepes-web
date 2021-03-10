@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Divider } from '@equinor/eds-core-react';
-import { Icon } from '@equinor/eds-core-react';
+import { Icon, Divider } from '@equinor/eds-core-react';
 import {
     cloud_upload,
     delete_forever,
@@ -118,7 +117,7 @@ const StyledRequiredLabel = styled.span`
 `;
 
 export const Title = (props: any) => {
-    let { title } = props;
+    const { title } = props;
 
     return (
         <div>
@@ -129,7 +128,7 @@ export const Title = (props: any) => {
 };
 
 export const TextArea = (props: any) => {
-    let { label, text, textStyle } = props;
+    const { label, text, textStyle } = props;
 
     return (
         <StyledTextArea {...props}>
@@ -140,7 +139,7 @@ export const TextArea = (props: any) => {
 };
 
 export const TextAreaDescription = (props: any) => {
-    let { label, text, textStyle } = props;
+    const { label, text, textStyle } = props;
 
     return (
         <StyledTextArea {...props}>
@@ -151,7 +150,7 @@ export const TextAreaDescription = (props: any) => {
 };
 
 export const RequiredLabel = (props: any) => {
-    let { label } = props;
+    const { label } = props;
 
     return (
         <StyledRequiredLabel {...props}>

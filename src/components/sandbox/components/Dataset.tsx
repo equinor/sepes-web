@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import React, { useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
 import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
@@ -57,7 +58,7 @@ const Dataset: React.FC<datasetProps> = ({
                     notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
-                    let tempDatasets: any = sandbox.datasets;
+                    const tempDatasets: any = sandbox.datasets;
                     tempDatasets.push(dataset.datasetId);
                     setSandbox({
                         ...sandbox,
@@ -73,7 +74,7 @@ const Dataset: React.FC<datasetProps> = ({
                     notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
-                    let tempDatasets: any = sandbox.datasets;
+                    const tempDatasets: any = sandbox.datasets;
                     tempDatasets.splice(tempDatasets.indexOf(dataset.datasetId), 1);
                     setSandbox({
                         ...sandbox,

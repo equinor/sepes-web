@@ -1,3 +1,4 @@
+/*eslint-disable no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import StudyComponentFull from './StudyComponentFull';
 import styled from 'styled-components';

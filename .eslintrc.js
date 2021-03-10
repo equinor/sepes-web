@@ -18,7 +18,6 @@ module.exports = {
     },
     plugins: ['react'],
     rules: {
-        'linebreak-style': ['error', process.env.NODE_ENV === 'prod' ? 'unix' : 'windows'],
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
         indent: ['off', 4],
@@ -39,6 +38,39 @@ module.exports = {
         'implicit-arrow-linebreak': 0,
         'jsx-curly-newline': 0,
         'no-nested-ternary': 0,
-        'no-plusplus': 0
+        'no-plusplus': 0,
+        'import/order': 0,
+        'linebreak-style': 0,
+        'spaced-comment': 0,
+        'react/destructuring-assignment': 0,
+        'react/jsx-props-no-spreading': 0,
+        'no-extraneous-dependencies': 0,
+        'operator-linebreak': 0,
+        'array-callback-return': 0,
+        'no-underscore-dangle': 0,
+        'react/no-unescaped-entities': 0,
+        'react-hooks/exhaustive-deps': 0,
+        radix: 0,
+        'import/no-extraneous-dependencies': 0,
+        camelcase: 0,
+        'max-len': 0,
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                jsx: 'never',
+                ts: 'never',
+                tsx: 'never'
+            }
+        ]
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                moduleDirectory: ['node_modules', 'src/']
+            }
+        }
     }
 };

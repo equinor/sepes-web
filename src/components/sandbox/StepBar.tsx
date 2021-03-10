@@ -1,3 +1,4 @@
+/*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
@@ -14,7 +15,8 @@ import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallString
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import LoadingFull from '../common/LoadingComponentFullscreen';
-let set = require('lodash/set');
+
+const set = require('lodash/set');
 
 const { MenuItem } = Menu;
 
@@ -356,7 +358,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         </Button>
                         */}
                         {returnOptionsButton()}
-                        {/* 
+                        {/*
                         <Button
                             onClick={() => {
                                 setStep(2);

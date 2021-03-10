@@ -1,3 +1,4 @@
+/* eslint-disable react/no-render-return-value */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -42,10 +43,10 @@ const renderApp = async (user) => {
     });
 };
 
-let cyToken = localStorage.getItem('cyToken');
+const cyToken = localStorage.getItem('cyToken');
 
 if (cyToken && cyToken.length) {
-    let mockUser = {
+    const mockUser = {
         account: {
             name: 'MockUser',
             roles: ''

@@ -1,3 +1,4 @@
+/*eslint-disable no-shadow, react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
@@ -263,7 +264,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     setLoading(false);
-                    let newStudy = result;
+                    const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     setStudy(newStudy);
                     history.push('/studies/' + result.id);
@@ -389,7 +390,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                             <Tooltip
                                                 title="The value must be between 3 and 20 characters long (A-Z)"
-                                                placement={'right'}
+                                                placement="right"
                                             >
                                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                                             </Tooltip>

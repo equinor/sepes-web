@@ -4,9 +4,16 @@ import { info_circle } from '@equinor/eds-icons';
 import { passwordValidate, returnLimitMeta, roundUp, validateResourceName } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { VmObj, VmUsernameObj, CalculateNameObj } from '../../common/interfaces';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
-import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
+import {
+    SandboxObj,
+    DropdownObj,
+    SizeObj,
+    OperatingSystemObj,
+    VmObj,
+    VmUsernameObj,
+    CalculateNameObj
+} from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
@@ -178,7 +185,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 getResources();
-                let vmsList: any = [...vms];
+                const vmsList: any = [...vms];
                 vmsList.push(result);
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
@@ -272,18 +279,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         return false;
     };
 
-    const filterSizes = (sizes: any) => {
-        if (!sizes) {
+    const filterSizes = (_sizes: any) => {
+        if (!_sizes) {
             return [];
         }
         if (filter.length === 0) {
-            return sizes;
+            return _sizes;
         }
-        return sizes.filter((size) => filter.includes(size.category));
+        return _sizes.filter((size) => filter.includes(size.category));
     };
 
     const handleCheck = (column: string, checked: any) => {
-        let currentFilter: any = [...filter];
+        const currentFilter: any = [...filter];
         if (checked) {
             currentFilter.push(column);
         } else {
@@ -328,7 +335,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     data-cy="vm_name"
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement={'right'}>
+                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                             </Tooltip>
                         </div>
@@ -364,7 +371,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     helperText={usernameHelpText}
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                             </Tooltip>
                         </div>
@@ -386,7 +393,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                 <Tooltip
                                     title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement={'right'}
+                                    placement="right"
                                 >
                                     <Icon name="info_circle" size={24} color="#6F6F6F" />
                                 </Tooltip>

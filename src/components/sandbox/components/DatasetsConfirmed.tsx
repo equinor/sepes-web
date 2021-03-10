@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-curly-brace-presence, react/no-array-index-key */
 import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import '../../../styles/Table.scss';
 import { SandboxObj } from '../../common/interfaces';
+
 const { Body, Row, Cell, Head } = Table;
 
 type SandboxConfirmedProps = {
