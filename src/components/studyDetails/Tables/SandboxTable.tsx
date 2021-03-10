@@ -1,7 +1,7 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { chevron_right } from '@equinor/eds-icons';
-import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
 

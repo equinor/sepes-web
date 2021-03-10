@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-fragments */
 import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon, Tooltip, Button } from '@equinor/eds-core-react';
@@ -44,7 +45,7 @@ const LEFT_CHOICES = {
     text: 'Sepes',
     'text+icon': (
         <Fragment>
-            <Link to={'/'} style={{ color: '#000000', marginLeft: '16px' }}>
+            <Link to="/" style={{ color: '#000000', marginLeft: '16px' }}>
                 Sepes
             </Link>
         </Fragment>
@@ -76,7 +77,7 @@ const Bar = (props: any) => {
                             name="account_circle"
                             style={{ cursor: 'pointer' }}
                             size={24}
-                            color={'#007079'}
+                            color="#007079"
                             className="icon"
                             title="account"
                         />

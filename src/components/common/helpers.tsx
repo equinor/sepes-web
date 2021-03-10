@@ -1,11 +1,12 @@
+/*eslint-disable no-restricted-properties */
 import React from 'react';
 import { TextField } from '@equinor/eds-core-react';
 
 export const lineBreak = (text: string) => {
     return text
-        ? text.split(`\n`).map(function (item: string, idx: number) {
+        ? text.split('\n').map((item: string) => {
               return (
-                  <span key={idx}>
+                  <span key={item}>
                       {item}
                       <br />
                   </span>

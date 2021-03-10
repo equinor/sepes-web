@@ -10,14 +10,13 @@ import {
     updateStandardDataset
 } from '../../services/Api';
 import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
-import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
@@ -227,7 +226,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const handleChange = (columName: string, value: any) => {
         if (columName === 'dataId') {
             if (value < 0 || value === '') {
-                setDataset({ ...dataset, ['dataId']: undefined });
+                setDataset({ ...dataset, dataId: undefined });
             } else {
                 setDataset({
                     ...dataset,
@@ -327,7 +326,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             data-cy="dataset_storage_name"
                             inputIcon={
                                 <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                    <Tooltip title="This cannot be changed later" placement={'right'}>
+                                    <Tooltip title="This cannot be changed later" placement="right">
                                         {EquinorIcon('error_outlined', '#6F6F6F', 24)}
                                     </Tooltip>
                                 </div>

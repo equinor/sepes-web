@@ -10,7 +10,7 @@ const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) =
     const [showLoading, setShowLoading] = useState<boolean>(noTimeout);
 
     useEffect(() => {
-        const timer = setTimeout(function () {
+        const timer = setTimeout(() => {
             setShowLoading(true);
         }, 2000);
         return () => clearTimeout(timer);

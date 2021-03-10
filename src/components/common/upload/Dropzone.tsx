@@ -26,7 +26,7 @@ const Dropzone = ({ onDrop, accept }: props) => {
         accept
     });
 
-    /* 
+    /*
     useDropzone hooks exposes two functions called getRootProps and getInputProps
     and also exposes isDragActive boolean
   */

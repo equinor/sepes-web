@@ -24,7 +24,7 @@ type SandboxProps = {};
 
 let controller = new AbortController();
 
-const Sandbox: React.FC<SandboxProps> = ({}) => {
+const Sandbox: React.FC<SandboxProps> = () => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
@@ -105,7 +105,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
             case 1:
                 return <Execution resources={resources} sandbox={sandbox} getResources={getResources} />;
             case 2:
-                return <div></div>;
+                return <div />;
             default:
                 return (
                     <SandboxConfig

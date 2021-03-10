@@ -2,21 +2,23 @@ import React from 'react';
 import imageCompression from 'browser-image-compression';
 import Dropzone from './Dropzone';
 
-let link1 = document.createElement('img');
+const link1 = document.createElement('img');
 const AddImageAndCompressionContainer = (props: any) => {
     function handleImageUpload(imageEvent: File[]) {
-        var imageFile = imageEvent[0];
-        var options = {
+        const imageFile = imageEvent[0];
+        const options = {
             maxSizeMB: 0.2,
             maxWidthOrHeight: 1000,
             useWebWorker: false
         };
         imageCompression(imageFile, options)
-            .then(function (compressedFile) {
+            .then((compressedFile) => {
                 link1.src = URL.createObjectURL(compressedFile);
                 props.setImageUrl(link1.src);
             })
-            .catch(function (error) {});
+            .catch((error) => {
+                console.log(error);
+            });
     }
     //                             style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
     return (

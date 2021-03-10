@@ -20,7 +20,7 @@ export const getStudy = async (id: string) => {
     return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
-export const createStudy = async (study: StudyObj, imageUrl: string) => {  
+export const createStudy = async (study: StudyObj, imageUrl: string) => {
     // return apiRequestWithToken('api/studies/', 'POST', study);
     return postputStudy(study, imageUrl, 'api/studies/' + study.id, 'POST');
 };
@@ -121,8 +121,6 @@ export const addStudyParticipant = async (studyId: string, role: string, partici
 export const removeStudyParticipant = async (studyId: string, userId: string, roleName: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/participants/' + userId + '/' + roleName, 'DELETE');
 };
-
-
 
 //Sandbox
 

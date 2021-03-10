@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UpdateCache } from '../../../App';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
-import * as notify from '../../common/notify';
+import * as notify from '../notify';
 
 const cache = {};
 

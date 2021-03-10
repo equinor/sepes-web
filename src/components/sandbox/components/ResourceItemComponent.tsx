@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Label } from '../../common/StyledComponents';
+import { Label, EquinorIcon } from '../../common/StyledComponents';
 import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceType } from '../../common/staticValues/types';
-import { EquinorIcon } from '../../common/StyledComponents';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 import * as notify from '../../common/notify';
 
@@ -62,7 +61,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                 )}
             </div>
             <SatusWrapper isVm={type === resourceType.virtualMachine}>
-                <Tooltip title={retryLink ? 'Try Again' : status} placement={'top'}>
+                <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {' '}
                     {retryLink ? (
                         <Button variant="ghost_icon" onClick={() => retryResource()}>
