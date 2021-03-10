@@ -531,7 +531,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     aria-expanded={isOpen}
                                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                                 >
-                                    <Icon color="#007079" name="settings" size={16} />
+                                    <Icon color="#007079" name="settings" size={24} />
                                 </Button>
                                 <Menu
                                     id="menuButton"
