@@ -275,7 +275,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             });
         } else {
             study.id = id;
-            setStudy({ ...studyOnChange, logoUrl: imageUrl });
+            if (imageUrl) {
+                setStudy({ ...studyOnChange, logoUrl: imageUrl });
+            }
             setLoading(false);
             updateStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
