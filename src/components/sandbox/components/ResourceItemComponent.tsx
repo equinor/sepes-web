@@ -11,8 +11,7 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr 30px;
 `;
 
-const SatusWrapper = styled.div<{ isVm: boolean }>`
-    margin-top: ${(props: any) => (props.isVm ? '8px' : '0px')};
+const SatusWrapper = styled.div`
     margin-left: auto;
 `;
 
@@ -60,7 +59,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                     <div>{type}</div>
                 )}
             </div>
-            <SatusWrapper isVm={type === resourceType.virtualMachine}>
+            <SatusWrapper>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {' '}
                     {retryLink ? (

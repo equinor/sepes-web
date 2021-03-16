@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
-import { Table, Icon } from '@equinor/eds-core-react';
+import { Table, Icon, Button } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import { ParticipantObj, StudyPermissions } from '../../common/interfaces';
 import { studyOwner } from '../../common/staticValues/Roles';
@@ -40,19 +40,20 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
                 <Body>
                     {participants &&
                         participants.map((participant: ParticipantObj) => (
-                            <Row key={participant.userId + participant.role} id="tableRowNoPointer">
+                            <Row key={participant.userId + participant.role} id="tableRowNoPointerNoColor">
                                 <Cell>{participant.fullName}</Cell>
                                 {editMode && width > 800 && <Cell align="right">{participant.emailAddress}</Cell>}
                                 <Cell align="right">{participant.role}</Cell>
                                 {editMode && participant.role !== studyOwner ? (
                                     <Cell align="right">
                                         {permissions?.addRemoveParticipant && (
-                                            <Icon
-                                                name="close"
-                                                style={{ cursor: 'pointer' }}
-                                                size={24}
+                                            <Button
+                                                variant="ghost_icon"
                                                 onClick={() => removeParticipant(participant)}
-                                            />
+                                                style={{ color: '#3D3D3D' }}
+                                            >
+                                                <Icon name="close" style={{ cursor: 'pointer' }} size={24} />
+                                            </Button>
                                         )}
                                     </Cell>
                                 ) : (

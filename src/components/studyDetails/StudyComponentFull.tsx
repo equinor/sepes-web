@@ -321,26 +321,37 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
     };
 
-    function handleChange(columnName: string, value: string) {
+    const handleChange = (columnName: string, value: string): void => {
         setHasChanged(true);
         const inputLength = value.length;
         if (columnName === 'description' && inputLength > limits.description) {
+            returnAllowedLengthOfString(value, limits.description, columnName);
             return;
         }
         if (columnName === 'name' && inputLength > limits.name) {
+            returnAllowedLengthOfString(value, limits.name, columnName);
             return;
         }
         if (columnName === 'vendor' && inputLength > limits.vendor) {
+            returnAllowedLengthOfString(value, limits.vendor, columnName);
             return;
         }
         if (columnName === 'wbsCode' && inputLength > limits.wbsCode) {
+            returnAllowedLengthOfString(value, limits.wbsCode, columnName);
             return;
         }
         setStudyOnChange({
             ...studyOnChange,
             [columnName]: value
         });
-    }
+    };
+
+    const returnAllowedLengthOfString = (input: string, limit: number, columnName: string) => {
+        setStudyOnChange({
+            ...studyOnChange,
+            [columnName]: input.substr(0, limit)
+        });
+    };
 
     return (
         <div
