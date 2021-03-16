@@ -116,7 +116,7 @@ const CoreDevDropdown = (props: any) => {
                 >
                     {options.map((option: any, i: number) => {
                         return (
-                            <li key={option} onMouseDown={() => handleChange(option)}>
+                            <li key={option.displayValue} onMouseDown={() => handleChange(option)}>
                                 <DropdownOption>{option.displayValue}</DropdownOption>
                             </li>
                         );
