@@ -100,7 +100,10 @@
         "transformIgnorePatterns": [
             "node_modules/(?!(@equinor/eds-icons)/)"
         ],
-        "preset": "ts-jest",
+        "preset": [
+            "ts-jest",
+            "@babel/preset-flow"
+        ],
         "transform": {
             "^.+\\.tsx?$": "babel-jest",
             "^.+\\.ts?$": "ts-jest"
