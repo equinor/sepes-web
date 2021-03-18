@@ -99,6 +99,17 @@
     "jest": {
         "transformIgnorePatterns": [
             "node_modules/(?!(@equinor/eds-icons)/)"
+        ],
+        "preset": "ts-jest",
+        "transform": {
+            "^.+\\.tsx?$": "babel-jest",
+            "^.+\\.ts?$": "ts-jest"
+        },
+        "moduleFileExtensions": [
+            "ts",
+            "js",
+            "json",
+            "node"
         ]
     },
     "config": {
