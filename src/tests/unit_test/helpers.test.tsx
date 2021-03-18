@@ -1,4 +1,4 @@
-import * as helpers from './helpers';
+import * as helpers from '../../components/common/helpers';
 
 test('test requiredFields', () => {
     expect(helpers.checkIfRequiredFieldsAreNull('', false)).toContain('default');
