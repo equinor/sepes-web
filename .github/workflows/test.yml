@@ -14,6 +14,9 @@ jobs:
       with:
         jestArgs: src/tests/unit_test
     - uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+      with:
+      # The GitHub Token. This is only used, if none is provided via Env.
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            
         
     # You may pin to the exact commit or the version.
