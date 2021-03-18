@@ -4,8 +4,10 @@
 module.exports = {
     preset: 'ts-jest',
     transform: {
-        '^.+\\.tsx?$': 'babel-jest'
+        '^.+\\.tsx?$': 'babel-jest',
+        '^.+\\.ts?$': 'ts-jest'
     },
+    moduleFileExtensions: ['ts', 'js', 'json', 'node'],
     // All imported modules in your tests should be mocked automatically
     // automock: false,
 
