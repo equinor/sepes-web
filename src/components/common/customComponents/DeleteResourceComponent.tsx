@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Typography, TextField, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import useClickOutside from '../../common/customComponents/useClickOutside';
+import useClickOutside from './useClickOutside';
 
 const Wrapper = styled.div`
     display: grid;

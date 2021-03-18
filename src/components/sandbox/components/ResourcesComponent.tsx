@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import ResourceItemComponent from './ResourceItemComponent';
@@ -6,7 +7,7 @@ import '../../../styles/Table.scss';
 const { Body, Row, Cell, Head } = Table;
 
 const Dataset = (props: any) => {
-    const { resources } = props;
+    const { resources, getResources } = props;
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
@@ -25,6 +26,8 @@ const Dataset = (props: any) => {
                                         type={resource.type}
                                         status={resource.status}
                                         linkToResource={resource.linkToExternalSystem}
+                                        retryLink={resource.retryLink}
+                                        getResources={getResources}
                                     />
                                 </Cell>
                             </Row>

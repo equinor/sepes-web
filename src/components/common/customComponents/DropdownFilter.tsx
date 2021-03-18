@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring*/
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Search, Checkbox } from '@equinor/eds-core-react';
@@ -27,7 +28,7 @@ type DatasetSearchFilterProps = {
     filter: any;
     column: string;
 };
-let filterList: any = [];
+const filterList: any = [];
 const DropdownFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, filter, column }) => {
     const [searchValue, setSearchValue] = useState('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -43,7 +44,7 @@ const DropdownFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, filter,
         if (!filterList.includes(value)) {
             filterList.push(value);
         } else {
-            let indexOfElement = filterList.indexOf(value);
+            const indexOfElement = filterList.indexOf(value);
             filterList.splice(indexOfElement, 1);
         }
         setFilter({ ...filter, [column]: filterList });
@@ -56,9 +57,8 @@ const DropdownFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, filter,
                 stringBuilder += element + ', ';
             });
             return stringBuilder;
-        } else {
-            return searchValue;
         }
+        return searchValue;
     };
 
     const isCheckboxChecked = (name: any) => {
@@ -83,7 +83,6 @@ const DropdownFilter: React.FC<DatasetSearchFilterProps> = ({ setFilter, filter,
                                             name={row.displayValue}
                                             onChange={handleColumnsChange}
                                             checked={isCheckboxChecked(row.displayValue)}
-                                            enterKeyHint="Add filter"
                                         />
                                     </div>
                                 )

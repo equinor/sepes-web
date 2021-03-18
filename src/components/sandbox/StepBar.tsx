@@ -1,3 +1,4 @@
+/*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
@@ -14,7 +15,8 @@ import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallString
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import LoadingFull from '../common/LoadingComponentFullscreen';
-let set = require('lodash/set');
+
+const set = require('lodash/set');
 
 const { MenuItem } = Menu;
 
@@ -113,6 +115,8 @@ const StepBar: React.FC<StepBarProps> = ({
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
     const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
+    const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
+    const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
 
     useEffect(() => {
         getResources();
@@ -136,7 +140,7 @@ const StepBar: React.FC<StepBarProps> = ({
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 resourcesFailed = true;
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
                 console.log('Err');
             } else {
                 setResources(result);
@@ -151,24 +155,30 @@ const StepBar: React.FC<StepBarProps> = ({
             return res;
         }
         let hasVm = false;
+        let noOpenInternet = true;
         resourcesIn.map((resource: any, i: number) => {
             if (resource.status !== resourceStatus.ok) {
                 res = false;
             }
             if (resource.type === resourceType.virtualMachine) {
                 hasVm = true;
+                if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
+                    noOpenInternet = false;
+                }
             }
             if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
                 getCostAnalysisLinkToSandbox();
             }
         });
-        setAllResourcesOk(res && hasVm);
+        setAnyVmWithOpenInternet(!noOpenInternet);
+        setSandboxHasVm(hasVm);
+        setAllResourcesOk(res && hasVm && noOpenInternet);
     };
 
     const getCostAnalysisLinkToSandbox = () => {
         getSandboxCostAnalysis(sandboxId).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             } else {
                 setNewCostanalysisLink(result);
                 setSandbox({ ...sandbox, linkToCostAnalysis: result });
@@ -205,9 +215,9 @@ const StepBar: React.FC<StepBarProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             setLoading(false);
-            if (result.Message) {
+            if (result && result.Message) {
                 setDeleteSandboxInProgress(false);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
             history.push('/studies/' + studyId);
         });
@@ -221,7 +231,7 @@ const StepBar: React.FC<StepBarProps> = ({
             setMakeAvailableInProgress(false);
             if (result.Message || result.errors) {
                 setNewPhase(0);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
                 setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
@@ -234,22 +244,41 @@ const StepBar: React.FC<StepBarProps> = ({
         if (sandbox.permissions && !sandbox.permissions.increasePhase) {
             return 'You do not have permission to make this sandbox Available';
         }
-        if (!allResourcesOk || sandbox.datasets.length === 0) {
-            return 'All resources must have status OK and atleast one VM and Data set must be in the sandbox';
+        if (!sandboxHasVm) {
+            return 'You need atleast one VM in the sandbox';
+        }
+        if (anyVmWithOpenInternet) {
+            return 'One or more vms have open internet. Close before making sandbox available';
+        }
+        if (sandbox.datasets.length === 0) {
+            return 'No datasets in the sandbox';
+        }
+        if (!allResourcesOk) {
+            return 'All resources must have status OK';
         }
         return '';
     };
 
     const optionsTemplate = (
         <>
-            <MenuItem
-                onClick={() => setUserClickedDelete(true)}
-                data-cy="sandbox_delete"
-                disabled={sandbox.permissions && !sandbox.permissions.delete}
+            <Tooltip
+                title={
+                    sandbox.permissions && !sandbox.permissions.delete
+                        ? 'You do not have access to delete this sandbox'
+                        : ''
+                }
+                placement="left"
+                open={sandbox.permissions && !sandbox.permissions.delete}
             >
-                {EquinorIcon('delete_forever', 'red', 24)}
-                <span style={{ color: 'red' }}>Delete sandbox</span>
-            </MenuItem>
+                <MenuItem
+                    onClick={() => setUserClickedDelete(true)}
+                    data-cy="sandbox_delete"
+                    disabled={sandbox.permissions && !sandbox.permissions.delete}
+                >
+                    {EquinorIcon('delete_forever', 'red', 24)}
+                    <span style={{ color: 'red' }}>Delete sandbox</span>
+                </MenuItem>
+            </Tooltip>
         </>
     );
 
@@ -265,7 +294,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
-                    More options
+                    <span style={{ marginLeft: '0' }}>More options</span>
                     {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu
@@ -307,16 +336,8 @@ const StepBar: React.FC<StepBarProps> = ({
                                         )
                                     }
                                 >
-                                    {makeAvailableInProgress ? (
-                                        <div>
-                                            <DotProgress variant="green" />
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <span>Make available</span>
-                                            {EquinorIcon('arrow_forward', '#FFFFFF', 16, () => {}, true)}
-                                        </>
-                                    )}
+                                    <span style={{ marginLeft: '0' }}>Make available</span>
+                                    {EquinorIcon('chevron_right', '#FFFFFF', 24, () => {}, true)}
                                 </Button>
                             </Tooltip>
                         </div>
@@ -337,7 +358,7 @@ const StepBar: React.FC<StepBarProps> = ({
                         </Button>
                         */}
                         {returnOptionsButton()}
-                        {/* 
+                        {/*
                         <Button
                             onClick={() => {
                                 setStep(2);
@@ -358,7 +379,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                 setStep(0);
                             }}
                         >
-                            {EquinorIcon('arrow_back', '#007079', 16, () => {}, true)}Make Available
+                            {EquinorIcon('chevron_left', '#007079', 16, () => {}, true)}Make Available
                         </Button>
                         {returnOptionsButton()}
                     </BtnTwoWrapper>
@@ -428,7 +449,7 @@ const StepBar: React.FC<StepBarProps> = ({
                             {sandbox.linkToCostAnalysis ? (
                                 EquinorIcon('external_link', '#007079', 24, () => {}, true)
                             ) : (
-                                <DotProgress variant="green" />
+                                <DotProgress color="primary" />
                             )}
                         </a>
                     </Tooltip>

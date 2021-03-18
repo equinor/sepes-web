@@ -1,3 +1,4 @@
+/*eslint-disable consistent-return */
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
@@ -50,7 +51,7 @@ interface checkedColumns {
     sepesApproved: boolean;
 }
 
-interface filter {
+interface Filter {
     name: string;
     sourceSystem: string;
     areaL2: string;
@@ -96,7 +97,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
               }
     );
 
-    const [filter, setFilter] = useState<filter>({
+    const [filter, setFilter] = useState<Filter>({
         name: '',
         sourceSystem: '',
         areaL2: '',
@@ -147,7 +148,6 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
                 name={name}
                 value={checked.toString()}
                 onChange={handleColumnsChange}
-                enterKeyHint="Select filter"
             />
         );
     };
@@ -189,7 +189,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
 
     const filterListOptions = (column: string, filterColumn: any, resDataset) => {
         if (filterColumn.length > 0) {
-            let res = resDataset;
+            const res = resDataset;
             return combineArray(
                 filterColumn.map((row: any) => {
                     return filterList(column, row, res);
@@ -200,7 +200,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     };
 
     function combineArray(array: any) {
-        let newArray: any = [];
+        const newArray: any = [];
         array.map((res: any, i: number) => {
             res.map((dataset: any, j: number) => {
                 newArray.push(dataset);

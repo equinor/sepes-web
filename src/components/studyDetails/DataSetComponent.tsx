@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Tooltip } from '@equinor/eds-core-react';
+import { Button, Tooltip, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
-import { Icon } from '@equinor/eds-core-react';
 import { useHistory } from 'react-router-dom';
 import { unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
@@ -73,7 +72,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
         });
         unlinkStudyDataset(studyId, row.id).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
                 console.log('Err');
             }
             //datasetsResponse.setLoading(false);
@@ -101,14 +100,13 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.Message) {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);
             });
         }
     };
-    
     const checkIfDatasetIsAlreadyAdded = (id: string) => {
         let elementExist = false;
         study.datasets &&
@@ -144,7 +142,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                     </Button>
                 </Tooltip>
             </div>
-            {/* 
+            {/*
                 <span style={{ textAlign: 'center' }}>or</span>
                 <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
                     <SearchWithDropdown
@@ -156,7 +154,6 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                         disabled={study.permissions && !study.permissions.addRemoveDataset}
                     />
                 </div>
-                
             </Bar>
             <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>
                 Advanced search

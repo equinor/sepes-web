@@ -10,14 +10,13 @@ import {
     updateStandardDataset
 } from '../../services/Api';
 import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
-import { useHistory } from 'react-router-dom';
 import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
@@ -167,8 +166,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     });
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
+                    setUserPressedCreate(false);
                     console.log('Err');
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                 }
             });
         } else if (isDatasetspecificDataset) {
@@ -184,7 +184,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    setUserPressedCreate(false);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -200,7 +201,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     });
                     history.push('/datasets/' + result.id);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    setUserPressedCreate(false);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -213,7 +215,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    setUserPressedCreate(false);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -223,7 +226,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const handleChange = (columName: string, value: any) => {
         if (columName === 'dataId') {
             if (value < 0 || value === '') {
-                setDataset({ ...dataset, ['dataId']: undefined });
+                setDataset({ ...dataset, dataId: undefined });
             } else {
                 setDataset({
                     ...dataset,
@@ -282,7 +285,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return (checkUrlIfGeneralDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
+    return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
         (permissions && permissions.editDataset) ||
         (location && location.state.canCreateStudySpecificDataset) ? (
         <>
@@ -323,7 +326,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             data-cy="dataset_storage_name"
                             inputIcon={
                                 <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                    <Tooltip title="This cannot be changed later" placement={'right'}>
+                                    <Tooltip title="This cannot be changed later" placement="right">
                                         {EquinorIcon('error_outlined', '#6F6F6F', 24)}
                                     </Tooltip>
                                 </div>
@@ -389,7 +392,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     </StyledLink>
                     <SaveCancelWrapper>
                         <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
-                            {loading ? <DotProgress variant="green" /> : 'Save'}
+                            {loading ? <DotProgress color="primary" /> : 'Save'}
                         </Button>
                         <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">
                             Cancel

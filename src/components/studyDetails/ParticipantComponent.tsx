@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
@@ -76,15 +77,15 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             cb: async () => {
                 api.getParticipantList(value || 'a').then((result: any) => {
                     if (!result.Message) {
-                        let temp = result.map((user) => {
+                        const temp = result.map((_user) => {
                             return {
-                                label: `${user.fullName} (${user.emailAddress})`,
-                                value: user.objectId,
-                                emailAddress: user.emailAddress,
-                                source: user.source,
-                                objectId: user.objectId,
-                                name: user.fullName,
-                                databaseId: user.databaseId
+                                label: `${_user.fullName} (${_user.emailAddress})`,
+                                value: _user.objectId,
+                                emailAddress: _user.emailAddress,
+                                source: _user.source,
+                                objectId: _user.objectId,
+                                name: _user.fullName,
+                                databaseId: _user.databaseId
                             };
                         });
                         callback(temp);
@@ -104,13 +105,13 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     }, [participantNotSelected, study.permissions.addRemoveParticipant]);
 
     const removeParticipant = (participant: any) => {
-        let participantList: any = [...study.participants];
+        const participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({ ...study, participants: participantList });
         const studyId = window.location.pathname.split('/')[2];
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (!result.Message && isSubscribed) {
+            if (result && !result.Message && isSubscribed) {
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
@@ -118,7 +119,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     history.push('/');
                 }
             } else {
-                notify.show('danger', '500', result.Message, result.requestId);
+                notify.show('danger', '500', result);
             }
             rolesResponse.setLoading(false);
         });
@@ -134,12 +135,12 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             setLoading(true);
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 setLoading(false);
-                if (!result.Message) {
-                    let participantList: any = [...study.participants];
+                if (result && !result.Message) {
+                    const participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
                 } else {
-                    notify.show('danger', '500', result.Message, result.requestId);
+                    notify.show('danger', '500', result);
                     console.log('Err getting participants');
                 }
                 rolesResponse.setLoading(false);
@@ -174,7 +175,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const selectParticipant = (row: any) => {
         setText(row.label);
         setParticipantNotSelected(false);
-        let participant: any = row;
+        const participant: any = row;
         setSelectedParticipant(participant);
     };
 
@@ -216,7 +217,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         <AsynchSelect
                             label="Add participants"
                             onChange={(option: any) => selectParticipant(option)}
-                            placeholder={''}
+                            placeholder=""
                             selectedOption={{ value: 'Search..', label: text }}
                             onInputChange={handleInputChange}
                             disabled={study.permissions && !study.permissions.addRemoveParticipant}
@@ -252,7 +253,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     onClick={addParticipant}
                     style={{ width: '136px' }}
                 >
-                    {rolesResponse.loading ? <DotProgress variant="green" /> : 'Add participant'}
+                    {loading ? <DotProgress color="primary" /> : 'Add participant'}
                 </Button>
             </SearchWrapper>
             <TableWrapper>

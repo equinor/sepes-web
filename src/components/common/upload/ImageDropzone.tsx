@@ -2,30 +2,30 @@ import React from 'react';
 import imageCompression from 'browser-image-compression';
 import Dropzone from './Dropzone';
 
-let link1 = document.createElement('img');
+const link1 = document.createElement('img');
 const AddImageAndCompressionContainer = (props: any) => {
     function handleImageUpload(imageEvent: File[]) {
-        var imageFile = imageEvent[0];
-        var options = {
+        const imageFile = imageEvent[0];
+        const options = {
             maxSizeMB: 0.2,
             maxWidthOrHeight: 1000,
             useWebWorker: false
         };
         imageCompression(imageFile, options)
-            .then(function (compressedFile) {
+            .then((compressedFile) => {
                 link1.src = URL.createObjectURL(compressedFile);
                 props.setImageUrl(link1.src);
             })
-            .catch(function (error) {});
+            .catch((error) => {
+                console.log(error);
+            });
     }
     //                             style={{ margin: 'auto', position: 'absolute', top: '0', left: '0' }}
     return (
         <div style={{ position: 'relative' }}>
             {props.imageUrl ? (
-                <div style={{ height: '125px', width: '125px' }}>
-                    <div style={{ minHeight: '125px', minWidth: '125px' }}>
-                        <img src={props.imageUrl} width="100%" height="100%" alt="logoUrl" />
-                    </div>
+                <div style={{ height: '125px', width: '125px', textAlign: 'center' }}>
+                    <img src={props.imageUrl} style={{ maxHeight: '125px', maxWidth: '125px' }} alt="Logo" />
                 </div>
             ) : (
                 <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} accept={'image/*'} />

@@ -76,7 +76,7 @@ const CustomContent = (props) => {
                 </p>
                 <Tooltip title="Copy to clipboard" placement="top">
                     <CopyToClipboard text={requestId}>
-                        <Icon name="copy" size={20} color={'#007079'} className="icon" />
+                        <Icon name="copy" size={20} color="#007079" className="icon" />
                     </CopyToClipboard>
                 </Tooltip>
             </span>
@@ -84,10 +84,17 @@ const CustomContent = (props) => {
     );
 };
 
-export const show = (type, code, message, requestId) => {
+export const show = (type, code, result) => {
     store.addNotification({
         title: 'Error',
-        content: <CustomContent type={type} code={code} message={message} requestId={requestId} />,
+        content: (
+            <CustomContent
+                type={type}
+                code={code}
+                message={result && result.message}
+                requestId={result && result.requestId}
+            />
+        ),
         type: 'danger',
         insert: 'top',
         container: 'top-center',
@@ -98,14 +105,14 @@ export const show = (type, code, message, requestId) => {
             pauseOnHover: true,
             click: true
         },
-        width: width
+        width
     });
 };
 
 export const warning = (message) => {
     store.addNotification({
         content: (
-            <Card variant={'warning'}>
+            <Card variant="warning">
                 {/*<Typography variant="h6">Error</Typography> <br />*/}
                 <Typography variant="body_short">{message}</Typography>
             </Card>
@@ -119,6 +126,6 @@ export const warning = (message) => {
             touch: false,
             click: true
         },
-        width: width
+        width
     });
 };

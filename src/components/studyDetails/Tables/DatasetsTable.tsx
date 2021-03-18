@@ -1,8 +1,8 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import React, { useEffect, useState } from 'react';
 import { Table } from '@equinor/eds-core-react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { EquinorIcon } from '../../common/StyledComponents';
-import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
@@ -77,7 +77,7 @@ const DatasetsTable = (props: any) => {
                     ) : (
                         <Row key={1} id="tableRowNoPointerNoColor">
                             <Cell>No datasets added</Cell>
-                            {editMode && <Cell></Cell>}
+                            {editMode && <Cell />}
                             <Cell>{''}</Cell>
                         </Row>
                     )}

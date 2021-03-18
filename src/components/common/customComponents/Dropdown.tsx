@@ -1,10 +1,11 @@
+/*eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
 import useClickOutside from './useClickOutside';
 import styled from 'styled-components';
 import { Icon } from '@equinor/eds-core-react';
 import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
-import { truncate } from '../../common/helpers';
+import { truncate } from '../helpers';
 
 const icons = {
     arrow_drop_up,
@@ -67,8 +68,8 @@ const Meta = styled.div`
 `;
 */
 
-const CoreDevDropdown = (props: any): JSX.Element => {
-    let { options, label, meta } = props;
+const CoreDevDropdown = (props: any) => {
+    const { options, label, meta } = props;
     const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
     const useOverflow = props.useOverflow || false;
     const [selectedOption, setSelectedOption] = useState({
@@ -115,7 +116,7 @@ const CoreDevDropdown = (props: any): JSX.Element => {
                 >
                     {options.map((option: any, i: number) => {
                         return (
-                            <li key={i} onMouseDown={() => handleChange(option)}>
+                            <li key={option.displayValue} onMouseDown={() => handleChange(option)}>
                                 <DropdownOption>{option.displayValue}</DropdownOption>
                             </li>
                         );

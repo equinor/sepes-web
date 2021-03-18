@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,8 +22,8 @@ class ErrorBoundary extends Component {
     componentDidCatch(error, errorInfo) {
         this.setState({
             hasError: true,
-            error: error,
-            errorInfo: errorInfo,
+            error,
+            errorInfo,
             errorMessage: error.message
         });
     }
@@ -57,7 +58,7 @@ class ErrorBoundary extends Component {
                 <div style={{ paddingTop: '128px', textAlign: 'center' }}>
                     {this.makeErrorMessage(this.state.errorMessage)}
                     {this.props.appInsights.trackTrace(this.state.errorMessage)}
-                    <Link to={'/'} style={linkStyle}>
+                    <Link to="/" style={linkStyle}>
                         Go back
                     </Link>
                 </div>

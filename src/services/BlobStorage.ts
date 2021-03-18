@@ -1,5 +1,6 @@
 import { TransferProgressEvent } from '@azure/core-http';
 import { BlockBlobClient } from '@azure/storage-blob';
+
 const { BlobServiceClient } = require('@azure/storage-blob');
 
 /*
@@ -39,7 +40,6 @@ export const uploadFile2 = async (
                             ? progressArray.push(filePercent)
                             : (progressArray[index].percent = percentCalculated);
 
-                        
                         let temp: any = [...percentComplete];
                         temp.push(filePercent);
                         console.log(temp);
@@ -70,7 +70,7 @@ export const uploadFile2 = async (
 };
 */
 const findWithAttr = (array, attr, value) => {
-    for (var i = 0; i < array.length; i += 1) {
+    for (let i = 0; i < array.length; i += 1) {
         if (array[i][attr] === value) {
             return i;
         }
@@ -101,11 +101,11 @@ export const uploadFile = async (
                     if (percentCalculated < 1) {
                         percentCalculated = 1;
                     }
-                    let index2 = findWithAttr(progressArray, 'name', blobName);
+                    const index2 = findWithAttr(progressArray, 'name', blobName);
                     if (percentCalculated >= 0) {
-                        let temp: any = [...progressArray];
+                        const temp: any = [...progressArray];
                         if (index2 === -1) {
-                            let modfiedBlob = data;
+                            const modfiedBlob = data;
                             modfiedBlob.percent = percentCalculated;
                             temp.push(modfiedBlob);
                             progressArray.push(modfiedBlob);
@@ -124,10 +124,8 @@ export const uploadFile = async (
 
                         if (index === -1) {
                             abortArray.push(filePercent);
-                        } else {
-                            if (abortArray[index]) {
-                                abortArray[index].percent = percentCalculated;
-                            }
+                        } else if (abortArray[index]) {
+                            abortArray[index].percent = percentCalculated;
                         }
                     }
                 },

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
@@ -20,23 +21,27 @@ export const acquireTokenSilent = async () => {
 
 const cyToken = localStorage.getItem('cyToken');
 
-const makeHeaders = (accessToken: any, acceptHeader?: string) => {
+const makeHeaders = (accessToken: any, acceptHeader?: string, skipSettingContentType?: boolean) => {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
     headers.append('Authorization', bearer);
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', acceptHeader ? acceptHeader : 'application/json');
+
+    headers.append('Accept', acceptHeader || 'application/json');
+
+    if (!skipSettingContentType) {
+        headers.append('Content-Type', 'application/json');
+    }
     return headers;
 };
 
 export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const post = async (accessToken) => {
             try {
                 const headers = makeHeaders(accessToken);
                 const options = {
                     method,
-                    headers: headers,
+                    headers,
                     body: JSON.stringify(body),
                     signal
                 };
@@ -73,13 +78,13 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
 };
 
 export const apiRequestPermissionsWithToken = async (url: string, method: string, body?: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const post = async (accessToken) => {
             try {
                 const headers = makeHeaders(accessToken);
                 const options = {
                     method,
-                    headers: headers,
+                    headers,
                     body: JSON.stringify(body)
                 };
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
@@ -124,55 +129,8 @@ export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     return new File([response.data], fileName);
 };
 
-const makeBlobFromUrl = async (blobUrl: string) => {
-    const axiosWithBlobUrl = axios.create({
-        baseURL: blobUrl,
-        timeout: 1000
-    });
-    const response = await axiosWithBlobUrl.get('', {
-        responseType: 'blob'
-    });
-    const imageFile = new File([response.data], 'image.' + response.headers['content-type'].split('/')[1]);
-    const formData = new FormData();
-    formData.append('image', imageFile);
-    return formData;
-};
-// Posts the image separately before the piece is posted to the API, returns URL of the uploaded file
-export const postBlob = async (imageUrl: string, studyId: string) => {
-    const imageFile = await makeBlobFromUrl(imageUrl);
-    return new Promise((resolve, reject) => {
-        myMSALObj
-            .acquireTokenSilent(loginRequest)
-            .then((tokenResponse: any) => {
-                if (tokenResponse.accessToken) {
-                    const headers = new Headers();
-                    const bearer = `Bearer ${tokenResponse.accessToken}`;
-
-                    headers.append('Authorization', bearer);
-                    const options = {
-                        method: 'PUT',
-                        headers: headers,
-                        body: imageFile
-                    };
-
-                    return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + 'api/studies/' + studyId + '/logo', options)
-                        .then((response) => response.json())
-                        .then((responseData) => {
-                            return resolve(responseData);
-                        })
-                        .catch((error) => console.log(error));
-                }
-
-                // Callback code here
-            })
-            .catch((error: string) => {
-                console.log(error);
-            });
-    });
-};
-
 export const postFile = async (url, files: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
         myMSALObj
             .acquireTokenSilent(loginRequest)
             .then((tokenResponse: any) => {
@@ -181,13 +139,12 @@ export const postFile = async (url, files: any) => {
                     const bearer = `Bearer ${tokenResponse.accessToken}`;
                     headers.append('Authorization', bearer);
 
-                    var xhr = new XMLHttpRequest();
+                    const xhr = new XMLHttpRequest();
                     xhr.upload.addEventListener(
                         'progress',
                         (evt) => {
                             if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                console.log(percentComplete);
+                                const percentComplete = evt.loaded / evt.total;
                                 return percentComplete;
                             }
                         },
@@ -212,31 +169,17 @@ export const postFile = async (url, files: any) => {
     });
 };
 
-export const postputStudy = async (study: StudyObj, url: any, method: string, imageUrl: string) => {
-    let newStudyWithBlob: StudyObj = {
-        ...study
-    };
-    let fileUrl = '';
-    if (imageUrl) {
-        fileUrl = 'process.env.REACT_APP_BLOB_BASE_URL' + (await postBlob(imageUrl, study.id));
+export const postputStudy = async (study: StudyObj, imageUrl: string, url: any, method: string) => {
+    const requestBody = await createStudyRequestBody(study, imageUrl);
 
-        newStudyWithBlob = {
-            ...study,
-            logoUrl: fileUrl
-        };
-        console.log('Fileurl:');
-        console.log(fileUrl);
-    }
-
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const post = async (accessToken) => {
-            console.log('post request made to Graph API at: ' + new Date().toString());
             try {
-                const headers = makeHeaders(accessToken);
+                const headers = makeHeaders(accessToken, undefined, true);
                 const options = {
                     method,
-                    headers: headers,
-                    body: JSON.stringify(newStudyWithBlob)
+                    headers,
+                    body: requestBody
                 };
                 return fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
                     .then((response) => response.json())
@@ -267,8 +210,39 @@ export const postputStudy = async (study: StudyObj, url: any, method: string, im
     });
 };
 
+const createStudyRequestBody = async (study: StudyObj, blobUrl: string) => {
+    const studyRequestPart = {
+        name: study.name,
+        description: study.description,
+        wbsCode: study.wbsCode,
+        vendor: study.vendor,
+        restricted: study.restricted,
+        deleteLogo: !study.logoUrl && !blobUrl
+    };
+
+    const formData = new FormData();
+    formData.append('study', JSON.stringify(studyRequestPart));
+
+    if (blobUrl && blobUrl !== study.logoUrl) {
+        const axiosWithBlobUrl = axios.create({
+            baseURL: blobUrl,
+            timeout: 1000
+        });
+
+        const response = await axiosWithBlobUrl.get('', {
+            responseType: 'blob'
+        });
+
+        const imageFile = new File([response.data], 'image.' + response.headers['content-type'].split('/')[1]);
+
+        formData.append('image', imageFile);
+    }
+
+    return formData;
+};
+
 function authCallback(error: any, response: any) {
-    //handle redirect response
+    // handle redirect response
     if (response) {
         console.log('id_token acquired at: ' + new Date().toString());
     } else {
@@ -280,11 +254,11 @@ export function signInRedirect() {
     myMSALObj.handleRedirectCallback(authCallback);
     myMSALObj.loginRedirect(loginRequest);
 }
-
+/*
 export function signOut(myMSALObj: any) {
     myMSALObj.logout();
 }
-
+*/
 export const loginRequest = {
     scopes: [process.env.REACT_APP_SEPES_CLIENTID + '']
 };

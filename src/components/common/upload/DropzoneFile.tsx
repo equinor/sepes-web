@@ -25,20 +25,22 @@ const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
         width: 95%;
     }
 `;
-interface props {
+
+type DropzoneProps = {
     onDrop: any;
     accept?: string;
     disabled?: boolean;
     loading?: boolean;
-}
-const Dropzone = ({ onDrop, accept, disabled, loading }: props) => {
+};
+
+const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }) => {
     // Initializing useDropzone hooks with options
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept
     });
 
-    /* 
+    /*
     useDropzone hooks exposes two functions called getRootProps and getInputProps
     and also exposes isDragActive boolean
   */
