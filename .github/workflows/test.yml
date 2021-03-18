@@ -13,6 +13,7 @@ jobs:
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src/tests/unit_test
+    - name: Coverage report
     - uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       with:
       # The GitHub Token. This is only used, if none is provided via Env.
