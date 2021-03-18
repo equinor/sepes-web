@@ -12,7 +12,7 @@ jobs:
     - name: npx react-scripts test
       uses: stefanoeb/jest-action@1.0.3
       with:
-        jestArgs: src
+        jestArgs: src/tests/unit_test
     - uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
            
         
