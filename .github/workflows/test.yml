@@ -11,16 +11,11 @@ jobs:
     - uses: actions/checkout@v1
     - name: npm test
       uses: stefanoeb/jest-action@1.0.3
+    - uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       with:
         jestArgs: src     
         
     # You may pin to the exact commit or the version.
     # uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@6e23f271b4fb10248a260e72fe6d1bcddeea9f4a
-    uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
-    with:
-      # The GitHub Token. This is only used, if none is provided via Env.
-      GITHUB_TOKEN: # optional
-      # Glob for matching the Jest Output files
-      json-glob: # optional, default is **/jest-output.json
-      # Specify a custom workdirectory if needed. By default env.GITHUB_WORKSPACE is used.
-      workdir: # optional
+   
+
