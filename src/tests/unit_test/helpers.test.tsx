@@ -1,3 +1,4 @@
+import React from 'react';
 import * as helpers from '../../components/common/helpers';
 
 test('test requiredFields', () => {
