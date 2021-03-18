@@ -114,8 +114,7 @@
     },
     "babel": {
         "presets": [
-            "@babel/react",
-            "es2015"
+            "@babel/react"
         ]
     }
 }
