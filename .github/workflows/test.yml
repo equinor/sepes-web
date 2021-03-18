@@ -9,7 +9,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run Jest
+    - name: npm test
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src
+    - uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+           
+        
+    # You may pin to the exact commit or the version.
+    # uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@6e23f271b4fb10248a260e72fe6d1bcddeea9f4a
+   
+
