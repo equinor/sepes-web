@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, SandboxPermissions } from '../../common/interfaces';
+import {
+    SandboxObj,
+    SizeObj,
+    DropdownObj,
+    OperatingSystemObj,
+    SandboxPermissions,
+    VmObj
+} from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
@@ -11,6 +18,7 @@ import VmDetails from './VmDetails';
 import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+
 const { TabList, Tab } = Tabs;
 
 type VmConfigProps = {
@@ -22,6 +30,8 @@ type VmConfigProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    controller: AbortController;
+    setVmsWithOpenInternet: any;
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
@@ -32,7 +42,9 @@ const VmConfig: React.FC<VmConfigProps> = ({
     loadingSandbox,
     permissions,
     setUpdateCache,
-    updateCache
+    updateCache,
+    controller,
+    setVmsWithOpenInternet
 }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [vms, setVms] = useState<any>([]);
@@ -41,12 +53,20 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
+    const [vmSaved, setVmSaved] = useState<Boolean>(false);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
             setActiveTab(1);
         }
     }, [vms]);
+
+    useEffect(() => {
+        if (vmSaved) {
+            checkIfAnyVmsHasOpenInternet();
+            setVmSaved(false);
+        }
+    }, [vmSaved, vms]);
 
     useEffect(() => {
         setIsSubscribed(true);
@@ -58,35 +78,50 @@ const VmConfig: React.FC<VmConfigProps> = ({
         return () => setIsSubscribed(false);
     }, [permissions]);
 
+    const checkIfAnyVmsHasOpenInternet = () => {
+        let result = false;
+        vms.forEach((vm: VmObj) => {
+            if (vm.rules) {
+                vm.rules.forEach((rule: any) => {
+                    if (rule.action === 0 && rule.direction === 1) {
+                        result = true;
+                    }
+                });
+            }
+        });
+        setVmsWithOpenInternet(result);
+        return result;
+    };
+
     const getVmSizes = () => {
-        getVirtualMachineSizes(sandbox.id).then((result: any) => {
-            if (result && !result.Message) {
-                setSizes(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+        getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
+            if (result && result.Message) {
+                notify.show('danger', '500', result);
                 console.log('Err');
+            } else if (result) {
+                setSizes(result);
             }
         });
     };
 
     const getVmDisks = () => {
-        getVirtualMachineDisks().then((result: any) => {
-            if (result && !result.Message) {
-                setDisks(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+        getVirtualMachineDisks(controller.signal).then((result: any) => {
+            if (result && result.Message) {
+                notify.show('danger', '500', result);
                 console.log('Err');
+            } else if (result) {
+                setDisks(result);
             }
         });
     };
 
     const getVms = () => {
-        getVirtualMachineOperatingSystems(sandbox.id).then((result: any) => {
-            if (result && !result.Message) {
-                setOs(result);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+        getVirtualMachineOperatingSystems(sandbox.id, controller.signal).then((result: any) => {
+            if (result && result.Message) {
+                notify.show('danger', '500', result);
                 console.log('Err');
+            } else if (result) {
+                setOs(result);
             }
         });
     };
@@ -126,6 +161,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         permissions={permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        setVmSaved={setVmSaved}
                     />
                 );
         }

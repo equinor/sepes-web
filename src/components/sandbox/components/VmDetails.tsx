@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, TextField, Button, Tooltip } from '@equinor/eds-core-react';
@@ -11,9 +12,12 @@ import {
     getVirtualMachineRule
 } from '../../../services/Api';
 import * as notify from '../../common/notify';
-import { resourceStatus, resourceType } from '../../common/types';
+import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
+import '../../../styles/Table.scss';
+import Prompt from '../../common/Promt';
+
 const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
@@ -39,10 +43,11 @@ type VmDetailsProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
+    setVmSaved: any;
 };
 
 const ipMethod = [
-    { displayValue: 'current personal IP', key: '1' },
+    { displayValue: 'Current personal IP', key: '1' },
     { displayValue: 'Custom', key: '2' }
 ];
 
@@ -82,11 +87,15 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources
+    getResources,
+    setVmSaved
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
+    const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
+    const studyId = window.location.pathname.split('/')[2];
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -97,6 +106,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         getVmRules();
     }, [index]);
 
+    useEffect(() => {
+        checkIfAnyVmRulesHasChanged();
+    }, [hasChangedVmRules]);
+
     const getKey = () => {
         const res = keyCount++;
         return res.toString();
@@ -106,11 +119,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
             getVirtualMachineExtended(vm.id).then((result: any) => {
                 if (result && !result.Message) {
-                    let tempsVms: any = [...vms];
+                    const tempsVms: any = [...vms];
                     tempsVms[index].extendedInfo = result;
                     setVms(tempsVms);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -121,7 +134,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (!vm.rules) {
             getVirtualMachineRule(vm.id).then((result: any) => {
                 if (result && !result.Message) {
-                    let tempsVms: any = [...vms];
+                    const tempsVms: any = [...vms];
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
                 } else {
@@ -132,10 +145,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const resetRules = () => {
+        setOutboundRuleChanged(false);
         setHasChanged(false);
+        updateHasChanged(false);
         getVirtualMachineRule(vm.id).then((result: any) => {
             if (result && !result.Message) {
-                let tempsVms: any = [...vms];
+                const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
             } else {
@@ -147,7 +162,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const getExternalLink = () => {
         getVirtualExternalLink(vm.id).then((result: any) => {
             if (result && !result.Message) {
-                let tempsVms: any = [...vms];
+                const tempsVms: any = [...vms];
                 tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
                 setVms(tempsVms);
             } else {
@@ -158,10 +173,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const isVmCreatingOrReady = (): boolean => {
         let res = false;
-        if (!resources) {
+        if (!resources && !Array.isArray(resources)) {
             return res;
         }
-        resources.map((resource: any, i: number) => {
+        resources.map((resource: any) => {
             if (
                 resource.type === resourceType.virtualMachine &&
                 resource.status === resourceStatus.ok &&
@@ -176,8 +191,36 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         return res;
     };
 
+    const checkIfAnyVmRulesHasChanged = () => {
+        const indexHasChanged = hasChangedVmRules.filter((x: any) => x.hasChanged === true);
+        if (indexHasChanged.length > 0) {
+            setHasChanged(true);
+        } else {
+            setHasChanged(false);
+        }
+    };
+
+    const updateHasChanged = (_hasChanged: boolean) => {
+        const indexHasChanged = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+        const temp: any = [...hasChangedVmRules];
+        if (indexHasChanged === -1) {
+            temp.push({ vmId: vm.id, hasChanged: _hasChanged });
+        } else {
+            temp[indexHasChanged].hasChanged = _hasChanged;
+        }
+        setHasChangedVmRules(temp);
+    };
+
+    const checkIfVmRulesHasChanged = () => {
+        const indexHasChanged = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+        if (indexHasChanged === -1) {
+            return false;
+        }
+        return hasChangedVmRules[indexHasChanged].hasChanged;
+    };
+
     const addRule = () => {
-        setHasChanged(true);
+        updateHasChanged(true);
         let currentRules: any = [];
         if (vm.rules && vm.rules.length) {
             currentRules = [...vm.rules];
@@ -192,13 +235,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             name: '',
             key: getKey()
         });
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const addOutBoundRule = () => {
-        setHasChanged(true);
+        updateHasChanged(true);
+        setOutboundRuleChanged(true);
         const newRules: any = [...vm.rules];
         const tempsVms: any = [...vms];
         const outboundRule = newRules.find((rule: any) => rule.direction === 1);
@@ -207,45 +251,46 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
         setVms(tempsVms);
-        getResources();
     };
 
     const saveRule = (rules: any) => {
-        setHasChanged(false);
+        updateHasChanged(false);
+        setOutboundRuleChanged(false);
         createVirtualMachineRule(rules, vm.id).then((result: any) => {
             if (result && !result.Message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
                 getResources();
+                setVmSaved(true);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
                 console.log('Err');
             }
         });
     };
 
     const updateRule = (i: number, value: string, key: string) => {
-        setHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        updateHasChanged(true);
+        const currentRules: any = [...vm.rules];
         currentRules[i][key] = value;
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const removeRule = (i: number) => {
-        setHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        updateHasChanged(true);
+        const currentRules: any = [...vm.rules];
         currentRules.splice(i, 1);
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const handleDropdownChange = (key: string, i: number, value?): void => {
-        setHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        updateHasChanged(true);
+        const currentRules: any = [...vm.rules];
         currentRules[i][key] = value;
         if (value === protocolOptions.HTTP) {
             currentRules[i].port = ports.HTTP;
@@ -253,21 +298,21 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (value === protocolOptions.HTTPS) {
             currentRules[i].port = ports.HTTPS;
         }
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
 
     const handleDropdownChangeClientIp = (value: any, name: string, ruleIndex): void => {
-        setHasChanged(true);
-        let currentRules: any = [...vm.rules];
+        updateHasChanged(true);
+        const currentRules: any = [...vm.rules];
         if (value === '1') {
             currentRules[ruleIndex][name] = true;
             currentRules[ruleIndex].ip = clientIp;
         } else {
             currentRules[ruleIndex][name] = false;
         }
-        let tempsVms: any = [...vms];
+        const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
         setVms(tempsVms);
     };
@@ -287,9 +332,14 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const checkIfSaveIsEnabled = (): boolean => {
-        if (!vm.rules || !hasChanged) {
+        const hasChangedIndex = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+        if (hasChangedIndex === -1) {
             return false;
         }
+        if (!vm.rules || !hasChangedVmRules[hasChangedIndex].hasChanged) {
+            return false;
+        }
+
         if (checkIfEqualRules()) {
             if (inputError !== inputErrors.equalRules) {
                 setInputError(inputErrors.equalRules);
@@ -334,238 +384,254 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         if (actionRule) {
             if (actionRule.action === 0) {
                 return type === 'text' ? ' open' : 'Close internet';
-            } else {
-                return type === 'text' ? ' closed' : 'Open internet';
             }
+            return type === 'text' ? ' closed' : 'Open internet';
         }
     };
 
     return (
-        <Wrapper>
-            <VmProperties
-                vmProperties={vm}
-                setVms={setVms}
-                vms={vms}
-                setActiveTab={setActiveTab}
-                permissions={permissions}
-                setUpdateCache={setUpdateCache}
-                updateCache={updateCache}
-                getResources={getResources}
-            />
-            <div>
-                <Table style={{ width: '100%' }}>
-                    <Head>
-                        <Row>
-                            <Cell as="th" scope="col">
-                                Inbound rules
-                            </Cell>
-                            <Cell style={{ width: '220px' }} as="th" scope="col" />
-                            <Cell as="th" scope="col" />
-                            <Cell style={{ width: '220px' }} as="th" scope="col" />
-                            <Cell as="th" scope="col" />
-                            <Cell as="th" scope="col" />
-                        </Row>
-                    </Head>
-                    <Body>
-                        {vm.rules && vm.rules.length > 1 ? (
-                            vm.rules.map((rule: any, ruleNumber: number) => {
-                                return (
-                                    rule.direction === 0 && (
-                                        <Row key={getKey()}>
-                                            <Cell>
-                                                <TextField
-                                                    id={getKey()}
-                                                    value={rule.description}
-                                                    onChange={(e: any) =>
-                                                        updateRule(ruleNumber, e.target.value, 'description')
-                                                    }
-                                                    placeholder="Description"
-                                                    data-cy="vm_rule_description"
-                                                    disabled={!permissions.editInboundRules}
-                                                    autoComplete="off"
-                                                />
-                                            </Cell>
-                                            <Cell>
-                                                <div style={{ paddingBottom: '16px' }}>
-                                                    <CoreDevDropdown
-                                                        options={ipMethod}
-                                                        onChange={(e: any) =>
-                                                            handleDropdownChangeClientIp(e, 'useClientIp', ruleNumber)
-                                                        }
-                                                        name="useClientIp"
-                                                        preSlectedValue={'Custom'}
-                                                        data-cy="vm_rule_useClientIp"
-                                                        disabled={!permissions.editInboundRules}
-                                                    />
-                                                </div>
-                                            </Cell>
-                                            <Cell>
-                                                {rule.useClientIp ? (
-                                                    <span>{rule.ip || 'loading ip..'}</span>
-                                                ) : (
-                                                    <Tooltip
-                                                        title={
-                                                            checkIfValidIp(rule.ip) || rule.ip === ''
-                                                                ? ''
-                                                                : 'This is not a valid ip'
-                                                        }
-                                                        placement="top"
-                                                    >
-                                                        <TextField
-                                                            id={getKey()}
-                                                            autoComplete="off"
-                                                            value={rule.ip}
-                                                            onChange={(e: any) => {
-                                                                updateRule(ruleNumber, e.target.value, 'ip');
-                                                            }}
-                                                            placeholder="IP"
-                                                            data-cy="vm_rule_ip"
-                                                            disabled={!permissions.editInboundRules}
-                                                            variant={
-                                                                checkIfValidIp(rule.ip) || rule.ip === ''
-                                                                    ? 'default'
-                                                                    : 'error'
-                                                            }
-                                                        />
-                                                    </Tooltip>
-                                                )}
-                                            </Cell>
-                                            <Cell>
-                                                <div style={{ paddingBottom: '16px' }}>
-                                                    <CoreDevDropdown
-                                                        options={portsOptions}
-                                                        onChange={(e: any) => {
-                                                            handleDropdownChange('protocol', ruleNumber, e);
-                                                        }}
-                                                        name="protocol"
-                                                        preSlectedValue={rule.protocol || 'Custom'}
-                                                        data-cy="vm_rule_protocol"
-                                                        disabled={!permissions.editInboundRules}
-                                                    />
-                                                </div>
-                                            </Cell>
-                                            <Cell>
-                                                {rule.protocol !== protocolOptions.CUSTOM ? (
-                                                    <span>{rule.port || '-'}</span>
-                                                ) : (
-                                                    <Tooltip
-                                                        title={
-                                                            checkIfInputIsNumberWihoutCharacters(rule.port) ||
-                                                            !hasChanged
-                                                                ? ''
-                                                                : 'Not a valid port number (0-65535)'
-                                                        }
-                                                        placement="top"
-                                                    >
-                                                        <TextField
-                                                            id={getKey()}
-                                                            autoComplete="off"
-                                                            value={rule.port}
-                                                            onChange={(e: any) => {
-                                                                let value = e.target.value;
-                                                                if (value <= numberOfPorts && value >= 0) {
-                                                                    updateRule(ruleNumber, value, 'port');
-                                                                }
-                                                            }}
-                                                            type="number"
-                                                            placeholder="Port"
-                                                            data-cy="vm_rule_port"
-                                                            disabled={!permissions.editInboundRules}
-                                                        />
-                                                    </Tooltip>
-                                                )}
-                                            </Cell>
-
-                                            <Cell>
-                                                {permissions.editInboundRules &&
-                                                    EquinorIcon('clear', '', 24, () => removeRule(ruleNumber), true)}
-                                            </Cell>
-                                        </Row>
-                                    )
-                                );
-                            })
-                        ) : (
+        <>
+            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
+            <Wrapper>
+                <VmProperties
+                    vmProperties={vm}
+                    setVms={setVms}
+                    vms={vms}
+                    setActiveTab={setActiveTab}
+                    permissions={permissions}
+                    setUpdateCache={setUpdateCache}
+                    updateCache={updateCache}
+                    getResources={getResources}
+                />
+                <div>
+                    <Table style={{ width: '100%' }}>
+                        <Head>
                             <Row>
-                                <Cell style={{ width: '220px' }}>No inbound rules added</Cell>
-                                <Cell />
-                                <Cell />
-                                <Cell />
-                                <Cell />
-                                <Cell />
+                                <Cell scope="col">Inbound rules</Cell>
+                                <Cell style={{ width: '220px' }} scope="col" />
+                                <Cell scope="col" />
+                                <Cell style={{ width: '220px' }} scope="col" />
+                                <Cell scope="col" />
+                                <Cell scope="col" />
                             </Row>
-                        )}
-                    </Body>
-                </Table>
-                <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                    <Tooltip
-                        title={permissions.editInboundRules ? '' : 'You do not have permission to add or create rules'}
-                        placement="left"
+                        </Head>
+                        <Body>
+                            {vm.rules && vm.rules.length > 1 ? (
+                                vm.rules.map((rule: any, ruleNumber: number) => {
+                                    return (
+                                        rule.direction === 0 && (
+                                            <Row key={getKey()} id="tableRowNoPointerNoColor">
+                                                <Cell>
+                                                    <TextField
+                                                        id={getKey()}
+                                                        value={rule.description}
+                                                        onChange={(e: any) =>
+                                                            updateRule(ruleNumber, e.target.value, 'description')
+                                                        }
+                                                        placeholder="Description"
+                                                        data-cy="vm_rule_description"
+                                                        disabled={!permissions.editInboundRules}
+                                                        autoComplete="off"
+                                                        autoFocus
+                                                    />
+                                                </Cell>
+                                                <Cell>
+                                                    <div style={{ paddingBottom: '16px' }}>
+                                                        <CoreDevDropdown
+                                                            options={ipMethod}
+                                                            onChange={(e: any) =>
+                                                                handleDropdownChangeClientIp(
+                                                                    e,
+                                                                    'useClientIp',
+                                                                    ruleNumber
+                                                                )
+                                                            }
+                                                            name="useClientIp"
+                                                            preSlectedValue={'Custom'}
+                                                            data-cy="vm_rule_useClientIp"
+                                                            disabled={!permissions.editInboundRules}
+                                                        />
+                                                    </div>
+                                                </Cell>
+                                                <Cell>
+                                                    {rule.useClientIp ? (
+                                                        <span>{rule.ip || 'loading ip..'}</span>
+                                                    ) : (
+                                                        <Tooltip
+                                                            title={
+                                                                checkIfValidIp(rule.ip) || rule.ip === ''
+                                                                    ? ''
+                                                                    : 'This is not a valid ip'
+                                                            }
+                                                            placement="top"
+                                                        >
+                                                            <TextField
+                                                                id={getKey()}
+                                                                autoComplete="off"
+                                                                value={rule.ip}
+                                                                onChange={(e: any) => {
+                                                                    updateRule(ruleNumber, e.target.value, 'ip');
+                                                                }}
+                                                                placeholder="IP"
+                                                                data-cy="vm_rule_ip"
+                                                                disabled={!permissions.editInboundRules}
+                                                                variant={
+                                                                    checkIfValidIp(rule.ip) || rule.ip === ''
+                                                                        ? 'default'
+                                                                        : 'error'
+                                                                }
+                                                            />
+                                                        </Tooltip>
+                                                    )}
+                                                </Cell>
+                                                <Cell>
+                                                    <div style={{ paddingBottom: '16px' }}>
+                                                        <CoreDevDropdown
+                                                            options={portsOptions}
+                                                            onChange={(e: any) => {
+                                                                handleDropdownChange('protocol', ruleNumber, e);
+                                                            }}
+                                                            name="protocol"
+                                                            preSlectedValue={rule.protocol || 'Custom'}
+                                                            data-cy="vm_rule_protocol"
+                                                            disabled={!permissions.editInboundRules}
+                                                        />
+                                                    </div>
+                                                </Cell>
+                                                <Cell>
+                                                    {rule.protocol !== protocolOptions.CUSTOM ? (
+                                                        <span>{rule.port || '-'}</span>
+                                                    ) : (
+                                                        <Tooltip
+                                                            title={
+                                                                checkIfInputIsNumberWihoutCharacters(rule.port) ||
+                                                                !hasChanged
+                                                                    ? ''
+                                                                    : 'Not a valid port number (0-65535)'
+                                                            }
+                                                            placement="top"
+                                                        >
+                                                            <TextField
+                                                                id={getKey()}
+                                                                autoComplete="off"
+                                                                value={rule.port}
+                                                                onChange={(e: any) => {
+                                                                    let value = e.target.value;
+                                                                    if (value <= numberOfPorts && value >= 0) {
+                                                                        updateRule(ruleNumber, value, 'port');
+                                                                    }
+                                                                }}
+                                                                type="number"
+                                                                placeholder="Port"
+                                                                data-cy="vm_rule_port"
+                                                                disabled={!permissions.editInboundRules}
+                                                            />
+                                                        </Tooltip>
+                                                    )}
+                                                </Cell>
+
+                                                <Cell>
+                                                    {permissions.editInboundRules && (
+                                                        <Button
+                                                            variant="ghost_icon"
+                                                            onClick={() => removeRule(ruleNumber)}
+                                                        >
+                                                            {EquinorIcon('clear', '', 24)}
+                                                        </Button>
+                                                    )}
+                                                </Cell>
+                                            </Row>
+                                        )
+                                    );
+                                })
+                            ) : (
+                                <Row id="tableRowNoPointerNoColor">
+                                    <Cell style={{ width: '220px' }}>No inbound rules added</Cell>
+                                    <Cell />
+                                    <Cell />
+                                    <Cell />
+                                    <Cell />
+                                    <Cell />
+                                </Row>
+                            )}
+                        </Body>
+                    </Table>
+                    <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
+                        <Tooltip
+                            title={
+                                permissions.editInboundRules ? '' : 'You do not have permission to add or create rules'
+                            }
+                            placement="left"
+                        >
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    addRule();
+                                }}
+                                data-cy="vm_add_rule"
+                                disabled={!permissions.editInboundRules}
+                            >
+                                Add rule
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    <Table style={{ width: '100%', marginTop: '24px' }}>
+                        <Head>
+                            <Row id="tableRowNoPointerNoColor">
+                                <Cell scope="col">Outbound rules</Cell>
+                                <Cell scope="col" />
+                            </Row>
+                        </Head>
+                        <Body>
+                            <Row key={1} id="tableRowNoPointerNoColor">
+                                <Cell>
+                                    {outboundRuleChanged
+                                        ? 'Changed outbound internet status to:'
+                                        : 'Outbound internet traffic is currently'}{' '}
+                                    {returnOpenClosed('text')}
+                                </Cell>
+                                <Cell>
+                                    <Button
+                                        variant="outlined"
+                                        style={{ float: 'right' }}
+                                        disabled={!permissions.openInternet}
+                                        onClick={() => {
+                                            addOutBoundRule();
+                                        }}
+                                    >
+                                        {returnOpenClosed('button')}
+                                    </Button>
+                                </Cell>
+                            </Row>
+                        </Body>
+                    </Table>
+                    <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
+                        <Tooltip title={checkIfSaveIsEnabled() || !hasChanged ? '' : inputError} placement="left">
+                            <Button
+                                onClick={() => {
+                                    saveRule(vm.rules);
+                                }}
+                                disabled={!checkIfSaveIsEnabled()}
+                                data-cy="vm_rule_save"
+                            >
+                                Save
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    <Button
+                        variant="outlined"
+                        style={{ float: 'right', margin: '24px 0 0 0' }}
+                        onClick={() => {
+                            resetRules();
+                        }}
+                        disabled={!checkIfVmRulesHasChanged()}
+                        data-cy="vm_rule_cancel"
                     >
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                addRule();
-                            }}
-                            data-cy="vm_add_rule"
-                            disabled={!permissions.editInboundRules}
-                        >
-                            Add rule
-                        </Button>
-                    </Tooltip>
+                        Cancel
+                    </Button>
                 </div>
-                <Table style={{ width: '100%', marginTop: '24px' }}>
-                    <Head>
-                        <Row>
-                            <Cell as="th" scope="col">
-                                Outbound rules
-                            </Cell>
-                            <Cell as="th" scope="col" />
-                        </Row>
-                    </Head>
-                    <Body>
-                        <Row key={1}>
-                            <Cell>Outbound internet traffic is currently {returnOpenClosed('text')}</Cell>
-                            <Cell>
-                                <Button
-                                    variant="outlined"
-                                    style={{ float: 'right' }}
-                                    disabled={!permissions.openInternet}
-                                    onClick={() => {
-                                        addOutBoundRule();
-                                    }}
-                                >
-                                    {returnOpenClosed('button')}
-                                </Button>
-                            </Cell>
-                        </Row>
-                    </Body>
-                </Table>
-                <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                    <Tooltip title={checkIfSaveIsEnabled() || !hasChanged ? '' : inputError} placement="left">
-                        <Button
-                            onClick={() => {
-                                saveRule(vm.rules);
-                            }}
-                            disabled={!checkIfSaveIsEnabled()}
-                            data-cy="vm_rule_save"
-                        >
-                            Save
-                        </Button>
-                    </Tooltip>
-                </div>
-                <Button
-                    variant="outlined"
-                    style={{ float: 'right', margin: '24px 0 0 0' }}
-                    onClick={() => {
-                        resetRules();
-                    }}
-                    disabled={!hasChanged}
-                    data-cy="vm_rule_cancel"
-                >
-                    Cancel
-                </Button>
-            </div>
-        </Wrapper>
+            </Wrapper>
+        </>
     );
 };
 

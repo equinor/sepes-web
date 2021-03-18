@@ -1,3 +1,4 @@
+/*eslint-disable no-shadow, react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
@@ -5,7 +6,7 @@ import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, deleteStudy, putStudy } from '../../services/Api';
+import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateResourceName } from '../common/helpers';
@@ -29,6 +30,7 @@ Icon.add(icons);
 
 const TitleText = styled.span`
     font-size: 28px;
+    margin-bottom: 8px;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -211,9 +213,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         deleteStudy(study.id).then((result: any) => {
             setLoading(false);
-            if (result.Message) {
+            if (result && result.Message) {
                 setDeleteStudyInProgress(true);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             } else {
                 history.push('/');
             }
@@ -222,6 +224,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const handleSave = () => {
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
+        setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
         if (!validateUserInputs()) {
@@ -234,57 +237,58 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
-
+    const studyDeleteEnabled = study.sandboxes && study.sandboxes.length > 0;
     const optionsTemplate = (
         <>
-            <MenuItem onClick={() => setUserClickedDelete(true)} data-cy="study_delete">
-                <Icon name="delete_forever" color="red" size={24} />
-                <span style={{ color: 'red' }}>Delete study</span>
-            </MenuItem>
+            <Tooltip
+                title={studyDeleteEnabled ? 'Deleting study is disabled when there is a sandbox in it' : ''}
+                placement="left"
+                open={studyDeleteEnabled}
+            >
+                <MenuItem
+                    onClick={() => setUserClickedDelete(true)}
+                    data-cy="study_delete"
+                    disabled={studyDeleteEnabled}
+                >
+                    <Icon name="delete_forever" color="red" size={24} />
+                    <span style={{ color: 'red' }}>Delete study</span>
+                </MenuItem>
+            </Tooltip>
         </>
     );
 
     const sendStudyToApi = (study: StudyObj) => {
-        if (imageUrl) {
-            setLoading(true);
-        }
+        setLoading(true);
+
         if (newStudy) {
-            createStudy(study).then((result: any) => {
+            createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     setLoading(false);
-                    let newStudy = result;
+                    const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     setStudy(newStudy);
-                    if (imageUrl && newStudy.id) {
-                        putStudy(newStudy, imageUrl).then((result: any) => {
-                            if (result && !result.Message) {
-                                setHasChanged(false);
-                            } else {
-                                notify.show('danger', '500', result.Message, result.RequestId);
-                                console.log('Err');
-                            }
-                            setLoading(false);
-                        });
-                    }
                     history.push('/studies/' + result.id);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
         } else {
             study.id = id;
-            setStudy(studyOnChange);
-            putStudy(study, imageUrl).then((result: any) => {
+            if (imageUrl) {
+                setStudy({ ...studyOnChange, logoUrl: imageUrl });
+            } else {
+                setStudy(studyOnChange);
+            }
+            setLoading(false);
+            updateStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.Message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
-                    setStudy(result);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
-                setLoading(false);
             });
         }
     };
@@ -317,26 +321,37 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
     };
 
-    function handleChange(columnName: string, value: string) {
+    const handleChange = (columnName: string, value: string): void => {
         setHasChanged(true);
         const inputLength = value.length;
         if (columnName === 'description' && inputLength > limits.description) {
+            returnAllowedLengthOfString(value, limits.description, columnName);
             return;
         }
         if (columnName === 'name' && inputLength > limits.name) {
+            returnAllowedLengthOfString(value, limits.name, columnName);
             return;
         }
         if (columnName === 'vendor' && inputLength > limits.vendor) {
+            returnAllowedLengthOfString(value, limits.vendor, columnName);
             return;
         }
         if (columnName === 'wbsCode' && inputLength > limits.wbsCode) {
+            returnAllowedLengthOfString(value, limits.wbsCode, columnName);
             return;
         }
         setStudyOnChange({
             ...studyOnChange,
             [columnName]: value
         });
-    }
+    };
+
+    const returnAllowedLengthOfString = (input: string, limit: number, columnName: string) => {
+        setStudyOnChange({
+            ...studyOnChange,
+            [columnName]: input.substr(0, limit)
+        });
+    };
 
     return (
         <div
@@ -385,11 +400,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
+                                    autoFocus
                                     inputIcon={
                                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                             <Tooltip
-                                                title="The value must be between 3 and 20 characters long"
-                                                placement={'right'}
+                                                title="The value must be between 3 and 20 characters long (A-Z)"
+                                                placement="right"
                                             >
                                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                                             </Tooltip>
@@ -480,7 +496,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                         variant="outlined"
                                         data-cy="edit_study"
                                         onClick={() => setEditMode(true)}
-                                        style={{ width: '80px' }}
+                                        style={{ width: '80px', marginTop: '12px' }}
                                         disabled={study.permissions && !study.permissions.updateMetadata}
                                     >
                                         Edit
@@ -530,7 +546,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     aria-expanded={isOpen}
                                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                                 >
-                                    <Icon color="#007079" name="settings" size={16} />
+                                    <Icon color="#007079" name="settings" size={24} />
                                 </Button>
                                 <Menu
                                     id="menuButton"
@@ -548,7 +564,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <div>
                                 {!showImagePicker && (
                                     <PictureWrapper editMode={editMode}>
-                                        <CustomLogoComponent logoUrl={logoUrl} />{' '}
+                                        <CustomLogoComponent logoUrl={logoUrl} center={editMode} />{' '}
                                     </PictureWrapper>
                                 )}
                                 {editMode && (
@@ -564,8 +580,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             )}
                                             <Button
                                                 onClick={() => {
-                                                    setShowImagePicker(!showImagePicker);
+                                                    if (imageUrl === '') {
+                                                        setShowImagePicker(!showImagePicker);
+                                                    }
+
                                                     setImageUrl('');
+                                                    setStudyOnChange({ ...studyOnChange, logoUrl: '' });
                                                 }}
                                                 variant="outlined"
                                                 style={{ margin: '16px 0 20px 56px' }}

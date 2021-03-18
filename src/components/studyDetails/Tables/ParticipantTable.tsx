@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
-import { Table, Icon } from '@equinor/eds-core-react';
+import { Table, Icon, Button } from '@equinor/eds-core-react';
 import { close } from '@equinor/eds-icons';
 import { ParticipantObj, StudyPermissions } from '../../common/interfaces';
-import { studyOwner } from '../../common/Roles';
+import { studyOwner } from '../../common/staticValues/Roles';
 import useWindowDimensions from '../../common/hooks/useWindowDimensions';
+import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -25,19 +27,11 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                 <Head>
                     <Row>
-                        <Cell as="th" scope="col">
-                            Name
-                        </Cell>
-                        {editMode && width > 800 && (
-                            <Cell as="th" scope="col">
-                                E-mail
-                            </Cell>
-                        )}
-                        <Cell as="th" scope="col">
-                            Role
-                        </Cell>
+                        <Cell scope="col">Name</Cell>
+                        {editMode && width > 800 && <Cell scope="col">E-mail</Cell>}
+                        <Cell scope="col">Role</Cell>
                         {editMode && (
-                            <Cell style={{ width: '10px' }} as="th" scope="col">
+                            <Cell style={{ width: '10px' }} scope="col">
                                 {''}
                             </Cell>
                         )}
@@ -46,19 +40,20 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
                 <Body>
                     {participants &&
                         participants.map((participant: ParticipantObj) => (
-                            <Row key={participant.userId + participant.role}>
+                            <Row key={participant.userId + participant.role} id="tableRowNoPointerNoColor">
                                 <Cell>{participant.fullName}</Cell>
                                 {editMode && width > 800 && <Cell align="right">{participant.emailAddress}</Cell>}
                                 <Cell align="right">{participant.role}</Cell>
                                 {editMode && participant.role !== studyOwner ? (
                                     <Cell align="right">
                                         {permissions?.addRemoveParticipant && (
-                                            <Icon
-                                                name="close"
-                                                style={{ cursor: 'pointer' }}
-                                                size={24}
+                                            <Button
+                                                variant="ghost_icon"
                                                 onClick={() => removeParticipant(participant)}
-                                            />
+                                                style={{ color: '#3D3D3D' }}
+                                            >
+                                                <Icon name="close" style={{ cursor: 'pointer' }} size={24} />
+                                            </Button>
                                         )}
                                     </Cell>
                                 ) : (

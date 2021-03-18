@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UpdateCache } from '../../../App';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
-import * as notify from '../../common/notify';
+import * as notify from '../notify';
 
 const cache = {};
 
-const useFetchUrl = (url: string, setter, condition?, shouldCache = true) => {
+const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache = true) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
@@ -23,23 +23,25 @@ const useFetchUrl = (url: string, setter, condition?, shouldCache = true) => {
             setLoading(false);
         } else {
             setLoading(true);
-            apiRequestWithToken('api/' + url, 'GET').then((result: any) => {
-                setLoading(false);
-                if (isSubscribed && result && !result.Message && !result.errors) {
-                    if (url) {
-                        cache[url] = result;
+            apiRequestWithToken('api/' + url, 'GET', undefined, (controller && controller.signal) || undefined).then(
+                (result: any) => {
+                    setLoading(false);
+                    if (isSubscribed && result && !result.Message && !result.errors) {
+                        if (url) {
+                            cache[url] = result;
+                        }
+                        if (setUpdateCache) {
+                            setUpdateCache({ ...updateCache, [url]: false });
+                        }
+                        setIntialValue(result);
+                        setter(result);
+                    } else if (result && ((result.Message && result.RequestId) || result.errors)) {
+                        setNotFound(true);
+                        notify.show('danger', '500', result);
+                        console.log('Err');
                     }
-                    if (setUpdateCache) {
-                        setUpdateCache({ ...updateCache, [url]: false });
-                    }
-                    setIntialValue(result);
-                    setter(result);
-                } else if (result && ((result.Message && result.RequestId) || result.errors)) {
-                    setNotFound(true);
-                    notify.show('danger', '500', result.Message, result.RequestId);
-                    console.log('Err');
                 }
-            });
+            );
         }
     };
 

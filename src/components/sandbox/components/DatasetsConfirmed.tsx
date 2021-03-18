@@ -1,32 +1,30 @@
-import React, { useState } from 'react';
+/* eslint-disable react/jsx-curly-brace-presence, react/no-array-index-key */
+import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
-import useFetchUrl from '../../common/hooks/useFetchUrl';
-import { getDatasetsInSandboxUrl } from '../../../services/ApiCallStrings';
+import '../../../styles/Table.scss';
+import { SandboxObj } from '../../common/interfaces';
+
 const { Body, Row, Cell, Head } = Table;
 
 type SandboxConfirmedProps = {
-    sandboxId;
+    sandbox: SandboxObj;
 };
 
-const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
-    const [datasetsConfirmed, setDatasetsConfirmed] = useState([]);
-    const datasetsConfirmedResponse = useFetchUrl(getDatasetsInSandboxUrl(sandboxId), setDatasetsConfirmed);
+const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandbox }) => {
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
                 <Row>
-                    <Cell as="th" scope="col">
-                        Data sets in sandbox
-                    </Cell>
-                    <Cell as="th" scope="col" />
+                    <Cell scope="col">Data sets in sandbox</Cell>
+                    <Cell scope="col" />
                 </Row>
             </Head>
             <Body>
-                {datasetsConfirmed.length > 0 ? (
-                    datasetsConfirmed.map((dataset: any, index: number) => {
+                {sandbox.datasets.length > 0 ? (
+                    sandbox.datasets.map((dataset: any, index: number) => {
                         return (
-                            <Row key={index}>
+                            <Row key={index} id="tableRowNoPointer">
                                 <Cell>
                                     {EquinorIcon('check', '#007079', 24)}
                                     <span style={{ marginLeft: '32px' }}>{dataset.name}</span>
@@ -36,8 +34,8 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandboxId }) => {
                         );
                     })
                 ) : (
-                    <Row key={1}>
-                        <Cell>{datasetsConfirmedResponse.loading ? 'loading...' : 'No data sets in sandbox'}</Cell>
+                    <Row key={1} id="tableRowNoPointerNoColor">
+                        <Cell>No data sets in sandbox</Cell>
                         <Cell style={{ width: '32px' }}>{''}</Cell>
                     </Row>
                 )}

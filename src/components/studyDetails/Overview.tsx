@@ -3,14 +3,13 @@ import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
-import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
+import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import * as notify from '../common/notify';
-import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -38,19 +37,20 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 type OverviewProps = {
     study: StudyObj;
     setHasChanged: any;
-    setUpdateCache: any;
-    updateCache: any;
+    setResultsAndLearnings: any;
+    resultsAndLearnings: any;
+    resultsAndLearningsResponse: any;
 };
 
-const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCache, updateCache }) => {
+const Overview: React.FC<OverviewProps> = ({
+    study,
+    setHasChanged,
+    setResultsAndLearnings,
+    resultsAndLearnings,
+    resultsAndLearningsResponse
+}) => {
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const res = useFetchUrl(
-        getResultsAndLearningsUrl(study.id),
-        setResultsAndLearnings,
-        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings
-    );
 
     const handleChange = (evt) => {
         setHasChanged(true);
@@ -58,14 +58,12 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     };
 
     const handleSave = () => {
-        setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true });
-        res.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
+        setHasChanged(false);
+        resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
-            if (result && !result.Message) {
-                setHasChanged(false);
-            } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+            if (result && result.Message) {
+                notify.show('danger', '500', result);
                 console.log('Err');
             }
         });
@@ -74,7 +72,9 @@ const Overview: React.FC<OverviewProps> = ({ study, setHasChanged, setUpdateCach
     const handleCancel = () => {
         if (editMode) {
             setHasChanged(false);
-            setResultsAndLearnings(res.intialValue || { resultsAndLearnings: '' });
+            setResultsAndLearnings(
+                resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] || { resultsAndLearnings: '' }
+            );
         }
     };
 

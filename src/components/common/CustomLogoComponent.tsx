@@ -2,26 +2,40 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Logo = styled.img`
-  height: 125px;
-  width: 125px;
+    max-width: 125px;
+    max-height: 125px;
 `;
 
+const Wrapper = styled.div<{ center: boolean }>`
+    width: 125px;
+    height: 125px;
+    text-align: ${(props: any) => (props.center ? 'center' : 'end')};
+`;
 const Dot = styled.span`
     height: 125px;
     width: 125px;
-    background-color: #EAEAEA;
+    background-color: #eaeaea;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     line-height: 125px;
-    font-size:3em;
-  `;
+    font-size: 3em;
+`;
 
-const CustomLogoComponent = (props: any) => {
-    return (
-        props.logoUrl ? <Logo src={props.logoUrl} alt='studyLogo' /> : <Dot>SP</Dot>
-    )
-}
+type CustomLogoComponentProps = {
+    logoUrl: string;
+    center: boolean;
+};
+
+const CustomLogoComponent: React.FC<CustomLogoComponentProps> = ({ logoUrl, center }) => {
+    return logoUrl !== '' && logoUrl !== null ? (
+        <Wrapper center={center}>
+            <Logo src={logoUrl} alt="studyLogo" />
+        </Wrapper>
+    ) : (
+        <Dot>SP</Dot>
+    );
+};
 
 export default CustomLogoComponent;

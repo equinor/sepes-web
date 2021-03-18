@@ -3,7 +3,7 @@ import DatasetsOverviewTable from './DatasetsOverviewTable';
 import LoadingComponentFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { Permissions } from '../../index';
-import NoAccess from '../common/NoAccess';
+import NoAccess from '../common/informationalComponents/NoAccess';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsUrl } from '../../services/ApiCallStrings';
 

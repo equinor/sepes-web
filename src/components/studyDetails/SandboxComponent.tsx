@@ -4,6 +4,7 @@ import SandboxTable from './Tables/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
 import CreateSandboxComponent from './CreateSandboxComponent';
 import styled from 'styled-components';
+import { StudyObj } from '../common/interfaces';
 
 const DropdownWrapper = styled.div`
     float: right;
@@ -14,7 +15,7 @@ const DropdownWrapper = styled.div`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-rows: 45px minmax(340px, 1fr);
+    grid-template-rows: 45px minmax(299px, 1fr);
     width: 100%;
 `;
 
@@ -25,6 +26,7 @@ type SandboxComponentProps = {
     setUpdateCache: any;
     updateCache: any;
     disabled: boolean;
+    study: StudyObj;
 };
 
 const SandboxComponent: React.FC<SandboxComponentProps> = ({
@@ -33,7 +35,8 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
     setHasChanged,
     setUpdateCache,
     updateCache,
-    disabled
+    disabled,
+    study
 }) => {
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -65,7 +68,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                             disabled={disabled}
                             style={{ width: '200px' }}
                         >
-                            Create sandbox
+                            <span style={{ marginLeft: '16px', marginRight: '16px' }}>Create sandbox</span>
                             {EquinorIcon('arrow_drop_down', '#007079', 24)}
                         </Button>
                     </Tooltip>
@@ -77,6 +80,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        study={study}
                     />
                 )}
             </DropdownWrapper>

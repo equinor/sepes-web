@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { Button, Typography, TextField, Scrim } from '@equinor/eds-core-react';
+import React, { useRef } from 'react';
+import { Button, Typography, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import useClickOutside from '../../common/customComponents/useClickOutside';
+import useClickOutside from './useClickOutside';
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,7 +33,7 @@ const SureToProceed: React.FC<SureToProceedComponentProps> = ({ setUserClickedBu
     return (
         <Scrim>
             <Wrapper ref={wrapperRef}>
-                <Typography variant="h4">Sure you want to procced with {type}?</Typography>
+                <Typography variant="h4">Are you sure you want to proceed with {type}?</Typography>
                 <div>
                     <Button onClick={() => setUserClickedButton(false)} variant="outlined">
                         Cancel

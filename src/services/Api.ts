@@ -1,8 +1,7 @@
-import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile, apiRequestPermissionsWithToken } from '../auth/AuthFunctions';
 import {
     StudyObj,
     DatasetObj,
-    SandboxObj,
     SandboxCreateObj,
     ParticipantObj,
     VmObj,
@@ -21,16 +20,17 @@ export const getStudy = async (id: string) => {
     return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
-export const createStudy = async (study: StudyObj) => {
-    return apiRequestWithToken('api/studies/', 'POST', study);
+export const createStudy = async (study: StudyObj, imageUrl: string) => {
+    // return apiRequestWithToken('api/studies/', 'POST', study);
+    return postputStudy(study, imageUrl, 'api/studies/' + study.id, 'POST');
+};
+
+export const updateStudy = async (study: StudyObj, imageUrl: string) => {
+    return postputStudy(study, imageUrl, 'api/studies/' + study.id + '/details', 'PUT');
 };
 
 export const deleteStudy = async (studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId, 'DELETE');
-};
-
-export const editStudy = async (study: StudyObj, id?: string) => {
-    return apiRequestWithToken('api/studies/' + id + '/details', 'PUT', study);
 };
 
 export const getDatasetList = async () => {
@@ -76,7 +76,27 @@ export const getDataset = async (datasetId: string, studyId: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET');
 };
 
+export const getStudySpecificDatasetResources = async (datasetId: string, studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId + '/resources', 'GET');
+};
+
+export const getStudySpecificDatasetFiles = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET', undefined, signal);
+};
+
+export const getDatasetSasToken = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/saskey', 'GET', undefined, signal);
+};
+
+export const getDatasetSasTokenDelete = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/saskeydelete', 'GET', undefined, signal);
+};
+
 //Standard dataset
+
+export const getStandardDatasetFiles = async (datasetId: string) => {
+    return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
+};
 
 export const getStandardDataset = async (datasetId: string) => {
     return apiRequestWithToken('api/datasets/' + datasetId, 'GET');
@@ -90,10 +110,6 @@ export const updateStandardDataset = async (datsetId: string, dataset?: DatasetO
     return apiRequestWithToken('api/datasets/' + datsetId, 'PUT', dataset);
 };
 
-export const getStandardDatasets = async () => {
-    return apiRequestWithToken('api/datasets/', 'GET');
-};
-
 export const getParticipantList = async (search: string) => {
     return apiRequestWithToken('api/participants/?search=' + search, 'GET');
 };
@@ -104,14 +120,6 @@ export const addStudyParticipant = async (studyId: string, role: string, partici
 
 export const removeStudyParticipant = async (studyId: string, userId: string, roleName: string) => {
     return apiRequestWithToken('api/studies/' + studyId + '/participants/' + userId + '/' + roleName, 'DELETE');
-};
-
-export const postStudy = async (study: StudyObj, imageUrl: string) => {
-    return postputStudy(study, 'api/studies/', 'POST', imageUrl);
-};
-
-export const putStudy = async (study: StudyObj, imageUrl: string) => {
-    return postputStudy(study, 'api/studies/' + study.id + '/details', 'PUT', imageUrl);
 };
 
 //Sandbox
@@ -128,8 +136,12 @@ export const deleteSandbox = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId, 'DELETE');
 };
 
-export const getResourceStatus = async (sandboxId: string) => {
-    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET');
+export const getResourceStatus = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET', undefined, signal);
+};
+
+export const getSandboxCostAnalysis = async (sandboxId: string) => {
+    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/costanalysis', 'GET');
 };
 
 export const makeAvailable = async (sandboxId: string) => {
@@ -176,16 +188,16 @@ export const validateVmUsername = async (username: VmUsernameObj) => {
     return apiRequestWithToken('api/virtualmachines/validateUsername', 'POST', username);
 };
 
-export const getVirtualMachineSizes = async (sandboxId: string) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/sizes', 'GET');
+export const getVirtualMachineSizes = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/sizes', 'GET', undefined, signal);
 };
 
-export const getVirtualMachineDisks = async () => {
-    return apiRequestWithToken('api/virtualmachines/disks', 'GET');
+export const getVirtualMachineDisks = async (signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/disks', 'GET', undefined, signal);
 };
 
-export const getVirtualMachineOperatingSystems = async (sandboxId: string) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET');
+export const getVirtualMachineOperatingSystems = async (sandboxId: string, signal: any) => {
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/operatingsystems', 'GET', undefined, signal);
 };
 
 export const getVirtualMachineExtended = async (vmId: string) => {
@@ -221,7 +233,7 @@ export const getStudyRoles = async () => {
 //Permission
 
 export const getPermissions = async () => {
-    return apiRequestWithToken('api/permissions', 'GET');
+    return apiRequestPermissionsWithToken('api/permissions', 'GET');
 };
 
 // Files

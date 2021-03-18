@@ -1,0 +1,18 @@
+#tableRow {
+    &:hover {
+        background-color: #deedee;
+        cursor: pointer;
+    }
+}
+
+#tableRowNoPointer {
+    &:hover {
+        background-color: #deedee;
+    }
+}
+
+#tableRowNoPointerNoColor {
+    &:hover {
+        background-color: #ffffff;
+    }
+}

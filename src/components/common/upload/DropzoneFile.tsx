@@ -10,7 +10,7 @@ const icons = {
 };
 Icon.add(icons);
 
-const ChooseImgdiv = styled.div`
+const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     height: 128px;
     display: flex;
     margin-top: 40px;
@@ -20,23 +20,27 @@ const ChooseImgdiv = styled.div`
     cursor: pointer;
     box-sizing: border-box;
     background: #ffffff;
+    background: ${(props: any) => (props.dragActive ? '#deedee' : '#ffffff')};
     @media (max-width: 700px) {
         width: 95%;
     }
 `;
-interface props {
+
+type DropzoneProps = {
     onDrop: any;
     accept?: string;
     disabled?: boolean;
-}
-const Dropzone = ({ onDrop, accept, disabled }: props) => {
+    loading?: boolean;
+};
+
+const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }) => {
     // Initializing useDropzone hooks with options
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept
     });
 
-    /* 
+    /*
     useDropzone hooks exposes two functions called getRootProps and getInputProps
     and also exposes isDragActive boolean
   */
@@ -48,10 +52,11 @@ const Dropzone = ({ onDrop, accept, disabled }: props) => {
                 opacity: disabled ? 0.5 : 1,
                 pointerEvents: disabled ? 'none' : 'initial'
             }}
+            dragActive={isDragActive}
         >
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
-                {isDragActive ? (
+                {isDragActive && !disabled ? (
                     <div className="dropzone-content">
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>Drop here</div>
@@ -60,7 +65,19 @@ const Dropzone = ({ onDrop, accept, disabled }: props) => {
                     <div className="dropzone-content">
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>
-                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                            {!loading ? (
+                                <>
+                                    {!disabled ? (
+                                        <>
+                                            Drop files or <span style={{ color: '#007079' }}>browse</span> to upload
+                                        </>
+                                    ) : (
+                                        'You do not have access to upload'
+                                    )}
+                                </>
+                            ) : (
+                                'File upload will be available when the storage account is ready'
+                            )}
                         </div>
                     </div>
                 )}

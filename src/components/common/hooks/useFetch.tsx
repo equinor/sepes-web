@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { UpdateCache } from '../../../App';
 import * as notify from '../../common/notify';
 
@@ -33,7 +33,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?, condi
                     setIntialValue(result);
                     setLoading(false);
                 } else if (result && result.Message && result.RequestId) {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });

@@ -2,14 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { SandboxObj } from '../common/interfaces';
+import { DatasetClassificationObj, SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
-import NotFound from '../common/NotFound';
+import NotFound from '../common/informationalComponents/NotFound';
 import { deleteFileInDataset, getResourceStatus } from '../../services/Api';
 
 const Wrapper = styled.div`
@@ -22,7 +22,9 @@ const Wrapper = styled.div`
 
 type SandboxProps = {};
 
-const Sandbox: React.FC<SandboxProps> = ({}) => {
+let controller = new AbortController();
+
+const Sandbox: React.FC<SandboxProps> = () => {
     const studyId = window.location.pathname.split('/')[2];
     const sandboxId = window.location.pathname.split('/')[4];
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
@@ -38,7 +40,9 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         template: '',
         id: sandboxId,
         currentPhase: undefined,
+        linkToCostAnalysis: '',
         studyName: '',
+        restrictionDisplayText: '',
         permissions: {
             delete: false,
             editInboundRules: false,
@@ -52,11 +56,20 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
+    const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>(
         (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
             undefined
     );
+
+    useEffect(() => {
+        return () => {
+            controller.abort();
+            controller = new AbortController();
+        };
+    }, []);
+
     useEffect(() => {
         if (
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
@@ -69,7 +82,7 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
     }, [SandboxResponse.loading, sandbox.currentPhase]);
 
     const getResources = () => {
-        getResourceStatus(sandboxId).then((result: any) => {
+        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 console.log('Err');
             } else {
@@ -83,12 +96,16 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
         SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
     };
 
+    const setNewCostanalysisLink = (link: any) => {
+        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].linkToCostAnalysis = link;
+    };
+
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandboxId={sandboxId} />;
+                return <Execution resources={resources} sandbox={sandbox} getResources={getResources} />;
             case 2:
-                return <div></div>;
+                return <div />;
             default:
                 return (
                     <SandboxConfig
@@ -99,6 +116,8 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
                         permissions={sandbox.permissions}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
+                        getResources={getResources}
+                        controller={controller}
                     />
                 );
         }
@@ -106,38 +125,45 @@ const Sandbox: React.FC<SandboxProps> = ({}) => {
 
     return !SandboxResponse.notFound ? (
         step !== undefined ? (
-            <Wrapper>
+            <>
                 {SandboxResponse.loading && <LoadingFull noTimeout={deleteSandboxInProgress} />}
-                <StepBar
-                    sandbox={sandbox}
-                    setSandbox={setSandbox}
-                    step={step}
-                    setStep={setStep}
-                    studyId={studyId}
-                    sandboxId={sandboxId}
-                    setUpdateCache={setUpdateCache}
-                    updateCache={updateCache}
-                    setUserClickedDelete={setUserClickedDelete}
-                    userClickedDelete={userClickedDelete}
-                    setResources={setResources}
-                    setLoading={SandboxResponse.setLoading}
-                    setNewPhase={setNewPhase}
-                    setDeleteSandboxInProgress={setDeleteSandboxInProgress}
-                />
-                {returnStepComponent()}
-                {(step === 0 || step === 1) && (
-                    <VmConfig
+                <Wrapper>
+                    <StepBar
                         sandbox={sandbox}
-                        showAddNewVm={sandbox.permissions && sandbox.permissions.update}
-                        resources={resources}
-                        getResources={getResources}
-                        loadingSandbox={SandboxResponse.loading}
-                        permissions={sandbox.permissions}
+                        setSandbox={setSandbox}
+                        step={step}
+                        setStep={setStep}
+                        studyId={studyId}
+                        sandboxId={sandboxId}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        setUserClickedDelete={setUserClickedDelete}
+                        userClickedDelete={userClickedDelete}
+                        setResources={setResources}
+                        setLoading={SandboxResponse.setLoading}
+                        setNewPhase={setNewPhase}
+                        setDeleteSandboxInProgress={setDeleteSandboxInProgress}
+                        setNewCostanalysisLink={setNewCostanalysisLink}
+                        controller={controller}
+                        vmsWithOpenInternet={vmsWithOpenInternet}
                     />
-                )}
-            </Wrapper>
+                    {returnStepComponent()}
+                    {(step === 0 || step === 1) && (
+                        <VmConfig
+                            sandbox={sandbox}
+                            showAddNewVm={sandbox.permissions && sandbox.permissions.update}
+                            resources={resources}
+                            getResources={getResources}
+                            loadingSandbox={SandboxResponse.loading}
+                            permissions={sandbox.permissions}
+                            setUpdateCache={setUpdateCache}
+                            updateCache={updateCache}
+                            controller={controller}
+                            setVmsWithOpenInternet={setVmsWithOpenInternet}
+                        />
+                    )}
+                </Wrapper>
+            </>
         ) : (
             <LoadingFull noTimeout={deleteSandboxInProgress} />
         )

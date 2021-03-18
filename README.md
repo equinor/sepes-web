@@ -15,6 +15,14 @@ The command "npm run test" or "npm test" runs all tests with filename including 
 
 Cypress:
 
+The command "npx cypress open" will open a new window containg all the cypress tests in the project. Clicking one will open a broweser window and run the test. The tests need an Token to work. To get this token is now a manual process. Before running a test. do these steps:
+
+1. Npm start and run the application
+2. Click F12 and go to the application tab
+3. Find "Session Store" and look after "access token". A very long string of numbers and charachters. Copy it
+4. Paste access token into the variable "cyToken" in cypress/support/commands.js
+5. Run npx cypress open
+
 ## Setup locally
 
 1. Clone project into local folder

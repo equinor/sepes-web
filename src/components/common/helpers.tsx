@@ -1,11 +1,12 @@
+/*eslint-disable no-restricted-properties */
 import React from 'react';
 import { TextField } from '@equinor/eds-core-react';
 
 export const lineBreak = (text: string) => {
     return text
-        ? text.split(`\n`).map(function (item: string, idx: number) {
+        ? text.split('\n').map((item: string) => {
               return (
-                  <span key={idx}>
+                  <span key={item}>
                       {item}
                       <br />
                   </span>
@@ -22,7 +23,19 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
 };
 
 export const bytesToMB = (sizeInBytes: number) => {
-    return (sizeInBytes / (1024 * 1024)).toFixed(2);
+    return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
+};
+
+export const bytesToSize = (bytes: any, decimals = 2) => {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 };
 
 export const ValidateEmail = (mail: string) => {
@@ -117,7 +130,8 @@ export const validateResourceName = (name: string): boolean => {
     if (name === '') {
         return false;
     }
+    const nameWithoutSpaces = name.split(' ').join('');
     const onlyLettersAndNumbers = /^[a-zA-Z0-9]+$/;
     const limit = /(?=.{3,123})/;
-    return onlyLettersAndNumbers.test(name) && limit.test(name);
+    return onlyLettersAndNumbers.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };

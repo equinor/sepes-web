@@ -1,3 +1,4 @@
+/* eslint-disable react/no-render-return-value */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -8,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
+import NoApi from './components/common/informationalComponents/NoApi';
+import GeneralError from './components/common/informationalComponents/GeneralError';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -19,9 +22,12 @@ export const Permissions = React.createContext<GeneralPermissions>({
     sponsor: false
 });
 
-const renderApp = (user) => {
-    getPermissions().then((result: any) => {
-        if (!result.Message) {
+const renderApp = async (user) => {
+    await getPermissions().then((result: any) => {
+        if (result && result.Message) {
+            return ReactDOM.render(<GeneralError />, document.getElementById('root'));
+        }
+        if (result && result.admin !== undefined) {
             return ReactDOM.render(
                 <React.StrictMode>
                     <UserConfig.Provider value={user}>
@@ -32,16 +38,15 @@ const renderApp = (user) => {
                 </React.StrictMode>,
                 document.getElementById('root')
             );
-        } else {
-            console.log('err: ', result.Message);
         }
+        return ReactDOM.render(<NoApi />, document.getElementById('root'));
     });
 };
 
-let cyToken = localStorage.getItem('cyToken');
+const cyToken = localStorage.getItem('cyToken');
 
 if (cyToken && cyToken.length) {
-    let mockUser = {
+    const mockUser = {
         account: {
             name: 'MockUser',
             roles: ''

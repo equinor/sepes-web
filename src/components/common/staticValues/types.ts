@@ -3,7 +3,8 @@ export const resourceType = {
     networkSecurityGroup: 'Network Security Group',
     virtualNetwork: 'Virtual Network',
     bastion: 'Bastion',
-    virtualMachine: 'Virtual Machine'
+    virtualMachine: 'Virtual Machine',
+    resourceGroup: 'Resource Group'
 };
 
 export const resourceStatus = {

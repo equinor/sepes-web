@@ -4,9 +4,16 @@ import { info_circle } from '@equinor/eds-icons';
 import { passwordValidate, returnLimitMeta, roundUp, validateResourceName } from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { VmObj, VmUsernameObj, CalculateNameObj } from '../../common/interfaces';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
-import { SandboxObj, DropdownObj, SizeObj, OperatingSystemObj } from '../../common/interfaces';
+import {
+    SandboxObj,
+    DropdownObj,
+    SizeObj,
+    OperatingSystemObj,
+    VmObj,
+    VmUsernameObj,
+    CalculateNameObj
+} from '../../common/interfaces';
 import * as notify from '../../common/notify';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
@@ -30,6 +37,7 @@ const SizeFilterWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 8px;
+    margin-top: 8px;
 `;
 
 const HardWareReqWrapper = styled.span`
@@ -66,7 +74,7 @@ type AddNewVmProps = {
     setActiveTab: any;
     sizes?: SizeObj;
     disks?: DropdownObj;
-    os?: OperatingSystemObj;
+    os?: any;
     setUpdateCache: any;
     updateCache: any;
     getResources: any;
@@ -112,7 +120,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     const [actualVmName, setActualVmName] = useState<string>('');
     const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
     const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
-    const [usernameHelpText, setUsernameHelptText] = useState<string>('');
+    const [usernameHelpText, setUsernameHelpText] = useState<string>(
+        'You need to pick operating system before username'
+    );
     const [loading, setLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<any>([]);
     const width = '400px';
@@ -138,9 +148,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [vm.username]);
+    }, [vm.username, vm.operatingSystem]);
 
     const handleDropdownChange = (value, name: string): void => {
+        if (name === 'operatingSystem') {
+            setUsernameHelpText('');
+        }
         if (name === 'dataDisks') {
             value = [value];
         }
@@ -172,12 +185,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.Message) {
                 getResources();
-                let vmsList: any = [...vms];
+                const vmsList: any = [...vms];
                 vmsList.push(result);
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
             setLoading(false);
         });
@@ -194,7 +207,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 if (result && !result.Message) {
                     setVmEstimatedCost(result);
                 } else {
-                    notify.show('danger', '500', result.Message, result.RequestId);
+                    notify.show('danger', '500', result);
                 }
             });
         }
@@ -214,7 +227,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             if (result && !result.errors) {
                 setActualVmName(result);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
         });
     };
@@ -224,25 +237,32 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             setUsernameIsValid(false);
             return;
         }
-        const username: VmUsernameObj = { username: value };
+
+        let operatingSystemType = '';
+        os.forEach((operatingSystem: OperatingSystemObj) => {
+            if (operatingSystem.key === vm.operatingSystem) {
+                operatingSystemType = operatingSystem.category;
+            }
+        });
+        const username: VmUsernameObj = { username: value, operativeSystemType: operatingSystemType };
         validateVmUsername(username).then((result: any) => {
             if (result) {
                 setUsernameIsValid(result.isValid);
                 if (!result.isValid) {
-                    setUsernameHelptText(result.errorMessage);
+                    setUsernameHelpText(result.errorMessage);
                     //notify.show('danger', '500', result.errorMessage);
                 } else {
-                    setUsernameHelptText('');
+                    setUsernameHelpText('');
                 }
             } else {
                 setUsernameIsValid(false);
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
             }
         });
     };
 
     const validateUserInput = () => {
-        if (loading) {
+        if (loading || !vmEstimatedCost) {
             return false;
         }
         if (
@@ -259,18 +279,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         return false;
     };
 
-    const filterSizes = (sizes: any) => {
-        if (!sizes) {
+    const filterSizes = (_sizes: any) => {
+        if (!_sizes) {
             return [];
         }
         if (filter.length === 0) {
-            return sizes;
+            return _sizes;
         }
-        return sizes.filter((size) => filter.includes(size.category));
+        return _sizes.filter((size) => filter.includes(size.category));
     };
 
     const handleCheck = (column: string, checked: any) => {
-        let currentFilter: any = [...filter];
+        const currentFilter: any = [...filter];
         if (checked) {
             currentFilter.push(column);
         } else {
@@ -315,7 +335,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     data-cy="vm_name"
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement={'right'}>
+                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                             </Tooltip>
                         </div>
@@ -325,6 +345,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     <Label>Actual VM name</Label>
                     <Typography variant="h6">{actualVmName || '-'}</Typography>
                 </div>
+                <CoreDevDropdown
+                    label="Operating system"
+                    options={os}
+                    width={width}
+                    onChange={handleDropdownChange}
+                    name="operatingSystem"
+                    data-cy="vm_operatingSystem"
+                    meta="(required)"
+                    useOverflow
+                    style={{ marginBottom: '24px' }}
+                    tabIndex={0}
+                />
                 <TextField
                     id="textfield2"
                     autoComplete="off"
@@ -335,10 +367,11 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     meta="(required)"
                     data-cy="vm_username"
                     variant={returnUsernameVariant()}
+                    disabled={!vm.operatingSystem}
                     helperText={usernameHelpText}
                     inputIcon={
                         <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement={'right'}>
+                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
                                 <Icon name="info_circle" size={24} color="#6F6F6F" />
                             </Tooltip>
                         </div>
@@ -360,7 +393,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
                                 <Tooltip
                                     title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement={'right'}
+                                    placement="right"
                                 >
                                     <Icon name="info_circle" size={24} color="#6F6F6F" />
                                 </Tooltip>
@@ -376,21 +409,15 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         <Checkbox
                             label="High memory"
                             onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
-                            enterKeyHint="Filter memory"
                         />
                     </li>
                     <li>
-                        <Checkbox
-                            label="High GPU"
-                            onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)}
-                            enterKeyHint="Filter GPU"
-                        />
+                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
                     </li>
                     <li>
                         <Checkbox
                             label="High CPU"
                             onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
-                            enterKeyHint="Filter CPU"
                         />
                     </li>
                 </UnstyledList>
@@ -406,17 +433,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 onChange={handleDropdownChange}
                 name="size"
                 data-cy="vm_size"
-                meta="(required)"
-                useOverflow
-                tabIndex={0}
-            />
-            <CoreDevDropdown
-                label="Operating system"
-                options={os}
-                width={width}
-                onChange={handleDropdownChange}
-                name="operatingSystem"
-                data-cy="vm_operatingSystem"
                 meta="(required)"
                 useOverflow
                 tabIndex={0}
@@ -450,7 +466,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         onClick={createVm}
                         disabled={!validateUserInput()}
                     >
-                        {loading ? <DotProgress variant="green" /> : 'Create'}
+                        {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>
                 </Tooltip>
             </div>

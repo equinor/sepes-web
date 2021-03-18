@@ -1,28 +1,27 @@
 import React from 'react';
-import { Table, Checkbox } from '@equinor/eds-core-react';
+import { Table } from '@equinor/eds-core-react';
+import '../../../styles/Table.scss';
+import { SandboxObj } from '../../common/interfaces';
+
 const { Body, Row, Cell, Head } = Table;
 
 type DatasetProps = {
     displayCheckbox?: boolean;
+    sandbox: SandboxObj;
 };
 
-const Dataset: React.FC<DatasetProps> = ({ displayCheckbox }) => {
+const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
     return (
         <>
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
                 <Head>
                     <Row>
-                        <Cell as="th" scope="col">
-                            Data set restrictions
-                        </Cell>
+                        <Cell scope="col">Data set restrictions</Cell>
                     </Row>
                 </Head>
                 <Body>
-                    <Row key={1}>
-                        <Cell>
-                            Restricted data - Outbound internet traffic cannot be opened. Strict inbound rules. Data
-                            traffic will be suspended if exceeding 500 MB
-                        </Cell>
+                    <Row key={1} id="tableRowNoPointerNoColor">
+                        <Cell>{sandbox.restrictionDisplayText}</Cell>
                     </Row>
                 </Body>
             </Table>

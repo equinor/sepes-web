@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { EquinorIcon, Label } from '../common/StyledComponents';
-import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
+import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
 import { checkIfRequiredFieldsAreNull, validateResourceName } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
@@ -33,6 +33,7 @@ type CreateSandboxComponentProps = {
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
+    study: StudyObj;
 };
 const width = '252px';
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
@@ -40,7 +41,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setStudy,
     setHasChanged,
     setUpdateCache,
-    updateCache
+    updateCache,
+    study
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
@@ -75,7 +77,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     };
 
     const validateUserInput = () => {
-        if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name)) {
+        if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !study.wbsCode) {
             return false;
         }
         return true;
@@ -96,7 +98,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {
-                notify.show('danger', '500', result.Message, result.RequestId);
+                notify.show('danger', '500', result);
                 console.log('Err');
                 setLoading(false);
             }
@@ -117,7 +119,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 autoFocus
                 inputIcon={
                     <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                        <Tooltip title="The value must be between 3 and 20 characters long" placement="left">
+                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="left">
                             <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
@@ -147,14 +149,22 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 data-cy="sandbox_template"
             />
             */}
-            <Button
-                style={{ width: '76px', margin: '8px 0 8px auto' }}
-                onClick={() => CreateSandbox()}
-                data-cy="create_actual_sandbox"
-                disabled={!validateUserInput()}
-            >
-                Create
-            </Button>
+            <div style={{ marginLeft: 'auto' }}>
+                <Tooltip
+                    title={study.wbsCode ? '' : 'Need WBS code for this study code to create sandbox'}
+                    placement="left"
+                    open={!study.wbsCode}
+                >
+                    <Button
+                        style={{ width: '76px', margin: '8px 0 8px auto' }}
+                        onClick={() => CreateSandbox()}
+                        data-cy="create_actual_sandbox"
+                        disabled={!validateUserInput()}
+                    >
+                        Create
+                    </Button>
+                </Tooltip>
+            </div>
         </Wrapper>
     ) : (
         <LoadingFull noTimeout />

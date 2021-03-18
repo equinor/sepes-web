@@ -92,6 +92,7 @@ export interface SandboxObj {
     permissions: SandboxPermissions;
     linkToCostAnalysis?: string;
     currentPhase: number | undefined;
+    restrictionDisplayText: string;
 }
 
 export interface SandboxPermissions {
@@ -131,6 +132,7 @@ export interface VmObj {
     extendedInfo?: any;
     linkToExternalSystem: string;
     dataDisks: string[];
+    rules?: any;
 }
 
 export interface SizeObj {
@@ -157,4 +159,18 @@ export interface CalculateNameObj {
 }
 export interface VmUsernameObj {
     username: string;
+    operativeSystemType: string;
+}
+
+export interface DatasetResourcesObj {
+    name: string;
+    retryLink: string;
+    status: string;
+    type: string;
+    linkToExternalSystem: string;
+}
+
+export interface DatasetClassificationObj {
+    classification: string;
+    restrictionDisplayText: string;
 }
