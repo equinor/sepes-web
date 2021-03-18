@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/equinor/sepes-web/compare/0.1.16...0.1.17) (2021-03-18)
+
+
+### Features
+
+* **sandbox:** add retry functionality for vms ([d8d7a05](https://github.com/equinor/sepes-web/commit/d8d7a05af479e62c0d067b791ca5d775619a9718)), closes [#676](https://github.com/equinor/sepes-web/issues/676)
+
+
+### Bug Fixes
+
+* different bugs and styling issues ([276e498](https://github.com/equinor/sepes-web/commit/276e498af9a499638b98d731132d17b68adb4015)), closes [#710](https://github.com/equinor/sepes-web/issues/710) [#707](https://github.com/equinor/sepes-web/issues/707) [#706](https://github.com/equinor/sepes-web/issues/706) [#702](https://github.com/equinor/sepes-web/issues/702)
+* dropdown equal key caused console error ([b0d15b7](https://github.com/equinor/sepes-web/commit/b0d15b75470cb32a338c8f1708628e04e2d552f0))
+* **sandbox:** newly created dataset would not show before refresh ([7b1b4fd](https://github.com/equinor/sepes-web/commit/7b1b4fd4c82870513c898000be0bbcf05e59ab47)), closes [#698](https://github.com/equinor/sepes-web/issues/698)
+* **study:** change size of setting wheel ([36f0f5b](https://github.com/equinor/sepes-web/commit/36f0f5b20d1c23535a0cee4467584ef1fc558dc6))
+* **study:** issue with logo ([c9bf943](https://github.com/equinor/sepes-web/commit/c9bf9439b9a9404360c3dee6af79338a8afe26e8))
+* **study:** issue with updating details ([986c31f](https://github.com/equinor/sepes-web/commit/986c31f6258a85e02433fd49616a910aeee15fac))
+* added general nullcheck to notify component ([#681](https://github.com/equinor/sepes-web/issues/681)) ([c647ada](https://github.com/equinor/sepes-web/commit/c647ada5ed3e2c582c6f94a306d75a9a0562211a)), closes [#675](https://github.com/equinor/sepes-web/issues/675)
+* multiple style issues ([b26fc0a](https://github.com/equinor/sepes-web/commit/b26fc0af486baf44dd454866dd52a3375d74deb2)), closes [#684](https://github.com/equinor/sepes-web/issues/684) [#687](https://github.com/equinor/sepes-web/issues/687)
+* update bootstrap to 4.6.0 ([4e16cf8](https://github.com/equinor/sepes-web/commit/4e16cf85afc9af43ce71daa65df3dbc0ed7b1552))
+* update EDS and npm packages ([#683](https://github.com/equinor/sepes-web/issues/683)) ([975c98e](https://github.com/equinor/sepes-web/commit/975c98e7696764ce590841290b786c4c68584a86))
+* update react-router to version 5.2.0 ([f20603b](https://github.com/equinor/sepes-web/commit/f20603be54dbc77eefd709e076b4deb9571282c9))
+* Update React-scripts to 4.0.3 ([#696](https://github.com/equinor/sepes-web/issues/696)) ([1808e06](https://github.com/equinor/sepes-web/commit/1808e0630d3c349063b215696f255112a68e63b1))
+* **dataset:** re-enable cancel if create fails ([fc8166b](https://github.com/equinor/sepes-web/commit/fc8166b4b4bed7bfdd77e3c6c9fd12823502b90b)), closes [#667](https://github.com/equinor/sepes-web/issues/667)
+* **participants:** issue when loading on button showed when loading page ([dead263](https://github.com/equinor/sepes-web/commit/dead26361c72cbb5ff6861495f6bb21ea9b9ab5f)), closes [#685](https://github.com/equinor/sepes-web/issues/685)
+* **sandbox:** new tooltips for access control ([3e279dd](https://github.com/equinor/sepes-web/commit/3e279ddb4f98b5e8285fb635687986cee2fdf7db)), closes [#670](https://github.com/equinor/sepes-web/issues/670) [#671](https://github.com/equinor/sepes-web/issues/671)
+* **study:** streamlined creation and logo upload ([#682](https://github.com/equinor/sepes-web/issues/682)) ([f9eb5f8](https://github.com/equinor/sepes-web/commit/f9eb5f895cd7f0b853402c8bd55b52722bfbb4aa)), closes [#674](https://github.com/equinor/sepes-web/issues/674)
+* **study:** Update study in an instant instead of waiting for api ([0599ee3](https://github.com/equinor/sepes-web/commit/0599ee3f9d3825ecfb8a9bbf6ab124c43532e26b))
+* update types/react to 17.0.3 ([928e3bd](https://github.com/equinor/sepes-web/commit/928e3bd1fa5ba42e612c105ceec55a92f5dfd5a9))
+* Update typescript to version 4.2.3 ([6867d85](https://github.com/equinor/sepes-web/commit/6867d85779905151220b209732686407cf4ee10c))
+* **study:** issue with logo component ([82d22a7](https://github.com/equinor/sepes-web/commit/82d22a7cc8f9ea1db4cc3986189c7c7e5f877029)), closes [#672](https://github.com/equinor/sepes-web/issues/672)
+* upgrade react-dropzone from 11.3.0 to 11.3.1 ([b90c394](https://github.com/equinor/sepes-web/commit/b90c394c7eb13213724c142ad71b85047a536163))
+
 ### [0.1.16](https://github.com/equinor/sepes-web/compare/0.1.15...0.1.16) (2021-03-04)
 
 
