@@ -14,13 +14,8 @@ jobs:
       with:
         jestArgs: src/tests/unit_test
     - name: Coverage report
+      if: always()
       uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       with:
       # The GitHub Token. This is only used, if none is provided via Env.
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-           
-        
-    # You may pin to the exact commit or the version.
-    # uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@6e23f271b4fb10248a260e72fe6d1bcddeea9f4a
-   
-
