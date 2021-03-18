@@ -116,6 +116,9 @@
     "babel": {
         "presets": [
             "@babel/react"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-class-properties"
         ]
     }
 }
