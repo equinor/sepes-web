@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run Jest
+    - name: npm test
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src
