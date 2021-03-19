@@ -19,7 +19,6 @@ jobs:
       with:
         test-command: "npm test -- --coverage"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        json-glob: src/tests/unit_test
         
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
