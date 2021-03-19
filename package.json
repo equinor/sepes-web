@@ -98,13 +98,13 @@
     },
     "jest": {
         "transformIgnorePatterns": [
-            "node_modules/(?!(@equinor/eds-icons)/)"
+            "node_modules/(?!(@equinor/eds-icons)/)",
+            "cypress"
         ],
         "transform": {
             "^.+\\.tsx?$": "babel-jest",
             "^.+\\.ts?$": "ts-jest"
-        },
-        "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.[jt]sx?$"
+        }
     },
     "config": {
         "commitizen": {
