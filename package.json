@@ -100,22 +100,10 @@
         "transformIgnorePatterns": [
             "node_modules/(?!(@equinor/eds-icons)/)"
         ],
-        "preset": [
-            "ts-jest",
-            "@babel/preset-flow"
-        ],
         "transform": {
             "^.+\\.tsx?$": "babel-jest",
             "^.+\\.ts?$": "ts-jest"
-        },
-        "moduleFileExtensions": [
-            "ts",
-            "js",
-            "json",
-            "node"
-        ],
-        "collectCoverage": true,
-        "coverageDirectory": "jest-coverage"
+        }
     },
     "config": {
         "commitizen": {
