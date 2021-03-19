@@ -8,11 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: npx react-scripts test -- --coverage
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src/tests/unit_test
+    - name: check
+      run: dir
     - name: Coverage report
       if: always()
       uses: tanmen/jest-reporter@v1.1
