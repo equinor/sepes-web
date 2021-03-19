@@ -18,5 +18,8 @@ jobs:
       uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       with:
         test-command: "npm test -- --coverage"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        json-glob: src/tests/unit_test
+        
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
