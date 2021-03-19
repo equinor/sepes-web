@@ -20,10 +20,11 @@ jobs:
       
     - name: Coverage report
       if: always()
-      uses: artiomtr/jest-coverage-report-action@v1.1
+    - uses: actions/checkout@v2
+    - uses: artiomtr/jest-coverage-report-action@v1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        test_script: npx react-scripts test -- --coverage --collectCoverageFrom:["**/*.{ts,tsx}", "!**/node_modules/**", "!**/vendor/**"]
+        test_script: npx react-scripts test -- --coverage
       #  test_script: npx react-scripts test -- --coverage --collectCoverageFrom=**/src/tests/unit_test/**/*.tsx
       #"collectCoverageFrom":["src/**/*.{js,jsx,ts,tsx}"
 #     - name: Coverage report
