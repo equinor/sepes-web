@@ -20,18 +20,25 @@ jobs:
       
     - name: Coverage report
       if: always()
-      uses: mattallty/jest-github-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
-        
-    - name: Coverage report2
-      if: always()
-      uses: ziishaned/jest-reporter-action@v0.0.1
+      uses: raulanatol/jest-coverage-comment-action@v1.0.0
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+        jest-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+      
+#     - name: Coverage report
+#       if: always()
+#       uses: mattallty/jest-github-action@v1
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       with:
+#         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+        
+#     - name: Coverage report2
+#       if: always()
+#       uses: ziishaned/jest-reporter-action@v0.0.1
+#       with:
+#         github-token: ${{ secrets.GITHUB_TOKEN }}
+#         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
 
 #     - name: Coverage report
 #       if: always()
