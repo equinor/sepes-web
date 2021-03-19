@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: npx react-scripts test --outputFile=result.json
+    - name: npx react-scripts test --outputFile=jest-coverage
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src/tests/unit_test
@@ -17,7 +17,8 @@ jobs:
       if: always()
       uses: tanmen/jest-reporter@v1.1
       with:
-        action-name: npm test -- --coverage --outputFile=result.json
+        action-name: npm test -- --coverage --outputFile=jest-coverage
+        result-file: jest-coverage
         github-token: ${{ secrets.GITHUB_TOKEN }}
         
       env:
