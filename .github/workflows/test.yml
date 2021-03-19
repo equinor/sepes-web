@@ -18,12 +18,19 @@ jobs:
       
     - name: Coverage report
       if: always()
-      uses: artiomtr/jest-coverage-report-action@v1.1
+      uses: ziishaned/jest-reporter-action@v0.0.1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
-      env:
-        CI_JOB_NUMBER: 1
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+
+#     - name: Coverage report
+#       if: always()
+#       uses: artiomtr/jest-coverage-report-action@v1.1
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
+#         test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+#       env:
+#         CI_JOB_NUMBER: 1
       #  test_script: npx react-scripts test -- --coverage --collectCoverageFrom=**/src/tests/unit_test/**/*.tsx
       #"collectCoverageFrom":["src/**/*.{js,jsx,ts,tsx}"
 #     - name: Coverage report
