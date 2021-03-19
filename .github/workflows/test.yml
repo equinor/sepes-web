@@ -1,53 +1,36 @@
-name: Node.js CI
 
-on: pull_request
+
+on:
+  pull_request:
+    branches: [ master, develop ]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        node-version: [14.x]
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: npx react-scripts test --coverage
+      uses: stefanoeb/jest-action@1.0.3
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - name: TestCoverage
-      id: testCovergae
-      uses: anuraag016/Jest-Coverage-Diff@master
-      with:
-        fullCoverageDiff: false // defaults to false, if made true whole coverage report is commented with the diff
-        runCommand: "npx react-scripts test --collectCoverageFrom='[\"src/**/*.{js,jsx,ts,tsx}\"]' --coverage --collectCoverage=true --coverageDirectory='./' --coverageReporters='json-summary' --forceExit --detectOpenHandles test/.*test.*"
-        delta: 0.5
-
-# on:
-#   pull_request:
-#     branches: [ master, develop ]
-
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v2
-#     - name: npx react-scripts test --coverage
-#       uses: stefanoeb/jest-action@1.0.3
-#       with:
-#         jestArgs: src/tests/unit_test
-#     - name: check
-#       run: dir jest-coverage
+        jestArgs: src/tests/unit_test
+    - name: check
+      run: dir jest-coverage
       
-#     - name: Coverage report
-#       if: always()
-#       uses: ziishaned/jest-reporter-action@v0.1.1
-#       with:
-#         github-token: ${{ secrets.GITHUB_TOKEN }}
-#         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+    - name: Coverage report
+      if: always()
+      uses: mattallty/jest-github-action@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+        
+    - name: Coverage report2
+      if: always()
+      uses: ziishaned/jest-reporter-action@v0.1.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
 
 #     - name: Coverage report
 #       if: always()
