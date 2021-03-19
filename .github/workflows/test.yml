@@ -23,7 +23,7 @@ jobs:
       uses: artiomtr/jest-coverage-report-action@v1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        test_script: npx react-scripts test -- --coverage
+        test_script: npx react-scripts test -- --coverage --collectCoverageFrom=src/**/*.tsx
       
 #     - name: Coverage report
 #       if: always()
