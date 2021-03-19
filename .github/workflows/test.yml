@@ -20,7 +20,7 @@ jobs:
       
     - name: Coverage report
       if: always()
-      uses: raulanatol/jest-coverage-comment-action@v1.0.0
+      uses: raulanatol/jest-coverage-comment-action@v1.0.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         jest-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
