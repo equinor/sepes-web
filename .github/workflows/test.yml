@@ -14,7 +14,7 @@ jobs:
       with:
         jestArgs: src/tests/unit_test
     - name: check
-      run: dir
+      run: dir jest-coverage
     - name: Coverage report
       if: always()
       uses: tanmen/jest-reporter@v1.1
