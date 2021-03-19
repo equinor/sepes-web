@@ -37,4 +37,3 @@ jobs:
 #       uses: tanmen/jest-reporter@v1.1
 #       with:
 #         action-name: npm test -- --coverage
-*
