@@ -21,8 +21,9 @@ jobs:
     - name: Coverage report
       if: always()
       uses: mattallty/jest-github-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
         
     - name: Coverage report2
