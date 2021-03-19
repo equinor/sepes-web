@@ -22,7 +22,7 @@ jobs:
       if: always()
       uses: mattallty/jest-github-action@v1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
         
     - name: Coverage report2
