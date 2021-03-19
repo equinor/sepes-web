@@ -18,7 +18,7 @@ jobs:
       uses: tanmen/jest-reporter@v1.1
       with:
         action-name: npm test -- --coverage --outputFile=jest-coverage
-        result-file: jest-coverage
+        result-file: jest-coverage/coverage-finale.json
         github-token: ${{ secrets.GITHUB_TOKEN }}
         
       env:
