@@ -15,11 +15,27 @@ jobs:
         jestArgs: src/tests/unit_test
     - name: check
       run: dir jest-coverage
+      
     - name: Coverage report
       if: always()
-      uses: tanmen/jest-reporter@v1.1
+    - uses: artiomtr/jest-coverage-report-action@v1.0
       with:
-        action-name: npm test -- --coverage
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        test_script: npx react-scripts test -- --coverage
+      
+#     - name: Coverage report
+#       if: always()
+#       uses: tanmen/jest-reporter@v1.1
+#       with:
+#         action-name: npm test -- --coverage
+#         result-file: ./jest-coverage/coverage-final.json
+#         github-token: ${{ secrets.GITHUB_TOKEN }}
+
+#     - name: Coverage report
+#       if: always()
+#       uses: tanmen/jest-reporter@v1.1
+#       with:
+#         action-name: npm test -- --coverage
         result-file: ./jest-coverage/coverage-final.json
         github-token: ${{ secrets.GITHUB_TOKEN }}
         
