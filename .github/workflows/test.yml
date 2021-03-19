@@ -9,16 +9,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: npx react-scripts test
+    - name: npx react-scripts test --outputFile=result.json
       uses: stefanoeb/jest-action@1.0.3
       with:
         jestArgs: src/tests/unit_test
     - name: Coverage report
       if: always()
-      uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+      uses: tanmen/jest-reporter@v1.1
       with:
-        test-command: "npm test -- --coverage"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        action-name: npm test -- --coverage --outputFile=result.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
