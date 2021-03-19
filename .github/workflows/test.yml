@@ -1,24 +1,42 @@
-
-
+name: 'coverage'
 on:
-  pull_request:
-    branches: [ master, develop ]
-
+    pull_request:
+        branches:
+            - develop
 jobs:
-  build:
+    coverage:
+        runs-on: ubuntu-latest
+        env:
+            CI_JOB_NUMBER: 1
+        steps:
+            - uses: actions/checkout@v1
+            - uses: artiomtr/jest-coverage-report-action@v1.0
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+                  #   threshold: 80 # optional parameter
 
-    runs-on: ubuntu-latest
 
-    steps:
-    - name: Coverage report
-      if: always()
-    - uses: actions/checkout@v1 
-    - uses: artiomtr/jest-coverage-report-action@v1.1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
-      env:
-        CI_JOB_NUMBER: 1
+
+# on:
+#   pull_request:
+#     branches: [ master, develop ]
+
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Coverage report
+#       if: always()
+#     - uses: actions/checkout@v1 
+#     - uses: artiomtr/jest-coverage-report-action@v1.1
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
+#         test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+#       env:
+#         CI_JOB_NUMBER: 1
 #     - uses: actions/checkout@v2
 #     - name: npx react-scripts test --coverage
 #       uses: stefanoeb/jest-action@1.0.3
