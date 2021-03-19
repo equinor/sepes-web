@@ -113,7 +113,9 @@
             "js",
             "json",
             "node"
-        ]
+        ],
+        "collectCoverage": true,
+        "coverageDirectory": "jest-coverage"
     },
     "config": {
         "commitizen": {
