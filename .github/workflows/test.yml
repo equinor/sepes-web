@@ -23,7 +23,6 @@ jobs:
       uses: artiomtr/jest-coverage-report-action@v1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        entryPoint: src/tests/unit_test
         test_script: npx react-scripts test -- --coverage --collectCoverageFrom:["**/*.{ts,tsx}", "!**/node_modules/**", "!**/vendor/**"]
       #  test_script: npx react-scripts test -- --coverage --collectCoverageFrom=**/src/tests/unit_test/**/*.tsx
       #"collectCoverageFrom":["src/**/*.{js,jsx,ts,tsx}"
