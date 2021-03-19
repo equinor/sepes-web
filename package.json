@@ -103,7 +103,8 @@
         "transform": {
             "^.+\\.tsx?$": "babel-jest",
             "^.+\\.ts?$": "ts-jest"
-        }
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(test))\\.[jt]sx?$"
     },
     "config": {
         "commitizen": {
