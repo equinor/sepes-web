@@ -9,7 +9,15 @@ jobs:
 
     runs-on: ubuntu-latest
 
-     steps:
+    steps:
+    - name: Coverage report
+      if: always()
+      uses: artiomtr/jest-coverage-report-action@v1.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
+      env:
+        CI_JOB_NUMBER: 1
 #     - uses: actions/checkout@v2
 #     - name: npx react-scripts test --coverage
 #       uses: stefanoeb/jest-action@1.0.3
@@ -40,14 +48,7 @@ jobs:
 #         github-token: ${{ secrets.GITHUB_TOKEN }}
 #         test-command: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
 
-    - name: Coverage report
-      if: always()
-      uses: artiomtr/jest-coverage-report-action@v1.1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        test_script: npx react-scripts test --collectCoverageFrom:["src/**/*.{ts,tsx}"]
-      env:
-        CI_JOB_NUMBER: 1
+
       #  test_script: npx react-scripts test -- --coverage --collectCoverageFrom=**/src/tests/unit_test/**/*.tsx
       #"collectCoverageFrom":["src/**/*.{js,jsx,ts,tsx}"
 #     - name: Coverage report
