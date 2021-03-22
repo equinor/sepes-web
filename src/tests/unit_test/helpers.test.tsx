@@ -17,3 +17,8 @@ test('test validate email', () => {
     expect(helpers.passwordValidate('test@')).toBeFalsy;
     expect(helpers.passwordValidate('test@mail.com')).toBeTruthy;
 });
+
+test('test checkIfInputIsNumberWihoutCharacters', () => {
+    expect(helpers.checkIfInputIsNumberWihoutCharacters('test@')).toBeFalsy;
+    expect(helpers.checkIfInputIsNumberWihoutCharacters('123')).toBeTruthy;
+});
