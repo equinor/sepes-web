@@ -15,6 +15,7 @@ import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import _ from 'lodash';
+import { getStudyId } from 'utils/CommonUtil';
 
 const icons = {
     close
@@ -49,13 +50,14 @@ type ParicipantComponentProps = {
 };
 
 const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+    const studyId = getStudyId();
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Search or add by e-mail');
     const [role, setRole] = useState<string>('');
-    const rolesResponse = useFetchUrl('lookup/studyroles/' + window.location.pathname.split('/')[2], setRoles);
+    const rolesResponse = useFetchUrl('lookup/studyroles/' + studyId, setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const user = useContext(UserConfig);
     const history = useHistory();
@@ -108,7 +110,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         const participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
         setStudy({ ...study, participants: participantList });
-        const studyId = window.location.pathname.split('/')[2];
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (result && !result.Message && isSubscribed) {
@@ -129,7 +130,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         rolesResponse.setLoading(true);
         setRole('');
         setRoleNotSelected(true);
-        const studyId = window.location.pathname.split('/')[2];
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         if (!participantNotSelected) {
             setLoading(true);

@@ -18,6 +18,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
+import { getStudyId } from 'utils/CommonUtil';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -40,7 +41,7 @@ interface passedProps {
 }
 
 const StudyDetails = () => {
-    const id = window.location.pathname.split('/')[2];
+    const id = getStudyId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [study, setStudy] = useState<StudyObj>({
         name: '',

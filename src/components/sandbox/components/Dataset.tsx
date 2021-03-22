@@ -12,6 +12,7 @@ import {
     getStudyByIdUrl
 } from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
+import { getStudyId } from 'utils/CommonUtil';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -34,7 +35,7 @@ const Dataset: React.FC<datasetProps> = ({
     sandbox,
     controller
 }) => {
-    const studyId = window.location.pathname.split('/')[2];
+    const studyId = getStudyId();
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
     const availableDatasetsResponse = useFetchUrl(
         getAvailableDatasetsUrl(sandboxId),

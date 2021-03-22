@@ -11,6 +11,7 @@ import * as notify from '../common/notify';
 //import { Permissions } from '../../index';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getStudyId } from 'utils/CommonUtil';
 
 const icons = {
     close
@@ -63,7 +64,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     //const permissions = useContext(Permissions);
     //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
     const removeDataset = (row: any) => {
-        const studyId = window.location.pathname.split('/')[2];
+        const studyId = getStudyId();
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
         setUpdateCache({
             ...updateCache,
@@ -80,7 +81,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
     };
 
     const redirectToStudySpecificDataset = () => {
-        const studyId = window.location.pathname.split('/')[2];
+        const studyId = getStudyId();
         history.push({
             pathname: '/studies/' + studyId + '/datasets',
             state: {

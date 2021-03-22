@@ -33,6 +33,7 @@ import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile, deleteFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
+import { getStudyId, getDatasetId } from 'utils/CommonUtil';
 
 const icons = {
     arrow_back,
@@ -88,8 +89,8 @@ let abortArray: any = [];
 let progressArray: any = [];
 
 const DatasetDetails = (props: any) => {
-    const datasetId = window.location.pathname.split('/')[4];
-    const studyId = window.location.pathname.split('/')[2];
+    const datasetId = getDatasetId();
+    const studyId = getStudyId();
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);

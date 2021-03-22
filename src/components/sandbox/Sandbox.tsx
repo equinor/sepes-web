@@ -11,6 +11,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { deleteFileInDataset, getResourceStatus } from '../../services/Api';
+import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 
 const Wrapper = styled.div`
     display: grid;
@@ -25,8 +26,8 @@ type SandboxProps = {};
 let controller = new AbortController();
 
 const Sandbox: React.FC<SandboxProps> = () => {
-    const studyId = window.location.pathname.split('/')[2];
-    const sandboxId = window.location.pathname.split('/')[4];
+    const studyId = getStudyId();
+    const sandboxId = getSandboxId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [sandbox, setSandbox] = useState<SandboxObj>({
         deleted: false,
