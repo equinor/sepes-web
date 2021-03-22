@@ -1,6 +1,5 @@
 /*eslint-disable no-restricted-properties */
 import React from 'react';
-import { TextField } from '@equinor/eds-core-react';
 
 export const lineBreak = (text) => {
     return text
@@ -20,10 +19,6 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
         return 'error';
     }
     return 'default';
-};
-
-export const bytesToMB = (sizeInBytes: number) => {
-    return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
 };
 
 export const bytesToSize = (bytes: any, decimals = 2) => {
@@ -50,46 +45,6 @@ export const returnLimitMeta = (limit: number, value: string) => {
         return value.length + '/' + limit;
     }
     return '0/' + limit;
-};
-
-export const returnTextField = (
-    name: string,
-    placeholder: string,
-    value: string,
-    label: string,
-    meta: string,
-    datacy: string,
-    handleChange: any,
-    userPressedCreate?: any,
-    style?: any,
-    multiline?: boolean
-) => {
-    if (meta !== 'Required') {
-        userPressedCreate = false;
-    }
-    if (meta === 'limit') {
-        if (!value) {
-            meta = '0/500';
-        } else {
-            meta = value.length + '/500';
-        }
-    }
-    return (
-        <TextField
-            id="textfield1"
-            name={name}
-            placeholder={placeholder}
-            variant={checkIfRequiredFieldsAreNull(value, userPressedCreate)}
-            onChange={handleChange}
-            label={label}
-            meta={meta}
-            style={style}
-            value={value}
-            data-cy={datacy}
-            multiline={multiline}
-            autoComplete="off"
-        />
-    );
 };
 
 export const truncate = (input: string, allowedLength: number) => {
