@@ -12,6 +12,7 @@ import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getStudyId } from 'utils/CommonUtil';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -89,7 +90,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         if (!validateUserInput()) {
             return;
         }
-        const studyId = window.location.pathname.split('/')[2];
+        const studyId = getStudyId();
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
