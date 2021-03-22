@@ -2,7 +2,7 @@
 import React from 'react';
 import { TextField } from '@equinor/eds-core-react';
 
-export const lineBreak = (text: string) => {
+export const lineBreak = (text) => {
     return text
         ? text.split('\n').map((item: string) => {
               return (

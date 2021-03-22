@@ -1,4 +1,5 @@
-import * as helpers from './helpers';
+import React from 'react';
+import * as helpers from '../../components/common/helpers';
 
 test('test requiredFields', () => {
     expect(helpers.checkIfRequiredFieldsAreNull('', false)).toContain('default');

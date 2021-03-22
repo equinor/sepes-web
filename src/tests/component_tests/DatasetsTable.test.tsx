@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SearchWithDropdown from './SearchWithDropdown';
+import DatasetsTable from '../../components/studyDetails/Tables/DatasetsTable';
 
 const checkIfDatasetIsAlreadyAdded = (id: string) => {};
 
@@ -14,21 +14,16 @@ const datasetsList = [
         id: '2'
     }
 ];
-/* eslint-disable no-undef */
-const isOpen = true;
-
-test('renders learn react link', () => {
+test('renders dropdown component', () => {
     const mockCallBack = jest.fn();
     const { getByText } = render(
-        <SearchWithDropdown
-            handleOnClick={mockCallBack}
-            arrayList={datasetsList}
-            isOpen={isOpen}
-            filter={checkIfDatasetIsAlreadyAdded}
+        <DatasetsTable
+            datasets={datasetsList}
+            removeDataset={checkIfDatasetIsAlreadyAdded}
+            editMode={true}
+            studyId={1}
         />
     );
     let linkElement = getByText('test1');
     expect(linkElement).toBeInTheDocument();
-    getByText('test1').click();
-    expect(mockCallBack.mock.calls.length).toEqual(1);
 });
