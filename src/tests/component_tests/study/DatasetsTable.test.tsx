@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import DatasetsTable from '../../components/studyDetails/Tables/DatasetsTable';
+import DatasetsTable from '../../../components/studyDetails/Tables/DatasetsTable';
 
 const checkIfDatasetIsAlreadyAdded = (id: string) => {};
 

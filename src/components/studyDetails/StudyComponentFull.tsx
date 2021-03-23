@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
+import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
@@ -24,7 +24,8 @@ const icons = {
     visibility,
     visibility_off,
     business,
-    settings
+    settings,
+    info_circle
 };
 Icon.add(icons);
 
