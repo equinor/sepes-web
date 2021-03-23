@@ -82,7 +82,7 @@ export const checkIfInputIsNumberWihoutCharacters = (number: string) => {
 };
 
 export const validateResourceName = (name: string): boolean => {
-    if (name === '') {
+    if (name === '' || name === undefined) {
         return false;
     }
     const nameWithoutSpaces = name.split(' ').join('');
