@@ -11,5 +11,5 @@ jobs:
               uses: ArtiomTr/jest-coverage-report-action@master
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  test_script: npx jest src/tests/unit_test --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+                  test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
