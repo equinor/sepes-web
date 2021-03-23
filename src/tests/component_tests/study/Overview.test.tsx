@@ -92,14 +92,13 @@ test('renders StudyComponent full component with invalid study name', () => {
     linkElement = getByText('Edit results and learnings');
     expect(linkElement).toBeInTheDocument();
     linkElement.click();
-    /*   
+
     linkElement = getByText('Save');
     expect(linkElement).toBeInTheDocument();
     linkElement.click();
 
     linkElement = getByText('this is a good study');
     expect(linkElement).toBeInTheDocument();
-    */
 
     //expect(getByText('Save').closest('button').disabled).toBeTruthy();
 });
