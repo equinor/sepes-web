@@ -193,7 +193,7 @@ export const getVirtualMachineSizes = async (sandboxId: string, signal: any) => 
 };
 
 export const getVirtualMachineDisks = async (sandboxId: string, signal: any) => {
-    return apiRequestWithToken('api/virtualmachines/' + sandboxId + 'disks', 'GET', undefined, signal);
+    return apiRequestWithToken('api/virtualmachines/' + sandboxId + '/disks', 'GET', undefined, signal);
 };
 
 export const getVirtualMachineOperatingSystems = async (sandboxId: string, signal: any) => {
