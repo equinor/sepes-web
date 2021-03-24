@@ -7,9 +7,9 @@ export interface StudyObj {
     logoUrl: string;
     id: string;
     resultsAndLearnings: string;
-    datasets: [];
-    participants: [];
-    sandboxes: [];
+    datasets: any;
+    participants: any;
+    sandboxes: any;
     permissions: StudyPermissions;
 }
 
