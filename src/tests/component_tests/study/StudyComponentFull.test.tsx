@@ -113,6 +113,26 @@ const studyWithNoDelete: StudyObj = {
     permissions: permissionsDeleteNotAllowed
 };
 
+const studyWithSandboxes: StudyObj = {
+    name: 'StudyName',
+    vendor: '',
+    wbsCode: 'abc123',
+    restricted: false,
+    description: 'Study about fishes',
+    logoUrl: 'asdwasdasd',
+    id: '1',
+    resultsAndLearnings: 'We learned a lot',
+    datasets: [],
+    participants: [],
+    sandboxes: [
+        {
+            id: 1,
+            name: 'sandbox1'
+        }
+    ],
+    permissions
+};
+
 const loading = false;
 const mockFunc = (id: string) => {};
 test('renders StudyComponent full component with edit study', () => {
@@ -248,7 +268,7 @@ test('renders StudyComponent full component with no permission to edit', () => {
     expect(getByText('Edit').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with no permission to edit', () => {
+test('renders StudyComponent full component with  permission to delete', () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByTitle, container, getByTestId } = render(
         <Router history={history}>
@@ -286,12 +306,49 @@ test('renders StudyComponent full component with no permission to edit', () => {
     expect(getByText('Delete').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with no permission to edit', () => {
+test('renders StudyComponent full component with no permission to delete', () => {
     const history = createMemoryHistory();
-    const { getByText, getByRole, getByTitle, container, getByTestId } = render(
+    const { getByText, container, getByTestId } = render(
         <Router history={history}>
             <StudyComponentFull
                 study={studyWithNoDelete}
+                newStudy={false}
+                setNewStudy={mockFunc}
+                setLoading={mockFunc}
+                loading={loading}
+                setStudy={mockFunc}
+                setHasChanged={mockFunc}
+                cache={mockFunc}
+                setUpdateCache={mockFunc}
+                updateCache={mockFunc}
+                setDeleteStudyInProgress={mockFunc}
+            />
+        </Router>
+    );
+    let linkElement = getByText('Edit');
+    expect(linkElement).toBeInTheDocument();
+    // Clicks the Edit button
+    linkElement.click();
+
+    linkElement = getByTestId('study_delete_settings');
+    expect(linkElement).toBeInTheDocument();
+    // Clicks the Edit button
+    linkElement.click();
+
+    expect(getByText('Delete study')).toBeInTheDocument();
+
+    expect(getByTestId('study_delete').hasAttribute('disabled')).toEqual(true);
+
+    linkElement = getByTestId('study_delete');
+    linkElement.click();
+});
+
+test('renders StudyComponent full component with sandbox in study', () => {
+    const history = createMemoryHistory();
+    const { getByText, getByTestId } = render(
+        <Router history={history}>
+            <StudyComponentFull
+                study={studyWithSandboxes}
                 newStudy={false}
                 setNewStudy={mockFunc}
                 setLoading={mockFunc}
