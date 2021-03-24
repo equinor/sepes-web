@@ -105,7 +105,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     };
 
     const getVmDisks = () => {
-        getVirtualMachineDisks(controller.signal).then((result: any) => {
+        getVirtualMachineDisks(sandbox.id, controller.signal).then((result: any) => {
             if (result && result.Message) {
                 notify.show('danger', '500', result);
                 console.log('Err');
