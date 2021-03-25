@@ -67,6 +67,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                             data-cy="create_sandbox"
                             disabled={disabled}
                             style={{ width: '200px' }}
+                            data-testid="study_add_sandbox"
                         >
                             <span style={{ marginLeft: '16px', marginRight: '16px' }}>Create sandbox</span>
                             {EquinorIcon('arrow_drop_down', '#007079', 24)}
