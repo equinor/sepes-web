@@ -91,8 +91,8 @@ export const show = (type, code, result) => {
             <CustomContent
                 type={type}
                 code={code}
-                message={result && result.message}
-                requestId={result && result.requestId}
+                message={result && result.Message}
+                requestId={result && result.RequestId}
             />
         ),
         type: 'danger',
