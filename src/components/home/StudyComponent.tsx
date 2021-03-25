@@ -15,7 +15,11 @@ Icon.add(icons);
 const SmallText = styled.div`
     font-size: 10px;
     display: inline-block;
-    width: 76px;
+`;
+
+const HiddenWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 48px 10px;
 `;
 
 const Wrapper = styled.div`
@@ -74,20 +78,23 @@ const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
                 <div>
                     <Typography variant="h6">{name}</Typography>
                     <SmallText>{vendor}</SmallText>
-                    <div>
-                        <SmallText>
-                            {restricted ? 'Hidden' : 'Not hidden'}
+
+                    <HiddenWrapper>
+                        <SmallText style={{ marginTop: '4px' }}>{restricted ? 'Hidden' : 'Not hidden'}</SmallText>
+                        <div>
                             <Icon
                                 color="#007079"
                                 name={restricted ? 'visibility_off' : 'visibility'}
                                 size={16}
                                 style={{ marginLeft: '4px' }}
                             />
-                        </SmallText>
-                    </div>
+                        </div>
+                    </HiddenWrapper>
                 </div>
             </LogoTitleWrapper>
-            <div>{description}</div>
+            <div>
+                <Typography variant="body_long">{description}</Typography>
+            </div>
         </Wrapper>
     );
 };

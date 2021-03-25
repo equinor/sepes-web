@@ -64,6 +64,12 @@ const StyledLink = styled.a`
     text-decoration-line: underline;
 `;
 
+const LinkWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    grid-grap: 8px;
+`;
+
 const studySpecificHelpText =
     'This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.';
 const standardHelpText =
@@ -285,7 +291,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                     </div>
                     <HelperTextWrapper>
-                        {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
+                        <Typography variant="body_long">
+                            {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
+                        </Typography>
                     </HelperTextWrapper>
                     <TextField
                         id="textfield1"
@@ -354,8 +362,10 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {EquinorIcon('external_link', '#007079', 24)}
-                        <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
+                        <LinkWrapper>
+                            <div>{EquinorIcon('external_link', '#007079', 24)}</div>
+                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Classification guidelines</span>
+                        </LinkWrapper>
                     </StyledLink>
                     <TextField
                         id="textfield13"
@@ -375,8 +385,10 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {EquinorIcon('external_link', '#007079', 24)}
-                        <span style={{ marginLeft: '8px' }}>Data inventory</span>
+                        <LinkWrapper>
+                            {EquinorIcon('external_link', '#007079', 24)}
+                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
+                        </LinkWrapper>
                     </StyledLink>
                     <SaveCancelWrapper>
                         <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">

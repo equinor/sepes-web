@@ -36,7 +36,7 @@ type CreateSandboxComponentProps = {
     updateCache: any;
     study: StudyObj;
 };
-const width = '252px';
+
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setToggle,
     setStudy,
@@ -133,7 +133,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             <CoreDevDropdown
                 label="Location"
                 options={regions}
-                width={width}
+                width="296px"
                 onChange={handleDropdownChange}
                 name="region"
                 data-cy="sandbox_region"

@@ -1,7 +1,7 @@
 /*eslint-disable no-shadow, react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Tooltip, Menu, Typography } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
@@ -519,7 +519,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         )}
                     </TitleWrapper>
                     {!editMode ? (
-                        <DescriptionWrapper>{description}</DescriptionWrapper>
+                        <DescriptionWrapper>
+                            <Typography variant="body_long">{description}</Typography>
+                        </DescriptionWrapper>
                     ) : (
                         <DescriptioTextfieldnWrapper>
                             <TextField

@@ -102,26 +102,30 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         <div>
             <Typography variant="h2">Properties</Typography>
             <Wrapper>
-                <div>
-                    <div>OS</div>
-                    <div>Public IP</div>
-                    <div>Private IP</div>
-                    {/*<div>DNS name</div>*/}
-                    <div>Location</div>
-                    <div style={{ marginTop: '16px' }}>Size</div>
-                    <div>vCPUs</div>
-                    <div>RAM</div>
-                </div>
-                <div>
-                    <div>{vmProperties.operatingSystem || '-'}</div>
-                    <div>{publicIp || '-'}</div>
-                    <div>{privateIp || '-'}</div>
-                    {/*<div>sb.env04-asdasdaas</div>*/}
-                    <div>{vmProperties.region}</div>
-                    <div style={{ marginTop: '16px' }}>{sizeName || '-'}</div>
-                    <div>{numberOfCores || '-'}</div>
-                    <div>{MemoryGB ? MemoryGB + 'MB' : '-'}</div>
-                </div>
+                <Typography variant="body_short">
+                    <div>
+                        <div>OS</div>
+                        <div>Public IP</div>
+                        <div>Private IP</div>
+                        {/*<div>DNS name</div>*/}
+                        <div>Location</div>
+                        <div style={{ marginTop: '16px' }}>Size</div>
+                        <div>vCPUs</div>
+                        <div>RAM</div>
+                    </div>
+                </Typography>
+                <Typography variant="body_short">
+                    <div>
+                        <div>{vmProperties.operatingSystem || '-'}</div>
+                        <div>{publicIp || '-'}</div>
+                        <div>{privateIp || '-'}</div>
+                        {/*<div>sb.env04-asdasdaas</div>*/}
+                        <div>{vmProperties.region}</div>
+                        <div style={{ marginTop: '16px' }}>{sizeName || '-'}</div>
+                        <div>{numberOfCores || '-'}</div>
+                        <div>{MemoryGB ? MemoryGB + 'MB' : '-'}</div>
+                    </div>
+                </Typography>
             </Wrapper>
             <BtnWrapper>
                 <div style={{ marginTop: '24px' }}>
