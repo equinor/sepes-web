@@ -50,14 +50,14 @@ const Bar = styled.div`
 `;
 */
 
-type StudyComponentFullProps = {
+type DatasetComponentProps = {
     study: StudyObj;
     setStudy: any;
     setUpdateCache: any;
     updateCache: any;
 };
 
-const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const history = useHistory();
     //const [datasetsList, setDatasetsList] = useState<any>([]);
     //const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -138,6 +138,7 @@ const DataSetComponent: React.FC<StudyComponentFullProps> = ({ study, setStudy, 
                             redirectToStudySpecificDataset();
                         }}
                         disabled={study.permissions && !study.permissions.addRemoveDataset}
+                        data-testid="study_add_dataset"
                     >
                         Create study specific data set
                     </Button>

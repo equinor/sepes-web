@@ -99,6 +99,7 @@
     "jest": {
         "transformIgnorePatterns": [
             "node_modules/(?!(@equinor/eds-icons)/)",
+            "node_modules/(?!(bootstrap)/)",
             "cypress"
         ],
         "transform": {
