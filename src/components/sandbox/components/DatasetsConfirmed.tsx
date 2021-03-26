@@ -24,7 +24,7 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandbox }) => {
                 {sandbox.datasets.length > 0 ? (
                     sandbox.datasets.map((dataset: any, index: number) => {
                         return (
-                            <Row key={index} id="tableRowNoPointer">
+                            <Row key={index} id="tableRowNoPointerNoColor">
                                 <Cell>
                                     {EquinorIcon('check', '#007079', 24)}
                                     <span style={{ marginLeft: '32px' }}>{dataset.name}</span>
