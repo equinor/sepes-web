@@ -27,6 +27,8 @@ import {
     getStudyByIdUrl,
     getStudySpecificDatasetUrl
 } from '../../services/ApiCallStrings';
+import { checkUrlIfGeneralDataset, checkUrlNewDataset } from '../../utils/DatasetUtil';
+import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -95,8 +97,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     editingDataset,
     permissions
 }) => {
-    const studyId = window.location.pathname.split('/')[2];
-    const datasetId = window.location.pathname.split('/')[4];
+    const studyId = getStudyId();
+    const datasetId = getDatasetId();
     const history = useHistory();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
@@ -131,20 +133,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
             setEditDataset(true);
         }
-    };
-
-    const checkUrlIfGeneralDataset = (): boolean => {
-        if (window.location.pathname.split('/')[1] === 'datasets') {
-            return true;
-        }
-        return false;
-    };
-
-    const checkUrlNewDataset = () => {
-        if (window.location.pathname.split('/')[2] === 'new') {
-            return true;
-        }
-        return false;
     };
 
     const addDataset = () => {

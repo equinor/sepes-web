@@ -70,7 +70,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     post(tokenResponse.accessToken);
                 })
                 .catch((error: string) => {
-                    myMSALObj.acquireTokenRedirect(loginRequest);
+                    //myMSALObj.acquireTokenRedirect(loginRequest);
                     console.log(error);
                 });
         }

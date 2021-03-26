@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, visibility, visibility_off, business, settings } from '@equinor/eds-icons';
+import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
@@ -24,7 +24,8 @@ const icons = {
     visibility,
     visibility_off,
     business,
-    settings
+    settings,
+    info_circle
 };
 Icon.add(icons);
 
@@ -237,7 +238,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
-    const studyDeleteEnabled = study.sandboxes && study.sandboxes.length > 0;
+    const studyDeleteEnabled =
+        (study.sandboxes && study.sandboxes.length) > 0 || !(study.permissions && study.permissions.deleteStudy);
     const optionsTemplate = (
         <>
             <Tooltip
@@ -249,6 +251,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
                     disabled={studyDeleteEnabled}
+                    title="study_delete"
+                    className="study_delete"
+                    data-testid="study_delete"
                 >
                     <Icon name="delete_forever" color="red" size={24} />
                     <span style={{ color: 'red' }}>Delete study</span>
@@ -545,6 +550,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     aria-labelledby="menuButton"
                                     aria-expanded={isOpen}
                                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                                    data-testid="study_delete_settings"
                                 >
                                     <Icon color="#007079" name="settings" size={24} />
                                 </Button>

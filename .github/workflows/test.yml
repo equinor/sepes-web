@@ -1,0 +1,15 @@
+on: [pull_request]
+
+jobs:
+    custom_test:
+        runs-on: ubuntu-latest
+        name: Test locally using act
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Test coverage
+              uses: ArtiomTr/jest-coverage-report-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+

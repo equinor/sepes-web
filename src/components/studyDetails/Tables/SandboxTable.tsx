@@ -4,6 +4,7 @@ import { Table, Icon } from '@equinor/eds-core-react';
 import { chevron_right } from '@equinor/eds-icons';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
+import { getStudyId } from 'utils/CommonUtil';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -16,7 +17,7 @@ type SandboxTableProps = {
 };
 
 const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
-    const studyId = window.location.pathname.split('/')[2];
+    const studyId = getStudyId();
     const history = useHistory();
     const returnCell = (value: string, sandboxId: string, type: 'icon' | 'text') => {
         //This means it is a study specific dataset
