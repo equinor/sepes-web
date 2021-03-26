@@ -25,14 +25,20 @@ const Dropdown = styled.div<{ isOpen: any; color: any }>`
     font-family: Equinor;
     letter-spacing: 0.4px;
     outline-color: #007079;
-    border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
-    border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
-    border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
-    border-left: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-bottom: ${(props: any) => (props.isOpen ? '0px solid #007079' : '1px solid #6f6f6f')};
+    border-top: ${(props: any) => (props.isOpen ? '0px solid #007079' : '0px')};
+    border-right: ${(props: any) => (props.isOpen ? '0px solid #007079' : '0px')};
+    border-left: ${(props: any) => (props.isOpen ? '0px solid #007079' : '0px')};
     &:hover {
         cursor: pointer;
     }
 `;
+/*
+    border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
+    border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-left: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+*/
 
 const DropdownOption = styled.p`
     font-family: ${(props) => props.theme.font};
