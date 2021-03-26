@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/equinor/sepes-web/compare/0.1.17...0.1.18) (2021-03-26)
+
+
+### Bug Fixes
+
+* error notification bug ([f95a1a6](https://github.com/equinor/sepes-web/commit/f95a1a6c8d09a7c870f4ef4afc5a841d955ad2ba))
+* **sandbox:** update vm disk endpoint ([#725](https://github.com/equinor/sepes-web/issues/725)) ([4c165d3](https://github.com/equinor/sepes-web/commit/4c165d34ef255556f79d269af940c9ee6cbee6ae))
+
 ### [0.1.17](https://github.com/equinor/sepes-web/compare/0.1.16...0.1.17) (2021-03-18)
 
 
