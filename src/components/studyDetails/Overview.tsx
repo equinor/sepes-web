@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
-import { Button, TextField, Tooltip } from '@equinor/eds-core-react';
+import { Button, TextField, Tooltip, Typography } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
@@ -85,11 +85,13 @@ const Overview: React.FC<OverviewProps> = ({
                     <Label>Results and learnings</Label>
                     {!editMode ? (
                         <div style={{ marginTop: '8px' }}>
-                            {study.permissions.readResulsAndLearnings ? (
-                                lineBreak(resultsAndLearnings.resultsAndLearnings || '-')
-                            ) : (
-                                <em>You do not have permission to view results and learnings</em>
-                            )}
+                            <Typography variant="body_long">
+                                {study.permissions.readResulsAndLearnings ? (
+                                    lineBreak(resultsAndLearnings.resultsAndLearnings || '-')
+                                ) : (
+                                    <em>You do not have permission to view results and learnings</em>
+                                )}
+                            </Typography>
                         </div>
                     ) : (
                         <TextField
