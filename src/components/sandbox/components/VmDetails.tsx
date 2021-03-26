@@ -448,6 +448,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                                 )
                                                             }
                                                             name="useClientIp"
+                                                            tabIndex={0}
                                                             preSlectedValue={'Custom'}
                                                             data-cy="vm_rule_useClientIp"
                                                             disabled={!permissions.editInboundRules}
@@ -496,6 +497,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             preSlectedValue={rule.protocol || 'Custom'}
                                                             data-cy="vm_rule_protocol"
                                                             disabled={!permissions.editInboundRules}
+                                                            width="240px"
+                                                            tabIndex={1}
                                                         />
                                                     </div>
                                                 </Cell>

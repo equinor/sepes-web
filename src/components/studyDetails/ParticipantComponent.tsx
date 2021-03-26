@@ -244,6 +244,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             width="224px"
                             resetState={roleNotSelected}
                             disabled={participantNotSelected || loading}
+                            tabIndex={0}
                         />
                     </Tooltip>
                 </div>

@@ -62,7 +62,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
                         <div>Drop here</div>
                     </div>
                 ) : (
-                    <div className="dropzone-content">
+                    <div className="dropzone-content" style={{ textAlign: 'center' }}>
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>
                             {!loading ? (

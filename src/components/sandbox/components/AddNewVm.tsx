@@ -354,9 +354,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     data-cy="vm_operatingSystem"
                     meta="(required)"
                     useOverflow
-                    style={{ marginBottom: '24px' }}
                     tabIndex={0}
                 />
+                <div style={{ marginTop: '24px' }} />
                 <TextField
                     id="textfield2"
                     autoComplete="off"
