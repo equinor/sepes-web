@@ -27,6 +27,7 @@ type SandboxComponentProps = {
     updateCache: any;
     disabled: boolean;
     study: StudyObj;
+    setLoading: any;
 };
 
 const SandboxComponent: React.FC<SandboxComponentProps> = ({
@@ -36,7 +37,8 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
     setUpdateCache,
     updateCache,
     disabled,
-    study
+    study,
+    setLoading
 }) => {
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -82,6 +84,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         study={study}
+                        setLoading={setLoading}
                     />
                 )}
             </DropdownWrapper>

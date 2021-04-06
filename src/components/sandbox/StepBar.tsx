@@ -29,6 +29,13 @@ const Wrapper = styled.div`
     background-color: #ffffff;
 `;
 
+const CostAnalysisWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 32px;
+    margin-bottom: -8px;
+    color: #007079;
+`;
+
 const BtnTwoWrapper = styled.div`
     display: grid;
     grid-template-columns: 160px 160px;
@@ -440,16 +447,23 @@ const StepBar: React.FC<StepBarProps> = ({
                                 float: 'right'
                             }}
                         >
-                            <Typography
-                                style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
-                                variant="h2"
-                            >
-                                Cost analysis
-                            </Typography>
-                            {sandbox.linkToCostAnalysis ? (
-                                EquinorIcon('external_link', '#007079', 24, () => {}, true)
-                            ) : (
-                                <DotProgress color="primary" />
+                            {sandbox.linkToCostAnalysis && (
+                                <CostAnalysisWrapper>
+                                    <Typography
+                                        style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                        variant="h2"
+                                        color="#007079"
+                                    >
+                                        Cost analysis
+                                    </Typography>
+                                    <Icon
+                                        style={{ marginLeft: '12px' }}
+                                        color="#007079"
+                                        name="external_link"
+                                        size={24}
+                                        title="external_link"
+                                    />
+                                </CostAnalysisWrapper>
                             )}
                         </a>
                     </Tooltip>
