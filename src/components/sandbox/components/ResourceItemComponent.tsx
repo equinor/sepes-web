@@ -13,6 +13,13 @@ const Wrapper = styled.div`
 
 const SatusWrapper = styled.div`
     margin-left: auto;
+    margin-top: 4px;
+`;
+
+const SatusWrapperCentered = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
 `;
 
 type ResourceItemComponentProps = {
@@ -45,10 +52,10 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
 
     return (
         <Wrapper>
-            <div>
+            <SatusWrapperCentered>
                 {type === resourceType.virtualMachine ? (
-                    <>
-                        <Label>{type}</Label>
+                    <div>
+                        <Label style={{ marginBottom: '-24px' }}>{type}</Label> <br />
                         <div>
                             <a
                                 style={{ color: '#007079' }}
@@ -59,11 +66,11 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                                 {name}
                             </a>
                         </div>
-                    </>
+                    </div>
                 ) : (
-                    <div style={{ marginTop: '4px' }}>{type}</div>
+                    <div>{type}</div>
                 )}
-            </div>
+            </SatusWrapperCentered>
             <SatusWrapper>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {' '}
