@@ -7,7 +7,6 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { createSandbox } from '../../services/Api';
-import LoadingFull from '../common/LoadingComponentFullscreen';
 import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetchUrl from '../common/hooks/useFetchUrl';
@@ -35,6 +34,7 @@ type CreateSandboxComponentProps = {
     setUpdateCache: any;
     updateCache: any;
     study: StudyObj;
+    setLoading: any;
 };
 
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
@@ -43,12 +43,12 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setHasChanged,
     setUpdateCache,
     updateCache,
-    study
+    study,
+    setLoading
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
-    const [loading, setLoading] = useState<Boolean>(false);
     const wrapperRef = useRef(null);
     useClickOutside(wrapperRef, setToggle);
 
@@ -91,6 +91,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             return;
         }
         const studyId = getStudyId();
+
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
@@ -105,7 +106,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             }
         });
     };
-    return !loading ? (
+    return (
         <Wrapper ref={wrapperRef}>
             <TextField
                 id="textfield1"
@@ -167,8 +168,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 </Tooltip>
             </div>
         </Wrapper>
-    ) : (
-        <LoadingFull noTimeout />
     );
 };
 

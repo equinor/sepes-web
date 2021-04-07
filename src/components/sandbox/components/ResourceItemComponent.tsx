@@ -50,13 +50,18 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                     <>
                         <Label>{type}</Label>
                         <div>
-                            <a href={linkToResource} target="_blank" rel="noopener noreferrer">
+                            <a
+                                style={{ color: '#007079' }}
+                                href={linkToResource}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {name}
                             </a>
                         </div>
                     </>
                 ) : (
-                    <div>{type}</div>
+                    <div style={{ marginTop: '4px' }}>{type}</div>
                 )}
             </div>
             <SatusWrapper>

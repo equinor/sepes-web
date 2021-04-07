@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SearchWithDropdown from '../../components/common/customComponents/SearchWithDropdown';
+import SearchWithDropdown from '../../../components/common/customComponents/SearchWithDropdown';
 
 const checkIfDatasetIsAlreadyAdded = (id: string) => {};
 

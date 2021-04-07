@@ -1,6 +1,6 @@
 /*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -27,6 +27,13 @@ const Wrapper = styled.div`
     border-radius: 4px;
     padding: 16px;
     background-color: #ffffff;
+`;
+
+const CostAnalysisWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 32px;
+    margin-bottom: -8px;
+    color: #007079;
 `;
 
 const BtnTwoWrapper = styled.div`
@@ -440,16 +447,23 @@ const StepBar: React.FC<StepBarProps> = ({
                                 float: 'right'
                             }}
                         >
-                            <Typography
-                                style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
-                                variant="h2"
-                            >
-                                Cost analysis
-                            </Typography>
-                            {sandbox.linkToCostAnalysis ? (
-                                EquinorIcon('external_link', '#007079', 24, () => {}, true)
-                            ) : (
-                                <DotProgress color="primary" />
+                            {sandbox.linkToCostAnalysis && (
+                                <CostAnalysisWrapper>
+                                    <Typography
+                                        style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                        variant="h2"
+                                        color="#007079"
+                                    >
+                                        Cost analysis
+                                    </Typography>
+                                    <Icon
+                                        style={{ marginLeft: '12px' }}
+                                        color="#007079"
+                                        name="external_link"
+                                        size={24}
+                                        title="external_link"
+                                    />
+                                </CostAnalysisWrapper>
                             )}
                         </a>
                     </Tooltip>
