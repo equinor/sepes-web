@@ -3,8 +3,8 @@ import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
-    height: 125px;
-    width: 125px;
+    height: 123px;
+    width: 123px;
     display: flex;
     justify-content: center;
     align-items: center;
