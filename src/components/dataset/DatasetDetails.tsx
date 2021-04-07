@@ -19,7 +19,7 @@ import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
-import { EquinorIcon, Label } from '../common/StyledComponents';
+import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
