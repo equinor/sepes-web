@@ -13,6 +13,8 @@ const Wrapper = styled.div`
 
 const SatusWrapper = styled.div`
     margin-left: auto;
+    display: flex;
+    justify-content: center;
     margin-top: 4px;
 `;
 
