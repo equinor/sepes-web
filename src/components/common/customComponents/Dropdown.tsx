@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useClickOutside from './useClickOutside';
 import styled from 'styled-components';
-import { Icon } from '@equinor/eds-core-react';
+import { Icon, Typography } from '@equinor/eds-core-react';
 import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
 import { truncate } from '../helpers';
@@ -43,7 +43,6 @@ const DropdownOption = styled.p`
     font-size: 16px;
     width: ${(props: any) => (props.width ? props.width : '220px')};
     padding-left: 24px;
-    padding-top: 16px;
 `;
 
 const Label = styled.p`
@@ -121,7 +120,9 @@ const CoreDevDropdown = (props: any) => {
                     {options.map((option: any, i: number) => {
                         return (
                             <li key={option.displayValue} onMouseDown={() => handleChange(option)}>
-                                <DropdownOption>{option.displayValue}</DropdownOption>
+                                <DropdownOption>
+                                    <Typography variant="body_long">{option.displayValue}</Typography>
+                                </DropdownOption>
                             </li>
                         );
                     })}

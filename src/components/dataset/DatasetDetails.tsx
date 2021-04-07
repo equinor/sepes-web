@@ -19,7 +19,7 @@ import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import * as notify from '../common/notify';
-import { EquinorIcon, Label } from '../common/StyledComponents';
+import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
@@ -72,6 +72,17 @@ const AttachmentWrapper = styled.div`
     grid-gap: 0 8px;
 `;
 
+const StorageAccountWrapper = styled.div`
+    margin-top: 4px;
+    display: flex;
+    color: #007079;
+`;
+/*
+display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: -8px;
+    color: #007079;
+*/
 const checkUrlIfGeneralDataset = () => {
     if (window.location.pathname.split('/')[1] === 'datasets') {
         return true;
@@ -523,18 +534,24 @@ const DatasetDetails = (props: any) => {
                     <Wrapper>
                         <div>
                             <div style={{ marginBottom: '16px' }}>
-                                <Typography variant="h1">{dataset?.name}</Typography>
+                                <Typography variant="h2">{dataset?.name}</Typography>
                                 {!checkUrlIfGeneralDataset() ? (
-                                    <span>This data is only available for this study</span>
+                                    <Typography variant="h6">This data set is only available for this study</Typography>
                                 ) : null}
                             </div>
                             {!checkUrlIfGeneralDataset() ? (
                                 <Link
                                     to={'/studies/' + studyId}
-                                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
+                                    style={{
+                                        color: '#007079',
+                                        fontSize: '16px',
+                                        margin: '32px 0 0 16px',
+                                        display: 'flex',
+                                        lineHeight: '16px'
+                                    }}
                                     data-cy="dataset_back_to_study"
                                 >
-                                    <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
+                                    <Icon color="#007079" name="arrow_back" size={16} style={{ marginRight: '16px' }} />
                                     Back to study
                                 </Link>
                             ) : (
@@ -604,14 +621,14 @@ const DatasetDetails = (props: any) => {
                                             );
                                         })
                                     ) : (
-                                        <div style={{ textAlign: 'center' }}>
+                                        <div style={{ textAlign: 'center', marginTop: '16px' }}>
                                             {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
                                         </div>
                                     )
                                 ) : (
                                     <div style={{ textAlign: 'center' }}>
                                         <DotProgress color="primary" />
-                                        <div>Loading files..</div>
+                                        <div style={{ marginTop: '8px' }}>Loading files..</div>
                                     </div>
                                 )}
                             </div>
@@ -622,8 +639,17 @@ const DatasetDetails = (props: any) => {
                                     <Label>Storage account</Label>
                                     {dataset?.storageAccountLink ? (
                                         <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
-                                            <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
-                                            {EquinorIcon('external_link', '#007079', 24)}
+                                            <StorageAccountWrapper>
+                                                <span style={{ marginRight: '8px' }}>
+                                                    {dataset?.storageAccountName}
+                                                </span>
+                                                <Icon
+                                                    color="#007079"
+                                                    name="external_link"
+                                                    size={24}
+                                                    style={{ marginTop: '-6px' }}
+                                                />
+                                            </StorageAccountWrapper>
                                         </a>
                                     ) : (
                                         <Tooltip title={storageAccountStatus} placement="top">

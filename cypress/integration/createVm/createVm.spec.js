@@ -68,13 +68,12 @@ describe('Create vm', () => {
 
     it('fills out vm information', () => {
         cy.get('[data-cy=vm_name]').type('cy name');
+        cy.get('[data-cy=vm_operatingSystem]').click();
+        cy.contains('Windows Server 2019 Datacenter').click();
         cy.get('[data-cy=vm_username]').type('cy username');
         cy.get('[data-cy=vm_password]').type('Cypassword123!!');
         cy.get('[data-cy=vm_size]').click();
         cy.contains('Standard_F1').click();
-
-        cy.get('[data-cy=vm_operatingSystem]').click();
-        cy.contains('Windows Server 2019 Datacenter').click();
 
         cy.get('[data-cy=vm_dataDisks]').click();
         cy.contains('64 GB').click();
