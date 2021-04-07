@@ -66,19 +66,24 @@ const CustomContent = (props) => {
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <p>{icon}</p>
+            <div>{icon}</div>
             <span>
-                <p style={{ display: 'inline', fontSize: '14px' }}>
-                    {message} <br />
+                <div style={{ display: 'inline', fontSize: '14px' }}>
+                    <Typography variant="body_short" style={{ marginTop: '16px' }}>
+                        {message}
+                    </Typography>
                     <br />
-                    Please contact support. Providing the following Event Id could make it easier to locate the problem:{' '}
-                    {requestId}
-                </p>
-                <Tooltip title="Copy to clipboard" placement="top">
-                    <CopyToClipboard text={requestId}>
-                        <Icon name="copy" size={20} color="#007079" className="icon" />
-                    </CopyToClipboard>
-                </Tooltip>
+                    <br />
+                    <Typography variant="body_short">
+                        Please contact support. Providing the following Event Id could make it easier to locate the
+                        problem: {requestId}{' '}
+                        <Tooltip title="Copy to clipboard" placement="top">
+                            <CopyToClipboard text={requestId}>
+                                <Icon name="copy" size={20} color="#007079" className="icon" />
+                            </CopyToClipboard>
+                        </Tooltip>
+                    </Typography>
+                </div>
             </span>
         </Card>
     );

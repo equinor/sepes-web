@@ -24,7 +24,6 @@ const MoreActionsWrapper = styled.div`
     position: absolute;
     background-color: #ffffff;
     box-shadow: 0 0 4px 4px #e7e7e7;
-    width: 296px;
     border-radius: 4px;
     margin-top: 196px;
     display: grid;
