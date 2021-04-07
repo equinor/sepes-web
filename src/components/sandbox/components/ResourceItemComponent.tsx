@@ -46,18 +46,6 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
         });
     };
 
-    const returnProgressDots = () => {
-        if (type === resourceType.virtualMachine) {
-            console.log(name);
-            return (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '24px' }}>
-                    <DotProgress color="primary" />
-                </div>
-            );
-        }
-        return <DotProgress color="primary" />;
-    };
-
     return (
         <Wrapper>
             <div>
