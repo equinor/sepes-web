@@ -4,12 +4,19 @@ import { Table } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import '../../../styles/Table.scss';
 import { SandboxObj } from '../../common/interfaces';
+import styled from 'styled-components';
 
 const { Body, Row, Cell, Head } = Table;
 
 type SandboxConfirmedProps = {
     sandbox: SandboxObj;
 };
+
+const SatusWrapper = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+`;
 
 const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandbox }) => {
     return (
@@ -26,8 +33,10 @@ const DatasetConfirmed: React.FC<SandboxConfirmedProps> = ({ sandbox }) => {
                         return (
                             <Row key={index} id="tableRowNoPointerNoColor">
                                 <Cell>
-                                    {EquinorIcon('check', '#007079', 24)}
-                                    <span style={{ marginLeft: '32px' }}>{dataset.name}</span>
+                                    <SatusWrapper>
+                                        {EquinorIcon('check', '#007079', 24)}
+                                        <span style={{ marginLeft: '32px' }}>{dataset.name}</span>
+                                    </SatusWrapper>
                                 </Cell>
                                 <Cell style={{ width: '32px' }}>{dataset.status}</Cell>
                             </Row>

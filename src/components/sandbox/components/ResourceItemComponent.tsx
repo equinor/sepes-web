@@ -15,6 +15,12 @@ const SatusWrapper = styled.div`
     margin-left: auto;
 `;
 
+const SatusWrapper2 = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+`;
+
 type ResourceItemComponentProps = {
     name?: string;
     linkToResource: string;
@@ -45,25 +51,17 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
 
     return (
         <Wrapper>
-            <div>
+            <SatusWrapper2>
                 {type === resourceType.virtualMachine ? (
-                    <>
-                        <Label>{type}</Label>
-                        <div>
-                            <a
-                                style={{ color: '#007079' }}
-                                href={linkToResource}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {name}
-                            </a>
-                        </div>
-                    </>
+                    <div>
+                        <a style={{ color: '#007079' }} href={linkToResource} target="_blank" rel="noopener noreferrer">
+                            {name}
+                        </a>
+                    </div>
                 ) : (
                     <div style={{ marginTop: '4px' }}>{type}</div>
                 )}
-            </div>
+            </SatusWrapper2>
             <SatusWrapper>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {' '}

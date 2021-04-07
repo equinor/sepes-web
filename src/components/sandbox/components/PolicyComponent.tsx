@@ -22,7 +22,7 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
                 </Head>
                 <Body>
                     <Row key={1} id="tableRowNoPointerNoColor">
-                        <Cell>{lineBreak(sandbox.restrictionDisplayText)}</Cell>
+                        <Cell style={{ padding: '16px' }}>{lineBreak(sandbox.restrictionDisplayText)}</Cell>
                     </Row>
                 </Body>
             </Table>
