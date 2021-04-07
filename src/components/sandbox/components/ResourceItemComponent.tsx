@@ -13,6 +13,9 @@ const Wrapper = styled.div`
 
 const SatusWrapper = styled.div`
     margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 type ResourceItemComponentProps = {
@@ -41,6 +44,18 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                 getResources();
             }
         });
+    };
+
+    const returnProgressDots = () => {
+        if (type === resourceType.virtualMachine) {
+            console.log(name);
+            return (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '24px' }}>
+                    <DotProgress color="primary" />
+                </div>
+            );
+        }
+        return <DotProgress color="primary" />;
     };
 
     return (
