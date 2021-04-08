@@ -301,7 +301,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
-                    <span style={{ marginLeft: '0' }}>More options</span>
+                    <span style={{ marginLeft: '8px', marginRight: '4px' }}>More options</span>
                     {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu

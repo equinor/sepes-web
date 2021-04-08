@@ -334,11 +334,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     meta={returnLimitMeta(20, vm.name)}
                     data-cy="vm_name"
                     inputIcon={
-                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
-                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                            </Tooltip>
-                        </div>
+                        <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
+                            <Icon name="info_circle" />
+                        </Tooltip>
                     }
                 />
                 <div style={{ marginTop: '24px', marginBottom: '24px' }}>
@@ -370,11 +368,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     disabled={!vm.operatingSystem}
                     helperText={usernameHelpText}
                     inputIcon={
-                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
-                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                            </Tooltip>
-                        </div>
+                        <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
+                            <Icon name="info_circle" />
+                        </Tooltip>
                     }
                 />
                 <div style={{ marginTop: '24px' }}>
@@ -390,14 +386,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         data-cy="vm_password"
                         variant={returnPasswordVariant()}
                         inputIcon={
-                            <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                <Tooltip
-                                    title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement="right"
-                                >
-                                    <Icon name="info_circle" size={24} color="#6F6F6F" />
-                                </Tooltip>
-                            </div>
+                            <Tooltip
+                                title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
+                                placement="right"
+                            >
+                                <Icon name="info_circle" />
+                            </Tooltip>
                         }
                     />
                 </div>

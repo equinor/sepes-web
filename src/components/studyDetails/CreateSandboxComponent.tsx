@@ -120,8 +120,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 autoComplete="off"
                 autoFocus
                 inputIcon={
-                    <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="left">
+                    <div>
+                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="topRight">
                             <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
