@@ -3,8 +3,8 @@ import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
-    height: 125px;
-    width: 125px;
+    height: 123px;
+    width: 123px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,15 +36,15 @@ const Dropzone = ({ onDrop, accept }: props) => {
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
                 {isDragActive ? (
-                    <p className="dropzone-content">Drop here</p>
+                    <div className="dropzone-content">Drop here</div>
                 ) : (
-                    <p className="dropzone-content" style={{ textAlign: 'center' }}>
+                    <div className="dropzone-content" style={{ textAlign: 'center' }}>
                         Click or drag n drop photo. <br />
                         <br />
                         <span style={{ fontSize: '10px' }}>
                             <em>Leaving blank removes logo</em>
                         </span>
-                    </p>
+                    </div>
                 )}
             </div>
         </ChooseImgdiv>

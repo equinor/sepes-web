@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { DatasetClassificationObj, SandboxObj } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import styled from 'styled-components';
@@ -10,7 +10,7 @@ import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
-import { deleteFileInDataset, getResourceStatus } from '../../services/Api';
+import { getResourceStatus } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 
 const Wrapper = styled.div`
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
     grid-template-rows: auto 4fr;
     grid-gap: 16px;
     margin: 8px 32px 32px 32px;
-    padding: 16px;
+    padding-top: 16px;
 `;
 
 type SandboxProps = {};

@@ -77,7 +77,7 @@ const StudyDetails = () => {
 
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
-
+    const [loading, setLoading] = useState<Boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
 
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
@@ -89,6 +89,8 @@ const StudyDetails = () => {
     );
 
     const permissions = useContext(Permissions);
+    const displayStudyInfo = !studyResponse.loading && study;
+    const noTimeout: any = deleteStudyInProgress || loading;
 
     useEffect(() => {
         return () => {
@@ -120,6 +122,7 @@ const StudyDetails = () => {
                         updateCache={updateCache}
                         disabled={study.permissions && !study.permissions.addRemoveSandbox}
                         study={study}
+                        setLoading={setLoading}
                     />
                 );
             case 3:
@@ -152,7 +155,7 @@ const StudyDetails = () => {
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
                 <Promt hasChanged={hasChanged} />
-                {!studyResponse.loading && study ? (
+                {displayStudyInfo ? (
                     <StudyComponentFull
                         study={study}
                         newStudy={newStudy}
@@ -167,10 +170,9 @@ const StudyDetails = () => {
                         setDeleteStudyInProgress={setDeleteStudyInProgress}
                     />
                 ) : (
-                    <LoadingWrapper>
-                        <LoadingFull noTimeout={deleteStudyInProgress} />
-                    </LoadingWrapper>
+                    <LoadingWrapper />
                 )}
+                {(studyResponse.loading || loading) && <LoadingFull noTimeout={noTimeout} />}
                 {!newStudy && (
                     <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>

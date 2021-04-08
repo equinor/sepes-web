@@ -10,6 +10,7 @@ import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
+import LoadingFull from 'components/common/LoadingComponentFullscreen';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -22,6 +23,7 @@ export const Permissions = React.createContext<GeneralPermissions>({
 });
 
 const renderApp = async (user) => {
+    ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
         if (result && result.Message) {
             return ReactDOM.render(<GeneralError />, document.getElementById('root'));

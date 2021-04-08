@@ -321,11 +321,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                             data-cy="dataset_storage_name"
                             inputIcon={
-                                <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                    <Tooltip title="This cannot be changed later" placement="right">
-                                        {EquinorIcon('error_outlined', '#6F6F6F', 24)}
-                                    </Tooltip>
-                                </div>
+                                <Tooltip title="This cannot be changed later" placement="right">
+                                    {EquinorIcon('error_outlined', '#6F6F6F', 24)}
+                                </Tooltip>
                             }
                         />
                     )}

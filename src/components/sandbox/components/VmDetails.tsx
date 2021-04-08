@@ -221,6 +221,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const addRule = () => {
+        setHasChanged(true);
         updateHasChanged(true);
         let currentRules: any = [];
         if (vm.rules && vm.rules.length) {
@@ -410,10 +411,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                             <Row>
                                 <Cell scope="col">Inbound rules</Cell>
                                 <Cell style={{ width: '220px' }} scope="col" />
-                                <Cell scope="col" />
+                                <Cell style={{ width: '180px' }} scope="col" />
                                 <Cell style={{ width: '220px' }} scope="col" />
-                                <Cell scope="col" />
-                                <Cell scope="col" />
+                                <Cell style={{ width: '100px' }} scope="col" />
+                                <Cell scope="col" style={{ width: '24px' }} />
                             </Row>
                         </Head>
                         <Body>
@@ -433,11 +434,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         data-cy="vm_rule_description"
                                                         disabled={!permissions.editInboundRules}
                                                         autoComplete="off"
-                                                        autoFocus
+                                                        autoFocus={hasChanged}
                                                     />
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '16px' }}>
+                                                    <div style={{ paddingBottom: '18px' }}>
                                                         <CoreDevDropdown
                                                             options={ipMethod}
                                                             onChange={(e: any) =>
@@ -487,7 +488,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     )}
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '16px' }}>
+                                                    <div style={{ paddingBottom: '18px' }}>
                                                         <CoreDevDropdown
                                                             options={portsOptions}
                                                             onChange={(e: any) => {
@@ -504,7 +505,9 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                 </Cell>
                                                 <Cell>
                                                     {rule.protocol !== protocolOptions.CUSTOM ? (
-                                                        <span>{rule.port || '-'}</span>
+                                                        <div style={{ width: '100px', textAlign: 'center' }}>
+                                                            <span>{rule.port || '-'}</span>
+                                                        </div>
                                                     ) : (
                                                         <Tooltip
                                                             title={
@@ -528,6 +531,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                                 type="number"
                                                                 placeholder="Port"
                                                                 data-cy="vm_rule_port"
+                                                                style={{ width: '100px' }}
                                                                 disabled={!permissions.editInboundRules}
                                                             />
                                                         </Tooltip>

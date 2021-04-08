@@ -24,6 +24,13 @@ const ResourceWrapper = styled.div`
     }
 `;
 
+const SatusWrapper = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 24px 16px 16px 16px;
+`;
+
 type ExecutionProps = {
     resources: any;
     sandbox: SandboxObj;
@@ -33,9 +40,10 @@ type ExecutionProps = {
 const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources }) => {
     return (
         <Wrapper>
-            <span style={{ padding: '16px' }}>
-                {EquinorIcon('mood_very_happy', '#007079', 24)} Data is now available in storage account
-            </span>
+            <SatusWrapper>
+                {EquinorIcon('mood_very_happy', '#007079', 24)}{' '}
+                <div style={{ marginLeft: '8px' }}>Data is now available in storage account</div>
+            </SatusWrapper>
             <ResourceWrapper>
                 <div>
                     <DatasetConfirmed sandbox={sandbox} />

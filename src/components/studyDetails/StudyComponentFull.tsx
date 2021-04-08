@@ -401,20 +401,18 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     onChange={(e: any) => handleChange('name', e.target.value)}
                                     label="Study name"
                                     meta="(required)"
-                                    style={{ margin: 'auto', marginLeft: '0' }}
+                                    style={{ margin: 'auto', marginLeft: '0', resize: 'none' }}
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
                                     autoFocus
                                     inputIcon={
-                                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                            <Tooltip
-                                                title="The value must be between 3 and 20 characters long (A-Z)"
-                                                placement="right"
-                                            >
-                                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                                            </Tooltip>
-                                        </div>
+                                        <Tooltip
+                                            title="The value must be between 3 and 20 characters long (A-Z)"
+                                            placement="right"
+                                        >
+                                            <Icon name="info_circle" />
+                                        </Tooltip>
                                     }
                                 />
                                 <TextField
@@ -427,16 +425,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     label="Vendor"
                                     meta="(required)"
                                     data-cy="study_vendor"
-                                    inputIcon={
-                                        <div style={{ marginRight: '-80px' }}>
-                                            <Icon
-                                                style={{ position: 'absolute', right: '4px' }}
-                                                name="business"
-                                                size={24}
-                                                color="#6F6F6F"
-                                            />
-                                        </div>
-                                    }
+                                    inputIcon={<Icon name="business" />}
                                 />
                                 <TextField
                                     id="textfield3"
@@ -446,16 +435,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     label="wbs"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
-                                    inputIcon={
-                                        <div style={{ marginRight: '-80px' }}>
-                                            <Icon
-                                                style={{ position: 'absolute', right: '4px', top: '-2px' }}
-                                                name="dollar"
-                                                size={24}
-                                                color="#6F6F6F"
-                                            />
-                                        </div>
-                                    }
+                                    inputIcon={<Icon name="dollar" />}
                                 />
                             </>
                         )}
