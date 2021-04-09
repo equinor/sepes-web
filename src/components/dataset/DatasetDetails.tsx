@@ -636,7 +636,7 @@ const DatasetDetails = (props: any) => {
                         {!datasetResponse.loading ? (
                             <RightWrapper>
                                 <div>
-                                    <Label>Storage account</Label>
+                                    <Label>Azure storage account</Label>
                                     {dataset?.storageAccountLink ? (
                                         <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
                                             <StorageAccountWrapper>
@@ -658,7 +658,7 @@ const DatasetDetails = (props: any) => {
                                     )}
                                 </div>
                                 <div>
-                                    <Label>Location</Label>
+                                    <Label>Azure Location</Label>
                                     {returnField(dataset?.location)}
                                 </div>
                                 <div>
