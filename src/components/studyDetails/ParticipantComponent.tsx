@@ -120,7 +120,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     history.push('/');
                 }
             } else {
-                notify.show('danger', '500', result);
+                //notify.show('danger', '500', result);
             }
             rolesResponse.setLoading(false);
         });
@@ -140,7 +140,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
                 } else {
-                    notify.show('danger', '500', result);
+                    //notify.show('danger', '500', result);
                     console.log('Err getting participants');
                 }
                 rolesResponse.setLoading(false);

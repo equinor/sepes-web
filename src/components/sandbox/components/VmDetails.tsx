@@ -124,7 +124,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     tempsVms[index].extendedInfo = result;
                     setVms(tempsVms);
                 } else {
-                    notify.show('danger', '500', result);
+                    //notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -266,7 +266,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 getResources();
                 setVmSaved(true);
             } else {
-                notify.show('danger', '500', result);
+                //notify.show('danger', '500', result);
                 console.log('Err');
             }
         });

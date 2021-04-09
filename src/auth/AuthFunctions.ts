@@ -3,6 +3,7 @@ import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
+import * as notify from '../components/common/notify';
 
 export const acquireTokenSilent = async () => {
     myMSALObj
@@ -45,14 +46,26 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     body: JSON.stringify(body),
                     signal
                 };
+                /*
+                const response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+
+                if (!response.ok) {
+                    notify.show('danger', response.status, response);
+                }
+                return resolve(await JSON.parse((await response.text()) ?? {}));
+*/
+
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
                     .then((response) => {
-                        return response.text();
+                        if (response.ok) {
+                            return response.text();
+                        }
+                        notify.show('danger', response.status, response);
                     })
                     .then((responseData) => {
                         return resolve(responseData ? JSON.parse(responseData) : {});
                     })
-                    .catch((error) => console.log(error));
+                    .catch((error) => console.log('err'));
             } catch (error) {
                 return resolve(error);
             }

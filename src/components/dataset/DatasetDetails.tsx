@@ -271,7 +271,7 @@ const DatasetDetails = (props: any) => {
         if (!checkUrlIfGeneralDataset()) {
             getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
                 if (result && (result.errors || result.Message)) {
-                    notify.show('danger', '500', result);
+                    //notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     checkStatusOfStorageAccount(result);
@@ -286,7 +286,7 @@ const DatasetDetails = (props: any) => {
             getStudySpecificDatasetFiles(datasetId, controllerFiles.signal).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
-                    notify.show('danger', '500', result);
+                    //notify.show('danger', '500', result);
                     console.log('Err');
                 } else if (result && isSubscribed) {
                     setFiles(result);
@@ -337,7 +337,7 @@ const DatasetDetails = (props: any) => {
                 history.push('/studies/' + studyId);
             } else {
                 console.log('Err');
-                notify.show('danger', '500', result);
+                //notify.show('danger', '500', result);
             }
         });
     };
@@ -397,7 +397,7 @@ const DatasetDetails = (props: any) => {
                 } else {
                     setFiles(previousFiles);
                     console.log('Err');
-                    notify.show('danger', '500', result);
+                    //notify.show('danger', '500', result);
                 }
             });
         }
@@ -587,7 +587,7 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            <div style={{ paddingTop: '8px' }}>
+                            <div style={{ paddingTop: '16px' }}>
                                 {!loadingFiles ? (
                                     files.length > 0 ? (
                                         files.map((file: any, i: number) => {

@@ -82,9 +82,9 @@ const StudyDetails = () => {
 
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const resultsAndLearningsResponse = useFetchUrl(
-        getResultsAndLearningsUrl(study.id),
+        getResultsAndLearningsUrl(id),
         setResultsAndLearnings,
-        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
         controller
     );
 

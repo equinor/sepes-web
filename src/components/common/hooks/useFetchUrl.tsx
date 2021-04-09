@@ -37,7 +37,7 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
                         setter(result);
                     } else if (result && ((result.Message && result.RequestId) || result.errors)) {
                         setNotFound(true);
-                        notify.show('danger', '500', result);
+                        ////notify.show('danger', '500', result);
                         console.log('Err');
                     }
                 }
