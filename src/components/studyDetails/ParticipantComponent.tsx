@@ -118,7 +118,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
                     history.push('/');
                 }
-            } else {
             }
             rolesResponse.setLoading(false);
         });

@@ -188,7 +188,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 vmsList.push(result);
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
-            } else {
             }
             setLoading(false);
         });
@@ -204,7 +203,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             getVirtualMachineCost(sandbox?.id, vmPrice).then((result: any) => {
                 if (result && !result.Message) {
                     setVmEstimatedCost(result);
-                } else {
                 }
             });
         }
@@ -223,7 +221,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         getVmName(calculateName).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
-            } else {
             }
         });
     };
