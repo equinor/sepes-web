@@ -66,7 +66,9 @@ const CustomContent = (props) => {
     return (
         <Card variant={type}>
             <FontAwesomeIcon icon={faTimes} size="1x" style={{ float: 'right', pointerEvents: 'auto' }} />
-            <div>{icon}</div>
+            <div>
+                {icon} Code: {code}
+            </div>
             <span>
                 <div style={{ display: 'inline', fontSize: '14px' }}>
                     <Typography variant="body_short" style={{ marginTop: '16px' }}>

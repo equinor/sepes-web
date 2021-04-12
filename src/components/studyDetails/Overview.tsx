@@ -8,7 +8,6 @@ import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak } from '../common/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
-import * as notify from '../common/notify';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
@@ -63,7 +62,6 @@ const Overview: React.FC<OverviewProps> = ({
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             }
         });
