@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-fragments */
 import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { TopBar, Icon, Tooltip, Button } from '@equinor/eds-core-react';
+import { TopBar, Icon, Tooltip, Button, Divider } from '@equinor/eds-core-react';
 import NavTabs from './NavTabs';
 import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
@@ -33,11 +33,12 @@ const Icons = styled.div`
 const LogoutWrapper = styled.div`
     position: absolute;
     right: 8px;
-    background-color: #f7f7f7;
+    background-color: #ffffff;
     padding: 16px;
     z-index: 99999;
     border-radius: 4px;
     box-shadow: 0 0 4px 4px #e7e7e7;
+    text-align: center;
 `;
 
 const LEFT_CHOICES = {
@@ -98,6 +99,10 @@ const Bar = (props: any) => {
             setToggle(false);
         }
     };
+
+    const onChangelogClick = () => {
+        setToggle(false);
+    };
     return (
         <Wrapper>
             <TopBar>
@@ -107,8 +112,13 @@ const Bar = (props: any) => {
             </TopBar>
             {toggle && (
                 <LogoutWrapper ref={wrapperRef}>
-                    <div style={{ marginBottom: '8px' }}>{user.getAccount().name}</div>
-                    <EquinorLink style={{ marginLeft: '48px' }} to="/" onClick={() => user.logout()}>
+                    <div>{user.getAccount().name}</div>
+                    <Divider color="medium" variant="small" />
+                    <EquinorLink style={{ marginBottom: '8px' }} to="/releasenotes" onClick={onChangelogClick}>
+                        Release Notes
+                    </EquinorLink>
+                    <div style={{ marginBottom: '8px' }} />
+                    <EquinorLink to="/" onClick={() => user.logout()}>
                         Log Out
                     </EquinorLink>
                 </LogoutWrapper>
