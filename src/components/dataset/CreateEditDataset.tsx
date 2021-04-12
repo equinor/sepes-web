@@ -18,7 +18,7 @@ import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
+import { dataInventoryLink, classificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
     getDatasetsInStudyUrl,
     getDatasetsUrl,
@@ -355,7 +355,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         tabIndex={0}
                     />
                     <StyledLink
-                        href={ClassificationGuidlinesLink}
+                        href={classificationGuidlinesLink}
                         style={{ marginTop: '-8px' }}
                         target="_blank"
                         rel="noopener noreferrer"
