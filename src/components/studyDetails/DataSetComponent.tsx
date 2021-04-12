@@ -110,7 +110,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.Message) {
-                    
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);

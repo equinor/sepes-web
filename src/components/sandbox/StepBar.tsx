@@ -183,8 +183,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getCostAnalysisLinkToSandbox = () => {
         getSandboxCostAnalysis(sandboxId).then((result: any) => {
-            if (result && result.Message) {
-            } else {
+            if (result && !result.Message) {
                 setNewCostanalysisLink(result);
                 setSandbox({ ...sandbox, linkToCostAnalysis: result });
             }
