@@ -4,7 +4,6 @@ import { Label, EquinorIcon } from '../../common/StyledComponents';
 import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
-import * as notify from '../../common/notify';
 
 const Wrapper = styled.div`
     display: grid;
@@ -44,7 +43,6 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
     const retryResource = () => {
         apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             } else {
                 getResources();

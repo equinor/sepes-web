@@ -10,6 +10,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import Sandbox from './components/sandbox/Sandbox';
 import './styles/app.scss';
 import NotFound from './components/common/informationalComponents/NotFound';
+import ReleaseNotes from './components/releaseNotes/ReleaseNotes';
 
 interface IContextProps {
     updateCache: any;
@@ -43,6 +44,7 @@ const App = () => {
                         <Route exact path="/datasets/new" component={CreateEditDataset} />
                         <Route exact path={'/datasets/:datasetid(\\d+)'} component={DatasetDetails} />
                         <Route exact path={'/datasets/:datasetid(\\d+)/edit'} component={CreateEditDataset} />
+                        <Route exact path="/releasenotes/" component={ReleaseNotes} />
                         <Route component={NotFound} />
                     </Switch>
                 </UpdateCache.Provider>

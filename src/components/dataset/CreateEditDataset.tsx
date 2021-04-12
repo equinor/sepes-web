@@ -10,7 +10,6 @@ import {
     updateStandardDataset
 } from '../../services/Api';
 import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
-import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -18,7 +17,7 @@ import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
+import { dataInventoryLink, classificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
     getDatasetsInStudyUrl,
     getDatasetsUrl,
@@ -162,7 +161,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 } else {
                     setUserPressedCreate(false);
                     console.log('Err');
-                    notify.show('danger', '500', result);
                 }
             });
         } else if (isDatasetspecificDataset) {
@@ -179,7 +177,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -196,7 +194,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     history.push('/datasets/' + result.id);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -210,7 +208,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -355,7 +353,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         tabIndex={0}
                     />
                     <StyledLink
-                        href={ClassificationGuidlinesLink}
+                        href={classificationGuidlinesLink}
                         style={{ marginTop: '-8px' }}
                         target="_blank"
                         rel="noopener noreferrer"

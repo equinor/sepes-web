@@ -7,7 +7,6 @@ import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { createSandbox } from '../../services/Api';
-import * as notify from '../common/notify';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -100,7 +99,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {
-                notify.show('danger', '500', result);
                 console.log('Err');
                 setLoading(false);
             }
