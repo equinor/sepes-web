@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
 import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
-import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
     getAvailableDatasetsUrl,
@@ -59,7 +58,6 @@ const Dataset: React.FC<datasetProps> = ({
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    //notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     const tempDatasets: any = sandbox.datasets;
@@ -75,7 +73,6 @@ const Dataset: React.FC<datasetProps> = ({
             deleteDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    //notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     const tempDatasets: any = sandbox.datasets;

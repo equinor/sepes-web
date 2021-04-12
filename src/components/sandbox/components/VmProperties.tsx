@@ -5,7 +5,6 @@ import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
-import * as notify from '../../common/notify';
 import useClickOutside from '../../common/customComponents/useClickOutside';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
@@ -90,7 +89,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && result.Message) {
-                //notify.show('danger', '500', result);
             } else {
                 getResources();
             }

@@ -14,7 +14,6 @@ import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
-import * as notify from '../common/notify';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;
@@ -216,7 +215,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             setLoading(false);
             if (result && result.Message) {
                 setDeleteStudyInProgress(true);
-                //notify.show('danger', '500', result);
             } else {
                 history.push('/');
             }
@@ -274,7 +272,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setStudy(newStudy);
                     history.push('/studies/' + result.id);
                 } else {
-                    //notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -291,7 +288,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                 } else {
-                    //notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });

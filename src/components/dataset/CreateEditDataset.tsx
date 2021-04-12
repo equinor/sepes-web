@@ -10,7 +10,6 @@ import {
     updateStandardDataset
 } from '../../services/Api';
 import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
-import * as notify from '../common/notify';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -162,7 +161,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 } else {
                     setUserPressedCreate(false);
                     console.log('Err');
-                    //notify.show('danger', '500', result);
                 }
             });
         } else if (isDatasetspecificDataset) {
@@ -179,7 +177,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    //notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -196,7 +194,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     history.push('/datasets/' + result.id);
                 } else {
                     setUserPressedCreate(false);
-                    //notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -210,7 +208,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    //notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });

@@ -11,7 +11,6 @@ import {
     getVirtualMachineExtended,
     getVirtualMachineRule
 } from '../../../services/Api';
-import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
@@ -124,7 +123,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     tempsVms[index].extendedInfo = result;
                     setVms(tempsVms);
                 } else {
-                    //notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -266,7 +264,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 getResources();
                 setVmSaved(true);
             } else {
-                //notify.show('danger', '500', result);
                 console.log('Err');
             }
         });

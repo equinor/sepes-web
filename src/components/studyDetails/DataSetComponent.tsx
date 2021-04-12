@@ -7,7 +7,6 @@ import { unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 //import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
-import * as notify from '../common/notify';
 //import { Permissions } from '../../index';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -74,7 +73,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
         });
         unlinkStudyDataset(studyId, row.id).then((result: any) => {
             if (result && result.Message) {
-                //notify.show('danger', '500', result);
                 console.log('Err');
             }
             //datasetsResponse.setLoading(false);
@@ -112,7 +110,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.Message) {
-                    //notify.show('danger', '500', result);
+                    
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);

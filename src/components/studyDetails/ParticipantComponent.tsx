@@ -8,7 +8,6 @@ import ParticipantTable from './Tables/ParticipantTable';
 import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
-import * as notify from '../common/notify';
 import { ValidateEmail } from '../common/helpers';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
@@ -120,7 +119,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     history.push('/');
                 }
             } else {
-                //notify.show('danger', '500', result);
             }
             rolesResponse.setLoading(false);
         });
@@ -140,7 +138,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
                 } else {
-                    //notify.show('danger', '500', result);
                     console.log('Err getting participants');
                 }
                 rolesResponse.setLoading(false);
