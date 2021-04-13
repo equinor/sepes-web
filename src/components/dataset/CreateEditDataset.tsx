@@ -276,7 +276,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
-        (datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset) ||
+        (datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset) ||
         (location && location.state && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
