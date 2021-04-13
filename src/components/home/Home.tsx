@@ -20,16 +20,13 @@ const Wrapper = styled.div`
         display: block;
     }
 `;
-//     grid-template-rows: 172px;
-//height: 436px;
-//    min-width: 368px;
 
 const RightWrapper = styled.div`
     background-color: #d5eaf4;
     padding: 16px;
     border-radius: 4px;
     margin-right: 32px;
-    height: 451px;
+    max-height: 451px;
     text-align: center;
 
     @media (max-width: 768px) {
@@ -56,11 +53,12 @@ const Home = () => {
                 </div>
             )}
             <RightWrapper>
-                <div style={{ textAlign: 'initial' }}>
-                    {' '}
-                    <Typography variant="body_long">{lineBreak(sepesInfoText)}</Typography>
+                <div style={{ textAlign: 'initial' }} id="test3">
+                    <Typography variant="body_long" key="yaasd">
+                        {lineBreak(sepesInfoText)}
+                    </Typography>
                 </div>
-                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
+                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }} id="test4">
                     <Tooltip
                         title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
                         placement="top"

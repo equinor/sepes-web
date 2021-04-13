@@ -38,11 +38,11 @@ const Dropdown = styled.div<{ isOpen: any; color: any }>`
     border-left: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
 */
 
-const DropdownOption = styled.p`
+const DropdownOption = styled.div`
     font-family: ${(props) => props.theme.font};
     font-size: 16px;
     width: ${(props: any) => (props.width ? props.width : '220px')};
-    padding-left: 24px;
+    padding: 16px;
 `;
 
 const Label = styled.p`

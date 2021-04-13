@@ -65,7 +65,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     .then((responseData) => {
                         return resolve(responseData ? JSON.parse(responseData) : {});
                     })
-                    .catch((error) => console.log('err'));
+                    .catch((error) => console.log(error));
             } catch (error) {
                 return resolve(error);
             }
