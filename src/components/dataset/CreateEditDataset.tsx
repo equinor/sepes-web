@@ -92,22 +92,20 @@ type CreateEditDatasetProps = {
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
     editingDataset: boolean;
-    permissions: DatasetPermissionObj;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     datasetFromDetails,
     setDatasetFromDetails,
     setShowEditDataset,
-    editingDataset,
-    permissions
+    editingDataset
 }) => {
     const studyId = getStudyId();
     const datasetId = getDatasetId();
     const history = useHistory();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
-    const [loading, setLoading] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
@@ -277,8 +275,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
-        (permissions && permissions.editDataset) ||
-        (location && location.state.canCreateStudySpecificDataset) ? (
+        (datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset) ||
+        (location && location.state && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
@@ -386,7 +384,12 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         </LinkWrapper>
                     </StyledLink>
                     <SaveCancelWrapper>
-                        <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
+                        <Button
+                            disabled={checkForInputErrors() || loading}
+                            onClick={addDataset}
+                            data-cy="dataset_save"
+                            data-testid="dataset_save"
+                        >
                             {loading ? <DotProgress color="primary" /> : 'Save'}
                         </Button>
                         <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">

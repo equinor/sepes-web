@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { passwordValidate, returnLimitMeta, roundUp, validateResourceName } from '../../common/helpers';
+import {
+    passwordValidate,
+    returnLimitMeta,
+    roundUp,
+    validateResourceName,
+    validateUserInput
+} from '../../common/helpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
@@ -252,7 +258,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             }
         });
     };
-
+    /*
     const validateUserInput = () => {
         if (loading || !vmEstimatedCost) {
             return false;
@@ -270,6 +276,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         }
         return false;
     };
+    */
 
     const filterSizes = (_sizes: any) => {
         if (!_sizes) {
@@ -443,14 +450,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             </div>
             <div>
                 <Tooltip
-                    title={!validateUserInput() && !loading ? 'Please fill out all required fields' : ''}
+                    title={
+                        !validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
+                            ? 'Please fill out all required fields'
+                            : ''
+                    }
                     placement="right"
                 >
                     <Button
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"
                         onClick={createVm}
-                        disabled={!validateUserInput()}
+                        disabled={!validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid)}
                     >
                         {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>

@@ -768,7 +768,6 @@ const DatasetDetails = (props: any) => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
-            permissions={dataset.permissions}
         />
     );
 };

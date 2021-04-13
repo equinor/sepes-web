@@ -276,6 +276,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="sandbox_delete"
                     disabled={sandbox.permissions && !sandbox.permissions.delete}
+                    data-testid="delete_sandbox"
                 >
                     {EquinorIcon('delete_forever', 'red', 24)}
                     <span style={{ color: 'red' }}>Delete sandbox</span>
@@ -326,6 +327,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                         setUserClickedMakeAvailable(true);
                                     }}
                                     data-cy="sandbox_make_available"
+                                    data-testid="make_available"
                                     style={{ width: '160px' }}
                                     disabled={
                                         !(
