@@ -177,7 +177,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-
                     console.log('Err');
                 }
             });

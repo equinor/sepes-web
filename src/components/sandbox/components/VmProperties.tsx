@@ -98,30 +98,31 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         <div>
             <Typography variant="h2">Properties</Typography>
             <Wrapper>
-                <Typography variant="body_short">
-                    <div>
-                        <div>OS</div>
-                        <div>Public IP</div>
-                        <div>Private IP</div>
-                        {/*<div>DNS name</div>*/}
-                        <div>Location</div>
-                        <div style={{ marginTop: '16px' }}>Size</div>
-                        <div>vCPUs</div>
-                        <div>RAM</div>
-                    </div>
-                </Typography>
-                <Typography variant="body_short">
-                    <div>
-                        <div>{vmProperties.operatingSystem || '-'}</div>
-                        <div>{publicIp || '-'}</div>
-                        <div>{privateIp || '-'}</div>
-                        {/*<div>sb.env04-asdasdaas</div>*/}
-                        <div>{vmProperties.region}</div>
-                        <div style={{ marginTop: '16px' }}>{sizeName || '-'}</div>
-                        <div>{numberOfCores || '-'}</div>
-                        <div>{MemoryGB ? MemoryGB + 'MB' : '-'}</div>
-                    </div>
-                </Typography>
+                <div>
+                    <Typography variant="body_short">OS</Typography>
+                    <Typography variant="body_short">Public IP</Typography>
+                    <Typography variant="body_short">Private IP</Typography>
+                    {/*<div>DNS name</div>*/}
+                    <Typography variant="body_short">Location</Typography>
+                    <Typography variant="body_short" style={{ marginTop: '16px' }}>
+                        Size
+                    </Typography>
+                    <Typography variant="body_short">vCPUs</Typography>
+                    <Typography variant="body_short">RAM</Typography>
+                </div>
+
+                <div>
+                    <Typography variant="body_short">{vmProperties.operatingSystem || '-'}</Typography>
+                    <Typography variant="body_short">{publicIp || '-'}</Typography>
+                    <Typography variant="body_short">{privateIp || '-'}</Typography>
+                    {/*<div>sb.env04-asdasdaas</div>*/}
+                    <Typography variant="body_short">{vmProperties.region}</Typography>
+                    <Typography variant="body_short" style={{ marginTop: '16px' }}>
+                        {sizeName || '-'}
+                    </Typography>
+                    <Typography variant="body_short">{numberOfCores || '-'}</Typography>
+                    <Typography variant="body_short">{MemoryGB ? MemoryGB + 'MB' : '-'}</Typography>
+                </div>
             </Wrapper>
             <BtnWrapper>
                 <div style={{ marginTop: '24px' }}>

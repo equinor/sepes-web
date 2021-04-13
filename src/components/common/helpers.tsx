@@ -1,11 +1,11 @@
-/*eslint-disable no-restricted-properties */
+/*eslint-disable no-restricted-properties, react/no-array-index-key */
 import React from 'react';
 
 export const lineBreak = (text) => {
     return text
-        ? text.split('\n').map((item: string) => {
+        ? text.split('\n').map((item: string, number: number) => {
               return (
-                  <span key={item}>
+                  <span key={item + number}>
                       {item}
                       <br />
                   </span>
