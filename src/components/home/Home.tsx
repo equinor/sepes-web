@@ -58,7 +58,7 @@ const Home = () => {
                         {lineBreak(sepesInfoText)}
                     </Typography>
                 </div>
-                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }} id="test4">
+                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
                     <Tooltip
                         title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
                         placement="top"
