@@ -1,5 +1,6 @@
 /*eslint-disable no-restricted-properties */
 import React from 'react';
+import { VmObj } from './interfaces';
 
 export const lineBreak = (text) => {
     return text
@@ -89,4 +90,27 @@ export const validateResourceName = (name: string): boolean => {
     const onlyLettersAndNumbers = /^[a-zA-Z0-9]+$/;
     const limit = /(?=.{3,123})/;
     return onlyLettersAndNumbers.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
+};
+
+export const validateUserInput = (
+    vm: VmObj,
+    loading: boolean,
+    vmEstimatedCost: string,
+    usernameIsValid: boolean | undefined
+) => {
+    if (loading || !vmEstimatedCost) {
+        return false;
+    }
+    if (
+        passwordValidate(vm.password) &&
+        vm.name !== '' &&
+        vm.operatingSystem !== '' &&
+        vm.size !== '' &&
+        vm.dataDisks.length > 0 &&
+        usernameIsValid &&
+        validateResourceName(vm.name)
+    ) {
+        return true;
+    }
+    return false;
 };
