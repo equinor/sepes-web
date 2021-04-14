@@ -448,7 +448,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>
             </div>
-            <div>
+            <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
                     title={
                         !validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid) && !loading

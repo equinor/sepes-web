@@ -62,7 +62,7 @@ const DescriptioTextfieldnWrapper = styled.div`
 
 const SmallText = styled.span`
     font-size: 10px;
-    margin-top: 4px;
+    margin-top: 8px;
 `;
 
 const Wrapper = styled.div`
@@ -392,10 +392,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <>
                                 <TextField
                                     id="textfield1"
-                                    placeholder="What is the study name?"
+                                    placeholder="Name of study"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
                                     onChange={(e: any) => handleChange('name', e.target.value)}
-                                    label="Study name"
+                                    label="Name"
                                     meta="(required)"
                                     style={{ margin: 'auto', marginLeft: '0', resize: 'none' }}
                                     value={studyOnChange.name}
@@ -414,7 +414,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 <TextField
                                     id="textfield2"
                                     autoComplete="off"
-                                    placeholder="Who is the vendor?"
+                                    placeholder="Add vendor"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
                                     onChange={(e: any) => handleChange('vendor', e.target.value)}
                                     value={studyOnChange.vendor}
@@ -426,9 +426,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 <TextField
                                     id="textfield3"
                                     autoComplete="off"
-                                    placeholder="Wbs for the study"
+                                    placeholder="Add WBS"
                                     onChange={(e: any) => handleChange('wbsCode', e.target.value)}
-                                    label="wbs"
+                                    label="WBS"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
                                     inputIcon={<Icon name="dollar" />}
