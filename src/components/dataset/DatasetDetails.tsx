@@ -591,14 +591,14 @@ const DatasetDetails = (props: any) => {
                                     files.length > 0 ? (
                                         files.map((file: any, i: number) => {
                                             return (
-                                                <div key={file.name}>
+                                                <div key={file.name} style={{ marginTop: '4px' }}>
                                                     <AttachmentWrapper>
                                                         <div>{file.name}</div>
                                                         <div>{bytesToSize(file.size)} </div>
                                                         <Button
                                                             variant="ghost_icon"
                                                             onClick={() => removeFile(i, file)}
-                                                            style={{ marginTop: '-8px' }}
+                                                            style={{ marginTop: '-14px' }}
                                                             disabled={checkIfDeleteIsEnabled(file)}
                                                         >
                                                             <Icon
