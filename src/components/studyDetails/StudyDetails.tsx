@@ -174,7 +174,7 @@ const StudyDetails = () => {
                 )}
                 {(studyResponse.loading || loading) && <LoadingFull noTimeout={noTimeout} />}
                 {!newStudy && (
-                    <div style={{ margin: '24px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
+                    <div style={{ margin: '32px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
                             <TabList style={divStyle}>
                                 <Tab style={{ borderRadius: '4px' }}>Overview</Tab>

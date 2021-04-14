@@ -72,7 +72,7 @@ const AttachmentWrapper = styled.div`
 `;
 
 const StorageAccountWrapper = styled.div`
-    margin-top: 4px;
+    margin-top: 11px;
     display: flex;
     color: #007079;
 `;
@@ -472,7 +472,11 @@ const DatasetDetails = (props: any) => {
     };
 
     const returnField = (fieldName) => {
-        return <Typography variant="h6">{fieldName || '-'}</Typography>;
+        return (
+            <Typography style={{ marginTop: '8px' }} variant="body_short">
+                {fieldName || '-'}
+            </Typography>
+        );
     };
 
     const cancelAllDownloads = () => {
@@ -616,7 +620,7 @@ const DatasetDetails = (props: any) => {
                                             );
                                         })
                                     ) : (
-                                        <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                                        <div style={{ textAlign: 'center', marginTop: '8px' }}>
                                             {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
                                         </div>
                                     )
