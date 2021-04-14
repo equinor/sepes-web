@@ -72,7 +72,7 @@ const AttachmentWrapper = styled.div`
 `;
 
 const StorageAccountWrapper = styled.div`
-    margin-top: 11px;
+    margin-top: 7px;
     display: flex;
     color: #007079;
 `;
@@ -473,7 +473,7 @@ const DatasetDetails = (props: any) => {
 
     const returnField = (fieldName) => {
         return (
-            <Typography style={{ marginTop: '8px' }} variant="body_short">
+            <Typography style={{ marginTop: '4px' }} variant="body_short">
                 {fieldName || '-'}
             </Typography>
         );
@@ -651,8 +651,12 @@ const DatasetDetails = (props: any) => {
                                             </StorageAccountWrapper>
                                         </a>
                                     ) : (
-                                        <Tooltip title={storageAccountStatus} placement="top">
-                                            <DotProgress color="primary" />
+                                        <Tooltip
+                                            title={storageAccountStatus}
+                                            placement="top"
+                                            style={{ marginTop: '4px' }}
+                                        >
+                                            <DotProgress color="primary" style={{ marginRight: '8px' }} />
                                         </Tooltip>
                                     )}
                                 </div>
