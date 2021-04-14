@@ -57,7 +57,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
                 {isDragActive && !disabled ? (
-                    <div className="dropzone-content">
+                    <div className="dropzone-content" style={{ textAlign: 'center' }}>
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>Drop here</div>
                     </div>
