@@ -15,9 +15,7 @@ import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
 
 const SatusWrapper = styled.div`
-    margin-left: auto;
     display: flex;
-    justify-content: center;
     margin-top: 4px;
 `;
 
