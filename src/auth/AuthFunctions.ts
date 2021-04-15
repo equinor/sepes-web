@@ -57,10 +57,10 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
 
                 return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
                     .then((response) => {
-                        if (response.ok) {
-                            return response.text();
+                        if (!response.ok) {
+                            notify.show('danger', response.status, response);
                         }
-                        notify.show('danger', response.status, response);
+                        return response.text();
                     })
                     .then((responseData) => {
                         return resolve(responseData ? JSON.parse(responseData) : {});
