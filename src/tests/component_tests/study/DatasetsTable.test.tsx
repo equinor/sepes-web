@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import DatasetsTable from '../../../components/studyDetails/Tables/DatasetsTable';
 
-const checkIfDatasetIsAlreadyAdded = (id: string) => {};
+const checkIfDatasetIsAlreadyAdded = () => {};
 
 const datasetsList = [
     {
@@ -15,7 +15,6 @@ const datasetsList = [
     }
 ];
 test('renders dropdown component', () => {
-    const mockCallBack = jest.fn();
     const { getByText } = render(
         <DatasetsTable
             datasets={datasetsList}

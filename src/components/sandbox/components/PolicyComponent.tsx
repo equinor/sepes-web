@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import '../../../styles/Table.scss';
 import { SandboxObj } from '../../common/interfaces';
-import { lineBreak } from 'components/common/helpers';
+import { lineBreak } from 'components/common/helpers/helpers';
 
 const { Body, Row, Cell, Head } = Table;
 

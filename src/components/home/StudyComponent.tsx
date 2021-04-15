@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
 import { visibility, visibility_off } from '@equinor/eds-icons';
-import CustomLogoComponent from '../common/CustomLogoComponent';
+import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
 

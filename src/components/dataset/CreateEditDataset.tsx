@@ -2,14 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, DropdownObj, DatasetPermissionObj } from '../common/interfaces';
+import { DatasetObj, DropdownObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
     editStudySpecificDataset,
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
+import { checkForInputErrors } from '../common/helpers/datasetHelpers';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -140,7 +141,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     const addDataset = () => {
         setUserPressedCreate(true);
-        if (checkForInputErrors()) {
+        if (checkForInputErrors(dataset)) {
             return;
         }
         setLoading(true);
@@ -253,16 +254,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             setFallBackAddress('/datasets');
             history.push('/datasets');
         }
-    };
-
-    const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
-            return true;
-        }
-        if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
-            return true;
-        }
-        return false;
     };
 
     const returnField = (fieldName, value) => {
@@ -385,7 +376,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     </StyledLink>
                     <SaveCancelWrapper>
                         <Button
-                            disabled={checkForInputErrors() || loading}
+                            disabled={checkForInputErrors(dataset) || loading}
                             onClick={addDataset}
                             data-cy="dataset_save"
                             data-testid="dataset_save"

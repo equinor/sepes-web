@@ -5,7 +5,7 @@ import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip, Typography } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
-import { lineBreak } from '../common/helpers';
+import { lineBreak } from '../common/helpers/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';

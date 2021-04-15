@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import {
-    passwordValidate,
-    returnLimitMeta,
-    roundUp,
-    validateResourceName,
-    validateUserInput
-} from '../../common/helpers';
+import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
+import { validateUserInput } from '../../common/helpers/sandboxHelpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
@@ -258,25 +253,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             }
         });
     };
-    /*
-    const validateUserInput = () => {
-        if (loading || !vmEstimatedCost) {
-            return false;
-        }
-        if (
-            passwordValidate(vm.password) &&
-            vm.name !== '' &&
-            vm.operatingSystem !== '' &&
-            vm.size !== '' &&
-            vm.dataDisks.length > 0 &&
-            usernameIsValid &&
-            validateResourceName(vm.name)
-        ) {
-            return true;
-        }
-        return false;
-    };
-    */
 
     const filterSizes = (_sizes: any) => {
         if (!_sizes) {
