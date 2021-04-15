@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
-import { checkIfRequiredFieldsAreNull, validateResourceName } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, validateUserInputSandbox } from '../common/helpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -76,17 +76,10 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         });
     };
 
-    const validateUserInput = () => {
-        if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !study.wbsCode) {
-            return false;
-        }
-        return true;
-    };
-
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
-        if (!validateUserInput()) {
+        if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
             return;
         }
         const studyId = getStudyId();
@@ -159,7 +152,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                         style={{ width: '76px', margin: '8px 0 8px auto' }}
                         onClick={() => CreateSandbox()}
                         data-cy="create_actual_sandbox"
-                        disabled={!validateUserInput()}
+                        disabled={!validateUserInputSandbox(sandbox, study.wbsCode)}
                     >
                         Create
                     </Button>

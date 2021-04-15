@@ -16,19 +16,19 @@ const Wrapper = styled.div`
 `;
 
 const NavTabs = (props: any) => {
+    /*
     const history = useHistory();
     const permissions = useContext(Permissions);
     const getActiveTab = () => {
         return 0;
-        /*
         const location = window.location.pathname;
         return !location.includes('datasets') ? 0 : 1;
-        */
     };
 
     const redirect = (e: any) => {
         return e === 0 ? history.push('/') : history.push('/datasets');
     };
+    */
 
     return (
         <Wrapper>

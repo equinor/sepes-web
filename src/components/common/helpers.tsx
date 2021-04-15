@@ -1,6 +1,6 @@
 /*eslint-disable no-restricted-properties, react/no-array-index-key */
 import React from 'react';
-import { VmObj } from './interfaces';
+import { DatasetObj, SandboxCreateObj, StudyObj, VmObj } from './interfaces';
 
 export const lineBreak = (text) => {
     return text
@@ -113,4 +113,32 @@ export const validateUserInput = (
         return true;
     }
     return false;
+};
+
+export const checkForInputErrors = (dataset: DatasetObj) => {
+    if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
+        return true;
+    }
+    if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
+        return true;
+    }
+    return false;
+};
+
+export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
+    if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !wbsCode) {
+        return false;
+    }
+    return true;
+};
+
+export const validateUserInputStudy = (study: StudyObj): boolean => {
+    let result = true;
+    if (!validateResourceName(study.name)) {
+        result = false;
+    }
+    if (study.name === '' || study === undefined || study.vendor === '' || study.vendor === undefined) {
+        result = false;
+    }
+    return result;
 };

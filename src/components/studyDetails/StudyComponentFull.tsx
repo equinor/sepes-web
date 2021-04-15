@@ -9,7 +9,7 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/CustomLogoComponent';
-import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateResourceName } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateUserInputStudy } from '../common/helpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
@@ -222,7 +222,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
-        if (!validateUserInputs()) {
+        if (!validateUserInputStudy(studyOnChange)) {
             return;
         }
         if (imageUrl) {
@@ -288,22 +288,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 }
             });
         }
-    };
-
-    const validateUserInputs = (): boolean => {
-        let result = true;
-        if (!validateResourceName(studyOnChange.name)) {
-            result = false;
-        }
-        if (
-            studyOnChange.name === '' ||
-            studyOnChange === undefined ||
-            studyOnChange.vendor === '' ||
-            studyOnChange.vendor === undefined
-        ) {
-            result = false;
-        }
-        return result;
     };
 
     const handleCancel = () => {
@@ -576,7 +560,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 <Button
                                                     data-cy="create_study"
                                                     onClick={() => handleSave()}
-                                                    disabled={!validateUserInputs()}
+                                                    disabled={!validateUserInputStudy(studyOnChange)}
                                                 >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>

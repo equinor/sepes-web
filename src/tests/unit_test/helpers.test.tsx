@@ -1,4 +1,3 @@
-import React from 'react';
 import * as helpers from '../../components/common/helpers';
 
 test('test requiredFields', () => {
@@ -152,5 +151,134 @@ test('test validateUserInput', () => {
             '100',
             true
         )
+    ).toBeFalsy();
+});
+
+test('test validateUserInputSandbox', () => {
+    expect(
+        helpers.validateUserInputSandbox(
+            {
+                name: 'test name',
+                region: 'test size',
+                template: 'location',
+                id: '1'
+            },
+            '123'
+        )
+    ).toBeTruthy();
+
+    expect(
+        helpers.validateUserInputSandbox(
+            {
+                name: '',
+                region: 'test size',
+                template: 'location',
+                id: '1'
+            },
+            '123'
+        )
+    ).toBeFalsy();
+
+    expect(
+        helpers.validateUserInputSandbox(
+            {
+                name: 'test name',
+                region: '',
+                template: 'location',
+                id: '1'
+            },
+            '123'
+        )
+    ).toBeFalsy();
+    expect(
+        helpers.validateUserInputSandbox(
+            {
+                name: 'test name',
+                region: 'test size',
+                template: 'location',
+                id: '1'
+            },
+            ''
+        )
+    ).toBeFalsy();
+});
+
+test('test validateUserInputStudy', () => {
+    expect(
+        helpers.validateUserInputStudy({
+            name: 'testName',
+            vendor: 'testVendor',
+            wbsCode: '',
+            restricted: false,
+            description: '',
+            logoUrl: '',
+            id: '',
+            resultsAndLearnings: '',
+            datasets: [],
+            participants: [],
+            sandboxes: [],
+            permissions: {
+                addRemoveDataset: false,
+                addRemoveParticipant: false,
+                addRemoveSandbox: false,
+                closeStudy: false,
+                deleteStudy: false,
+                readResulsAndLearnings: false,
+                updateMetadata: false,
+                updateResulsAndLearnings: false
+            }
+        })
+    ).toBeTruthy();
+
+    expect(
+        helpers.validateUserInputStudy({
+            name: '',
+            vendor: 'testVendor',
+            wbsCode: '',
+            restricted: false,
+            description: '',
+            logoUrl: '',
+            id: '',
+            resultsAndLearnings: '',
+            datasets: [],
+            participants: [],
+            sandboxes: [],
+            permissions: {
+                addRemoveDataset: false,
+                addRemoveParticipant: false,
+                addRemoveSandbox: false,
+                closeStudy: false,
+                deleteStudy: false,
+                readResulsAndLearnings: false,
+                updateMetadata: false,
+                updateResulsAndLearnings: false
+            }
+        })
+    ).toBeFalsy();
+
+    expect(
+        helpers.validateUserInputStudy({
+            name: '',
+            vendor: '',
+            wbsCode: '',
+            restricted: false,
+            description: '',
+            logoUrl: '',
+            id: '',
+            resultsAndLearnings: '',
+            datasets: [],
+            participants: [],
+            sandboxes: [],
+            permissions: {
+                addRemoveDataset: false,
+                addRemoveParticipant: false,
+                addRemoveSandbox: false,
+                closeStudy: false,
+                deleteStudy: false,
+                readResulsAndLearnings: false,
+                updateMetadata: false,
+                updateResulsAndLearnings: false
+            }
+        })
     ).toBeFalsy();
 });

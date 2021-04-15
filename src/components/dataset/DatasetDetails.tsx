@@ -211,8 +211,7 @@ const DatasetDetails = (props: any) => {
                 .then((result: any) => {
                     if (retries > 0 && result.Message) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
 
@@ -224,8 +223,7 @@ const DatasetDetails = (props: any) => {
                     console.log(ex);
                     if (retries > 0) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
                 });
@@ -241,8 +239,7 @@ const DatasetDetails = (props: any) => {
                 .then((result: any) => {
                     if (retries > 0 && result.Message) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKeyDelete(retries - 1); /* 3 */
+                            return getSasKeyDelete(retries - 1);
                         }, backoff);
                     }
                     setSasKeyDeleteExpired(false);
@@ -253,8 +250,7 @@ const DatasetDetails = (props: any) => {
                     console.log(ex);
                     if (retries > 0) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
                 });
