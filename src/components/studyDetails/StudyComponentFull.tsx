@@ -8,8 +8,9 @@ import { dollar, visibility, visibility_off, business, settings, info_circle } f
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import CustomLogoComponent from '../common/CustomLogoComponent';
-import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateUserInputStudy } from '../common/helpers';
+import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
+import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';

@@ -13,7 +13,7 @@ import {
 } from '../../../services/Api';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
-import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
+import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
 import Prompt from '../../common/Promt';
 import { getStudyId } from 'utils/CommonUtil';

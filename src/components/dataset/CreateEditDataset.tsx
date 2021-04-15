@@ -9,7 +9,8 @@ import {
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfRequiredFieldsAreNull, checkForInputErrors } from '../common/helpers';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
+import { checkForInputErrors } from '../common/helpers/datasetHelpers';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';

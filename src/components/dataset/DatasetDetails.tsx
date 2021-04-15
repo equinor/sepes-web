@@ -11,7 +11,7 @@ import {
     getDatasetSasTokenDelete
 } from '../../services/Api';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import { bytesToSize } from '../common/helpers';
+import { bytesToSize } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';

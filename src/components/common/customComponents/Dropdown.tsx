@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Icon, Typography } from '@equinor/eds-core-react';
 import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
-import { truncate } from '../helpers';
+import { truncate } from '../helpers/helpers';
 
 const icons = {
     arrow_drop_up,

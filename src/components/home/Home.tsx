@@ -7,7 +7,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { lineBreak } from '../common/helpers';
+import { lineBreak } from '../common/helpers/helpers';
 
 const Wrapper = styled.div`
     display: grid;
