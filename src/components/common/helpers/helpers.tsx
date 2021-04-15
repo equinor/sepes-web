@@ -1,6 +1,5 @@
 /*eslint-disable no-restricted-properties, react/no-array-index-key */
 import React from 'react';
-import { DatasetObj, ParticipantObj, SandboxCreateObj, StudyObj, VmObj, DropdownObj } from '../interfaces';
 
 export const lineBreak = (text) => {
     return text

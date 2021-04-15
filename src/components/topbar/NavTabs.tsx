@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+//import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Tabs } from '@equinor/eds-core-react';
-import { Permissions } from '../../index';
+//import { Tabs } from '@equinor/eds-core-react';
+//import { Permissions } from '../../index';
 
-const { TabList, Tab } = Tabs;
+//const { TabList, Tab } = Tabs;
 
 const Wrapper = styled.div`
     margin-left: 300px;
