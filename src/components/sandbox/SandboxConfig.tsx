@@ -71,7 +71,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                 <PolictyComponentWrapper>
                     <PolicyComponent displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
-                <ResourcesComponent resources={resources} getResources={getResources} />
+                <ResourcesComponent resources={resources} getResources={getResources} permissions={permissions} />
             </InfoWrapper>
         </Wrapper>
     );

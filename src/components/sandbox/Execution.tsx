@@ -52,7 +52,11 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources 
                     <PolicyComponent sandbox={sandbox} />
                 </div>
                 <div>
-                    <ResourcesComponent resources={resources} getResources={getResources} />
+                    <ResourcesComponent
+                        resources={resources}
+                        getResources={getResources}
+                        permissions={sandbox.permissions}
+                    />
                 </div>
             </ResourceWrapper>
         </Wrapper>
