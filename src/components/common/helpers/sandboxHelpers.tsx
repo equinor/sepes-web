@@ -30,3 +30,33 @@ export const validateUserInput = (
     }
     return false;
 };
+
+export const filterSizes = (_sizes: any, filter) => {
+    if (!_sizes) {
+        return [];
+    }
+    if (filter.length === 0) {
+        return _sizes;
+    }
+    return _sizes.filter((size) => filter.includes(size.category));
+};
+
+export const returnPasswordVariant = (vmPassword: string) => {
+    if (vmPassword === '') {
+        return 'default';
+    }
+    if (passwordValidate(vmPassword)) {
+        return 'success';
+    }
+    return 'error';
+};
+
+export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boolean | undefined) => {
+    if (vmUsername === '' || usernameIsValid === undefined) {
+        return 'default';
+    }
+    if (usernameIsValid) {
+        return 'success';
+    }
+    return 'error';
+};
