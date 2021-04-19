@@ -3,11 +3,18 @@ import React from 'react';
 import { Table } from '@equinor/eds-core-react';
 import ResourceItemComponent from './ResourceItemComponent';
 import '../../../styles/Table.scss';
+import { SandboxPermissions } from 'components/common/interfaces';
 
 const { Body, Row, Cell, Head } = Table;
 
-const Dataset = (props: any) => {
-    const { resources, getResources } = props;
+type ResourcesComponentProps = {
+    resources: any;
+    getResources: any;
+    permissions: SandboxPermissions;
+};
+
+const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, permissions }) => {
+    //const { resources, getResources } = props;
     return (
         <Table style={{ width: '100%', marginBottom: '24px' }}>
             <Head>
@@ -28,6 +35,7 @@ const Dataset = (props: any) => {
                                         linkToResource={resource.linkToExternalSystem}
                                         retryLink={resource.retryLink}
                                         getResources={getResources}
+                                        permission={permissions}
                                     />
                                 </Cell>
                             </Row>

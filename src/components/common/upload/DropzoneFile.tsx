@@ -21,9 +21,6 @@ const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     box-sizing: border-box;
     background: #ffffff;
     background: ${(props: any) => (props.dragActive ? '#deedee' : '#ffffff')};
-    @media (max-width: 700px) {
-        width: 95%;
-    }
 `;
 
 type DropzoneProps = {

@@ -233,19 +233,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
+
+    const returnTooltipText = () => {
+        if (study.sandboxes && study.sandboxes.length > 0) {
+            return 'Delete sandboxes before deleting study';
+        }
+        return 'You do not have permission to delete this study';
+    };
+
     const studyDeleteEnabled =
-        (study.sandboxes && study.sandboxes.length) > 0 || !(study.permissions && study.permissions.deleteStudy);
+        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.deleteStudy;
     const optionsTemplate = (
         <>
-            <Tooltip
-                title={studyDeleteEnabled ? 'Deleting study is disabled when there is a sandbox in it' : ''}
-                placement="left"
-                open={studyDeleteEnabled}
-            >
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left" open={studyDeleteEnabled}>
                 <MenuItem
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
-                    disabled={studyDeleteEnabled}
+                    disabled={!studyDeleteEnabled}
                     title="study_delete"
                     className="study_delete"
                     data-testid="study_delete"
