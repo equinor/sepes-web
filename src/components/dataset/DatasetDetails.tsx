@@ -1,4 +1,4 @@
-/*eslint-disable consistent-return, no-unneeded-ternary */
+/*eslint-disable consistent-return, no-unneeded-ternary, prefer-const */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
@@ -92,6 +92,12 @@ const intervalUpdateSasDelete = 285000;
 
 let abortArray: any = [];
 let progressArray: any = [];
+
+export interface FileObj {
+    name: string;
+    path: string;
+    percent: number;
+}
 
 const DatasetDetails = (props: any) => {
     const datasetId = getDatasetId();
@@ -343,8 +349,9 @@ const DatasetDetails = (props: any) => {
         tempFiles.push(..._files);
 
         _files.forEach((_file: any) => {
-            _file.percent = 1;
-            progressArray.push(_file);
+            let newFile: FileObj = _file;
+            newFile.percent = 1;
+            progressArray.push(newFile);
         });
 
         setFiles(tempFiles);
@@ -352,18 +359,24 @@ const DatasetDetails = (props: any) => {
             setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
                 if (result && !result.Message) {
-                    _files.forEach(async (file) => {
+                    _files.forEach(async (file: any) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
                                 try {
+                                    let filePath = file.path;
+                                    if (file.path[0] === '/') {
+                                        filePath = filePath.substring(1);
+                                    }
+
                                     uploadFile(
                                         result || sasKey,
-                                        file.name,
+                                        filePath,
                                         blob,
                                         file.size,
                                         abortArray,
                                         setFiles,
-                                        progressArray
+                                        progressArray,
+                                        file.name
                                     );
                                 } catch (ex) {
                                     console.log(ex);
@@ -545,7 +558,7 @@ const DatasetDetails = (props: any) => {
                                             return (
                                                 <div key={file.name} style={{ marginTop: '4px' }}>
                                                     <AttachmentWrapper>
-                                                        <div>{file.name}</div>
+                                                        <div>{file.path ?? file.name}</div>
                                                         <div>{bytesToSize(file.size)} </div>
                                                         <Button
                                                             variant="ghost_icon"

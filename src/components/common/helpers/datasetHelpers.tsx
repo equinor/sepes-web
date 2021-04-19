@@ -13,12 +13,15 @@ export const checkForInputErrors = (dataset: DatasetObj) => {
 
 export const checkIfFileAlreadyIsUploaded = (droppedFiles, existingFiles, setDuplicateFiles) => {
     const newArray: any = [];
-    droppedFiles.forEach((file: File) => {
+    droppedFiles.forEach((file: any) => {
         const res = existingFiles
             .map((e) => {
-                return e.name;
+                if (e.path) {
+                    return e.path.substring(1);
+                }
+                return '';
             })
-            .indexOf(file.name);
+            .indexOf(file.path.substring(1));
         if (res === -1) newArray.push(file);
     });
 
