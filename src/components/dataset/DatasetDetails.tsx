@@ -1,4 +1,4 @@
-/*eslint-disable consistent-return, no-unneeded-ternary, prefer-const */
+/*eslint-disable consistent-return, no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
@@ -349,7 +349,7 @@ const DatasetDetails = (props: any) => {
         tempFiles.push(..._files);
 
         _files.forEach((_file: any) => {
-            let newFile: FileObj = _file;
+            const newFile: FileObj = _file;
             newFile.percent = 1;
             progressArray.push(newFile);
         });
@@ -443,7 +443,7 @@ const DatasetDetails = (props: any) => {
         }
         getSasKeyDelete()
             .then((result: any) => {
-                deleteFile(result, file.name);
+                deleteFile(result, file.path ?? file.name);
             })
             .catch((ex: any) => {
                 console.log(ex);

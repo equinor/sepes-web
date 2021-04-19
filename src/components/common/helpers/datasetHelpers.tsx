@@ -16,12 +16,9 @@ export const checkIfFileAlreadyIsUploaded = (droppedFiles, existingFiles, setDup
     droppedFiles.forEach((file: any) => {
         const res = existingFiles
             .map((e) => {
-                if (e.path) {
-                    return e.path.substring(1);
-                }
-                return '';
+                return e.name;
             })
-            .indexOf(file.path.substring(1));
+            .indexOf(file.name);
         if (res === -1) newArray.push(file);
     });
 
@@ -58,4 +55,12 @@ export const checkUrlIfGeneralDataset = () => {
         return true;
     }
     return false;
+};
+
+export const removeFirstOccurenceCharacter = (text: string, character: string) => {
+    const index = text.indexOf(character);
+    if (index === 0) {
+        return text.replace(character, '');
+    }
+    return text;
 };

@@ -1,5 +1,6 @@
 import { TransferProgressEvent } from '@azure/core-http';
 import { BlockBlobClient } from '@azure/storage-blob';
+import { removeFirstOccurenceCharacter } from 'components/common/helpers/datasetHelpers';
 
 const { BlobServiceClient } = require('@azure/storage-blob');
 
@@ -153,7 +154,10 @@ export const uploadFile = async (
 export const deleteFile = async (blobUri: string, blobName: string) => {
     const blobServiceClient = new BlobServiceClient(blobUri);
     const containerClient = blobServiceClient.getContainerClient('files');
-    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(
+        removeFirstOccurenceCharacter(blobName, '/')
+    );
 
     try {
         blockBlobClient.delete().catch(() => {
