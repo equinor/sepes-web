@@ -33,6 +33,12 @@ import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile, deleteFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from 'utils/CommonUtil';
+import {
+    checkIfDeleteIsEnabled,
+    checkIfFileAlreadyIsUploaded,
+    setFilesProgressToOnePercent
+} from 'components/common/helpers/datasetHelpers';
+import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 
 const icons = {
     arrow_back,
@@ -76,18 +82,7 @@ const StorageAccountWrapper = styled.div`
     display: flex;
     color: #007079;
 `;
-/*
-display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: -8px;
-    color: #007079;
-*/
-const checkUrlIfGeneralDataset = () => {
-    if (window.location.pathname.split('/')[1] === 'datasets') {
-        return true;
-    }
-    return false;
-};
+
 let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
@@ -334,16 +329,9 @@ const DatasetDetails = (props: any) => {
         });
     };
 
-    const setFilesProgressToOnePercent = (_files: any) => {
-        _files.forEach(async (file: any) => {
-            const filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
-            abortArray.push(filePercent);
-        });
-    };
-
     const handleFileDrop = async (_files: File[]): Promise<void> => {
         setDuplicateFiles(false);
-        _files = checkIfFileAlreadyIsUploaded(_files);
+        _files = checkIfFileAlreadyIsUploaded(_files, files, setDuplicateFiles);
 
         if (_files.length === 0) {
             return;
@@ -361,7 +349,7 @@ const DatasetDetails = (props: any) => {
 
         setFiles(tempFiles);
         if (_files.length) {
-            setFilesProgressToOnePercent(_files);
+            setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
                 if (result && !result.Message) {
                     _files.forEach(async (file) => {
@@ -392,24 +380,6 @@ const DatasetDetails = (props: any) => {
                 }
             });
         }
-    };
-
-    const checkIfFileAlreadyIsUploaded = (_files) => {
-        const newArray: any = [];
-        _files.forEach((file: File) => {
-            const res = files
-                .map((e) => {
-                    return e.name;
-                })
-                .indexOf(file.name);
-            if (res === -1) newArray.push(file);
-        });
-
-        if (_files.length !== newArray.length) {
-            setDuplicateFiles(true);
-        }
-
-        return newArray;
     };
 
     const removeFile = (i: number, file: any): void => {
@@ -490,20 +460,6 @@ const DatasetDetails = (props: any) => {
                 console.log(ex);
             }
         });
-    };
-
-    const checkIfDeleteIsEnabled = (_file): boolean => {
-        if (!dataset.permissions.editDataset) {
-            return true;
-        }
-        const index = progressArray.findIndex((x: any) => x.name === _file.name);
-        if (index === -1) {
-            return false;
-        }
-        if (progressArray[index].percent === 1) {
-            return true;
-        }
-        return false;
     };
 
     return !showEditDataset ? (
@@ -595,7 +551,11 @@ const DatasetDetails = (props: any) => {
                                                             variant="ghost_icon"
                                                             onClick={() => removeFile(i, file)}
                                                             style={{ marginTop: '-14px' }}
-                                                            disabled={checkIfDeleteIsEnabled(file)}
+                                                            disabled={checkIfDeleteIsEnabled(
+                                                                file,
+                                                                dataset,
+                                                                progressArray
+                                                            )}
                                                         >
                                                             <Icon
                                                                 color="#007079"

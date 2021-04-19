@@ -150,3 +150,47 @@ test('test validateUserInput', () => {
         )
     ).toBeFalsy();
 });
+
+test('test filterSizes', () => {
+    const sizes = [{ category: 'category1' }, { category: 'category2' }];
+    const filter = ['category1'];
+    const expectedResult = [{ category: 'category1' }];
+    expect(helpers.filterSizes(sizes, filter)).toEqual(expectedResult);
+});
+
+test('test filterSizes, no hits', () => {
+    const sizes = [{ category: 'category1' }, { category: 'category2' }];
+    const filter = ['category3'];
+    const expectedResult = [];
+    expect(helpers.filterSizes(sizes, filter)).toEqual(expectedResult);
+});
+
+test('test returnPasswordVariant', () => {
+    const expectedResult = 'default';
+    expect(helpers.returnPasswordVariant('')).toEqual(expectedResult);
+});
+
+test('test returnPasswordVariant, valid password', () => {
+    const expectedResult = 'success';
+    expect(helpers.returnPasswordVariant('aaaAAA!!!111111111')).toEqual(expectedResult);
+});
+
+test('test returnPasswordVariant, invalid password', () => {
+    const expectedResult = 'error';
+    expect(helpers.returnPasswordVariant('asdasd')).toEqual(expectedResult);
+});
+
+test('test returnUsernameVariant', () => {
+    const expectedResult = 'default';
+    expect(helpers.returnUsernameVariant('', true)).toEqual(expectedResult);
+});
+
+test('test returnUsernameVariant, valid username', () => {
+    const expectedResult = 'success';
+    expect(helpers.returnUsernameVariant('john5124253', true)).toEqual(expectedResult);
+});
+
+test('test returnUsernameVariant, invalid password', () => {
+    const expectedResult = 'error';
+    expect(helpers.returnUsernameVariant('admin', false)).toEqual(expectedResult);
+});

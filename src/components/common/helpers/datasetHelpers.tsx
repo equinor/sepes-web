@@ -11,4 +11,48 @@ export const checkForInputErrors = (dataset: DatasetObj) => {
     return false;
 };
 
-export default checkForInputErrors;
+export const checkIfFileAlreadyIsUploaded = (droppedFiles, existingFiles, setDuplicateFiles) => {
+    const newArray: any = [];
+    droppedFiles.forEach((file: File) => {
+        const res = existingFiles
+            .map((e) => {
+                return e.name;
+            })
+            .indexOf(file.name);
+        if (res === -1) newArray.push(file);
+    });
+
+    if (droppedFiles.length !== newArray.length) {
+        setDuplicateFiles(true);
+    }
+
+    return newArray;
+};
+
+export const checkIfDeleteIsEnabled = (_file, dataset: DatasetObj, progressArray): boolean => {
+    if (!dataset.permissions.editDataset) {
+        return true;
+    }
+    const index = progressArray.findIndex((x: any) => x.name === _file.name);
+    if (index === -1) {
+        return false;
+    }
+    if (progressArray[index].percent === 1) {
+        return true;
+    }
+    return false;
+};
+
+export const setFilesProgressToOnePercent = (_files: any, abortArray) => {
+    _files.forEach(async (file: any) => {
+        const filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
+        abortArray.push(filePercent);
+    });
+};
+
+export const checkUrlIfGeneralDataset = () => {
+    if (window.location.pathname.split('/')[1] === 'datasets') {
+        return true;
+    }
+    return false;
+};

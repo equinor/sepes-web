@@ -38,3 +38,17 @@ test('test validateUserInputSandbox', () => {
         })
     ).toBeTruthy();
 });
+
+test('test checkIfFileAlreadyIsUploaded same files', () => {
+    const droppedFiles = [{ name: 'file1' }];
+    const existingFiles = [{ name: 'file1' }];
+    const expectedResult = [];
+    expect(helpers.checkIfFileAlreadyIsUploaded(droppedFiles, existingFiles, () => {})).toEqual(expectedResult);
+});
+
+test('test checkIfFileAlreadyIsUploaded one old file and one new', () => {
+    const droppedFiles = [{ name: 'file2' }, { name: 'file1' }];
+    const existingFiles = [{ name: 'file1' }];
+    const expectedResult = [{ name: 'file2' }];
+    expect(helpers.checkIfFileAlreadyIsUploaded(droppedFiles, existingFiles, () => {})).toEqual(expectedResult);
+});

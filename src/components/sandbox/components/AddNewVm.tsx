@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { passwordValidate, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
-import { validateUserInput } from '../../common/helpers/sandboxHelpers';
+import { returnLimitMeta, roundUp } from '../../common/helpers/helpers';
+import {
+    validateUserInput,
+    filterSizes,
+    returnPasswordVariant,
+    returnUsernameVariant
+} from '../../common/helpers/sandboxHelpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
@@ -254,16 +259,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         });
     };
 
-    const filterSizes = (_sizes: any) => {
-        if (!_sizes) {
-            return [];
-        }
-        if (filter.length === 0) {
-            return _sizes;
-        }
-        return _sizes.filter((size) => filter.includes(size.category));
-    };
-
     const handleCheck = (column: string, checked: any) => {
         const currentFilter: any = [...filter];
         if (checked) {
@@ -272,26 +267,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             currentFilter.splice(filter.indexOf(column), 1);
         }
         setFilter(currentFilter);
-    };
-
-    const returnPasswordVariant = () => {
-        if (vm.password === '') {
-            return 'default';
-        }
-        if (passwordValidate(vm.password)) {
-            return 'success';
-        }
-        return 'error';
-    };
-
-    const returnUsernameVariant = () => {
-        if (vm.username === '' || usernameIsValid === undefined) {
-            return 'default';
-        }
-        if (usernameIsValid) {
-            return 'success';
-        }
-        return 'error';
     };
 
     return (
@@ -339,7 +314,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     label="Username"
                     meta="(required)"
                     data-cy="vm_username"
-                    variant={returnUsernameVariant()}
+                    variant={returnUsernameVariant(vm.username, usernameIsValid)}
                     disabled={!vm.operatingSystem}
                     helperText={usernameHelpText}
                     inputIcon={
@@ -359,7 +334,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         label="Password"
                         meta="(required)"
                         data-cy="vm_password"
-                        variant={returnPasswordVariant()}
+                        variant={returnPasswordVariant(vm.password)}
                         inputIcon={
                             <Tooltip
                                 title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
@@ -397,7 +372,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             </SizeFilterWrapper>
             <CoreDevDropdown
                 label="VM size"
-                options={filterSizes(sizes)}
+                options={filterSizes(sizes, filter)}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
