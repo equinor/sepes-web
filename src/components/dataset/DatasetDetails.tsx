@@ -441,7 +441,7 @@ const DatasetDetails = (props: any) => {
                     console.log(error);
                 }
 
-                abortArray.slice(index, 1);
+                abortArray.splice(index, 1);
                 return;
             }
         }
