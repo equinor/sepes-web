@@ -113,9 +113,10 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
-                if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
-                    history.push('/');
-                }
+                // todo: fix
+                // if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
+                //     history.push('/');
+                // }
             }
             rolesResponse.setLoading(false);
         });

@@ -1,22 +1,74 @@
 /* eslint-disable consistent-return */
+import { InteractionRequiredAuthError } from '@azure/msal-browser';
 import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import * as notify from '../components/common/notify';
 
+let accountId = '';
+
+myMSALObj.handleRedirectPromise().then(handleResponse).catch(err => {
+    console.error(err);
+  });
+
+  function handleResponse(resp) {
+    console.log('handleResponse', resp);
+    const isInIframe = window.parent !== window;
+    if (!isInIframe) {
+        console.log('is in frame');
+        if (resp !== null) {
+            console.log('resp not nyll');
+            accountId = resp.account.homeAccountId;
+            console.log('Signed in fine', accountId);
+            //TODO: Continue
+            getTokenRedirect(loginRequest, resp.account);
+        } else {
+            console.log('resp is null');
+            const currentAccountsa = myMSALObj.getAllAccounts();
+            console.log(currentAccountsa);
+            myMSALObj.ssoSilent(silentRequest).then(() => {
+                const currentAccounts = myMSALObj.getAllAccounts();
+                accountId = currentAccounts[0].homeAccountId;
+                //TODO: Continue
+                getTokenRedirect(loginRequest, currentAccounts[0]);
+            }).catch(error => {
+                console.error('Silent Error: ' + error);
+            });
+        }
+    }
+}
+
+// This function can be removed if you do not need to support IE
+async function getTokenRedirect(request, account) {
+    request.account = account;
+    return myMSALObj.acquireTokenSilent(request).catch(async (error) => {
+        console.log('silent token acquisition fails.');
+        if (error instanceof InteractionRequiredAuthError) {
+            // fallback to interaction when silent call fails
+            console.log('acquiring token using redirect');
+            myMSALObj.acquireTokenRedirect(request);
+        } else {
+            console.error(error);
+        }
+    });
+}
+
 export const acquireTokenSilent = async () => {
+    console.log('acquireTokenSilent 1', loginRequest);
+
     myMSALObj
         .acquireTokenSilent(loginRequest)
         .then((tokenResponse: any) => {
-            if (!tokenResponse.accessToken) {
-                signInRedirect();
-            } else {
-                return tokenResponse;
-            }
+            console.log('tokenResponse 1');
+            // if (!tokenResponse.accessToken) {
+            //     signInRedirect();
+            // } else {
+            //     return tokenResponse;
+            // }
         })
         .catch((error: string) => {
-            console.log('acquireTokenSilent err', error);
+            console.log('error 1', 'acquireTokenSilent err', error);
         });
 };
 
@@ -74,6 +126,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
         if (cyToken) {
             post(cyToken);
         } else {
+            console.log('acquireTokenSilent 2');
             myMSALObj
                 .acquireTokenSilent(loginRequest)
                 .then((tokenResponse: any) => {
@@ -84,7 +137,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                 })
                 .catch((error: string) => {
                     //myMSALObj.acquireTokenRedirect(loginRequest);
-                    console.log(error);
+                    console.log('error 2', error);
                 });
         }
     });
@@ -115,17 +168,19 @@ export const apiRequestPermissionsWithToken = async (url: string, method: string
         if (cyToken) {
             post(cyToken);
         } else {
+            console.log('acquireTokenSilent 2');
             myMSALObj
                 .acquireTokenSilent(loginRequest)
                 .then((tokenResponse: any) => {
-                    if (!tokenResponse.accessToken) {
-                        signInRedirect();
-                    }
+                    console.log('tokenResponse', tokenResponse);
+                    // if (!tokenResponse.accessToken) {
+                    //     signInRedirect();
+                    // }
                     post(tokenResponse.accessToken);
                 })
                 .catch((error: string) => {
-                    myMSALObj.acquireTokenRedirect(loginRequest);
-                    console.log(error);
+                    //myMSALObj.acquireTokenRedirect(loginRequest);
+                    console.log('error 3', error);
                 });
         }
     });
@@ -144,6 +199,7 @@ export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
 
 export const postFile = async (url, files: any) => {
     return new Promise(() => {
+        console.log('acquireTokenSilent 3');
         myMSALObj
             .acquireTokenSilent(loginRequest)
             .then((tokenResponse: any) => {
@@ -208,6 +264,7 @@ export const postputStudy = async (study: StudyObj, imageUrl: string, url: any, 
         if (cyToken) {
             post(cyToken);
         } else {
+            console.log('acquireTokenSilent 3');
             myMSALObj
                 .acquireTokenSilent(loginRequest)
                 .then((tokenResponse: any) => {
@@ -254,17 +311,41 @@ const createStudyRequestBody = async (study: StudyObj, blobUrl: string) => {
     return formData;
 };
 
-function authCallback(error: any, response: any) {
-    // handle redirect response
-    if (response) {
-        console.log('id_token acquired at: ' + new Date().toString());
-    } else {
-        console.log('err', error);
-    }
-}
+// function authCallback(error: any, response: any) {
+//     // handle redirect response
+//     if (response) {
+//         console.log('id_token acquired at: ' + new Date().toString());
+//     } else {
+//         console.log('err', error);
+//     }
+// }
 
 export function signInRedirect() {
-    myMSALObj.handleRedirectCallback(authCallback);
+    myMSALObj.handleRedirectPromise().then((tokenResponse) => {
+        let accountObj;
+        if (tokenResponse !== null) {
+            accountObj = tokenResponse.account;
+            const id_token = tokenResponse.idToken;
+            const access_token = tokenResponse.accessToken;
+        } else {
+            const currentAccounts = myMSALObj.getAllAccounts();
+            if (!currentAccounts || currentAccounts.length === 0) {
+                accountObj = undefined;
+            } else if (currentAccounts.length > 1) {
+                // More than one user signed in, find desired user with getAccountByUsername(username)
+            } else {
+                const [firstAccount] = currentAccounts;
+                accountObj = firstAccount;
+            }
+
+            return;
+        }
+        const [usernameInr] = accountObj;
+        const username = usernameInr;
+      }).catch((error) => {
+        console.log(error);
+        // handleError(error);
+      });
     myMSALObj.loginRedirect(loginRequest);
 }
 /*
@@ -273,5 +354,9 @@ export function signOut(myMSALObj: any) {
 }
 */
 export const loginRequest = {
-    scopes: [process.env.REACT_APP_SEPES_CLIENTID + '']
+    scopes: [process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE]
+};
+
+const silentRequest = {
+    scopes: loginRequest.scopes
 };
