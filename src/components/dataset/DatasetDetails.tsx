@@ -583,7 +583,7 @@ const DatasetDetails = (props: any) => {
                                             {viewableFiles.map((file: any, i: number) => {
                                                 return (
                                                     <div
-                                                        key={file.name}
+                                                        key={file.path ?? file.name}
                                                         style={{ marginTop: '4px', marginRight: '8px' }}
                                                     >
                                                         <AttachmentWrapper>

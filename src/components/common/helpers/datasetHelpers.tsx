@@ -64,3 +64,20 @@ export const removeFirstOccurenceCharacter = (text: string, character: string) =
     }
     return text;
 };
+
+export const findWithAttr = (array, attr, value) => {
+    for (let i = 0; i < array.length; i += 1) {
+        const compareValue = removeFirstOccurenceCharacter(array[i].path, '/');
+        console.log(compareValue, value);
+
+        if (compareValue === value) {
+            return i;
+        }
+        /*
+        if (compareValue.substring(compareValue.lastIndexOf('/') + 1) === value.substring(value.lastIndexOf('/') + 1)) {
+            return i;
+        }
+        */
+    }
+    return -1;
+};
