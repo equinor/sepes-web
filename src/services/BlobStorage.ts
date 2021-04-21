@@ -1,5 +1,6 @@
 import { TransferProgressEvent } from '@azure/core-http';
 import { BlockBlobClient } from '@azure/storage-blob';
+import { removeFirstOccurenceCharacter } from 'components/common/helpers/datasetHelpers';
 
 const { BlobServiceClient } = require('@azure/storage-blob');
 
@@ -71,7 +72,8 @@ export const uploadFile2 = async (
 */
 const findWithAttr = (array, attr, value) => {
     for (let i = 0; i < array.length; i += 1) {
-        if (array[i][attr] === value) {
+        const compareValue = array[i][attr];
+        if (compareValue.substring(compareValue.lastIndexOf('/') + 1) === value.substring(value.lastIndexOf('/') + 1)) {
             return i;
         }
     }
@@ -85,14 +87,15 @@ export const uploadFile = async (
     totalSize: any,
     abortArray: any,
     setFiles: any,
-    progressArray: any
+    progressArray: any,
+    fileName: string
 ) => {
     const blobServiceClient = new BlobServiceClient(blobUri);
     const containerClient = blobServiceClient.getContainerClient('files');
     const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
 
     try {
-        const index = abortArray.findIndex((x: any) => x.blobName === blobName);
+        const index = abortArray.findIndex((x: any) => x.blobName === fileName);
 
         blockBlobClient
             .uploadBrowserData(data, {
@@ -101,7 +104,10 @@ export const uploadFile = async (
                     if (percentCalculated < 1) {
                         percentCalculated = 1;
                     }
-                    const index2 = findWithAttr(progressArray, 'name', blobName);
+                    let index2 = findWithAttr(progressArray, 'name', blobName);
+                    if (index === -1) {
+                        index2 = findWithAttr(progressArray, 'name', blobName.substring(1));
+                    }
                     if (percentCalculated >= 0) {
                         const temp: any = [...progressArray];
                         if (index2 === -1) {
@@ -113,7 +119,6 @@ export const uploadFile = async (
                             progressArray[index2].percent = percentCalculated;
                             temp[index2].percent = percentCalculated;
                         }
-
                         setFiles(temp);
 
                         const filePercent = {
@@ -149,7 +154,10 @@ export const uploadFile = async (
 export const deleteFile = async (blobUri: string, blobName: string) => {
     const blobServiceClient = new BlobServiceClient(blobUri);
     const containerClient = blobServiceClient.getContainerClient('files');
-    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    const blockBlobClient: BlockBlobClient = containerClient.getBlockBlobClient(
+        removeFirstOccurenceCharacter(blobName, '/')
+    );
 
     try {
         blockBlobClient.delete().catch(() => {
