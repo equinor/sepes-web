@@ -6,73 +6,72 @@ import axios from 'axios';
 import _ from 'lodash';
 import * as notify from '../components/common/notify';
 
-let accountId = '';
+const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
 
-myMSALObj.handleRedirectPromise().then(handleResponse).catch(err => {
-    console.error(err);
-  });
+const request = { scopes: [scope]};
 
-  function handleResponse(resp) {
-    console.log('handleResponse', resp);
-    const isInIframe = window.parent !== window;
-    if (!isInIframe) {
-        console.log('is in frame');
-        if (resp !== null) {
-            console.log('resp not nyll');
-            accountId = resp.account.homeAccountId;
-            console.log('Signed in fine', accountId);
-            //TODO: Continue
-            getTokenRedirect(loginRequest, resp.account);
-        } else {
-            console.log('resp is null');
-            const currentAccountsa = myMSALObj.getAllAccounts();
-            console.log(currentAccountsa);
-            myMSALObj.ssoSilent(silentRequest).then(() => {
-                const currentAccounts = myMSALObj.getAllAccounts();
-                accountId = currentAccounts[0].homeAccountId;
-                //TODO: Continue
-                getTokenRedirect(loginRequest, currentAccounts[0]);
-            }).catch(error => {
-                console.error('Silent Error: ' + error);
+export const SignInSilentRedirect = async () => {
+    const accounts = myMSALObj.getAllAccounts();
+
+    if (accounts.length) {
+        const srequest = {
+            scopes: [scope],
+            loginHint: accounts[0] ? accounts[0].username : '',
+            account: accounts[0],
+        };
+        try {
+            console.log('acquireTokenSilent');
+            await myMSALObj.acquireTokenSilent(srequest).then((tokenResponse) => {  
+                console.log('acquireTokenSilent storing access tokens');            
+                
+                sessionStorage.setItem('accessToken', tokenResponse.accessToken);
+                // const anyObj: any = tokenResponse.idTokenClaims;
+                // sessionStorage.setItem('role', anyObj.roles);
+
+                if (tokenResponse.account) {
+                    console.log('acquireTokenSilent setting username', tokenResponse.account);
+                    sessionStorage.setItem('userName', tokenResponse.account.username);
+                }
             });
+        } catch (error) {
+            console.log('acquireTokenSilent error', error);
+            if (error instanceof InteractionRequiredAuthError) {
+                await myMSALObj.acquireTokenRedirect({ scopes: [scope] });
+            }
+        }
+    } else {
+        try {
+            console.log('acquireTokenRedirect');
+            const response = await myMSALObj.acquireTokenRedirect(request);
+            console.log(response);
+        } catch (error) {
+            console.log('acquireTokenRedirect error', error);
+            console.warn(error);
         }
     }
-}
-
-// This function can be removed if you do not need to support IE
-async function getTokenRedirect(request, account) {
-    request.account = account;
-    return myMSALObj.acquireTokenSilent(request).catch(async (error) => {
-        console.log('silent token acquisition fails.');
-        if (error instanceof InteractionRequiredAuthError) {
-            // fallback to interaction when silent call fails
-            console.log('acquiring token using redirect');
-            myMSALObj.acquireTokenRedirect(request);
-        } else {
-            console.error(error);
-        }
-    });
-}
-
-export const acquireTokenSilent = async () => {
-    console.log('acquireTokenSilent 1', loginRequest);
-
-    myMSALObj
-        .acquireTokenSilent(loginRequest)
-        .then((tokenResponse: any) => {
-            console.log('tokenResponse 1');
-            // if (!tokenResponse.accessToken) {
-            //     signInRedirect();
-            // } else {
-            //     return tokenResponse;
-            // }
-        })
-        .catch((error: string) => {
-            console.log('error 1', 'acquireTokenSilent err', error);
-        });
 };
 
-const cyToken = localStorage.getItem('cyToken');
+myMSALObj
+    .handleRedirectPromise()
+    .then((tokenResponse) => {
+        console.log('handleRedirectPromise');
+        if (tokenResponse !== null) {
+            console.log('handleRedirectPromise tokenresponse', tokenResponse);
+             sessionStorage.setItem('accessToken', tokenResponse.accessToken);
+            // const anyObj: any = tokenResponse.idTokenClaims;
+             //sessionStorage.setItem('role', anyObj.roles);
+
+            if (tokenResponse.account) {
+                console.log('handleRedirectPromise setting username', tokenResponse.account);
+                sessionStorage.setItem('userName', tokenResponse.account.username);
+            }
+
+            window.location.reload();
+        }
+    })
+    .catch((error) => {
+        console.warn(error);
+    });
 
 const makeHeaders = (accessToken: any, acceptHeader?: string, skipSettingContentType?: boolean) => {
     const headers = new Headers();
@@ -87,104 +86,156 @@ const makeHeaders = (accessToken: any, acceptHeader?: string, skipSettingContent
     return headers;
 };
 
+const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
+    return new Promise((resolve) => {
+
+        const processAuthorizedResponse = async (response) => {
+
+            if (!response.ok) 
+            {            
+                notify.show('danger', response.status, response);
+            }            
+
+            return await JSON.parse((await response.text()) ?? {});
+        };
+
+        const performRequest = async (accessToken) => {
+            try { 
+                
+                let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+
+                if (!response.ok && response.status === 401) {
+                    //Unauthorized, need to re-authorize. Only try this once
+                    await SignInSilentRedirect();
+                    response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                }
+                
+                return resolve(await processAuthorizedResponse(response));
+           
+            } catch (error) {
+                return resolve(error);
+            }
+        };
+
+        const cyToken = localStorage.getItem('cyToken');
+
+        if (cyToken) {
+           console.log('apiRequestWithToken cypress')
+            performRequest(cyToken);
+        } else {          
+            const accessToken: string | null = sessionStorage.getItem('accessToken'); 
+            console.log('apiRequestWithToken normal')                      
+            performRequest(accessToken);
+        }
+    });
+
+};
+
 export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
     return new Promise((resolve) => {
-        const post = async (accessToken) => {
+
+        const processAuthorizedResponse = async (response) => {
+
+            if (!response.ok) 
+            {            
+                notify.show('danger', response.status, response);
+            }            
+
+            return await JSON.parse((await response.text()) ?? {});
+        };
+
+        const performRequest = async (accessToken) => {
             try {
                 const headers = makeHeaders(accessToken);
+                
                 const options = {
                     method,
                     headers,
                     body: JSON.stringify(body),
                     signal
                 };
-                /*
-                const response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                
+                let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
 
-                if (!response.ok) {
-                    notify.show('danger', response.status, response);
+                if (!response.ok && response.status === 401) {
+                    //Unauthorized, need to re-authorize. Only try this once
+                    await SignInSilentRedirect();
+                    response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                 }
-                return resolve(await JSON.parse((await response.text()) ?? {}));
-*/
-
-                return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
-                    .then((response) => {
-                        if (!response.ok) {
-                            notify.show('danger', response.status, response);
-                        }
-                        return response.text();
-                    })
-                    .then((responseData) => {
-                        return resolve(responseData ? JSON.parse(responseData) : {});
-                    })
-                    .catch((error) => console.log(error));
+                
+                return resolve(await processAuthorizedResponse(response));
+           
             } catch (error) {
                 return resolve(error);
             }
         };
 
-        if (cyToken) {
-            post(cyToken);
-        } else {
-            console.log('acquireTokenSilent 2');
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (!tokenResponse.accessToken) {
-                        signInRedirect();
-                    }
-                    post(tokenResponse.accessToken);
-                })
-                .catch((error: string) => {
-                    //myMSALObj.acquireTokenRedirect(loginRequest);
-                    console.log('error 2', error);
-                });
-        }
-    });
-};
-
-export const apiRequestPermissionsWithToken = async (url: string, method: string, body?: any) => {
-    return new Promise((resolve) => {
-        const post = async (accessToken) => {
-            try {
-                const headers = makeHeaders(accessToken);
-                const options = {
-                    method,
-                    headers,
-                    body: JSON.stringify(body)
-                };
-                return await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options)
-                    .then((response) => {
-                        return response.text();
-                    })
-                    .then((responseData) => {
-                        return resolve(responseData ? JSON.parse(responseData) : {});
-                    });
-            } catch (error) {
-                return resolve(error);
-            }
-        };
+        const cyToken = localStorage.getItem('cyToken');
 
         if (cyToken) {
-            post(cyToken);
-        } else {
-            console.log('acquireTokenSilent 2');
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    console.log('tokenResponse', tokenResponse);
-                    // if (!tokenResponse.accessToken) {
-                    //     signInRedirect();
-                    // }
-                    post(tokenResponse.accessToken);
-                })
-                .catch((error: string) => {
-                    //myMSALObj.acquireTokenRedirect(loginRequest);
-                    console.log('error 3', error);
-                });
+           console.log('apiRequestWithToken cypress')
+            performRequest(cyToken);
+        } else {          
+            const accessToken: string | null = sessionStorage.getItem('accessToken'); 
+            console.log('apiRequestWithToken normal')                      
+            performRequest(accessToken);
         }
     });
+
 };
+
+// export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
+//     return new Promise((resolve) => {
+
+//         const processAuthorizedResponse = async (response) => {
+
+//             if (!response.ok) 
+//             {            
+//                 notify.show('danger', response.status, response);
+//             }            
+
+//             return await JSON.parse((await response.text()) ?? {});
+//         };
+
+//         const performRequest = async (accessToken) => {
+//             try {
+//                 const headers = makeHeaders(accessToken);
+                
+//                 const options = {
+//                     method,
+//                     headers,
+//                     body: JSON.stringify(body),
+//                     signal
+//                 };
+                
+//                 let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+
+//                 if (!response.ok && response.status === 401) {
+//                     //Unauthorized, need to re-authorize. Only try this once
+//                     await SignInSilentRedirect();
+//                     response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+//                 }
+                
+//                 return resolve(await processAuthorizedResponse(response));
+           
+//             } catch (error) {
+//                 return resolve(error);
+//             }
+//         };
+
+//         const cyToken = localStorage.getItem('cyToken');
+
+//         if (cyToken) {
+//            console.log('apiRequestWithToken cypress')
+//             performRequest(cyToken);
+//         } else {          
+//             const accessToken: string | null = sessionStorage.getItem('accessToken'); 
+//             console.log('apiRequestWithToken normal')                      
+//             performRequest(accessToken);
+//         }
+//     });
+
+// };
 
 export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
     const axiosWithBlobUrl = axios.create({
@@ -198,43 +249,44 @@ export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
 };
 
 export const postFile = async (url, files: any) => {
+    console.log('postFile 3');
     return new Promise(() => {
-        console.log('acquireTokenSilent 3');
-        myMSALObj
-            .acquireTokenSilent(loginRequest)
-            .then((tokenResponse: any) => {
-                if (tokenResponse.accessToken) {
-                    const headers = new Headers();
-                    const bearer = `Bearer ${tokenResponse.accessToken}`;
-                    headers.append('Authorization', bearer);
+        console.log('postFile 3 inside promise');
+        // myMSALObj
+        //     .acquireTokenSilent(loginRequest)
+        //     .then((tokenResponse: any) => {
+        //         if (tokenResponse.accessToken) {
+        //             const headers = new Headers();
+        //             const bearer = `Bearer ${tokenResponse.accessToken}`;
+        //             headers.append('Authorization', bearer);
 
-                    const xhr = new XMLHttpRequest();
-                    xhr.upload.addEventListener(
-                        'progress',
-                        (evt) => {
-                            if (evt.lengthComputable) {
-                                const percentComplete = evt.loaded / evt.total;
-                                return percentComplete;
-                            }
-                        },
-                        false
-                    );
-                    xhr.open('POST', `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`);
-                    xhr.setRequestHeader('Authorization', bearer);
-                    xhr.send(files);
+        //             const xhr = new XMLHttpRequest();
+        //             xhr.upload.addEventListener(
+        //                 'progress',
+        //                 (evt) => {
+        //                     if (evt.lengthComputable) {
+        //                         const percentComplete = evt.loaded / evt.total;
+        //                         return percentComplete;
+        //                     }
+        //                 },
+        //                 false
+        //             );
+        //             xhr.open('POST', `${process.env.REACT_APP_SEPES_BASE_API_URL}${url}`);
+        //             xhr.setRequestHeader('Authorization', bearer);
+        //             xhr.send(files);
 
-                    xhr.onreadystatechange = function () {
-                        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                            return this.response;
-                        }
-                    };
-                }
+        //             xhr.onreadystatechange = function () {
+        //                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        //                     return this.response;
+        //                 }
+        //             };
+        //         }
 
-                // Callback code here
-            })
-            .catch((error: string) => {
-                console.log(error);
-            });
+        //         // Callback code here
+        //     })
+        //     .catch((error: string) => {
+        //         console.log(error);
+        //     });
     });
 };
 
@@ -261,22 +313,22 @@ export const postputStudy = async (study: StudyObj, imageUrl: string, url: any, 
             }
         };
 
-        if (cyToken) {
-            post(cyToken);
-        } else {
-            console.log('acquireTokenSilent 3');
-            myMSALObj
-                .acquireTokenSilent(loginRequest)
-                .then((tokenResponse: any) => {
-                    if (!tokenResponse.accessToken) {
-                        signInRedirect();
-                    }
-                    post(tokenResponse.accessToken);
-                })
-                .catch((error: string) => {
-                    console.log(error);
-                });
-        }
+        // if (cyToken) {
+        //     post(cyToken);
+        // } else {
+        //     console.log('acquireTokenSilent 3');
+        //     myMSALObj
+        //         .acquireTokenSilent(loginRequest)
+        //         .then((tokenResponse: any) => {
+        //             if (!tokenResponse.accessToken) {
+        //                 signInRedirect();
+        //             }
+        //             post(tokenResponse.accessToken);
+        //         })
+        //         .catch((error: string) => {
+        //             console.log(error);
+        //         });
+        // }
     });
 };
 
@@ -320,43 +372,51 @@ const createStudyRequestBody = async (study: StudyObj, blobUrl: string) => {
 //     }
 // }
 
-export function signInRedirect() {
-    myMSALObj.handleRedirectPromise().then((tokenResponse) => {
-        let accountObj;
-        if (tokenResponse !== null) {
-            accountObj = tokenResponse.account;
-            const id_token = tokenResponse.idToken;
-            const access_token = tokenResponse.accessToken;
-        } else {
-            const currentAccounts = myMSALObj.getAllAccounts();
-            if (!currentAccounts || currentAccounts.length === 0) {
-                accountObj = undefined;
-            } else if (currentAccounts.length > 1) {
-                // More than one user signed in, find desired user with getAccountByUsername(username)
-            } else {
-                const [firstAccount] = currentAccounts;
-                accountObj = firstAccount;
-            }
+// export function signInRedirect() {
+//     myMSALObj.handleRedirectPromise().then((tokenResponse) => {
+//         let accountObj;
+//         if (tokenResponse !== null) {
+//             accountObj = tokenResponse.account;
+//             const id_token = tokenResponse.idToken;
+//             const access_token = tokenResponse.accessToken;
+//         } else {
+//             const currentAccounts = myMSALObj.getAllAccounts();
+//             if (!currentAccounts || currentAccounts.length === 0) {
+//                 accountObj = undefined;
+//             } else if (currentAccounts.length > 1) {
+//                 // More than one user signed in, find desired user with getAccountByUsername(username)
+//             } else {
+//                 const [firstAccount] = currentAccounts;
+//                 accountObj = firstAccount;
+//             }
 
-            return;
-        }
-        const [usernameInr] = accountObj;
-        const username = usernameInr;
-      }).catch((error) => {
-        console.log(error);
-        // handleError(error);
-      });
-    myMSALObj.loginRedirect(loginRequest);
-}
+//             return;
+//         }
+//         const [usernameInr] = accountObj;
+//         const username = usernameInr;
+//       }).catch((error) => {
+//         console.log(error);
+//         // handleError(error);
+//       });
+//     myMSALObj.loginRedirect(loginRequest);
+// }
 /*
 export function signOut(myMSALObj: any) {
     myMSALObj.logout();
 }
 */
-export const loginRequest = {
-    scopes: [process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE]
-};
 
-const silentRequest = {
-    scopes: loginRequest.scopes
+// eslint-disable-next-line no-shadow
+export const signOut = () => {
+
+    const accounts = myMSALObj.getAllAccounts();
+
+    if (accounts.length && accounts.length == 1) {
+
+        const logoutRequest = {
+            account: accounts[0],
+        };
+    
+        myMSALObj.logoutRedirect(logoutRequest as any);
+    }  
 };

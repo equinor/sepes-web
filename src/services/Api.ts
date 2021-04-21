@@ -1,4 +1,4 @@
-import { apiRequestWithToken, postputStudy, postFile, apiRequestPermissionsWithToken } from '../auth/AuthFunctions';
+import { apiRequestWithToken, postputStudy, postFile } from '../auth/AuthFunctions';
 import {
     StudyObj,
     DatasetObj,
@@ -233,7 +233,7 @@ export const getStudyRoles = async () => {
 //Permission
 
 export const getPermissions = async () => {
-    return apiRequestPermissionsWithToken('api/permissions', 'GET');
+    return apiRequestWithToken('api/permissions', 'GET');
 };
 
 // Files
