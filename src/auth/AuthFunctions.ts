@@ -5,6 +5,7 @@ import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import * as notify from '../components/common/notify';
+import { access } from 'fs';
 
 const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
 
@@ -73,9 +74,27 @@ myMSALObj
         console.warn(error);
     });
 
-const makeHeaders = (accessToken: any, acceptHeader?: string, skipSettingContentType?: boolean) => {
+const makeHeaders = (acceptHeader?: string, skipSettingContentType?: boolean) => {
     const headers = new Headers();
-    const bearer = `Bearer ${accessToken}`;
+
+    let accessTokenToUse : string | null;
+
+    const cyToken = localStorage.getItem('cyToken');
+    const accessTokenFromSession: string | null = sessionStorage.getItem('accessToken');
+
+    if (cyToken) {
+       console.log('makeHeaders, cypress token')
+       accessTokenToUse = cyToken;
+    } else if(accessTokenFromSession) {  
+        console.log('makeHeaders, normal token')          
+        accessTokenToUse = accessTokenFromSession;
+    }
+    else{
+        console.log('makeHeaders, no token found')          
+        accessTokenToUse = null;
+    }
+
+    const bearer = `Bearer ${accessTokenToUse}`;
     headers.append('Authorization', bearer);
 
     headers.append('Accept', acceptHeader || 'application/json');
@@ -99,7 +118,7 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
             return await JSON.parse((await response.text()) ?? {});
         };
 
-        const performRequest = async (accessToken) => {
+        const performRequest = async () => {
             try { 
                 
                 let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
@@ -117,36 +136,18 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
             }
         };
 
-        const cyToken = localStorage.getItem('cyToken');
+        console.log('apiRequestInternal')
+        performRequest();
 
-        if (cyToken) {
-           console.log('apiRequestWithToken cypress')
-            performRequest(cyToken);
-        } else {          
-            const accessToken: string | null = sessionStorage.getItem('accessToken'); 
-            console.log('apiRequestWithToken normal')                      
-            performRequest(accessToken);
-        }
     });
-
 };
 
 export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve) => {       
 
-        const processAuthorizedResponse = async (response) => {
-
-            if (!response.ok) 
-            {            
-                notify.show('danger', response.status, response);
-            }            
-
-            return await JSON.parse((await response.text()) ?? {});
-        };
-
-        const performRequest = async (accessToken) => {
-            try {
-                const headers = makeHeaders(accessToken);
+        const performRequest = async () => {
+           
+                const headers = makeHeaders();
                 
                 const options = {
                     method,
@@ -154,32 +155,13 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
                     body: JSON.stringify(body),
                     signal
                 };
-                
-                let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+              
+                return resolve(await apiRequestInternal(url, headers, options)  );       
+          
+        };       
 
-                if (!response.ok && response.status === 401) {
-                    //Unauthorized, need to re-authorize. Only try this once
-                    await SignInSilentRedirect();
-                    response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                }
-                
-                return resolve(await processAuthorizedResponse(response));
-           
-            } catch (error) {
-                return resolve(error);
-            }
-        };
-
-        const cyToken = localStorage.getItem('cyToken');
-
-        if (cyToken) {
-           console.log('apiRequestWithToken cypress')
-            performRequest(cyToken);
-        } else {          
-            const accessToken: string | null = sessionStorage.getItem('accessToken'); 
-            console.log('apiRequestWithToken normal')                      
-            performRequest(accessToken);
-        }
+        console.log('apiRequestWithToken')
+        performRequest();
     });
 
 };
@@ -296,7 +278,7 @@ export const postputStudy = async (study: StudyObj, imageUrl: string, url: any, 
     return new Promise((resolve) => {
         const post = async (accessToken) => {
             try {
-                const headers = makeHeaders(accessToken, undefined, true);
+                const headers = makeHeaders(undefined, true);
                 const options = {
                     method,
                     headers,
