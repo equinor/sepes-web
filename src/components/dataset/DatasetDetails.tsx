@@ -1,7 +1,7 @@
 /*eslint-disable consistent-return, no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
+import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip, Search } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     getDatasetSasToken,
@@ -139,6 +139,12 @@ const DatasetDetails = (props: any) => {
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
     const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
     const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
+    const [searchValue, setSearchValue] = useState('');
+    const handleOnSearchValueChange = (event) => {
+        //const value = event.target.value;
+        setViewableFiles(files);
+        setSearchValue(event.target.value.toLowerCase());
+    };
 
     useEffect(() => {
         let timer: any;
@@ -321,6 +327,7 @@ const DatasetDetails = (props: any) => {
     };
 
     const deleteDataset = () => {
+        setHasChanged(false);
         controllerFiles.abort();
         controllerFiles = new AbortController();
         setLoading(true);
@@ -559,6 +566,9 @@ const DatasetDetails = (props: any) => {
                                     disabled={!(dataset.permissions?.editDataset && dataset.storageAccountLink)}
                                 />
                             )}
+                            <div style={{ marginTop: '16px' }}>
+                                <Search onChange={handleOnSearchValueChange} placeholder="Type to search" />
+                            </div>
                             {duplicateFiles && (
                                 <div>
                                     <Chip
@@ -572,7 +582,7 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            <div style={{ paddingTop: '16px' }}>
+                            <div>
                                 {!loadingFiles ? (
                                     viewableFiles.length > 0 ? (
                                         <div
@@ -580,44 +590,51 @@ const DatasetDetails = (props: any) => {
                                             style={{ height: 428, overflowY: 'auto', overflowX: 'hidden' }}
                                             onScroll={handleScroll}
                                         >
+                                            <div style={{ paddingTop: '10px' }} />
                                             {viewableFiles.map((file: any, i: number) => {
-                                                return (
-                                                    <div
-                                                        key={file.path ?? file.name}
-                                                        style={{ marginTop: '4px', marginRight: '8px' }}
-                                                    >
-                                                        <AttachmentWrapper>
-                                                            <div>
-                                                                {truncate(file.path, 100) ?? truncate(file.name, 100)}
-                                                            </div>
-                                                            <div>{bytesToSize(file.size)} </div>
-                                                            <Button
-                                                                variant="ghost_icon"
-                                                                onClick={() => removeFile(i, file)}
-                                                                style={{ marginTop: '-14px' }}
-                                                                disabled={checkIfDeleteIsEnabled(
-                                                                    file,
-                                                                    dataset,
-                                                                    progressArray
-                                                                )}
-                                                            >
-                                                                <Icon
-                                                                    color="#007079"
-                                                                    name="delete_forever"
-                                                                    size={24}
-                                                                    style={{ cursor: 'pointer' }}
+                                                if (
+                                                    searchValue === '' ||
+                                                    (file.name && file.name.toLowerCase().includes(searchValue))
+                                                ) {
+                                                    return (
+                                                        <div
+                                                            key={file.path ?? file.name}
+                                                            style={{ marginTop: '4px', marginRight: '8px' }}
+                                                        >
+                                                            <AttachmentWrapper>
+                                                                <div>
+                                                                    {truncate(file.path, 100) ??
+                                                                        truncate(file.name, 100)}
+                                                                </div>
+                                                                <div>{bytesToSize(file.size)} </div>
+                                                                <Button
+                                                                    variant="ghost_icon"
+                                                                    onClick={() => removeFile(i, file)}
+                                                                    style={{ marginTop: '-14px' }}
+                                                                    disabled={checkIfDeleteIsEnabled(
+                                                                        file,
+                                                                        dataset,
+                                                                        progressArray
+                                                                    )}
+                                                                >
+                                                                    <Icon
+                                                                        color="#007079"
+                                                                        name="delete_forever"
+                                                                        size={24}
+                                                                        style={{ cursor: 'pointer' }}
+                                                                    />
+                                                                </Button>
+                                                            </AttachmentWrapper>
+                                                            {file.percent && (
+                                                                <LinearProgress
+                                                                    style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                                    value={file.percent}
+                                                                    variant="determinate"
                                                                 />
-                                                            </Button>
-                                                        </AttachmentWrapper>
-                                                        {file.percent && (
-                                                            <LinearProgress
-                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                                value={file.percent}
-                                                                variant="determinate"
-                                                            />
-                                                        )}
-                                                    </div>
-                                                );
+                                                            )}
+                                                        </div>
+                                                    );
+                                                }
                                             })}
                                         </div>
                                     ) : (
@@ -626,7 +643,7 @@ const DatasetDetails = (props: any) => {
                                         </div>
                                     )
                                 ) : (
-                                    <div style={{ textAlign: 'center' }}>
+                                    <div style={{ textAlign: 'center', marginTop: '16px' }}>
                                         <DotProgress color="primary" />
                                         <div style={{ marginTop: '8px' }}>Loading files..</div>
                                     </div>
