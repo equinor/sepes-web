@@ -1,6 +1,6 @@
 import { TransferProgressEvent } from '@azure/core-http';
 import { BlockBlobClient } from '@azure/storage-blob';
-import { removeFirstOccurenceCharacter } from 'components/common/helpers/datasetHelpers';
+import { findWithAttr, removeFirstOccurenceCharacter } from 'components/common/helpers/datasetHelpers';
 
 const { BlobServiceClient } = require('@azure/storage-blob');
 
@@ -70,15 +70,20 @@ export const uploadFile2 = async (
     }
 };
 */
+/*
 const findWithAttr = (array, attr, value) => {
     for (let i = 0; i < array.length; i += 1) {
-        const compareValue = array[i][attr];
+        const compareValue = removeFirstOccurenceCharacter(array[i][attr], '/');
+        if (compareValue === value) {
+            return i;
+        }
         if (compareValue.substring(compareValue.lastIndexOf('/') + 1) === value.substring(value.lastIndexOf('/') + 1)) {
             return i;
         }
     }
     return -1;
 };
+*/
 
 export const uploadFile = async (
     blobUri: string,
@@ -103,10 +108,12 @@ export const uploadFile = async (
                     let percentCalculated = Math.floor((progress.loadedBytes * 100) / totalSize);
                     if (percentCalculated < 1) {
                         percentCalculated = 1;
+                    } else if (Math.floor(totalSize) === 0) {
+                        percentCalculated = 100;
                     }
-                    let index2 = findWithAttr(progressArray, 'name', blobName);
+                    let index2 = findWithAttr(progressArray, 'path', blobName);
                     if (index === -1) {
-                        index2 = findWithAttr(progressArray, 'name', blobName.substring(1));
+                        index2 = findWithAttr(progressArray, 'path', blobName.substring(1));
                     }
                     if (percentCalculated >= 0) {
                         const temp: any = [...progressArray];

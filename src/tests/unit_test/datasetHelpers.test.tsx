@@ -58,3 +58,9 @@ test('test removeFirstOccurenceCharacter ', () => {
     const expectedResult = 'testing';
     expect(helpers.removeFirstOccurenceCharacter(test, '/')).toEqual(expectedResult);
 });
+
+test('test findWithAttr ', () => {
+    const array = [{ path: 'file1.png' }];
+    const expectedResult = 'testing';
+    expect(helpers.findWithAttr(array, 'path', 'file1.png')).toEqual(0);
+});
