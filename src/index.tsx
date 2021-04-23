@@ -54,22 +54,7 @@ if (cyToken && cyToken.length) {
         }
     };
     renderApp(mockUser);
-} else {
-    // const isCache = true;
-    // //myMSALObj.getCurrentConfiguration().cache
-    // const accounts = myMSALObj.getAllAccounts();
-    // console.log('accounts', accounts);
-    // const accountCount = accounts.length;
-    // if (accountCount === 0) {
-    //     console.log('index, accounts exist');
-    //     signInRedirect();
-    // } else {
-    //     console.log('index, NO accounts');
-    //     acquireTokenSilent().catch((error: string) => {
-    //         console.log('error4, going for redirect', error);
-    //         myMSALObj.acquireTokenRedirect(loginRequest);
-    //     });
-    // }
+} else {    
     SignInSilentRedirect();
 
     if (myMSALObj.getAllAccounts().length > 0) {
