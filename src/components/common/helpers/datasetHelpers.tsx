@@ -13,7 +13,7 @@ export const checkForInputErrors = (dataset: DatasetObj) => {
 
 export const checkIfFileAlreadyIsUploaded = (droppedFiles, existingFiles, setDuplicateFiles) => {
     const newArray: any = [];
-    droppedFiles.forEach((file: File) => {
+    droppedFiles.forEach((file: any) => {
         const res = existingFiles
             .map((e) => {
                 return e.name;
@@ -55,4 +55,29 @@ export const checkUrlIfGeneralDataset = () => {
         return true;
     }
     return false;
+};
+
+export const removeFirstOccurenceCharacter = (text: string, character: string) => {
+    const index = text.indexOf(character);
+    if (index === 0) {
+        return text.replace(character, '');
+    }
+    return text;
+};
+
+export const findWithAttr = (array, attr, value) => {
+    for (let i = 0; i < array.length; i += 1) {
+        const compareValue = removeFirstOccurenceCharacter(array[i].path, '/');
+        console.log(compareValue, value);
+
+        if (compareValue === value) {
+            return i;
+        }
+        /*
+        if (compareValue.substring(compareValue.lastIndexOf('/') + 1) === value.substring(value.lastIndexOf('/') + 1)) {
+            return i;
+        }
+        */
+    }
+    return -1;
 };

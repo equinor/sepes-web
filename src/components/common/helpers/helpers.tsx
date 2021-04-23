@@ -48,7 +48,7 @@ export const returnLimitMeta = (limit: number, value: string) => {
 };
 
 export const truncate = (input: string, allowedLength: number) => {
-    if (input.length > allowedLength) {
+    if (input && input.length > allowedLength) {
         return input.substring(0, allowedLength) + '...';
     }
     return input;
@@ -69,6 +69,16 @@ export const passwordValidate = (password: string): boolean => {
 export const roundUp = (num: number, precision: number): string => {
     if (!precision) return num.toLocaleString();
     return (Math.ceil(num / precision) * precision).toLocaleString();
+};
+
+export const roundDown = (num: number, precision: number): number => {
+    if (!precision) return num;
+    return Math.floor(num / precision) * precision;
+};
+
+export const round = (num: number, precision: number): number => {
+    if (!precision) return num;
+    return Math.round(num / precision) * precision;
 };
 
 export const checkIfValidIp = (ip: string) => {

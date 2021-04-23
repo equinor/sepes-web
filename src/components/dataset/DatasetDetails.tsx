@@ -11,7 +11,7 @@ import {
     getDatasetSasTokenDelete
 } from '../../services/Api';
 import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import { bytesToSize } from '../common/helpers/helpers';
+import { bytesToSize, round, truncate } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
@@ -57,7 +57,7 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 256px;
+    grid-gap: 196px;
     padding: 32px;
     background-color: #ffffff;
     @media (max-width: 768px) {
@@ -93,6 +93,12 @@ const intervalUpdateSasDelete = 285000;
 let abortArray: any = [];
 let progressArray: any = [];
 
+export interface FileObj {
+    name: string;
+    path: string;
+    percent: number;
+}
+
 const DatasetDetails = (props: any) => {
     const datasetId = getDatasetId();
     const studyId = getStudyId();
@@ -121,6 +127,7 @@ const DatasetDetails = (props: any) => {
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
+    const [viewableFiles, setViewableFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
@@ -278,6 +285,7 @@ const DatasetDetails = (props: any) => {
                     console.log('Err');
                 } else if (result && isSubscribed) {
                     setFiles(result);
+                    setViewableFiles(result.slice(0, 20));
                     progressArray = result;
                 }
             });
@@ -340,30 +348,38 @@ const DatasetDetails = (props: any) => {
         setHasChanged(true);
         const previousFiles = [...files];
         const tempFiles = [...files];
-        tempFiles.push(..._files);
+        tempFiles.unshift(..._files);
 
         _files.forEach((_file: any) => {
-            _file.percent = 1;
-            progressArray.push(_file);
+            const newFile: FileObj = _file;
+            newFile.percent = 1;
+            progressArray.unshift(newFile);
         });
 
         setFiles(tempFiles);
+        setViewableFiles(tempFiles.slice(0, viewableFiles.length + _files.length));
         if (_files.length) {
             setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
                 if (result && !result.Message) {
-                    _files.forEach(async (file) => {
+                    _files.forEach(async (file: any) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
                             .then((blob) => {
                                 try {
+                                    let filePath = file.path;
+                                    if (file.path[0] === '/') {
+                                        filePath = filePath.substring(1);
+                                    }
+
                                     uploadFile(
                                         result || sasKey,
-                                        file.name,
+                                        filePath,
                                         blob,
                                         file.size,
                                         abortArray,
                                         setFiles,
-                                        progressArray
+                                        progressArray,
+                                        file.name
                                     );
                                 } catch (ex) {
                                     console.log(ex);
@@ -400,6 +416,7 @@ const DatasetDetails = (props: any) => {
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
+        setViewableFiles(_files.slice(0, viewableFiles.length));
         const index = abortArray.findIndex((x) => x.blobName === file.name);
         const progIndex = progressArray.findIndex((x) => x.name === file.name);
         if (progIndex !== -1) {
@@ -430,7 +447,7 @@ const DatasetDetails = (props: any) => {
         }
         getSasKeyDelete()
             .then((result: any) => {
-                deleteFile(result, file.name);
+                deleteFile(result, file.path ?? file.name);
             })
             .catch((ex: any) => {
                 console.log(ex);
@@ -462,6 +479,23 @@ const DatasetDetails = (props: any) => {
         });
     };
 
+    const fetchMoreData = () => {
+        setTimeout(() => {
+            if (viewableFiles.length + 20 <= files.length) {
+                setViewableFiles(files.slice(0, viewableFiles.length + 10));
+            } else {
+                setViewableFiles(files);
+            }
+        }, 200);
+    };
+
+    const handleScroll = (e) => {
+        const bottom = e.target.scrollHeight - round(e.target.scrollTop, 2); // === e.target.clientHeight;
+        if (bottom <= e.target.clientHeight + 5 && bottom >= e.target.clientHeight - 5) {
+            fetchMoreData();
+        }
+    };
+
     return !showEditDataset ? (
         !loadingFiles && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
@@ -483,7 +517,7 @@ const DatasetDetails = (props: any) => {
                         />
                     )}
                     <Wrapper>
-                        <div>
+                        <div style={{}}>
                             <div style={{ marginBottom: '16px' }}>
                                 <Typography variant="h2">{dataset?.name}</Typography>
                                 {!checkUrlIfGeneralDataset() ? (
@@ -540,41 +574,52 @@ const DatasetDetails = (props: any) => {
                             )}
                             <div style={{ paddingTop: '16px' }}>
                                 {!loadingFiles ? (
-                                    files.length > 0 ? (
-                                        files.map((file: any, i: number) => {
-                                            return (
-                                                <div key={file.name} style={{ marginTop: '4px' }}>
-                                                    <AttachmentWrapper>
-                                                        <div>{file.name}</div>
-                                                        <div>{bytesToSize(file.size)} </div>
-                                                        <Button
-                                                            variant="ghost_icon"
-                                                            onClick={() => removeFile(i, file)}
-                                                            style={{ marginTop: '-14px' }}
-                                                            disabled={checkIfDeleteIsEnabled(
-                                                                file,
-                                                                dataset,
-                                                                progressArray
-                                                            )}
-                                                        >
-                                                            <Icon
-                                                                color="#007079"
-                                                                name="delete_forever"
-                                                                size={24}
-                                                                style={{ cursor: 'pointer' }}
+                                    viewableFiles.length > 0 ? (
+                                        <div
+                                            id="scrollableDiv"
+                                            style={{ height: 428, overflowY: 'auto', overflowX: 'hidden' }}
+                                            onScroll={handleScroll}
+                                        >
+                                            {viewableFiles.map((file: any, i: number) => {
+                                                return (
+                                                    <div
+                                                        key={file.path ?? file.name}
+                                                        style={{ marginTop: '4px', marginRight: '8px' }}
+                                                    >
+                                                        <AttachmentWrapper>
+                                                            <div>
+                                                                {truncate(file.path, 100) ?? truncate(file.name, 100)}
+                                                            </div>
+                                                            <div>{bytesToSize(file.size)} </div>
+                                                            <Button
+                                                                variant="ghost_icon"
+                                                                onClick={() => removeFile(i, file)}
+                                                                style={{ marginTop: '-14px' }}
+                                                                disabled={checkIfDeleteIsEnabled(
+                                                                    file,
+                                                                    dataset,
+                                                                    progressArray
+                                                                )}
+                                                            >
+                                                                <Icon
+                                                                    color="#007079"
+                                                                    name="delete_forever"
+                                                                    size={24}
+                                                                    style={{ cursor: 'pointer' }}
+                                                                />
+                                                            </Button>
+                                                        </AttachmentWrapper>
+                                                        {file.percent && (
+                                                            <LinearProgress
+                                                                style={{ marginBottom: '16px', marginTop: '-4px' }}
+                                                                value={file.percent}
+                                                                variant="determinate"
                                                             />
-                                                        </Button>
-                                                    </AttachmentWrapper>
-                                                    {file.percent && (
-                                                        <LinearProgress
-                                                            style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                            value={file.percent}
-                                                            variant="determinate"
-                                                        />
-                                                    )}
-                                                </div>
-                                            );
-                                        })
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     ) : (
                                         <div style={{ textAlign: 'center', marginTop: '8px' }}>
                                             {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}

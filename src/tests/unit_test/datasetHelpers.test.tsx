@@ -52,3 +52,15 @@ test('test checkIfFileAlreadyIsUploaded one old file and one new', () => {
     const expectedResult = [{ name: 'file2' }];
     expect(helpers.checkIfFileAlreadyIsUploaded(droppedFiles, existingFiles, () => {})).toEqual(expectedResult);
 });
+
+test('test removeFirstOccurenceCharacter ', () => {
+    const test = '/testing';
+    const expectedResult = 'testing';
+    expect(helpers.removeFirstOccurenceCharacter(test, '/')).toEqual(expectedResult);
+});
+
+test('test findWithAttr ', () => {
+    const array = [{ path: 'file1.png' }];
+    const expectedResult = 'testing';
+    expect(helpers.findWithAttr(array, 'path', 'file1.png')).toEqual(0);
+});
