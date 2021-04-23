@@ -97,6 +97,7 @@ export interface FileObj {
     name: string;
     path: string;
     percent: number;
+    uploadedBytes: number;
 }
 
 const DatasetDetails = (props: any) => {
@@ -140,6 +141,7 @@ const DatasetDetails = (props: any) => {
     const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
     const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
     const [searchValue, setSearchValue] = useState('');
+    const [totalProgress, setTotalProgress] = useState<number>(0);
     const handleOnSearchValueChange = (event) => {
         setViewableFiles(files);
         setSearchValue(event.target.value.toLowerCase());
@@ -183,6 +185,19 @@ const DatasetDetails = (props: any) => {
         } else {
             setHasChanged(false);
         }
+        let totalSizeUploaded = 0;
+        let totalSizeToUpload = 0;
+        progressArray.forEach((_filesInProgress: any) => {
+            if (_filesInProgress.percent !== undefined) {
+                totalSizeUploaded += _filesInProgress.uploadedBytes;
+                totalSizeToUpload += _filesInProgress.size;
+            }
+        });
+        let percent = Math.floor((totalSizeUploaded * 100) / totalSizeToUpload);
+        if (percent === 0 && hasChanged) {
+            percent = 1;
+        }
+        setTotalProgress(percent);
     }, [files, progressArray]);
 
     useEffect(() => {
@@ -190,6 +205,7 @@ const DatasetDetails = (props: any) => {
             cancelGettingFilesCall();
             cancelAllDownloads();
             abortArray = [];
+            progressArray = [];
         };
     }, []);
 
@@ -355,10 +371,16 @@ const DatasetDetails = (props: any) => {
         const previousFiles = [...files];
         const tempFiles = [...files];
         tempFiles.unshift(..._files);
+        progressArray.forEach((_progress) => {
+            if (_progress.percent === 100) {
+                progressArray[progressArray.indexOf(_progress)].percent = undefined;
+            }
+        });
 
         _files.forEach((_file: any) => {
             const newFile: FileObj = _file;
             newFile.percent = 1;
+            newFile.uploadedBytes = 1;
             progressArray.unshift(newFile);
         });
 
@@ -565,6 +587,16 @@ const DatasetDetails = (props: any) => {
                                     disabled={!(dataset.permissions?.editDataset && dataset.storageAccountLink)}
                                 />
                             )}
+                            {totalProgress > 0 && (
+                                <>
+                                    <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
+                                    <LinearProgress
+                                        style={{ marginBottom: '0px', marginTop: '16px' }}
+                                        value={totalProgress}
+                                        variant="determinate"
+                                    />
+                                </>
+                            )}
                             <div style={{ marginTop: '16px' }}>
                                 <Search onChange={handleOnSearchValueChange} placeholder="Type to search" />
                             </div>
@@ -581,6 +613,7 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
+
                             <div>
                                 {!loadingFiles ? (
                                     viewableFiles.length > 0 ? (
@@ -637,7 +670,7 @@ const DatasetDetails = (props: any) => {
                                             })}
                                         </div>
                                     ) : (
-                                        <div style={{ textAlign: 'center', marginTop: '8px' }}>
+                                        <div style={{ textAlign: 'center', marginTop: '16px' }}>
                                             {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
                                         </div>
                                     )
