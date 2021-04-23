@@ -85,6 +85,49 @@ const findWithAttr = (array, attr, value) => {
 };
 */
 
+export const updateWithProgress = (
+    percentCalculated,
+    progressArray,
+    index,
+    blobName,
+    data,
+    progress,
+    setFiles,
+    abortArray
+) => {
+    let index2 = findWithAttr(progressArray, 'path', blobName);
+    if (index === -1) {
+        index2 = findWithAttr(progressArray, 'path', blobName.substring(1));
+    }
+    if (percentCalculated >= 0) {
+        const temp: any = [...progressArray];
+        if (index2 === -1) {
+            const modfiedBlob = data;
+            modfiedBlob.percent = percentCalculated;
+            modfiedBlob.uploadedBytes = progress.loadedBytes;
+            temp.push(modfiedBlob);
+            progressArray.push(modfiedBlob);
+        } else if (temp[index2] && temp) {
+            progressArray[index2].percent = percentCalculated;
+            temp[index2].percent = percentCalculated;
+            progressArray[index2].uploadedBytes = progress.loadedBytes;
+            temp[index2].uploadedBytes = progress.loadedBytes;
+        }
+        setFiles(temp);
+
+        const filePercent = {
+            blobName,
+            percent: percentCalculated,
+            controller: new AbortController()
+        };
+
+        if (index === -1) {
+            abortArray.push(filePercent);
+        } else if (abortArray[index]) {
+            abortArray[index].percent = percentCalculated;
+        }
+    }
+};
 export const uploadFile = async (
     blobUri: string,
     blobName: string,
@@ -102,6 +145,10 @@ export const uploadFile = async (
     try {
         const index = abortArray.findIndex((x: any) => x.blobName === fileName);
 
+        if (totalSize === 0) {
+            updateWithProgress(100, progressArray, index, blobName, data, { loadedBytes: 0 }, setFiles, abortArray);
+        }
+
         blockBlobClient
             .uploadBrowserData(data, {
                 onProgress: (progress: TransferProgressEvent) => {
@@ -111,6 +158,17 @@ export const uploadFile = async (
                     } else if (Math.floor(totalSize) === 0) {
                         percentCalculated = 100;
                     }
+                    updateWithProgress(
+                        percentCalculated,
+                        progressArray,
+                        index,
+                        blobName,
+                        data,
+                        progress,
+                        setFiles,
+                        abortArray
+                    );
+                    /*
                     let index2 = findWithAttr(progressArray, 'path', blobName);
                     if (index === -1) {
                         index2 = findWithAttr(progressArray, 'path', blobName.substring(1));
@@ -142,7 +200,7 @@ export const uploadFile = async (
                         } else if (abortArray[index]) {
                             abortArray[index].percent = percentCalculated;
                         }
-                    }
+                    }*/
                 },
                 abortSignal: abortArray[index] && abortArray[index].controller.signal
             })
