@@ -141,7 +141,6 @@ const DatasetDetails = (props: any) => {
     const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
     const [searchValue, setSearchValue] = useState('');
     const handleOnSearchValueChange = (event) => {
-        //const value = event.target.value;
         setViewableFiles(files);
         setSearchValue(event.target.value.toLowerCase());
     };
