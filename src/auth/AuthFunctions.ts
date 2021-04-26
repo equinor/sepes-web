@@ -3,7 +3,6 @@ import { InteractionRequiredAuthError } from '@azure/msal-browser';
 import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
 import * as notify from '../components/common/notify';
 
 const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
@@ -20,12 +19,10 @@ export const SignInSilentRedirect = async () => {
             account: accounts[0],
         };
         try {
-           
-            await myMSALObj.acquireTokenSilent(srequest).then((tokenResponse) => {              
+            await myMSALObj.acquireTokenSilent(srequest).then((tokenResponse) => {
+                sessionStorage.setItem('accessToken', tokenResponse.accessToken);
 
-                sessionStorage.setItem('accessToken', tokenResponse.accessToken);               
-
-                if (tokenResponse.account) {                 
+                if (tokenResponse.account) {
                     sessionStorage.setItem('userName', tokenResponse.account.username);
                 }
             });
@@ -36,9 +33,9 @@ export const SignInSilentRedirect = async () => {
             }
         }
     } else {
-        try {            
-            const response = await myMSALObj.acquireTokenRedirect(request);          
-        } catch (error) {            
+        try {
+            await myMSALObj.acquireTokenRedirect(request);
+        } catch (error) {
             console.warn(error);
         }
     }
@@ -47,13 +44,12 @@ export const SignInSilentRedirect = async () => {
 myMSALObj
     .handleRedirectPromise()
     .then((tokenResponse) => {
-      
-        if (tokenResponse !== null) {           
+        if (tokenResponse !== null) {
             sessionStorage.setItem('accessToken', tokenResponse.accessToken);
             // const anyObj: any = tokenResponse.idTokenClaims;
             //sessionStorage.setItem('role', anyObj.roles);
 
-            if (tokenResponse.account) {                
+            if (tokenResponse.account) {
                 sessionStorage.setItem('userName', tokenResponse.account.username);
             }
 
@@ -72,12 +68,11 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
     const cyToken = localStorage.getItem('cyToken');
     const accessTokenFromSession: string | null = sessionStorage.getItem('accessToken');
 
-    if (cyToken) {      
+    if (cyToken) {
         accessTokenToUse = cyToken;
     } else if (accessTokenFromSession) {
         accessTokenToUse = accessTokenFromSession;
-    }
-    else {
+    } else {
         accessTokenToUse = null;
     }
 
@@ -97,19 +92,16 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
 
 const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
     return new Promise((resolve) => {
-
         const processAuthorizedResponse = async (response) => {
-
             if (!response.ok) {
                 notify.show('danger', response.status, response);
             }
 
-            return await JSON.parse((await response.text()) ?? {});
+            return JSON.parse((await response.text()) ?? {});
         };
 
         const performRequest = async () => {
             try {
-
                 let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
 
                 if (!response.ok && response.status === 401) {
@@ -119,22 +111,18 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                 }
 
                 return resolve(await processAuthorizedResponse(response));
-
             } catch (error) {
                 return resolve(error);
             }
         };
 
         performRequest();
-
     });
 };
 
 export const apiRequestWithToken = async (url: string, method: string, body?: any, signal?: any) => {
     return new Promise((resolve) => {
-
         const performRequest = async () => {
-
             const headers = makeHeaders();
 
             const options = {
@@ -145,7 +133,6 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
             };
 
             return resolve(await apiRequestInternal(url, headers, options));
-
         };
 
         performRequest();
@@ -154,21 +141,20 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
 
 export const createOrUpdateStudyRequest = async (study: StudyObj, imageUrl: string, url: any, method: string) => {
     return new Promise((resolve) => {
-
-        const createStudyRequestBody = async (study: StudyObj, blobUrl: string) => {
+        const createStudyRequestBody = async (studyInner: StudyObj, blobUrl: string) => {
             const studyRequestPart = {
-                name: study.name,
-                description: study.description,
-                wbsCode: study.wbsCode,
-                vendor: study.vendor,
-                restricted: study.restricted,
-                deleteLogo: !study.logoUrl && !blobUrl
+                name: studyInner.name,
+                description: studyInner.description,
+                wbsCode: studyInner.wbsCode,
+                vendor: studyInner.vendor,
+                restricted: studyInner.restricted,
+                deleteLogo: !studyInner.logoUrl && !blobUrl
             };
 
             const formData = new FormData();
             formData.append('study', JSON.stringify(studyRequestPart));
 
-            if (blobUrl && blobUrl !== study.logoUrl) {
+            if (blobUrl && blobUrl !== studyInner.logoUrl) {
                 const axiosWithBlobUrl = axios.create({
                     baseURL: blobUrl,
                     timeout: 1000
@@ -187,7 +173,6 @@ export const createOrUpdateStudyRequest = async (study: StudyObj, imageUrl: stri
         };
 
         const performRequest = async () => {
-
             const headers = makeHeaders(true);
 
             const requestBody = await createStudyRequestBody(study, imageUrl);
@@ -199,7 +184,6 @@ export const createOrUpdateStudyRequest = async (study: StudyObj, imageUrl: stri
             };
 
             return resolve(await apiRequestInternal(url, headers, options));
-
         };
 
         performRequest();
@@ -219,11 +203,9 @@ export const makeFileBlobFromUrl = async (blobUrl: any, fileName: string) => {
 
 // eslint-disable-next-line no-shadow
 export const signOut = () => {
-
     const accounts = myMSALObj.getAllAccounts();
 
-    if (accounts.length && accounts.length == 1) {
-
+    if (accounts.length && accounts.length === 1) {
         const logoutRequest = {
             account: accounts[0],
         };
