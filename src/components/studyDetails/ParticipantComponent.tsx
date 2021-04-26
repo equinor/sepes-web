@@ -14,7 +14,6 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
-import _ from 'lodash';
 import { getStudyId } from 'utils/CommonUtil';
 
 const icons = {
@@ -114,17 +113,15 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     (part: any) => part.userId === participant.userId
                 );
 
-                var accounts = user.getAllAccounts();
+                const accounts = user.getAllAccounts();
 
                 if (accounts.length && accounts.length > 0) {
-                    var currentAccount = accounts[0];
+                    const currentAccount = accounts[0];
 
                     if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
                         history.push('/');
                     }
                 }
-
-
             }
             rolesResponse.setLoading(false);
         });
