@@ -5,7 +5,6 @@ import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import * as notify from '../components/common/notify';
-import { access } from 'fs';
 
 const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
 
@@ -83,28 +82,28 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
     const accessTokenFromSession: string | null = sessionStorage.getItem('accessToken');
 
     if (cyToken) {
-        console.log('makeHeaders, cypress token')
+        console.log('makeHeaders, cypress token');
         accessTokenToUse = cyToken;
     } else if (accessTokenFromSession) {
-        console.log('makeHeaders, normal token')
+        console.log('makeHeaders, normal token');
         accessTokenToUse = accessTokenFromSession;
     }
     else {
-        console.log('makeHeaders, no token found')
+        console.log('makeHeaders, no token found');
         accessTokenToUse = null;
     }
 
     const bearer = `Bearer ${accessTokenToUse}`;
-    headers.append('Authorization', bearer);   
+    headers.append('Authorization', bearer);
 
     if (!skipSettingContentType) {
         headers.append('Content-Type', 'application/json');
     }
-    
+
     if (!skipSettingAccept) {
         headers.append('Accept', 'application/json');
     }
-    
+
     return headers;
 };
 
@@ -138,7 +137,7 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
             }
         };
 
-        console.log('apiRequestInternal')
+        console.log('apiRequestInternal');
         performRequest();
 
     });
@@ -162,7 +161,7 @@ export const apiRequestWithToken = async (url: string, method: string, body?: an
 
         };
 
-        console.log('apiRequestWithToken')
+        console.log('apiRequestWithToken');
         performRequest();
     });
 };
