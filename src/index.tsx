@@ -54,12 +54,12 @@ if (cyToken && cyToken.length) {
         }
     };
     renderApp(mockUser);
-} else {    
+} else {
     SignInSilentRedirect();
 
     if (myMSALObj.getAllAccounts().length > 0) {
         renderApp(myMSALObj);
-    }   
+    }
 }
 
 // If you want your app to work offline and load faster, you can change
