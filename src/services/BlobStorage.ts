@@ -95,23 +95,23 @@ export const updateWithProgress = (
     setFiles,
     abortArray
 ) => {
-    let index2 = findWithAttr(progressArray, 'path', blobName);
+    let progressArrayIndex = findWithAttr(progressArray, 'path', blobName);
     if (index === -1) {
-        index2 = findWithAttr(progressArray, 'path', blobName.substring(1));
+        progressArrayIndex = findWithAttr(progressArray, 'path', blobName.substring(1));
     }
     if (percentCalculated >= 0) {
         const temp: any = [...progressArray];
-        if (index2 === -1) {
+        if (progressArrayIndex === -1) {
             const modfiedBlob = data;
             modfiedBlob.percent = percentCalculated;
             modfiedBlob.uploadedBytes = progress.loadedBytes;
             temp.push(modfiedBlob);
             progressArray.push(modfiedBlob);
-        } else if (temp[index2] && temp) {
-            progressArray[index2].percent = percentCalculated;
-            temp[index2].percent = percentCalculated;
-            progressArray[index2].uploadedBytes = progress.loadedBytes;
-            temp[index2].uploadedBytes = progress.loadedBytes;
+        } else if (temp[progressArrayIndex] && temp) {
+            progressArray[progressArrayIndex].percent = percentCalculated;
+            temp[progressArrayIndex].percent = percentCalculated;
+            progressArray[progressArrayIndex].uploadedBytes = progress.loadedBytes;
+            temp[progressArrayIndex].uploadedBytes = progress.loadedBytes;
         }
         setFiles(temp);
 
