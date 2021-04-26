@@ -120,11 +120,14 @@ export const uploadFile = async (
                         if (index2 === -1) {
                             const modfiedBlob = data;
                             modfiedBlob.percent = percentCalculated;
+                            modfiedBlob.uploadedBytes = progress.loadedBytes;
                             temp.push(modfiedBlob);
                             progressArray.push(modfiedBlob);
                         } else if (temp[index2] && temp) {
                             progressArray[index2].percent = percentCalculated;
                             temp[index2].percent = percentCalculated;
+                            progressArray[index2].uploadedBytes = progress.loadedBytes;
+                            temp[index2].uploadedBytes = progress.loadedBytes;
                         }
                         setFiles(temp);
 

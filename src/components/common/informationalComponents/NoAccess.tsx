@@ -1,6 +1,7 @@
 import React from 'react';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Typography } from '@equinor/eds-core-react';
 
 const NoAccess = () => {
     return (
@@ -19,7 +20,9 @@ const NoAccess = () => {
         >
             <FontAwesomeIcon icon={faTimesCircle} size="5x" style={{ margin: '20px' }} />
             <div>
-                <b>It seems like you don´t have access to this content.</b>
+                <Typography style={{ textAlign: 'center' }} variant="h4">
+                    It seems like you don´t have access to this content.
+                </Typography>
             </div>
         </div>
     );

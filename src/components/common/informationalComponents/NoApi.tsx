@@ -1,6 +1,7 @@
 import React from 'react';
 import { faBlind } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Typography } from '@equinor/eds-core-react';
 
 const NoApi = () => {
     return (
@@ -19,7 +20,9 @@ const NoApi = () => {
         >
             <FontAwesomeIcon icon={faBlind} size="5x" style={{ margin: '20px' }} />
             <div>
-                <b>Unable to reach API..</b>
+                <Typography style={{ textAlign: 'center' }} variant="h4">
+                    Unable to reach API..
+                </Typography>
             </div>
         </div>
     );

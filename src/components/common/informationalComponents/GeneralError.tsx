@@ -1,6 +1,7 @@
 import React from 'react';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Typography } from '@equinor/eds-core-react';
 
 const NoApi = () => {
     return (
@@ -19,7 +20,9 @@ const NoApi = () => {
         >
             <FontAwesomeIcon icon={faExclamationTriangle} size="5x" style={{ margin: '20px' }} />
             <div>
-                <b>Seems to be an error..</b>
+                <Typography style={{ textAlign: 'center' }} variant="h4">
+                    Seems to be an error..
+                </Typography>
             </div>
         </div>
     );
