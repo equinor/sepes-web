@@ -17,6 +17,7 @@ export const getStudyList = async () => {
 };
 
 export const getStudy = async (id: string) => {
+    console.log('getStudy');
     return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
@@ -28,8 +29,8 @@ export const updateStudy = async (study: StudyObj, imageUrl: string) => {
     return createOrUpdateStudyRequest(study, imageUrl, 'api/studies/' + study.id + '/details', 'PUT');
 };
 
-export const deleteStudy = async (studyId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId, 'DELETE');
+export const closeStudy = async (studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/close', 'PUT');
 };
 
 export const getDatasetList = async () => {
