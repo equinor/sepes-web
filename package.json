@@ -1,6 +1,6 @@
 {
     "name": "sepes-web",
-    "version": "0.1.18",
+    "version": "0.1.19",
     "private": true,
     "dependencies": {
         "@azure/msal-browser": "^2.14.0",
