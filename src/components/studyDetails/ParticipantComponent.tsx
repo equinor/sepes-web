@@ -14,7 +14,6 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
-import _ from 'lodash';
 import { getStudyId } from 'utils/CommonUtil';
 
 const icons = {
@@ -63,7 +62,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
     useEffect(() => {
@@ -113,8 +112,15 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
-                if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
-                    history.push('/');
+
+                const accounts = user.getAllAccounts();
+
+                if (accounts.length && accounts.length > 0) {
+                    const currentAccount = accounts[0];
+
+                    if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
+                        history.push('/');
+                    }
                 }
             }
             rolesResponse.setLoading(false);

@@ -112,13 +112,13 @@ const Bar = (props: any) => {
             </TopBar>
             {toggle && (
                 <LogoutWrapper ref={wrapperRef}>
-                    <div>{user.getAccount().name}</div>
+                    <div>{user.getActiveAccount()?.name}</div>
                     <Divider color="medium" variant="small" />
                     <EquinorLink style={{ marginBottom: '8px' }} to="/releasenotes" onClick={onChangelogClick}>
                         Release Notes
                     </EquinorLink>
                     <div style={{ marginBottom: '8px' }} />
-                    <EquinorLink to="/" onClick={() => user.logout()}>
+                    <EquinorLink to="/" onClick={() => user.logoutRedirect()}>
                         Log Out
                     </EquinorLink>
                 </LogoutWrapper>
