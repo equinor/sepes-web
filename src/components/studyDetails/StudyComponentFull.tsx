@@ -6,7 +6,7 @@ import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
+import { createStudy, updateStudy, closeStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
@@ -208,7 +208,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUserClickedDelete(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
-        deleteStudy(study.id).then((result: any) => {
+        closeStudy(study.id).then((result: any) => {
             setLoading(false);
             if (result && result.Message) {
                 setDeleteStudyInProgress(true);
