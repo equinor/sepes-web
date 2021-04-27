@@ -1,10 +1,10 @@
-import { UserAgentApplication } from 'msal';
+import { PublicClientApplication } from '@azure/msal-browser';
 
-export const myMSALObj = new UserAgentApplication({
+export const myMSALObj = new PublicClientApplication({
   auth: {
     clientId: process.env.REACT_APP_SEPES_CLIENTID + '',
     authority: process.env.REACT_APP_SEPES_AUTHORITY,
-    redirectUri: process.env.REACT_APP_SEPES_REDIRECT_URI,
+    redirectUri: process.env.REACT_APP_SEPES_REDIRECT_URI
   },
   cache: {
     cacheLocation: 'sessionStorage', // This configures where your cache will be stored

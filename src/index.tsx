@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { acquireTokenSilent, loginRequest, signInRedirect } from './auth/AuthFunctions';
+import { SignInSilentRedirect } from './auth/AuthFunctions';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
@@ -55,16 +55,9 @@ if (cyToken && cyToken.length) {
     };
     renderApp(mockUser);
 } else {
-    if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
-        signInRedirect();
-    } else {
-        acquireTokenSilent().catch((error: string) => {
-            myMSALObj.acquireTokenRedirect(loginRequest);
-            console.log(error);
-        });
-    }
+    SignInSilentRedirect();
 
-    if (myMSALObj.getAccount()) {
+    if (myMSALObj.getAllAccounts().length > 0) {
         renderApp(myMSALObj);
     }
 }
