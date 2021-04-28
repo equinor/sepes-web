@@ -686,9 +686,7 @@ const DatasetDetails = (props: any) => {
                                                                             {truncate(_file.path, 100) ??
                                                                                 truncate(_file.name, 100)}
                                                                         </div>
-                                                                        <div>
-                                                                            {bytesToSize(_file.size)} {_file.size}{' '}
-                                                                        </div>
+                                                                        <div>{bytesToSize(_file.size)}</div>
                                                                         <Button
                                                                             variant="ghost_icon"
                                                                             onClick={() => removeFile(i, _file)}
