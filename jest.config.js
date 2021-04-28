@@ -2,6 +2,18 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+    transformIgnorePatterns: ['node_modules/(?!(@equinor/eds-icons)/)', 'cypress'],
+    transform: {
+        '^.+\\.tsx?$': 'babel-jest',
+        '^.+\\.ts?$': 'ts-jest',
+        '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub'
+    },
+    moduleNameMapper: {
+        '\\.(css|less)$': 'identity-obj-proxy'
+    },
+    globals: {
+        crypto: require('crypto')
+    }
     /*
     preset: 'ts-jest',
     transform: {
