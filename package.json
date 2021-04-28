@@ -43,6 +43,8 @@
         "object-path": ">=0.11.5",
         "react": "^16.13.1",
         "react-copy-to-clipboard": "^5.0.3",
+        "react-dnd-html5-backend": "^14.0.0",
+        "react-dnd-html5-backend-cjs": "^9.5.1",
         "react-dom": "^16.13.1",
         "react-dropzone": "^11.3.2",
         "react-keyed-file-browser": "^1.10.0",
@@ -107,6 +109,16 @@
     },
     "nyc": {
         "report-dir": "cypress-coverage"
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "^dnd-core$": "dnd-core/dist/cjs",
+            "^react-dnd$": "react-dnd/dist/cjs",
+            "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
+            "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
+            "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
+            "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs"
+        }
     },
     "resolutions": {
         "**/@typescript-eslint/eslint-plugin": "^4.1.1",
