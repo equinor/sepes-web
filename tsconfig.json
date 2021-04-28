@@ -19,5 +19,6 @@
         "baseUrl": "src"
     },
     "include": ["src", "jest.setup.js"],
-    "types": ["node", "jest", "@testing-library/jest-dom"]
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "typeRoots": ["../node_modules/@types", "../@types"]
 }
