@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+/* eslint-disable consistent-return, import/no-unresolved */
 import { InteractionRequiredAuthError } from '@azure/msal-browser';
 import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
@@ -16,7 +16,7 @@ export const SignInSilentRedirect = async () => {
         const srequest = {
             scopes: [scope],
             loginHint: accounts[0] ? accounts[0].username : '',
-            account: accounts[0],
+            account: accounts[0]
         };
         try {
             await myMSALObj.acquireTokenSilent(srequest).then((tokenResponse) => {
@@ -207,7 +207,7 @@ export const signOut = () => {
 
     if (accounts.length && accounts.length === 1) {
         const logoutRequest = {
-            account: accounts[0],
+            account: accounts[0]
         };
 
         myMSALObj.logoutRedirect(logoutRequest as any);
