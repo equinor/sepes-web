@@ -218,7 +218,6 @@ const DatasetDetails = (props: any) => {
             percent = 1;
         }
         setTotalProgress(percent);
-        console.log(progressArray);
     }, [files, progressArray]);
 
     useEffect(() => {
