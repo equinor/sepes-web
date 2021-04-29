@@ -218,6 +218,7 @@ const DatasetDetails = (props: any) => {
             percent = 1;
         }
         setTotalProgress(percent);
+        console.log(progressArray);
     }, [files, progressArray]);
 
     useEffect(() => {
@@ -362,6 +363,16 @@ const DatasetDetails = (props: any) => {
         setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
+    const returnEnumberableFiles = () => {
+        const tempFiles: any = [];
+        files.forEach((_file) => {
+            const tempFile = _file;
+            Object.defineProperty(tempFile, 'size', { value: _file.size, enumerable: true });
+            tempFiles.push(_file);
+        });
+        return tempFiles;
+    };
+
     const deleteDataset = () => {
         setHasChanged(false);
         controllerFiles.abort();
@@ -399,12 +410,23 @@ const DatasetDetails = (props: any) => {
         });
 
         _files.forEach((_file: any) => {
-            const newFile: any = _file;
+            const newFile: FileObj = _file;
+
+            //Object.defineProperty(newFile, 'size', { value: 345325235, enumerable: true });
+            const test: any = {};
             newFile.percent = 1;
             newFile.uploadedBytes = 1;
             newFile.key = _file.path;
-
             newFile.modified = _file.lastModified;
+
+            test.percent = 1;
+            test.uploadedBytes = 1;
+            test.key = _file.path;
+            test.modified = _file.lastModified;
+            test.name = _file.name;
+            test.path = _file.path;
+            test.size = _file.size;
+            console.log(newFile, _file, test);
             progressArray.unshift(newFile);
         });
         setFiles(tempFiles);
@@ -643,7 +665,7 @@ const DatasetDetails = (props: any) => {
                             )}
                             {folderViewMode && (
                                 <FileBrowser
-                                    files={files ?? []}
+                                    files={returnEnumberableFiles() ?? []}
                                     headerRenderer={null}
                                     icons={{
                                         File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
