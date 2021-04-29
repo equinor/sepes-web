@@ -7,6 +7,7 @@ import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import useClickOutside from '../../common/customComponents/useClickOutside';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { useHistory } from 'react-router-dom';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -74,6 +75,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const wrapperRef = useRef(null);
+    const history = useHistory();
     useClickOutside(wrapperRef, setDisplayMoreActions);
 
     const handleToggle = () => {
@@ -92,6 +94,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                 getResources();
             }
         });
+    };
+
+    const redirectToChangePassword = (): void => {
+        if (vmProperties.linkToExternalSystem) {
+            window.open(vmProperties.linkToExternalSystem + '/resetpassword', '_blank');
+        }
     };
 
     return (
@@ -161,6 +169,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                     opacity: permissions.update ? 1 : 0.5,
                                     pointerEvents: permissions.update ? 'initial' : 'none'
                                 }}
+                                onClick={redirectToChangePassword}
                             >
                                 {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
                                 <ItemText>Reset password</ItemText>
