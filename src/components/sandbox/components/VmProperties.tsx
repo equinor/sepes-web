@@ -102,6 +102,16 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         }
     };
 
+    const returnResetpasswordTooltip = () => {
+        if (!permissions.update) {
+            return 'You do not have permission to reset password';
+        }
+        if (!vmProperties.linkToExternalSystem) {
+            return 'VM has to be ready before changing password';
+        }
+        return '';
+    };
+
     return (
         <div>
             <Typography variant="h2">Properties</Typography>
@@ -163,17 +173,30 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     </div>
                     {displayMoreActions && (
                         <MoreActionsWrapper ref={wrapperRef}>
-                            <Item
-                                color="#000000"
-                                style={{
-                                    opacity: permissions.update ? 1 : 0.5,
-                                    pointerEvents: permissions.update ? 'initial' : 'none'
-                                }}
-                                onClick={redirectToChangePassword}
+                            <Tooltip
+                                title={
+                                    permissions.update && vmProperties.linkToExternalSystem
+                                        ? ''
+                                        : returnResetpasswordTooltip()
+                                }
+                                placement="right"
                             >
-                                {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
-                                <ItemText>Reset password</ItemText>
-                            </Item>
+                                <Item
+                                    color="#000000"
+                                    style={{
+                                        opacity: permissions.update && vmProperties.linkToExternalSystem ? 1 : 0.5,
+                                        pointerEvents:
+                                            permissions.update && vmProperties.linkToExternalSystem
+                                                ? 'initial'
+                                                : 'none',
+                                        width: '296px'
+                                    }}
+                                    onClick={redirectToChangePassword}
+                                >
+                                    {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
+                                    <ItemText>Reset password</ItemText>
+                                </Item>
+                            </Tooltip>
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
