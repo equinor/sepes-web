@@ -7,6 +7,7 @@ import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import useClickOutside from '../../common/customComponents/useClickOutside';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { useHistory } from 'react-router-dom';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -74,6 +75,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const wrapperRef = useRef(null);
+    const history = useHistory();
     useClickOutside(wrapperRef, setDisplayMoreActions);
 
     const handleToggle = () => {
@@ -92,6 +94,22 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                 getResources();
             }
         });
+    };
+
+    const redirectToChangePassword = (): void => {
+        if (vmProperties.linkToExternalSystem) {
+            window.open(vmProperties.linkToExternalSystem + '/resetpassword', '_blank');
+        }
+    };
+
+    const returnResetpasswordTooltip = () => {
+        if (!permissions.update) {
+            return 'You do not have permission to reset password';
+        }
+        if (!vmProperties.linkToExternalSystem) {
+            return 'VM has to be ready before changing password';
+        }
+        return '';
     };
 
     return (
@@ -155,16 +173,30 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     </div>
                     {displayMoreActions && (
                         <MoreActionsWrapper ref={wrapperRef}>
-                            <Item
-                                color="#000000"
-                                style={{
-                                    opacity: permissions.update ? 1 : 0.5,
-                                    pointerEvents: permissions.update ? 'initial' : 'none'
-                                }}
+                            <Tooltip
+                                title={
+                                    permissions.update && vmProperties.linkToExternalSystem
+                                        ? ''
+                                        : returnResetpasswordTooltip()
+                                }
+                                placement="right"
                             >
-                                {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
-                                <ItemText>Reset password</ItemText>
-                            </Item>
+                                <Item
+                                    color="#000000"
+                                    style={{
+                                        opacity: permissions.update && vmProperties.linkToExternalSystem ? 1 : 0.5,
+                                        pointerEvents:
+                                            permissions.update && vmProperties.linkToExternalSystem
+                                                ? 'initial'
+                                                : 'none',
+                                        width: '296px'
+                                    }}
+                                    onClick={redirectToChangePassword}
+                                >
+                                    {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
+                                    <ItemText>Reset password</ItemText>
+                                </Item>
+                            </Tooltip>
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
