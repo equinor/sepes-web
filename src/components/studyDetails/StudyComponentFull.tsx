@@ -1,20 +1,20 @@
 /*eslint-disable no-shadow, react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon, Tooltip, Menu } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Tooltip, Menu, Typography } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, updateStudy, deleteStudy } from '../../services/Api';
+import { createStudy, updateStudy, closeStudy } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import CustomLogoComponent from '../common/CustomLogoComponent';
-import { checkIfRequiredFieldsAreNull, returnLimitMeta, validateResourceName } from '../common/helpers';
+import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
+import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
+import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
-import * as notify from '../common/notify';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
 const { MenuItem } = Menu;
@@ -63,7 +63,7 @@ const DescriptioTextfieldnWrapper = styled.div`
 
 const SmallText = styled.span`
     font-size: 10px;
-    margin-top: 4px;
+    margin-top: 8px;
 `;
 
 const Wrapper = styled.div`
@@ -195,11 +195,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const listener = (e: any) => {
         if (e.key === 'Escape') {
-            if (!newStudy) {
-                setEditMode(false);
-            } else {
-                history.push('/');
-            }
+            handleCancel();
         }
         if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
             e.preventDefault();
@@ -212,11 +208,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUserClickedDelete(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
-        deleteStudy(study.id).then((result: any) => {
+        closeStudy(study.id).then((result: any) => {
             setLoading(false);
             if (result && result.Message) {
                 setDeleteStudyInProgress(true);
-                notify.show('danger', '500', result);
             } else {
                 history.push('/');
             }
@@ -228,7 +223,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
-        if (!validateUserInputs()) {
+        if (!validateUserInputStudy(studyOnChange)) {
             return;
         }
         if (imageUrl) {
@@ -238,19 +233,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
+
+    const returnTooltipText = () => {
+        if (study.sandboxes && study.sandboxes.length > 0) {
+            return 'Delete sandboxes before deleting study';
+        }
+        return 'You do not have permission to delete this study';
+    };
+
     const studyDeleteEnabled =
-        (study.sandboxes && study.sandboxes.length) > 0 || !(study.permissions && study.permissions.deleteStudy);
+        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.deleteStudy;
     const optionsTemplate = (
         <>
-            <Tooltip
-                title={studyDeleteEnabled ? 'Deleting study is disabled when there is a sandbox in it' : ''}
-                placement="left"
-                open={studyDeleteEnabled}
-            >
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left" open={studyDeleteEnabled}>
                 <MenuItem
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
-                    disabled={studyDeleteEnabled}
+                    disabled={!studyDeleteEnabled}
                     title="study_delete"
                     className="study_delete"
                     data-testid="study_delete"
@@ -274,7 +273,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setStudy(newStudy);
                     history.push('/studies/' + result.id);
                 } else {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -291,27 +289,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                 } else {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
         }
-    };
-
-    const validateUserInputs = (): boolean => {
-        let result = true;
-        if (!validateResourceName(studyOnChange.name)) {
-            result = false;
-        }
-        if (
-            studyOnChange.name === '' ||
-            studyOnChange === undefined ||
-            studyOnChange.vendor === '' ||
-            studyOnChange.vendor === undefined
-        ) {
-            result = false;
-        }
-        return result;
     };
 
     const handleCancel = () => {
@@ -396,66 +377,46 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <>
                                 <TextField
                                     id="textfield1"
-                                    placeholder="What is the study name?"
+                                    placeholder="Name of study"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
                                     onChange={(e: any) => handleChange('name', e.target.value)}
-                                    label="Study name"
+                                    label="Name"
                                     meta="(required)"
-                                    style={{ margin: 'auto', marginLeft: '0' }}
+                                    style={{ margin: 'auto', marginLeft: '0', resize: 'none' }}
                                     value={studyOnChange.name}
                                     data-cy="study_name"
                                     autoComplete="off"
                                     autoFocus
                                     inputIcon={
-                                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                            <Tooltip
-                                                title="The value must be between 3 and 20 characters long (A-Z)"
-                                                placement="right"
-                                            >
-                                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                                            </Tooltip>
-                                        </div>
+                                        <Tooltip
+                                            title="The value must be between 3 and 20 characters long (A-Z)"
+                                            placement="right"
+                                        >
+                                            <Icon name="info_circle" />
+                                        </Tooltip>
                                     }
                                 />
                                 <TextField
                                     id="textfield2"
                                     autoComplete="off"
-                                    placeholder="Who is the vendor?"
+                                    placeholder="Add vendor"
                                     variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
                                     onChange={(e: any) => handleChange('vendor', e.target.value)}
                                     value={studyOnChange.vendor}
                                     label="Vendor"
                                     meta="(required)"
                                     data-cy="study_vendor"
-                                    inputIcon={
-                                        <div style={{ marginRight: '-80px' }}>
-                                            <Icon
-                                                style={{ position: 'absolute', right: '4px' }}
-                                                name="business"
-                                                size={24}
-                                                color="#6F6F6F"
-                                            />
-                                        </div>
-                                    }
+                                    inputIcon={<Icon name="business" />}
                                 />
                                 <TextField
                                     id="textfield3"
                                     autoComplete="off"
-                                    placeholder="Wbs for the study"
+                                    placeholder="Add WBS"
                                     onChange={(e: any) => handleChange('wbsCode', e.target.value)}
-                                    label="wbs"
+                                    label="WBS"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
-                                    inputIcon={
-                                        <div style={{ marginRight: '-80px' }}>
-                                            <Icon
-                                                style={{ position: 'absolute', right: '4px', top: '-2px' }}
-                                                name="dollar"
-                                                size={24}
-                                                color="#6F6F6F"
-                                            />
-                                        </div>
-                                    }
+                                    inputIcon={<Icon name="dollar" />}
                                 />
                             </>
                         )}
@@ -519,7 +480,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         )}
                     </TitleWrapper>
                     {!editMode ? (
-                        <DescriptionWrapper>{description}</DescriptionWrapper>
+                        <DescriptionWrapper>
+                            <Typography variant="body_long">{description}</Typography>
+                        </DescriptionWrapper>
                     ) : (
                         <DescriptioTextfieldnWrapper>
                             <TextField
@@ -602,7 +565,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 <Button
                                                     data-cy="create_study"
                                                     onClick={() => handleSave()}
-                                                    disabled={!validateUserInputs()}
+                                                    disabled={!validateUserInputStudy(studyOnChange)}
                                                 >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>

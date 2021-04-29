@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
 import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
-import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
     getAvailableDatasetsUrl,
@@ -13,6 +13,11 @@ import {
 } from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
+
+const SatusWrapper = styled.div`
+    display: flex;
+    margin-top: 4px;
+`;
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -59,7 +64,6 @@ const Dataset: React.FC<datasetProps> = ({
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     const tempDatasets: any = sandbox.datasets;
@@ -75,7 +79,6 @@ const Dataset: React.FC<datasetProps> = ({
             deleteDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.Message) {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     const tempDatasets: any = sandbox.datasets;
@@ -104,7 +107,7 @@ const Dataset: React.FC<datasetProps> = ({
                         return (
                             <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                 <Cell>
-                                    <div style={{ paddingTop: '6px' }}>
+                                    <SatusWrapper style={{ paddingBottom: '6px' }}>
                                         <span data-cy="add_dataset_to_sandbox">
                                             <Tooltip
                                                 title={
@@ -127,7 +130,7 @@ const Dataset: React.FC<datasetProps> = ({
                                                 />
                                             </Tooltip>
                                         </span>
-                                    </div>
+                                    </SatusWrapper>
                                 </Cell>
                                 <Cell style={{ width: '32px' }}>{dataset.classification}</Cell>
                             </Row>

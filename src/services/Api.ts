@@ -1,4 +1,4 @@
-import { apiRequestWithToken, postputStudy, postFile, apiRequestPermissionsWithToken } from '../auth/AuthFunctions';
+import { apiRequestWithToken, createOrUpdateStudyRequest } from '../auth/AuthFunctions';
 import {
     StudyObj,
     DatasetObj,
@@ -17,20 +17,20 @@ export const getStudyList = async () => {
 };
 
 export const getStudy = async (id: string) => {
+    console.log('getStudy');
     return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
 export const createStudy = async (study: StudyObj, imageUrl: string) => {
-    // return apiRequestWithToken('api/studies/', 'POST', study);
-    return postputStudy(study, imageUrl, 'api/studies/' + study.id, 'POST');
+    return createOrUpdateStudyRequest(study, imageUrl, 'api/studies/' + study.id, 'POST');
 };
 
 export const updateStudy = async (study: StudyObj, imageUrl: string) => {
-    return postputStudy(study, imageUrl, 'api/studies/' + study.id + '/details', 'PUT');
+    return createOrUpdateStudyRequest(study, imageUrl, 'api/studies/' + study.id + '/details', 'PUT');
 };
 
-export const deleteStudy = async (studyId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId, 'DELETE');
+export const closeStudy = async (studyId: string) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/close', 'PUT');
 };
 
 export const getDatasetList = async () => {
@@ -233,23 +233,5 @@ export const getStudyRoles = async () => {
 //Permission
 
 export const getPermissions = async () => {
-    return apiRequestPermissionsWithToken('api/permissions', 'GET');
+    return apiRequestWithToken('api/permissions', 'GET');
 };
-
-// Files
-
-export const addFiles = async (datasetId: string, formData: any): Promise<any> => {
-    return postFile('api/datasets/' + datasetId + '/files', formData);
-    /*
-    if (studyId) {
-        return postFile(`datasetfile/addfiles?datasetId=${datasetId}&studyId=${studyId}`, formData);
-    }
-    //Endpoint does not exists yet
-    return postFile(`datasetfile/addfiles?datasetId=${datasetId}`, formData);
-    */
-};
-/*
-export const postOnlyBlobimage = async (imageUrl: string) => {
-  return postOnlyBlob(imageUrl, '1', 'api/studies/1/logo');
-};
-*/

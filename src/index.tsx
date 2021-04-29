@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { acquireTokenSilent, loginRequest, signInRedirect } from './auth/AuthFunctions';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { SignInSilentRedirect } from './auth/AuthFunctions';
 import { myMSALObj } from './auth/AuthConfig';
 import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
+import LoadingFull from 'components/common/LoadingComponentFullscreen';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -23,6 +23,7 @@ export const Permissions = React.createContext<GeneralPermissions>({
 });
 
 const renderApp = async (user) => {
+    ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
         if (result && result.Message) {
             return ReactDOM.render(<GeneralError />, document.getElementById('root'));
@@ -54,16 +55,9 @@ if (cyToken && cyToken.length) {
     };
     renderApp(mockUser);
 } else {
-    if (myMSALObj.getCurrentConfiguration().cache && !myMSALObj.getAccount()) {
-        signInRedirect();
-    } else {
-        acquireTokenSilent().catch((error: string) => {
-            myMSALObj.acquireTokenRedirect(loginRequest);
-            console.log(error);
-        });
-    }
+    SignInSilentRedirect();
 
-    if (myMSALObj.getAccount()) {
+    if (myMSALObj.getAllAccounts().length > 0) {
         renderApp(myMSALObj);
     }
 }

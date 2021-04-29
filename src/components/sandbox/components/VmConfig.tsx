@@ -15,7 +15,6 @@ import {
     getVirtualMachineOperatingSystems
 } from '../../../services/Api';
 import VmDetails from './VmDetails';
-import * as notify from '../../common/notify';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
@@ -96,7 +95,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             } else if (result) {
                 setSizes(result);
@@ -107,7 +105,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const getVmDisks = () => {
         getVirtualMachineDisks(sandbox.id, controller.signal).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             } else if (result) {
                 setDisks(result);
@@ -118,7 +115,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const getVms = () => {
         getVirtualMachineOperatingSystems(sandbox.id, controller.signal).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             } else if (result) {
                 setOs(result);

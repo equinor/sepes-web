@@ -11,10 +11,9 @@ import {
     getVirtualMachineExtended,
     getVirtualMachineRule
 } from '../../../services/Api';
-import * as notify from '../../common/notify';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
-import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers';
+import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
 import Prompt from '../../common/Promt';
 import { getStudyId } from 'utils/CommonUtil';
@@ -124,7 +123,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     tempsVms[index].extendedInfo = result;
                     setVms(tempsVms);
                 } else {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -221,6 +219,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const addRule = () => {
+        setHasChanged(true);
         updateHasChanged(true);
         let currentRules: any = [];
         if (vm.rules && vm.rules.length) {
@@ -265,7 +264,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 getResources();
                 setVmSaved(true);
             } else {
-                notify.show('danger', '500', result);
                 console.log('Err');
             }
         });
@@ -410,10 +408,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                             <Row>
                                 <Cell scope="col">Inbound rules</Cell>
                                 <Cell style={{ width: '220px' }} scope="col" />
-                                <Cell scope="col" />
+                                <Cell style={{ width: '180px' }} scope="col" />
                                 <Cell style={{ width: '220px' }} scope="col" />
-                                <Cell scope="col" />
-                                <Cell scope="col" />
+                                <Cell style={{ width: '100px' }} scope="col" />
+                                <Cell scope="col" style={{ width: '24px' }} />
                             </Row>
                         </Head>
                         <Body>
@@ -433,11 +431,11 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         data-cy="vm_rule_description"
                                                         disabled={!permissions.editInboundRules}
                                                         autoComplete="off"
-                                                        autoFocus
+                                                        autoFocus={hasChanged}
                                                     />
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '16px' }}>
+                                                    <div style={{ paddingBottom: '18px' }}>
                                                         <CoreDevDropdown
                                                             options={ipMethod}
                                                             onChange={(e: any) =>
@@ -448,6 +446,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                                 )
                                                             }
                                                             name="useClientIp"
+                                                            tabIndex={0}
                                                             preSlectedValue={'Custom'}
                                                             data-cy="vm_rule_useClientIp"
                                                             disabled={!permissions.editInboundRules}
@@ -486,7 +485,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     )}
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '16px' }}>
+                                                    <div style={{ paddingBottom: '18px' }}>
                                                         <CoreDevDropdown
                                                             options={portsOptions}
                                                             onChange={(e: any) => {
@@ -496,12 +495,16 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             preSlectedValue={rule.protocol || 'Custom'}
                                                             data-cy="vm_rule_protocol"
                                                             disabled={!permissions.editInboundRules}
+                                                            width="240px"
+                                                            tabIndex={1}
                                                         />
                                                     </div>
                                                 </Cell>
                                                 <Cell>
                                                     {rule.protocol !== protocolOptions.CUSTOM ? (
-                                                        <span>{rule.port || '-'}</span>
+                                                        <div style={{ width: '100px', textAlign: 'center' }}>
+                                                            <span>{rule.port || '-'}</span>
+                                                        </div>
                                                     ) : (
                                                         <Tooltip
                                                             title={
@@ -525,6 +528,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                                 type="number"
                                                                 placeholder="Port"
                                                                 data-cy="vm_rule_port"
+                                                                style={{ width: '100px' }}
                                                                 disabled={!permissions.editInboundRules}
                                                             />
                                                         </Tooltip>

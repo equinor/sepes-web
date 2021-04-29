@@ -21,7 +21,7 @@ type DatasetsTableProps = {
 };
 
 const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
-    const { height, width } = useWindowDimensions();
+    const { width } = useWindowDimensions();
     return (
         <div>
             <Table style={{ width: '100%', marginBottom: '24px' }}>

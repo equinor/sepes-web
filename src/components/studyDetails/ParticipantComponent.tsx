@@ -5,16 +5,15 @@ import { close } from '@equinor/eds-icons';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
 import ParticipantTable from './Tables/ParticipantTable';
-import { ParticipantObj, DropdownObj, StudyObj } from '../common/interfaces';
+import { ParticipantObj, StudyObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
-import * as notify from '../common/notify';
-import { ValidateEmail } from '../common/helpers';
+import { ValidateEmail } from '../common/helpers/helpers';
+import { filterRoleList } from '../common/helpers/studyHelpers';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
-import _ from 'lodash';
 import { getStudyId } from 'utils/CommonUtil';
 
 const icons = {
@@ -63,7 +62,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
     useEffect(() => {
@@ -91,9 +90,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             };
                         });
                         callback(temp);
-                    } else {
-                        console.log('err');
-                        //notify.show('danger', '500');
                     }
                 });
             },
@@ -116,11 +112,16 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
-                if (user.getAccount().userName === participant.userName && participantsWithuserid.length === 1) {
-                    history.push('/');
+
+                const accounts = user.getAllAccounts();
+
+                if (accounts.length && accounts.length > 0) {
+                    const currentAccount = accounts[0];
+
+                    if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
+                        history.push('/');
+                    }
                 }
-            } else {
-                notify.show('danger', '500', result);
             }
             rolesResponse.setLoading(false);
         });
@@ -140,7 +141,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
                 } else {
-                    notify.show('danger', '500', result);
                     console.log('Err getting participants');
                 }
                 rolesResponse.setLoading(false);
@@ -149,27 +149,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             // TODO Implement backend to handle email
             console.log('Send email to backend', text);
         }
-    };
-
-    const filterRoleList = () => {
-        if (!selectedParticipant) {
-            return roles;
-        }
-        let partAsSelected: any = [];
-        partAsSelected = study.participants.filter(
-            (participant: ParticipantObj) =>
-                participant.userId === selectedParticipant?.databaseId ||
-                participant.emailAddress === selectedParticipant?.emailAddress
-        );
-        const tempRoles: any = [...roles];
-        roles.forEach((element: DropdownObj, key: number) => {
-            for (let i = 0; i < partAsSelected.length; i++) {
-                if (element.displayValue === partAsSelected[i].role) {
-                    tempRoles.splice(tempRoles.indexOf(element), 1);
-                }
-            }
-        });
-        return tempRoles;
     };
 
     const selectParticipant = (row: any) => {
@@ -238,12 +217,13 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     >
                         <CoreDevDropdown
                             label="Role"
-                            options={filterRoleList()}
+                            options={filterRoleList(roles, selectedParticipant, study)}
                             onChange={handleChange}
                             name="region"
                             width="224px"
                             resetState={roleNotSelected}
                             disabled={participantNotSelected || loading}
+                            tabIndex={0}
                         />
                     </Tooltip>
                 </div>

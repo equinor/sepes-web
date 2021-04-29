@@ -21,9 +21,6 @@ const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     box-sizing: border-box;
     background: #ffffff;
     background: ${(props: any) => (props.dragActive ? '#deedee' : '#ffffff')};
-    @media (max-width: 700px) {
-        width: 95%;
-    }
 `;
 
 type DropzoneProps = {
@@ -57,12 +54,12 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
             <input className="dropzone-input" {...getInputProps()} />
             <div className="text-center">
                 {isDragActive && !disabled ? (
-                    <div className="dropzone-content">
+                    <div className="dropzone-content" style={{ textAlign: 'center' }}>
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>Drop here</div>
                     </div>
                 ) : (
-                    <div className="dropzone-content">
+                    <div className="dropzone-content" style={{ textAlign: 'center' }}>
                         {EquinorIcon('cloud_upload', '#007079', 32)}
                         <div>
                             {!loading ? (

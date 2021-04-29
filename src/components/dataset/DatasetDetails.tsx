@@ -1,7 +1,17 @@
 /*eslint-disable consistent-return, no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, Button, Tooltip, LinearProgress, DotProgress, Chip } from '@equinor/eds-core-react';
+import {
+    Typography,
+    Icon,
+    Button,
+    Tooltip,
+    LinearProgress,
+    DotProgress,
+    Chip,
+    Search,
+    Switch
+} from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     getDatasetSasToken,
@@ -10,16 +20,15 @@ import {
     removeStudyDataset,
     getDatasetSasTokenDelete
 } from '../../services/Api';
-import { arrow_back, delete_forever } from '@equinor/eds-icons';
-import { bytesToSize } from '../common/helpers';
+import { arrow_back, delete_forever, folder, file, folder_open } from '@equinor/eds-icons';
+import { bytesToSize, round, truncate } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import * as notify from '../common/notify';
-import { EquinorIcon, Label } from '../common/StyledComponents';
+import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
@@ -34,10 +43,21 @@ import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile, deleteFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from 'utils/CommonUtil';
+import {
+    checkIfDeleteIsEnabled,
+    checkIfFileAlreadyIsUploaded,
+    setFilesProgressToOnePercent
+} from 'components/common/helpers/datasetHelpers';
+import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
+import FileBrowser from 'react-keyed-file-browser';
+import './DatasetDetailsStyle.css';
 
 const icons = {
     arrow_back,
-    delete_forever
+    delete_forever,
+    folder,
+    file,
+    folder_open
 };
 Icon.add(icons);
 
@@ -52,7 +72,7 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 256px;
+    grid-gap: 196px;
     padding: 32px;
     background-color: #ffffff;
     @media (max-width: 768px) {
@@ -64,6 +84,7 @@ const RightWrapper = styled.div`
     margin-top: 64px;
     display: grid;
     grid-gap: 16px;
+    max-height: 660px;
 `;
 
 const AttachmentWrapper = styled.div`
@@ -72,12 +93,12 @@ const AttachmentWrapper = styled.div`
     grid-gap: 0 8px;
 `;
 
-const checkUrlIfGeneralDataset = () => {
-    if (window.location.pathname.split('/')[1] === 'datasets') {
-        return true;
-    }
-    return false;
-};
+const StorageAccountWrapper = styled.div`
+    margin-top: 7px;
+    display: flex;
+    color: #007079;
+`;
+
 let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
@@ -87,6 +108,16 @@ const intervalUpdateSasDelete = 285000;
 
 let abortArray: any = [];
 let progressArray: any = [];
+
+export interface FileObj {
+    name: string;
+    path: string;
+    percent: number;
+    uploadedBytes: number;
+    key: string;
+    size: number;
+    modified: string;
+}
 
 const DatasetDetails = (props: any) => {
     const datasetId = getDatasetId();
@@ -116,6 +147,7 @@ const DatasetDetails = (props: any) => {
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
+    const [viewableFiles, setViewableFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
         dataset.storageAccountLink !== '' || false
     );
@@ -127,6 +159,13 @@ const DatasetDetails = (props: any) => {
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
     const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
     const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
+    const [searchValue, setSearchValue] = useState('');
+    const [totalProgress, setTotalProgress] = useState<number>(0);
+    const [folderViewMode, setFolderViewMode] = useState<boolean>(false);
+    const handleOnSearchValueChange = (event) => {
+        setViewableFiles(files);
+        setSearchValue(event.target.value.toLowerCase());
+    };
 
     useEffect(() => {
         let timer: any;
@@ -166,6 +205,19 @@ const DatasetDetails = (props: any) => {
         } else {
             setHasChanged(false);
         }
+        let totalSizeUploaded = 0;
+        let totalSizeToUpload = 0;
+        progressArray.forEach((_filesInProgress: any) => {
+            if (_filesInProgress.percent !== undefined) {
+                totalSizeUploaded += _filesInProgress.uploadedBytes;
+                totalSizeToUpload += _filesInProgress.size;
+            }
+        });
+        let percent = Math.floor((totalSizeUploaded * 100) / totalSizeToUpload);
+        if (percent === 0 && hasChanged) {
+            percent = 1;
+        }
+        setTotalProgress(percent);
     }, [files, progressArray]);
 
     useEffect(() => {
@@ -173,6 +225,7 @@ const DatasetDetails = (props: any) => {
             cancelGettingFilesCall();
             cancelAllDownloads();
             abortArray = [];
+            progressArray = [];
         };
     }, []);
 
@@ -201,8 +254,7 @@ const DatasetDetails = (props: any) => {
                 .then((result: any) => {
                     if (retries > 0 && result.Message) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
 
@@ -214,8 +266,7 @@ const DatasetDetails = (props: any) => {
                     console.log(ex);
                     if (retries > 0) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
                 });
@@ -231,8 +282,7 @@ const DatasetDetails = (props: any) => {
                 .then((result: any) => {
                     if (retries > 0 && result.Message) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKeyDelete(retries - 1); /* 3 */
+                            return getSasKeyDelete(retries - 1);
                         }, backoff);
                     }
                     setSasKeyDeleteExpired(false);
@@ -243,8 +293,7 @@ const DatasetDetails = (props: any) => {
                     console.log(ex);
                     if (retries > 0) {
                         setTimeout(() => {
-                            /* 2 */
-                            return getSasKey(retries - 1); /* 3 */
+                            return getSasKey(retries - 1);
                         }, backoff);
                     }
                 });
@@ -260,7 +309,6 @@ const DatasetDetails = (props: any) => {
         if (!checkUrlIfGeneralDataset()) {
             getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
                 if (result && (result.errors || result.Message)) {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else {
                     checkStatusOfStorageAccount(result);
@@ -275,10 +323,11 @@ const DatasetDetails = (props: any) => {
             getStudySpecificDatasetFiles(datasetId, controllerFiles.signal).then((result: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 } else if (result && isSubscribed) {
-                    setFiles(result);
+                    const temp: any = [...result];
+                    setFiles(temp);
+                    setViewableFiles(result.slice(0, 20));
                     progressArray = result;
                 }
             });
@@ -313,7 +362,18 @@ const DatasetDetails = (props: any) => {
         setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
+    const returnEnumberableFiles = () => {
+        const tempFiles: any = [];
+        files.forEach((_file) => {
+            const tempFile = _file;
+            Object.defineProperty(tempFile, 'size', { value: _file.size, enumerable: true });
+            tempFiles.push(_file);
+        });
+        return tempFiles;
+    };
+
     const deleteDataset = () => {
+        setHasChanged(false);
         controllerFiles.abort();
         controllerFiles = new AbortController();
         setLoading(true);
@@ -326,21 +386,13 @@ const DatasetDetails = (props: any) => {
                 history.push('/studies/' + studyId);
             } else {
                 console.log('Err');
-                notify.show('danger', '500', result);
             }
-        });
-    };
-
-    const setFilesProgressToOnePercent = (_files: any) => {
-        _files.forEach(async (file: any) => {
-            const filePercent = { blobName: file.name, percent: 1, controller: new AbortController() };
-            abortArray.push(filePercent);
         });
     };
 
     const handleFileDrop = async (_files: File[]): Promise<void> => {
         setDuplicateFiles(false);
-        _files = checkIfFileAlreadyIsUploaded(_files);
+        _files = checkIfFileAlreadyIsUploaded(_files, files, setDuplicateFiles);
 
         if (_files.length === 0) {
             return;
@@ -349,30 +401,57 @@ const DatasetDetails = (props: any) => {
         setHasChanged(true);
         const previousFiles = [...files];
         const tempFiles = [...files];
-        tempFiles.push(..._files);
-
-        _files.forEach((_file: any) => {
-            _file.percent = 1;
-            progressArray.push(_file);
+        tempFiles.unshift(..._files);
+        progressArray.forEach((_progress) => {
+            if (_progress.percent === 100) {
+                progressArray[progressArray.indexOf(_progress)].percent = undefined;
+            }
         });
 
+        _files.forEach((_file: any) => {
+            const newFile: FileObj = _file;
+
+            //Object.defineProperty(newFile, 'size', { value: 345325235, enumerable: true });
+            const test: any = {};
+            newFile.percent = 1;
+            newFile.uploadedBytes = 1;
+            newFile.key = _file.path;
+            newFile.modified = _file.lastModified;
+
+            test.percent = 1;
+            test.uploadedBytes = 1;
+            test.key = _file.path;
+            test.modified = _file.lastModified;
+            test.name = _file.name;
+            test.path = _file.path;
+            test.size = _file.size;
+            console.log(newFile, _file, test);
+            progressArray.unshift(newFile);
+        });
         setFiles(tempFiles);
+        setViewableFiles(tempFiles.slice(0, viewableFiles.length + _files.length));
         if (_files.length) {
-            setFilesProgressToOnePercent(_files);
+            setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
                 if (result && !result.Message) {
-                    _files.forEach(async (file) => {
-                        await makeFileBlobFromUrl(URL.createObjectURL(file), file.name)
+                    _files.forEach(async (_file: any) => {
+                        await makeFileBlobFromUrl(URL.createObjectURL(_file), _file.name)
                             .then((blob) => {
                                 try {
+                                    let filePath = _file.path;
+                                    if (_file.path[0] === '/') {
+                                        filePath = filePath.substring(1);
+                                    }
+
                                     uploadFile(
                                         result || sasKey,
-                                        file.name,
+                                        filePath,
                                         blob,
-                                        file.size,
+                                        _file.size,
                                         abortArray,
                                         setFiles,
-                                        progressArray
+                                        progressArray,
+                                        _file.name
                                     );
                                 } catch (ex) {
                                     console.log(ex);
@@ -386,31 +465,12 @@ const DatasetDetails = (props: any) => {
                 } else {
                     setFiles(previousFiles);
                     console.log('Err');
-                    notify.show('danger', '500', result);
                 }
             });
         }
     };
 
-    const checkIfFileAlreadyIsUploaded = (_files) => {
-        const newArray: any = [];
-        _files.forEach((file: File) => {
-            const res = files
-                .map((e) => {
-                    return e.name;
-                })
-                .indexOf(file.name);
-            if (res === -1) newArray.push(file);
-        });
-
-        if (_files.length !== newArray.length) {
-            setDuplicateFiles(true);
-        }
-
-        return newArray;
-    };
-
-    const removeFile = (i: number, file: any): void => {
+    const removeFile = (i: number, _file: any): void => {
         try {
             controller.abort();
             controller = new AbortController();
@@ -428,8 +488,9 @@ const DatasetDetails = (props: any) => {
         const _files = [...files];
         _files.splice(i, 1);
         setFiles(_files);
-        const index = abortArray.findIndex((x) => x.blobName === file.name);
-        const progIndex = progressArray.findIndex((x) => x.name === file.name);
+        setViewableFiles(_files.slice(0, viewableFiles.length));
+        const index = abortArray.findIndex((x) => x.blobName === _file.name);
+        const progIndex = progressArray.findIndex((x) => x.name === _file.name);
         if (progIndex !== -1) {
             progressArray.splice(progIndex, 1);
         }
@@ -458,7 +519,7 @@ const DatasetDetails = (props: any) => {
         }
         getSasKeyDelete()
             .then((result: any) => {
-                deleteFile(result, file.name);
+                deleteFile(result, _file.path ?? _file.name);
             })
             .catch((ex: any) => {
                 console.log(ex);
@@ -466,7 +527,11 @@ const DatasetDetails = (props: any) => {
     };
 
     const returnField = (fieldName) => {
-        return <Typography variant="h6">{fieldName || '-'}</Typography>;
+        return (
+            <Typography style={{ marginTop: '4px' }} variant="body_short">
+                {fieldName || '-'}
+            </Typography>
+        );
     };
 
     const cancelAllDownloads = () => {
@@ -477,27 +542,30 @@ const DatasetDetails = (props: any) => {
             console.log(error);
         }
 
-        abortArray.forEach((file: any) => {
+        abortArray.forEach((_file: any) => {
             try {
-                file.controller.abort();
+                _file.controller.abort();
             } catch (ex) {
                 console.log(ex);
             }
         });
     };
 
-    const checkIfDeleteIsEnabled = (_file): boolean => {
-        if (!dataset.permissions.editDataset) {
-            return true;
+    const fetchMoreData = () => {
+        setTimeout(() => {
+            if (viewableFiles.length + 20 <= files.length) {
+                setViewableFiles(files.slice(0, viewableFiles.length + 10));
+            } else {
+                setViewableFiles(files);
+            }
+        }, 200);
+    };
+
+    const handleScroll = (e) => {
+        const bottom = e.target.scrollHeight - round(e.target.scrollTop, 2); // === e.target.clientHeight;
+        if (bottom <= e.target.clientHeight + 5 && bottom >= e.target.clientHeight - 5) {
+            fetchMoreData();
         }
-        const index = progressArray.findIndex((x: any) => x.name === _file.name);
-        if (index === -1) {
-            return false;
-        }
-        if (progressArray[index].percent === 1) {
-            return true;
-        }
-        return false;
     };
 
     return !showEditDataset ? (
@@ -521,20 +589,26 @@ const DatasetDetails = (props: any) => {
                         />
                     )}
                     <Wrapper>
-                        <div>
+                        <div style={{}}>
                             <div style={{ marginBottom: '16px' }}>
-                                <Typography variant="h1">{dataset?.name}</Typography>
+                                <Typography variant="h2">{dataset?.name}</Typography>
                                 {!checkUrlIfGeneralDataset() ? (
-                                    <span>This data is only available for this study</span>
+                                    <Typography variant="h6">This data set is only available for this study</Typography>
                                 ) : null}
                             </div>
                             {!checkUrlIfGeneralDataset() ? (
                                 <Link
                                     to={'/studies/' + studyId}
-                                    style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
+                                    style={{
+                                        color: '#007079',
+                                        fontSize: '16px',
+                                        margin: '32px 0 0 16px',
+                                        display: 'flex',
+                                        lineHeight: '16px'
+                                    }}
                                     data-cy="dataset_back_to_study"
                                 >
-                                    <Icon color="#007079" name="arrow_back" size={24} style={{ marginRight: '16px' }} />
+                                    <Icon color="#007079" name="arrow_back" size={16} style={{ marginRight: '16px' }} />
                                     Back to study
                                 </Link>
                             ) : (
@@ -570,69 +644,148 @@ const DatasetDetails = (props: any) => {
                                     </Chip>
                                 </div>
                             )}
-                            <div style={{ paddingTop: '8px' }}>
-                                {!loadingFiles ? (
-                                    files.length > 0 ? (
-                                        files.map((file: any, i: number) => {
-                                            return (
-                                                <div key={file.name}>
-                                                    <AttachmentWrapper>
-                                                        <div>{file.name}</div>
-                                                        <div>{bytesToSize(file.size)} </div>
-                                                        <Button
-                                                            variant="ghost_icon"
-                                                            onClick={() => removeFile(i, file)}
-                                                            style={{ marginTop: '-8px' }}
-                                                            disabled={checkIfDeleteIsEnabled(file)}
-                                                        >
-                                                            <Icon
-                                                                color="#007079"
-                                                                name="delete_forever"
-                                                                size={24}
-                                                                style={{ cursor: 'pointer' }}
-                                                            />
-                                                        </Button>
-                                                    </AttachmentWrapper>
-                                                    {file.percent && (
-                                                        <LinearProgress
-                                                            style={{ marginBottom: '16px', marginTop: '-4px' }}
-                                                            value={file.percent}
-                                                            variant="determinate"
-                                                        />
-                                                    )}
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <div style={{ textAlign: 'center' }}>
-                                            {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
-                                        </div>
-                                    )
-                                ) : (
-                                    <div style={{ textAlign: 'center' }}>
-                                        <DotProgress color="primary" />
-                                        <div>Loading files..</div>
-                                    </div>
-                                )}
+                            <div style={{ textAlign: 'end' }}>
+                                <Switch
+                                    checked={folderViewMode}
+                                    onChange={() => setFolderViewMode(!folderViewMode)}
+                                    label="Folder view"
+                                    style={{ float: 'right' }}
+                                />
                             </div>
+                            {totalProgress > 0 && (
+                                <div style={{ marginBottom: '16px' }}>
+                                    <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
+                                    <LinearProgress
+                                        style={{ marginBottom: '0px', marginTop: '16px' }}
+                                        value={totalProgress}
+                                        variant="determinate"
+                                    />
+                                </div>
+                            )}
+                            {folderViewMode && (
+                                <FileBrowser
+                                    files={returnEnumberableFiles() ?? []}
+                                    headerRenderer={null}
+                                    icons={{
+                                        File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
+                                        Folder: <Icon name="folder" color="#FF9200" style={{ marginBottom: '-6px' }} />,
+                                        FolderOpen: (
+                                            <Icon name="folder_open" color="#FF9200" style={{ marginBottom: '-6px' }} />
+                                        )
+                                    }}
+                                />
+                            )}
+
+                            {!folderViewMode && (
+                                <>
+                                    <div>
+                                        <Search onChange={handleOnSearchValueChange} placeholder="Type to search" />
+                                    </div>
+
+                                    <div>
+                                        {!loadingFiles ? (
+                                            viewableFiles.length > 0 ? (
+                                                <div
+                                                    id="scrollableDiv"
+                                                    style={{ height: 428, overflowY: 'auto', overflowX: 'hidden' }}
+                                                    onScroll={handleScroll}
+                                                >
+                                                    <div style={{ paddingTop: '10px' }} />
+                                                    {viewableFiles.map((_file: any, i: number) => {
+                                                        if (
+                                                            searchValue === '' ||
+                                                            (_file.name &&
+                                                                _file.name.toLowerCase().includes(searchValue))
+                                                        ) {
+                                                            return (
+                                                                <div
+                                                                    key={_file.path ?? _file.name}
+                                                                    style={{ marginTop: '4px', marginRight: '8px' }}
+                                                                >
+                                                                    <AttachmentWrapper>
+                                                                        <div>
+                                                                            {truncate(_file.path, 100) ??
+                                                                                truncate(_file.name, 100)}
+                                                                        </div>
+                                                                        <div>{bytesToSize(_file.size)}</div>
+                                                                        <Button
+                                                                            variant="ghost_icon"
+                                                                            onClick={() => removeFile(i, _file)}
+                                                                            style={{ marginTop: '-14px' }}
+                                                                            disabled={checkIfDeleteIsEnabled(
+                                                                                _file,
+                                                                                dataset,
+                                                                                progressArray
+                                                                            )}
+                                                                        >
+                                                                            <Icon
+                                                                                color="#007079"
+                                                                                name="delete_forever"
+                                                                                size={24}
+                                                                                style={{ cursor: 'pointer' }}
+                                                                            />
+                                                                        </Button>
+                                                                    </AttachmentWrapper>
+                                                                    {_file.percent && (
+                                                                        <LinearProgress
+                                                                            style={{
+                                                                                marginBottom: '16px',
+                                                                                marginTop: '-4px'
+                                                                            }}
+                                                                            value={_file.percent}
+                                                                            variant="determinate"
+                                                                        />
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        }
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                                                    {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
+                                                </div>
+                                            )
+                                        ) : (
+                                            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                                                <DotProgress color="primary" />
+                                                <div style={{ marginTop: '8px' }}>Loading files..</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </div>
                         {!datasetResponse.loading ? (
                             <RightWrapper>
                                 <div>
-                                    <Label>Storage account</Label>
+                                    <Label>Azure storage account</Label>
                                     {dataset?.storageAccountLink ? (
                                         <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">
-                                            <span style={{ marginRight: '8px' }}>{dataset?.storageAccountName}</span>
-                                            {EquinorIcon('external_link', '#007079', 24)}
+                                            <StorageAccountWrapper>
+                                                <span style={{ marginRight: '8px' }}>
+                                                    {dataset?.storageAccountName}
+                                                </span>
+                                                <Icon
+                                                    color="#007079"
+                                                    name="external_link"
+                                                    size={24}
+                                                    style={{ marginTop: '-6px' }}
+                                                />
+                                            </StorageAccountWrapper>
                                         </a>
                                     ) : (
-                                        <Tooltip title={storageAccountStatus} placement="top">
-                                            <DotProgress color="primary" />
+                                        <Tooltip
+                                            title={storageAccountStatus}
+                                            placement="top"
+                                            style={{ marginTop: '4px' }}
+                                        >
+                                            <DotProgress color="primary" style={{ marginRight: '8px' }} />
                                         </Tooltip>
                                     )}
                                 </div>
                                 <div>
-                                    <Label>Location</Label>
+                                    <Label>Azure Location</Label>
                                     {returnField(dataset?.location)}
                                 </div>
                                 <div>
@@ -747,7 +900,6 @@ const DatasetDetails = (props: any) => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
-            permissions={dataset.permissions}
         />
     );
 };

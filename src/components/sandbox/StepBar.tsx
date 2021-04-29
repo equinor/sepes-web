@@ -1,6 +1,6 @@
 /*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, Tooltip, Icon } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -9,7 +9,6 @@ import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus, makeAvailable, getSandboxCostAnalysis } from '../../services/Api';
-import * as notify from '../common/notify';
 import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
@@ -27,6 +26,13 @@ const Wrapper = styled.div`
     border-radius: 4px;
     padding: 16px;
     background-color: #ffffff;
+`;
+
+const CostAnalysisWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 32px;
+    margin-bottom: -8px;
+    color: #007079;
 `;
 
 const BtnTwoWrapper = styled.div`
@@ -140,7 +146,7 @@ const StepBar: React.FC<StepBarProps> = ({
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.Message)) {
                 resourcesFailed = true;
-                notify.show('danger', '500', result);
+
                 console.log('Err');
             } else {
                 setResources(result);
@@ -177,9 +183,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getCostAnalysisLinkToSandbox = () => {
         getSandboxCostAnalysis(sandboxId).then((result: any) => {
-            if (result && result.Message) {
-                notify.show('danger', '500', result);
-            } else {
+            if (result && !result.Message) {
                 setNewCostanalysisLink(result);
                 setSandbox({ ...sandbox, linkToCostAnalysis: result });
             }
@@ -217,7 +221,6 @@ const StepBar: React.FC<StepBarProps> = ({
             setLoading(false);
             if (result && result.Message) {
                 setDeleteSandboxInProgress(false);
-                notify.show('danger', '500', result);
             }
             history.push('/studies/' + studyId);
         });
@@ -231,7 +234,6 @@ const StepBar: React.FC<StepBarProps> = ({
             setMakeAvailableInProgress(false);
             if (result.Message || result.errors) {
                 setNewPhase(0);
-                notify.show('danger', '500', result);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
                 setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
@@ -274,6 +276,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="sandbox_delete"
                     disabled={sandbox.permissions && !sandbox.permissions.delete}
+                    data-testid="delete_sandbox"
                 >
                     {EquinorIcon('delete_forever', 'red', 24)}
                     <span style={{ color: 'red' }}>Delete sandbox</span>
@@ -294,7 +297,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     data-cy="sandbox_more_options"
                 >
-                    <span style={{ marginLeft: '0' }}>More options</span>
+                    <span style={{ marginLeft: '8px', marginRight: '4px' }}>More options</span>
                     {EquinorIcon('more_vertical', '#007079', 24)}
                 </Button>
                 <Menu
@@ -324,6 +327,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                         setUserClickedMakeAvailable(true);
                                     }}
                                     data-cy="sandbox_make_available"
+                                    data-testid="make_available"
                                     style={{ width: '160px' }}
                                     disabled={
                                         !(
@@ -440,16 +444,23 @@ const StepBar: React.FC<StepBarProps> = ({
                                 float: 'right'
                             }}
                         >
-                            <Typography
-                                style={{ display: 'inline-block', marginRight: '8px', fontSize: '16px' }}
-                                variant="h2"
-                            >
-                                Cost analysis
-                            </Typography>
-                            {sandbox.linkToCostAnalysis ? (
-                                EquinorIcon('external_link', '#007079', 24, () => {}, true)
-                            ) : (
-                                <DotProgress color="primary" />
+                            {sandbox.linkToCostAnalysis && (
+                                <CostAnalysisWrapper>
+                                    <Typography
+                                        style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                        variant="h2"
+                                        color="#007079"
+                                    >
+                                        Cost analysis
+                                    </Typography>
+                                    <Icon
+                                        style={{ marginLeft: '12px' }}
+                                        color="#007079"
+                                        name="external_link"
+                                        size={24}
+                                        title="external_link"
+                                    />
+                                </CostAnalysisWrapper>
                             )}
                         </a>
                     </Tooltip>

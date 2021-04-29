@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { passwordValidate, returnLimitMeta, roundUp, validateResourceName } from '../../common/helpers';
+import { returnLimitMeta, roundUp } from '../../common/helpers/helpers';
+import {
+    validateUserInput,
+    filterSizes,
+    returnPasswordVariant,
+    returnUsernameVariant
+} from '../../common/helpers/sandboxHelpers';
 import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
@@ -14,7 +20,6 @@ import {
     VmUsernameObj,
     CalculateNameObj
 } from '../../common/interfaces';
-import * as notify from '../../common/notify';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
@@ -189,8 +194,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 vmsList.push(result);
                 setVms(vmsList);
                 setActiveTab(vmsList.length);
-            } else {
-                notify.show('danger', '500', result);
             }
             setLoading(false);
         });
@@ -206,8 +209,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             getVirtualMachineCost(sandbox?.id, vmPrice).then((result: any) => {
                 if (result && !result.Message) {
                     setVmEstimatedCost(result);
-                } else {
-                    notify.show('danger', '500', result);
                 }
             });
         }
@@ -226,8 +227,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         getVmName(calculateName).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
-            } else {
-                notify.show('danger', '500', result);
             }
         });
     };
@@ -256,37 +255,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 }
             } else {
                 setUsernameIsValid(false);
-                notify.show('danger', '500', result);
             }
         });
-    };
-
-    const validateUserInput = () => {
-        if (loading || !vmEstimatedCost) {
-            return false;
-        }
-        if (
-            passwordValidate(vm.password) &&
-            vm.name !== '' &&
-            vm.operatingSystem !== '' &&
-            vm.size !== '' &&
-            vm.dataDisks.length > 0 &&
-            usernameIsValid &&
-            validateResourceName(vm.name)
-        ) {
-            return true;
-        }
-        return false;
-    };
-
-    const filterSizes = (_sizes: any) => {
-        if (!_sizes) {
-            return [];
-        }
-        if (filter.length === 0) {
-            return _sizes;
-        }
-        return _sizes.filter((size) => filter.includes(size.category));
     };
 
     const handleCheck = (column: string, checked: any) => {
@@ -297,26 +267,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             currentFilter.splice(filter.indexOf(column), 1);
         }
         setFilter(currentFilter);
-    };
-
-    const returnPasswordVariant = () => {
-        if (vm.password === '') {
-            return 'default';
-        }
-        if (passwordValidate(vm.password)) {
-            return 'success';
-        }
-        return 'error';
-    };
-
-    const returnUsernameVariant = () => {
-        if (vm.username === '' || usernameIsValid === undefined) {
-            return 'default';
-        }
-        if (usernameIsValid) {
-            return 'success';
-        }
-        return 'error';
     };
 
     return (
@@ -334,11 +284,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     meta={returnLimitMeta(20, vm.name)}
                     data-cy="vm_name"
                     inputIcon={
-                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
-                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                            </Tooltip>
-                        </div>
+                        <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
+                            <Icon name="info_circle" />
+                        </Tooltip>
                     }
                 />
                 <div style={{ marginTop: '24px', marginBottom: '24px' }}>
@@ -354,9 +302,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     data-cy="vm_operatingSystem"
                     meta="(required)"
                     useOverflow
-                    style={{ marginBottom: '24px' }}
                     tabIndex={0}
                 />
+                <div style={{ marginTop: '24px' }} />
                 <TextField
                     id="textfield2"
                     autoComplete="off"
@@ -366,15 +314,13 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     label="Username"
                     meta="(required)"
                     data-cy="vm_username"
-                    variant={returnUsernameVariant()}
+                    variant={returnUsernameVariant(vm.username, usernameIsValid)}
                     disabled={!vm.operatingSystem}
                     helperText={usernameHelpText}
                     inputIcon={
-                        <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
-                                <Icon name="info_circle" size={24} color="#6F6F6F" />
-                            </Tooltip>
-                        </div>
+                        <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
+                            <Icon name="info_circle" />
+                        </Tooltip>
                     }
                 />
                 <div style={{ marginTop: '24px' }}>
@@ -388,16 +334,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         label="Password"
                         meta="(required)"
                         data-cy="vm_password"
-                        variant={returnPasswordVariant()}
+                        variant={returnPasswordVariant(vm.password)}
                         inputIcon={
-                            <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                <Tooltip
-                                    title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement="right"
-                                >
-                                    <Icon name="info_circle" size={24} color="#6F6F6F" />
-                                </Tooltip>
-                            </div>
+                            <Tooltip
+                                title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
+                                placement="right"
+                            >
+                                <Icon name="info_circle" />
+                            </Tooltip>
                         }
                     />
                 </div>
@@ -428,7 +372,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             </SizeFilterWrapper>
             <CoreDevDropdown
                 label="VM size"
-                options={filterSizes(sizes)}
+                options={filterSizes(sizes, filter)}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
@@ -455,16 +399,20 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>
             </div>
-            <div>
+            <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
-                    title={!validateUserInput() && !loading ? 'Please fill out all required fields' : ''}
+                    title={
+                        !validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
+                            ? 'Please fill out all required fields'
+                            : ''
+                    }
                     placement="right"
                 >
                     <Button
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"
                         onClick={createVm}
-                        disabled={!validateUserInput()}
+                        disabled={!validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid)}
                     >
                         {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>

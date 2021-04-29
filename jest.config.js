@@ -2,6 +2,25 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+    transformIgnorePatterns: [
+        'node_modules/(?!(@equinor/eds-icons)/)',
+        'cypress',
+        'node_modules/(?!(react-dnd-html5-backend)/)'
+    ],
+    transform: {
+        '^.+\\.tsx?$': 'babel-jest',
+        '^.+\\.ts?$': 'ts-jest',
+        '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub'
+    },
+    moduleNameMapper: {
+        '\\.(css|less)$': 'identity-obj-proxy',
+        '^react-dnd$': 'react-dnd/dist/cjs',
+        '^react-dnd-html5-backend$': 'identity-obj-proxy',
+        '^dnd-core$': 'dnd-core/dist/cjs'
+    },
+    globals: {
+        crypto: require('crypto')
+    }
     /*
     preset: 'ts-jest',
     transform: {

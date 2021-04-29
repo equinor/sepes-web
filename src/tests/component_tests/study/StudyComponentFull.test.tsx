@@ -175,7 +175,6 @@ test('renders StudyComponent full component with edit study', () => {
     linkElement.click();
     linkElement = getByText('Click or drag n drop photo.');
     expect(linkElement).toBeInTheDocument();
-    linkElement = getByText('Save');
     expect(getByText('Save').closest('button').disabled).toBeFalsy();
 });
 
@@ -270,7 +269,7 @@ test('renders StudyComponent full component with no permission to edit', () => {
 
 test('renders StudyComponent full component with  permission to delete', () => {
     const history = createMemoryHistory();
-    const { getByText, getByRole, getByTitle, container, getByTestId } = render(
+    const { getByText, getByTestId } = render(
         <Router history={history}>
             <StudyComponentFull
                 study={study}
@@ -379,3 +378,7 @@ test('renders StudyComponent full component with sandbox in study', () => {
     linkElement = getByTestId('study_delete');
     linkElement.click();
 });
+
+// test('dummy', () => {
+//     expect(2+2).toBe(4);
+// });

@@ -7,7 +7,6 @@ import { unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 //import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
-import * as notify from '../common/notify';
 //import { Permissions } from '../../index';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -63,6 +62,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
     //const [isOpen, setIsOpen] = useState<boolean>(false);
     //const permissions = useContext(Permissions);
     //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
+    const canCreateDataset = study.permissions && study.permissions.addRemoveDataset && study.wbsCode;
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
@@ -73,7 +73,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
         });
         unlinkStudyDataset(studyId, row.id).then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             }
             //datasetsResponse.setLoading(false);
@@ -90,6 +89,16 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             }
         });
     };
+
+    const returnTooltipText = () => {
+        if (study.permissions && !study.permissions.addRemoveDataset) {
+            return 'You do not have access to create a study specific data set';
+        }
+        if (study.wbsCode === '') {
+            return 'Please add a WBS code to study before creating data set';
+        }
+        return '';
+    };
     /*
     const addDatasetToStudy = (row: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true, [getDatasetsInStudyUrl(study.id)]: true });
@@ -101,7 +110,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.Message) {
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);
@@ -123,21 +131,14 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
         <Wrapper>
             {/*<Bar>*/}
             <div style={{ marginLeft: 'auto', marginTop: '32px', marginBottom: '8px' }}>
-                <Tooltip
-                    title={
-                        study.permissions && study.permissions.addRemoveDataset
-                            ? ''
-                            : 'You do not have access to create a study specific data set'
-                    }
-                    placement="top"
-                >
+                <Tooltip title={canCreateDataset ? '' : returnTooltipText()} placement="left">
                     <Button
                         variant="outlined"
                         data-cy="add_study_specific_dataset"
                         onClick={() => {
                             redirectToStudySpecificDataset();
                         }}
-                        disabled={study.permissions && !study.permissions.addRemoveDataset}
+                        disabled={!canCreateDataset}
                         data-testid="study_add_dataset"
                     >
                         Create study specific data set

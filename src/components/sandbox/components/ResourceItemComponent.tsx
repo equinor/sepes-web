@@ -4,7 +4,7 @@ import { Label, EquinorIcon } from '../../common/StyledComponents';
 import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
-import * as notify from '../../common/notify';
+import { SandboxPermissions } from 'components/common/interfaces';
 
 const Wrapper = styled.div`
     display: grid;
@@ -13,6 +13,15 @@ const Wrapper = styled.div`
 
 const SatusWrapper = styled.div`
     margin-left: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+`;
+
+const SatusWrapperCentered = styled.div`
+    display: flex;
+    justify-content: start;
+    align-items: center;
 `;
 
 type ResourceItemComponentProps = {
@@ -22,6 +31,7 @@ type ResourceItemComponentProps = {
     status: string;
     retryLink: string;
     getResources: any;
+    permission: SandboxPermissions;
 };
 
 const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
@@ -30,12 +40,12 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
     name,
     linkToResource,
     retryLink,
-    getResources
+    getResources,
+    permission
 }) => {
     const retryResource = () => {
         apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
             if (result && result.Message) {
-                notify.show('danger', '500', result);
                 console.log('Err');
             } else {
                 getResources();
@@ -45,25 +55,30 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
 
     return (
         <Wrapper>
-            <div>
+            <SatusWrapperCentered>
                 {type === resourceType.virtualMachine ? (
-                    <>
-                        <Label>{type}</Label>
+                    <div>
+                        <Label style={{ marginBottom: '-24px' }}>{type}</Label> <br />
                         <div>
-                            <a href={linkToResource} target="_blank" rel="noopener noreferrer">
+                            <a
+                                style={{ color: '#007079' }}
+                                href={linkToResource}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 {name}
                             </a>
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <div>{type}</div>
                 )}
-            </div>
+            </SatusWrapperCentered>
             <SatusWrapper>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {' '}
                     {retryLink ? (
-                        <Button variant="ghost_icon" onClick={() => retryResource()}>
+                        <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
                             {EquinorIcon('refresh', '#007079', 24)}
                         </Button>
                     ) : status !== 'Ok' ? (

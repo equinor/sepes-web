@@ -44,7 +44,6 @@ const study: StudyObj = {
     }
 };
 
-const loading = false;
 const mockFunc = (id: string) => {};
 const resultsAndLearnings = { resultsAndLearnings: 'this is a good study' };
 const resultsAndLearningsResponse = { cache: { 'studies/1/resultsandlearnings': 'this is a good study' } };

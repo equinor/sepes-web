@@ -2,10 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useClickOutside from './useClickOutside';
 import styled from 'styled-components';
-import { Icon } from '@equinor/eds-core-react';
+import { Icon, Typography } from '@equinor/eds-core-react';
 import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
-import { truncate } from '../helpers';
+import { truncate } from '../helpers/helpers';
 
 const icons = {
     arrow_drop_up,
@@ -25,21 +25,24 @@ const Dropdown = styled.div<{ isOpen: any; color: any }>`
     font-family: Equinor;
     letter-spacing: 0.4px;
     outline-color: #007079;
-    border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
-    border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
-    border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
-    border-left: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-bottom: 1px solid #6f6f6f;
+
     &:hover {
         cursor: pointer;
     }
 `;
+/*
+    border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
+    border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+    border-left: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
+*/
 
-const DropdownOption = styled.p`
+const DropdownOption = styled.div`
     font-family: ${(props) => props.theme.font};
     font-size: 16px;
     width: ${(props: any) => (props.width ? props.width : '220px')};
-    padding-left: 24px;
-    padding-top: 16px;
+    padding: 16px;
 `;
 
 const Label = styled.p`
@@ -117,7 +120,9 @@ const CoreDevDropdown = (props: any) => {
                     {options.map((option: any, i: number) => {
                         return (
                             <li key={option.displayValue} onMouseDown={() => handleChange(option)}>
-                                <DropdownOption>{option.displayValue}</DropdownOption>
+                                <DropdownOption>
+                                    <Typography variant="body_long">{option.displayValue}</Typography>
+                                </DropdownOption>
                             </li>
                         );
                     })}

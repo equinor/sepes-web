@@ -18,6 +18,7 @@
         "noFallthroughCasesInSwitch": true,
         "baseUrl": "src"
     },
-    "include": ["src"],
-    "types": ["node", "jest", "@testing-library/jest-dom"]
+    "include": ["src", "jest.setup.js"],
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "typeRoots": ["../node_modules/@types", "../@types"]
 }

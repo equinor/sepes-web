@@ -5,9 +5,9 @@ import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
-import * as notify from '../../common/notify';
 import useClickOutside from '../../common/customComponents/useClickOutside';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { useHistory } from 'react-router-dom';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -24,7 +24,6 @@ const MoreActionsWrapper = styled.div`
     position: absolute;
     background-color: #ffffff;
     box-shadow: 0 0 4px 4px #e7e7e7;
-    width: 296px;
     border-radius: 4px;
     margin-top: 196px;
     display: grid;
@@ -76,6 +75,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const wrapperRef = useRef(null);
+    const history = useHistory();
     useClickOutside(wrapperRef, setDisplayMoreActions);
 
     const handleToggle = () => {
@@ -90,12 +90,26 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result && result.Message) {
-                notify.show('danger', '500', result);
-            } else {
+            if (result && !result.Message) {
                 getResources();
             }
         });
+    };
+
+    const redirectToChangePassword = (): void => {
+        if (vmProperties.linkToExternalSystem) {
+            window.open(vmProperties.linkToExternalSystem + '/resetpassword', '_blank');
+        }
+    };
+
+    const returnResetpasswordTooltip = () => {
+        if (!permissions.update) {
+            return 'You do not have permission to reset password';
+        }
+        if (!vmProperties.linkToExternalSystem) {
+            return 'VM has to be ready before changing password';
+        }
+        return '';
     };
 
     return (
@@ -103,24 +117,29 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
             <Typography variant="h2">Properties</Typography>
             <Wrapper>
                 <div>
-                    <div>OS</div>
-                    <div>Public IP</div>
-                    <div>Private IP</div>
+                    <Typography variant="body_short">OS</Typography>
+                    <Typography variant="body_short">Public IP</Typography>
+                    <Typography variant="body_short">Private IP</Typography>
                     {/*<div>DNS name</div>*/}
-                    <div>Location</div>
-                    <div style={{ marginTop: '16px' }}>Size</div>
-                    <div>vCPUs</div>
-                    <div>RAM</div>
+                    <Typography variant="body_short">Location</Typography>
+                    <Typography variant="body_short" style={{ marginTop: '16px' }}>
+                        Size
+                    </Typography>
+                    <Typography variant="body_short">vCPUs</Typography>
+                    <Typography variant="body_short">RAM</Typography>
                 </div>
+
                 <div>
-                    <div>{vmProperties.operatingSystem || '-'}</div>
-                    <div>{publicIp || '-'}</div>
-                    <div>{privateIp || '-'}</div>
+                    <Typography variant="body_short">{vmProperties.operatingSystem || '-'}</Typography>
+                    <Typography variant="body_short">{publicIp || '-'}</Typography>
+                    <Typography variant="body_short">{privateIp || '-'}</Typography>
                     {/*<div>sb.env04-asdasdaas</div>*/}
-                    <div>{vmProperties.region}</div>
-                    <div style={{ marginTop: '16px' }}>{sizeName || '-'}</div>
-                    <div>{numberOfCores || '-'}</div>
-                    <div>{MemoryGB ? MemoryGB + 'MB' : '-'}</div>
+                    <Typography variant="body_short">{vmProperties.region}</Typography>
+                    <Typography variant="body_short" style={{ marginTop: '16px' }}>
+                        {sizeName || '-'}
+                    </Typography>
+                    <Typography variant="body_short">{numberOfCores || '-'}</Typography>
+                    <Typography variant="body_short">{MemoryGB ? MemoryGB + 'MB' : '-'}</Typography>
                 </div>
             </Wrapper>
             <BtnWrapper>
@@ -154,16 +173,30 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     </div>
                     {displayMoreActions && (
                         <MoreActionsWrapper ref={wrapperRef}>
-                            <Item
-                                color="#000000"
-                                style={{
-                                    opacity: permissions.update ? 1 : 0.5,
-                                    pointerEvents: permissions.update ? 'initial' : 'none'
-                                }}
+                            <Tooltip
+                                title={
+                                    permissions.update && vmProperties.linkToExternalSystem
+                                        ? ''
+                                        : returnResetpasswordTooltip()
+                                }
+                                placement="right"
                             >
-                                {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
-                                <ItemText>Reset password</ItemText>
-                            </Item>
+                                <Item
+                                    color="#000000"
+                                    style={{
+                                        opacity: permissions.update && vmProperties.linkToExternalSystem ? 1 : 0.5,
+                                        pointerEvents:
+                                            permissions.update && vmProperties.linkToExternalSystem
+                                                ? 'initial'
+                                                : 'none',
+                                        width: '296px'
+                                    }}
+                                    onClick={redirectToChangePassword}
+                                >
+                                    {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
+                                    <ItemText>Reset password</ItemText>
+                                </Item>
+                            </Tooltip>
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"

@@ -2,15 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, DropdownObj, DatasetPermissionObj } from '../common/interfaces';
+import { DatasetObj, DropdownObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
     editStudySpecificDataset,
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfInputIsNumberWihoutCharacters, checkIfRequiredFieldsAreNull } from '../common/helpers';
-import * as notify from '../common/notify';
+import { checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
+import { checkForInputErrors } from '../common/helpers/datasetHelpers';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
@@ -18,7 +18,7 @@ import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { dataInventoryLink, ClassificationGuidlinesLink } from '../common/staticValues/commonLinks';
+import { dataInventoryLink, classificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
     getDatasetsInStudyUrl,
     getDatasetsUrl,
@@ -64,6 +64,12 @@ const StyledLink = styled.a`
     text-decoration-line: underline;
 `;
 
+const LinkWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    grid-grap: 8px;
+`;
+
 const studySpecificHelpText =
     'This data set will only available for this study. We need some meta data before we create the storage. When storage is created you can start uploading files.';
 const standardHelpText =
@@ -87,22 +93,20 @@ type CreateEditDatasetProps = {
     setDatasetFromDetails: (value: any) => void;
     setShowEditDataset: (value: any) => void;
     editingDataset: boolean;
-    permissions: DatasetPermissionObj;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     datasetFromDetails,
     setDatasetFromDetails,
     setShowEditDataset,
-    editingDataset,
-    permissions
+    editingDataset
 }) => {
     const studyId = getStudyId();
     const datasetId = getDatasetId();
     const history = useHistory();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
-    const [loading, setLoading] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
@@ -137,7 +141,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     const addDataset = () => {
         setUserPressedCreate(true);
-        if (checkForInputErrors()) {
+        if (checkForInputErrors(dataset)) {
             return;
         }
         setLoading(true);
@@ -156,7 +160,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 } else {
                     setUserPressedCreate(false);
                     console.log('Err');
-                    notify.show('danger', '500', result);
                 }
             });
         } else if (isDatasetspecificDataset) {
@@ -173,7 +176,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
                     console.log('Err');
                 }
             });
@@ -190,7 +192,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     history.push('/datasets/' + result.id);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -204,7 +206,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
-                    notify.show('danger', '500', result);
+
                     console.log('Err');
                 }
             });
@@ -254,16 +256,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         }
     };
 
-    const checkForInputErrors = () => {
-        if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
-            return true;
-        }
-        if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
-            return true;
-        }
-        return false;
-    };
-
     const returnField = (fieldName, value) => {
         return (
             <div>
@@ -274,8 +266,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
-        (permissions && permissions.editDataset) ||
-        (location && location.state.canCreateStudySpecificDataset) ? (
+        (datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset) ||
+        (location && location.state && location.state.canCreateStudySpecificDataset) ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
@@ -285,7 +277,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
                     </div>
                     <HelperTextWrapper>
-                        {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
+                        <Typography variant="body_long">
+                            {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
+                        </Typography>
                     </HelperTextWrapper>
                     <TextField
                         id="textfield1"
@@ -313,11 +307,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             onChange={(e: any) => handleChange('storageAccountName', e.target.value)}
                             data-cy="dataset_storage_name"
                             inputIcon={
-                                <div style={{ position: 'relative', right: '4px', bottom: '4px' }}>
-                                    <Tooltip title="This cannot be changed later" placement="right">
-                                        {EquinorIcon('error_outlined', '#6F6F6F', 24)}
-                                    </Tooltip>
-                                </div>
+                                <Tooltip title="This cannot be changed later" placement="right">
+                                    {EquinorIcon('error_outlined', '#6F6F6F', 24)}
+                                </Tooltip>
                             }
                         />
                     )}
@@ -349,13 +341,15 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         tabIndex={0}
                     />
                     <StyledLink
-                        href={ClassificationGuidlinesLink}
+                        href={classificationGuidlinesLink}
                         style={{ marginTop: '-8px' }}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {EquinorIcon('external_link', '#007079', 24)}
-                        <span style={{ marginLeft: '8px' }}>Classification guidelines</span>
+                        <LinkWrapper>
+                            <div>{EquinorIcon('external_link', '#007079', 24)}</div>
+                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Classification guidelines</span>
+                        </LinkWrapper>
                     </StyledLink>
                     <TextField
                         id="textfield13"
@@ -375,11 +369,18 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {EquinorIcon('external_link', '#007079', 24)}
-                        <span style={{ marginLeft: '8px' }}>Data inventory</span>
+                        <LinkWrapper>
+                            {EquinorIcon('external_link', '#007079', 24)}
+                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
+                        </LinkWrapper>
                     </StyledLink>
                     <SaveCancelWrapper>
-                        <Button disabled={checkForInputErrors() || loading} onClick={addDataset} data-cy="dataset_save">
+                        <Button
+                            disabled={checkForInputErrors(dataset) || loading}
+                            onClick={addDataset}
+                            data-cy="dataset_save"
+                            data-testid="dataset_save"
+                        >
                             {loading ? <DotProgress color="primary" /> : 'Save'}
                         </Button>
                         <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">
