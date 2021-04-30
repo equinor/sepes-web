@@ -476,8 +476,6 @@ const DatasetDetails = (props: any) => {
     };
 
     const removeFile = (_file: any, _fileindex): void => {
-        console.log(_file);
-        // let fileIndex = i;
         try {
             controller.abort();
             controller = new AbortController();
@@ -491,8 +489,6 @@ const DatasetDetails = (props: any) => {
             }
         }
 
-        // const relevantFile = files.filter((x) => x.key === _file.key);
-        // const fileIndex = files.indexOf(relevantFile.key);
         updateOnNextVisit();
         const _files = [...files];
         _files.splice(_fileindex, 1);
