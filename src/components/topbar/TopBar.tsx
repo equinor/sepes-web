@@ -112,7 +112,7 @@ const Bar = (props: any) => {
             </TopBar>
             {toggle && (
                 <LogoutWrapper ref={wrapperRef}>
-                    <div>{user.getActiveAccount()?.name}</div>
+                    <div>{user.getAllAccounts()[0] && user.getAllAccounts()[0].name}</div>
                     <Divider color="medium" variant="small" />
                     <EquinorLink style={{ marginBottom: '8px' }} to="/releasenotes" onClick={onChangelogClick}>
                         Release Notes
