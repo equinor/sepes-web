@@ -123,7 +123,6 @@ const StepBar: React.FC<StepBarProps> = ({
     const history = useHistory();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
-    //const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
     const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
