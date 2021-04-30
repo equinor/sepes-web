@@ -58,6 +58,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
+    const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>(
         (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
@@ -127,7 +128,10 @@ const Sandbox: React.FC<SandboxProps> = () => {
     return !SandboxResponse.notFound ? (
         step !== undefined ? (
             <>
-                {SandboxResponse.loading && <LoadingFull noTimeout={deleteSandboxInProgress} />}
+                {SandboxResponse.loading ||
+                    (makeAvailableInProgress && (
+                        <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
+                    ))}
                 <Wrapper>
                     <StepBar
                         sandbox={sandbox}
@@ -147,6 +151,8 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         setNewCostanalysisLink={setNewCostanalysisLink}
                         controller={controller}
                         vmsWithOpenInternet={vmsWithOpenInternet}
+                        makeAvailableInProgress={makeAvailableInProgress}
+                        setMakeAvailableInProgress={setMakeAvailableInProgress}
                     />
                     {returnStepComponent()}
                     {(step === 0 || step === 1) && (
