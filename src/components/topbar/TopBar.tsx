@@ -135,7 +135,7 @@ const Bar = (props: any) => {
                             <LinkToReport>Report bug</LinkToReport>
                         </a>
                     </div>
-                    <div style={{ marginBottom: '8px' }} />
+                    <div style={{ marginBottom: '16px' }} />
                     <EquinorLink to="/" onClick={() => user.logoutRedirect()}>
                         Log Out
                     </EquinorLink>
