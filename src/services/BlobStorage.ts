@@ -93,7 +93,9 @@ export const updateWithProgress = (
     data,
     progress,
     setFiles,
-    abortArray
+    abortArray,
+    numberOfFilesInProgress,
+    updateTotalProgress
 ) => {
     let progressArrayIndex = findWithAttr(progressArray, 'path', blobName);
     if (index === -1) {
@@ -113,7 +115,11 @@ export const updateWithProgress = (
             progressArray[progressArrayIndex].uploadedBytes = progress.loadedBytes;
             temp[progressArrayIndex].uploadedBytes = progress.loadedBytes;
         }
-        setFiles(temp);
+        if (numberOfFilesInProgress <= 100) {
+            setFiles(temp);
+        } else {
+            updateTotalProgress();
+        }
 
         const filePercent = {
             blobName,
@@ -136,7 +142,9 @@ export const uploadFile = async (
     abortArray: any,
     setFiles: any,
     progressArray: any,
-    fileName: string
+    fileName: string,
+    numberOfFilesInProgress: number,
+    updateTotalProgress: any
 ) => {
     const blobServiceClient = new BlobServiceClient(blobUri);
     const containerClient = blobServiceClient.getContainerClient('files');
@@ -146,7 +154,18 @@ export const uploadFile = async (
         const index = abortArray.findIndex((x: any) => x.blobName === fileName);
 
         if (totalSize === 0) {
-            updateWithProgress(100, progressArray, index, blobName, data, { loadedBytes: 0 }, setFiles, abortArray);
+            updateWithProgress(
+                100,
+                progressArray,
+                index,
+                blobName,
+                data,
+                { loadedBytes: 0 },
+                setFiles,
+                abortArray,
+                numberOfFilesInProgress,
+                updateTotalProgress
+            );
         }
 
         blockBlobClient
@@ -166,7 +185,9 @@ export const uploadFile = async (
                         data,
                         progress,
                         setFiles,
-                        abortArray
+                        abortArray,
+                        numberOfFilesInProgress,
+                        updateTotalProgress
                     );
                 },
                 abortSignal: abortArray[index] && abortArray[index].controller.signal

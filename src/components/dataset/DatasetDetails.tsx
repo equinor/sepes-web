@@ -162,9 +162,17 @@ const DatasetDetails = (props: any) => {
     const [searchValue, setSearchValue] = useState('');
     const [totalProgress, setTotalProgress] = useState<number>(0);
     const [folderViewMode, setFolderViewMode] = useState<boolean>(false);
-    const handleOnSearchValueChange = (event) => {
-        setViewableFiles(files);
-        setSearchValue(event.target.value.toLowerCase());
+    const [numberOfFilesInProgress, setNumberOfFilesInProgress] = useState<number>(0);
+
+    const handleOnSearchValueChange = (event, _viewableFiles) => {
+        if (event.target.value === '') {
+            setViewableFiles(files.slice(0, 20));
+        }
+        if (event.target.value.length >= 3) {
+            setSearchValue(event.target.value.toLowerCase());
+            const temp = _viewableFiles.filter((x) => x.name.includes(event.target.value.toLowerCase())).slice(0, 20);
+            setViewableFiles(temp);
+        }
     };
 
     useEffect(() => {
@@ -198,6 +206,36 @@ const DatasetDetails = (props: any) => {
     }, [datasetStorageAccountIsReady, dataset]);
 
     useEffect(() => {
+        updateTotalProgress();
+    }, [files, progressArray]);
+
+    useEffect(() => {
+        return () => {
+            cancelGettingFilesCall();
+            cancelAllDownloads();
+            abortArray = [];
+            progressArray = [];
+            setSearchValue('');
+        };
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(async () => {
+            setSasKeyExpired(true);
+        }, intervalUpdateSas);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(async () => {
+            setSasKeyDeleteExpired(true);
+        }, intervalUpdateSasDelete);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const updateTotalProgress = () => {
         const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
 
         if (filesInProgress.length > 0) {
@@ -218,32 +256,7 @@ const DatasetDetails = (props: any) => {
             percent = 1;
         }
         setTotalProgress(percent);
-    }, [files, progressArray]);
-
-    useEffect(() => {
-        return () => {
-            cancelGettingFilesCall();
-            cancelAllDownloads();
-            abortArray = [];
-            progressArray = [];
-        };
-    }, []);
-
-    useEffect(() => {
-        const timer = setInterval(async () => {
-            setSasKeyExpired(true);
-        }, intervalUpdateSas);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    useEffect(() => {
-        const timer = setInterval(async () => {
-            setSasKeyDeleteExpired(true);
-        }, intervalUpdateSasDelete);
-
-        return () => clearInterval(timer);
-    }, []);
+    };
 
     const getSasKey = (retries = 3, backoff = 300) => {
         return new Promise((resolve) => {
@@ -410,27 +423,17 @@ const DatasetDetails = (props: any) => {
 
         _files.forEach((_file: any) => {
             const newFile: FileObj = _file;
-
-            //Object.defineProperty(newFile, 'size', { value: 345325235, enumerable: true });
-            const test: any = {};
             newFile.percent = 1;
             newFile.uploadedBytes = 1;
             newFile.key = _file.path;
             newFile.modified = _file.lastModified;
 
-            test.percent = 1;
-            test.uploadedBytes = 1;
-            test.key = _file.path;
-            test.modified = _file.lastModified;
-            test.name = _file.name;
-            test.path = _file.path;
-            test.size = _file.size;
-            console.log(newFile, _file, test);
             progressArray.unshift(newFile);
         });
         setFiles(tempFiles);
         setViewableFiles(tempFiles.slice(0, viewableFiles.length + _files.length));
         if (_files.length) {
+            setNumberOfFilesInProgress(numberOfFilesInProgress + _files.length);
             setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
                 if (result && !result.Message) {
@@ -451,7 +454,9 @@ const DatasetDetails = (props: any) => {
                                         abortArray,
                                         setFiles,
                                         progressArray,
-                                        _file.name
+                                        _file.name,
+                                        _files.length,
+                                        updateTotalProgress
                                     );
                                 } catch (ex) {
                                     console.log(ex);
@@ -470,7 +475,7 @@ const DatasetDetails = (props: any) => {
         }
     };
 
-    const removeFile = (i: number, _file: any): void => {
+    const removeFile = (_file: any, _fileindex): void => {
         try {
             controller.abort();
             controller = new AbortController();
@@ -486,7 +491,7 @@ const DatasetDetails = (props: any) => {
 
         updateOnNextVisit();
         const _files = [...files];
-        _files.splice(i, 1);
+        _files.splice(_fileindex, 1);
         setFiles(_files);
         setViewableFiles(_files.slice(0, viewableFiles.length));
         const index = abortArray.findIndex((x) => x.blobName === _file.name);
@@ -517,9 +522,11 @@ const DatasetDetails = (props: any) => {
                 return;
             }
         }
+        const fileName = _file.path ?? _file.name;
+
         getSasKeyDelete()
             .then((result: any) => {
-                deleteFile(result, _file.path ?? _file.name);
+                deleteFile(result, fileName ?? _file[0]);
             })
             .catch((ex: any) => {
                 console.log(ex);
@@ -553,7 +560,12 @@ const DatasetDetails = (props: any) => {
 
     const fetchMoreData = () => {
         setTimeout(() => {
-            if (viewableFiles.length + 20 <= files.length) {
+            if (searchValue !== '') {
+                const temp = files
+                    .filter((x) => x.name.includes(searchValue.toLowerCase()))
+                    .slice(0, viewableFiles.length + 20);
+                setViewableFiles(temp);
+            } else if (viewableFiles.length + 20 <= files.length) {
                 setViewableFiles(files.slice(0, viewableFiles.length + 10));
             } else {
                 setViewableFiles(files);
@@ -671,6 +683,13 @@ const DatasetDetails = (props: any) => {
                                         Folder: <Icon name="folder" color="#FF9200" style={{ marginBottom: '-6px' }} />,
                                         FolderOpen: (
                                             <Icon name="folder_open" color="#FF9200" style={{ marginBottom: '-6px' }} />
+                                        ),
+                                        Delete: (
+                                            <Icon
+                                                name="delete_forever"
+                                                color="#FF9200"
+                                                style={{ marginBottom: '-6px' }}
+                                            />
                                         )
                                     }}
                                 />
@@ -679,7 +698,12 @@ const DatasetDetails = (props: any) => {
                             {!folderViewMode && (
                                 <>
                                     <div>
-                                        <Search onChange={handleOnSearchValueChange} placeholder="Type to search" />
+                                        <Search
+                                            onChange={(e) => {
+                                                handleOnSearchValueChange(e, files);
+                                            }}
+                                            placeholder="Type minimum three characters to search"
+                                        />
                                     </div>
 
                                     <div>
@@ -692,53 +716,47 @@ const DatasetDetails = (props: any) => {
                                                 >
                                                     <div style={{ paddingTop: '10px' }} />
                                                     {viewableFiles.map((_file: any, i: number) => {
-                                                        if (
-                                                            searchValue === '' ||
-                                                            (_file.name &&
-                                                                _file.name.toLowerCase().includes(searchValue))
-                                                        ) {
-                                                            return (
-                                                                <div
-                                                                    key={_file.path ?? _file.name}
-                                                                    style={{ marginTop: '4px', marginRight: '8px' }}
-                                                                >
-                                                                    <AttachmentWrapper>
-                                                                        <div>
-                                                                            {truncate(_file.path, 100) ??
-                                                                                truncate(_file.name, 100)}
-                                                                        </div>
-                                                                        <div>{bytesToSize(_file.size)}</div>
-                                                                        <Button
-                                                                            variant="ghost_icon"
-                                                                            onClick={() => removeFile(i, _file)}
-                                                                            style={{ marginTop: '-14px' }}
-                                                                            disabled={checkIfDeleteIsEnabled(
-                                                                                _file,
-                                                                                dataset,
-                                                                                progressArray
-                                                                            )}
-                                                                        >
-                                                                            <Icon
-                                                                                color="#007079"
-                                                                                name="delete_forever"
-                                                                                size={24}
-                                                                                style={{ cursor: 'pointer' }}
-                                                                            />
-                                                                        </Button>
-                                                                    </AttachmentWrapper>
-                                                                    {_file.percent && (
-                                                                        <LinearProgress
-                                                                            style={{
-                                                                                marginBottom: '16px',
-                                                                                marginTop: '-4px'
-                                                                            }}
-                                                                            value={_file.percent}
-                                                                            variant="determinate"
+                                                        return (
+                                                            <div
+                                                                key={_file.path ?? _file.name}
+                                                                style={{ marginTop: '4px', marginRight: '8px' }}
+                                                            >
+                                                                <AttachmentWrapper>
+                                                                    <div>
+                                                                        {truncate(_file.path, 100) ??
+                                                                            truncate(_file.name, 100)}
+                                                                    </div>
+                                                                    <div>{bytesToSize(_file.size)}</div>
+                                                                    <Button
+                                                                        variant="ghost_icon"
+                                                                        onClick={() => removeFile(_file, i)}
+                                                                        style={{ marginTop: '-14px' }}
+                                                                        disabled={checkIfDeleteIsEnabled(
+                                                                            _file,
+                                                                            dataset,
+                                                                            progressArray
+                                                                        )}
+                                                                    >
+                                                                        <Icon
+                                                                            color="#007079"
+                                                                            name="delete_forever"
+                                                                            size={24}
+                                                                            style={{ cursor: 'pointer' }}
                                                                         />
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }
+                                                                    </Button>
+                                                                </AttachmentWrapper>
+                                                                {_file.percent && numberOfFilesInProgress <= 100 && (
+                                                                    <LinearProgress
+                                                                        style={{
+                                                                            marginBottom: '16px',
+                                                                            marginTop: '-4px'
+                                                                        }}
+                                                                        value={_file.percent}
+                                                                        variant="determinate"
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                        );
                                                     })}
                                                 </div>
                                             ) : (

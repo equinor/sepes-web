@@ -58,6 +58,9 @@ export const checkUrlIfGeneralDataset = () => {
 };
 
 export const removeFirstOccurenceCharacter = (text: string, character: string) => {
+    if (text === undefined || character === undefined) {
+        return '';
+    }
     const index = text.indexOf(character);
     if (index === 0) {
         return text.replace(character, '');
