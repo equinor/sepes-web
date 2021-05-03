@@ -7,3 +7,5 @@ export const classificationGuidlinesLink =
 export const webAppChangelog = 'https://raw.githubusercontent.com/equinor/sepes-web/master/CHANGELOG.md';
 
 export const apiChangelog = 'https://raw.githubusercontent.com/equinor/sepes-api/master/CHANGELOG.md';
+
+export const requestChangeLink = 'https://github.com/equinor/sepes-web/issues/new/choose';
