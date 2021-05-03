@@ -65,6 +65,8 @@ type StepBarProps = {
     setNewCostanalysisLink: any;
     controller: AbortController;
     vmsWithOpenInternet: any;
+    setMakeAvailableInProgress: any;
+    makeAvailableInProgress: any;
 };
 
 const getSteps = () => {
@@ -114,12 +116,13 @@ const StepBar: React.FC<StepBarProps> = ({
     setDeleteSandboxInProgress,
     setNewCostanalysisLink,
     controller,
-    vmsWithOpenInternet
+    vmsWithOpenInternet,
+    setMakeAvailableInProgress,
+    makeAvailableInProgress
 }) => {
     const history = useHistory();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
-    const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
     const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
@@ -392,96 +395,93 @@ const StepBar: React.FC<StepBarProps> = ({
         }
     };
     return (
-        <>
-            {makeAvailableInProgress && <LoadingFull noTimeout />}
-            <Wrapper>
-                <div style={{ display: 'flex' }}>
-                    <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px' }}>
-                        <Button variant="ghost_icon">
-                            <Icon
-                                style={{ marginBottom: '' }}
-                                color="#007079"
-                                name="chevron_left"
-                                size={24}
-                                title="chevron_left"
-                            />
-                        </Button>
-                    </Link>
-                    <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
-                        {sandbox && sandbox.name}
-                    </Typography>
-                    <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
-                </div>
-                <Stepper activeStep={step} alternativeLabel nonLinear color="red">
-                    {steps.map((stepL: any, index) => {
-                        const labelProps: any = {};
-                        labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
+        <Wrapper>
+            <div style={{ display: 'flex' }}>
+                <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px' }}>
+                    <Button variant="ghost_icon">
+                        <Icon
+                            style={{ marginBottom: '' }}
+                            color="#007079"
+                            name="chevron_left"
+                            size={24}
+                            title="chevron_left"
+                        />
+                    </Button>
+                </Link>
+                <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
+                    {sandbox && sandbox.name}
+                </Typography>
+                <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
+            </div>
+            <Stepper activeStep={step} alternativeLabel nonLinear color="red">
+                {steps.map((stepL: any, index) => {
+                    const labelProps: any = {};
+                    labelProps.optional = <Typography variant="caption">{stepL.description}</Typography>;
 
-                        return (
-                            <Step key={index} style={{ padding: '0 96px 0 96px' }}>
-                                <StepLabel {...labelProps}>
-                                    <span style={{ textAlign: 'center' }}>{stepL.label}</span>
-                                </StepLabel>
-                            </Step>
-                        );
-                    })}
-                </Stepper>
+                    return (
+                        <Step key={index} style={{ padding: '0 96px 0 96px' }}>
+                            <StepLabel {...labelProps}>
+                                <span style={{ textAlign: 'center' }}>{stepL.label}</span>
+                            </StepLabel>
+                        </Step>
+                    );
+                })}
+            </Stepper>
 
-                <div style={{ marginLeft: 'auto' }}>
-                    <Tooltip
-                        title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
-                        placement="left"
+            <div style={{ marginLeft: 'auto' }}>
+                <Tooltip
+                    title={sandbox.linkToCostAnalysis ? '' : 'Link will be available when resource group is ready'}
+                    placement="left"
+                >
+                    <a
+                        href={sandbox.linkToCostAnalysis}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            color: '#007079',
+                            fontSize: '22px',
+                            margin: '0 0 0 16px',
+                            display: 'inline-block',
+                            float: 'right'
+                        }}
                     >
-                        <a
-                            href={sandbox.linkToCostAnalysis}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: '#007079',
-                                fontSize: '22px',
-                                margin: '0 0 0 16px',
-                                display: 'inline-block',
-                                float: 'right'
-                            }}
-                        >
-                            {sandbox.linkToCostAnalysis && (
-                                <CostAnalysisWrapper>
-                                    <Typography
-                                        style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
-                                        variant="h2"
-                                        color="#007079"
-                                    >
-                                        Cost analysis
-                                    </Typography>
-                                    <Icon
-                                        style={{ marginLeft: '12px' }}
-                                        color="#007079"
-                                        name="external_link"
-                                        size={24}
-                                        title="external_link"
-                                    />
-                                </CostAnalysisWrapper>
-                            )}
-                        </a>
-                    </Tooltip>
-                </div>
-                {userClickedDelete && (
-                    <DeleteResourceComponent
-                        ResourceName={sandbox.name}
-                        setUserClickedDelete={setUserClickedDelete}
-                        onClick={deleteThisSandbox}
-                        type="sandbox"
-                    />
-                )}
-                {userClickedMakeAvailable && (
-                    <SureToProceed
-                        setUserClickedButton={setUserClickedMakeAvailable}
-                        onClick={makeThisSandboxAvailable}
-                        type="making the selected data sets available to this sandbox"
-                    />
-                )}
-            </Wrapper>
-        </>
+                        {sandbox.linkToCostAnalysis && (
+                            <CostAnalysisWrapper>
+                                <Typography
+                                    style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                    variant="h2"
+                                    color="#007079"
+                                >
+                                    Cost analysis
+                                </Typography>
+                                <Icon
+                                    style={{ marginLeft: '12px' }}
+                                    color="#007079"
+                                    name="external_link"
+                                    size={24}
+                                    title="external_link"
+                                />
+                            </CostAnalysisWrapper>
+                        )}
+                    </a>
+                </Tooltip>
+            </div>
+            {userClickedDelete && (
+                <DeleteResourceComponent
+                    ResourceName={sandbox.name}
+                    setUserClickedDelete={setUserClickedDelete}
+                    onClick={deleteThisSandbox}
+                    type="sandbox"
+                />
+            )}
+            {userClickedMakeAvailable && (
+                <SureToProceed
+                    setUserClickedButton={setUserClickedMakeAvailable}
+                    onClick={makeThisSandboxAvailable}
+                    type="making the selected data sets available to this sandbox"
+                />
+            )}
+        </Wrapper>
     );
 };
 
