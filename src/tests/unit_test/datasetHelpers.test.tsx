@@ -61,6 +61,5 @@ test('test removeFirstOccurenceCharacter ', () => {
 
 test('test findWithAttr ', () => {
     const array = [{ path: 'file1.png' }];
-    const expectedResult = 'testing';
     expect(helpers.findWithAttr(array, 'path', 'file1.png')).toEqual(0);
 });
