@@ -679,7 +679,7 @@ const DatasetDetails = (props: any) => {
                             )}
                             {folderViewMode && (
                                 <FileBrowser
-                                    files={returnEnumberableFiles() ?? []}
+                                    files={returnEnumberableFiles()}
                                     headerRenderer={null}
                                     icons={{
                                         File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
