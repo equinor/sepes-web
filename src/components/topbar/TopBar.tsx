@@ -8,6 +8,7 @@ import { UserConfig } from '../../index';
 import { Link } from 'react-router-dom';
 import { account_circle } from '@equinor/eds-icons';
 import useClickOutside from '../common/customComponents/useClickOutside';
+import { requestChangeLink } from '../common/staticValues/commonLinks';
 
 const { Actions, Header } = TopBar;
 
@@ -39,6 +40,12 @@ const LogoutWrapper = styled.div`
     border-radius: 4px;
     box-shadow: 0 0 4px 4px #e7e7e7;
     text-align: center;
+`;
+
+export const LinkToReport = styled.a`
+    font-size: 14px;
+    color: #007079;
+    text-decoration-line: underline;
 `;
 
 const LEFT_CHOICES = {
@@ -117,6 +124,17 @@ const Bar = (props: any) => {
                     <EquinorLink style={{ marginBottom: '8px' }} to="/releasenotes" onClick={onChangelogClick}>
                         Release Notes
                     </EquinorLink>
+                    <div style={{ marginTop: '8px' }}>
+                        <a
+                            style={{ marginLeft: '0px' }}
+                            href={requestChangeLink}
+                            onClick={onChangelogClick}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <LinkToReport>Report bug</LinkToReport>
+                        </a>
+                    </div>
                     <div style={{ marginBottom: '8px' }} />
                     <EquinorLink to="/" onClick={() => user.logoutRedirect()}>
                         Log Out
