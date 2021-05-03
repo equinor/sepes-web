@@ -1,19 +1,21 @@
-/* eslint-disable react/jsx-fragments */
-import React, { Fragment, useState, useContext, useEffect, useRef } from 'react';
+/* eslint-disable react/jsx-fragments, no-shadow */
+import React, { Fragment, useContext, useRef } from 'react';
 import styled from 'styled-components';
-import { TopBar, Icon, Tooltip, Button, Divider } from '@equinor/eds-core-react';
+import { TopBar, Icon, Tooltip, Button, Menu, Typography } from '@equinor/eds-core-react';
 import NavTabs from './NavTabs';
-import { EquinorLink } from '../common/StyledComponents';
 import { UserConfig } from '../../index';
-import { Link } from 'react-router-dom';
-import { account_circle } from '@equinor/eds-icons';
-import useClickOutside from '../common/customComponents/useClickOutside';
+import { Link, useHistory } from 'react-router-dom';
+import { account_circle, report_bug, exit_to_app } from '@equinor/eds-icons';
+//import useClickOutside from '../common/customComponents/useClickOutside';
 import { requestChangeLink } from '../common/staticValues/commonLinks';
 
-const { Actions, Header } = TopBar;
+const { MenuItem } = Menu;
+const { Header } = TopBar;
 
 const icons = {
-    account_circle
+    account_circle,
+    report_bug,
+    exit_to_app
 };
 
 Icon.add(icons);
@@ -70,17 +72,98 @@ const Bar = (props: any) => {
     const leftChoice = 'text+icon';
     const centerChoice = 'tabs';
     const rightChoice = 'icons';
-    const [toggle, setToggle] = useState<boolean>(false);
+    //const [, setIsopen] = useState<boolean>(false);
     const wrapperRef = useRef(null);
-    useClickOutside(wrapperRef, setToggle);
+    // useClickOutside(wrapperRef, setToggle);
+    const history = useHistory();
+
+    const [state, setState] = React.useState<{
+        buttonEl: any;
+        focus: 'first' | 'last';
+    }>({
+        focus: 'first',
+        buttonEl: null
+    });
+    const { buttonEl, focus } = state;
+    const isOpen = Boolean(buttonEl);
     const user = useContext(UserConfig);
+
+    const openMenu = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
+        focus: 'first' | 'last'
+    ) => {
+        const target = e.target as HTMLButtonElement;
+        setState({ ...state, buttonEl: target, focus });
+    };
+
+    const closeMenu = () => {
+        setState({ ...state, buttonEl: null, focus });
+    };
+
+    const redirectToLink = (url: string) => {
+        history.push(url);
+    };
+
+    const redirectToExternalLink = (url: string) => {
+        window.open(url, '_blank');
+    };
+
+    const optionsTemplate = (
+        <>
+            <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
+                <Typography variant="h6">{user.getAllAccounts()[0] && user.getAllAccounts()[0].name}</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => redirectToLink('/releasenotes')}>
+                <Icon
+                    color="#6F6F6F"
+                    name="info_circle"
+                    style={{ cursor: 'pointer' }}
+                    size={24}
+                    className="icon"
+                    title="Release notes"
+                />
+                Release notes
+            </MenuItem>
+            <MenuItem onClick={() => redirectToExternalLink(requestChangeLink)}>
+                <Icon
+                    color="#6F6F6F"
+                    name="report_bug"
+                    style={{ cursor: 'pointer' }}
+                    size={24}
+                    className="icon"
+                    title="Release notes"
+                />
+                Report bug
+            </MenuItem>
+            <Menu.Section title="">
+                <Menu.Item onClick={() => user.logoutRedirect()}>
+                    <Icon
+                        color="#6F6F6F"
+                        name="exit_to_app"
+                        style={{ cursor: 'pointer' }}
+                        size={24}
+                        className="icon"
+                        title="Log out"
+                    />
+                    <Typography group="navigation" variant="menu_title" as="span">
+                        Log out
+                    </Typography>
+                </Menu.Item>
+            </Menu.Section>
+        </>
+    );
+    /*
     const RIGHT_CHOICES = {
         none: null,
         text: '',
         icons: (
             <Icons>
                 <Tooltip title="User" placement="left">
-                    <Button variant="ghost_icon" onClick={() => setToggle(!toggle)}>
+                    <Button
+                        id="menuButton"
+                        variant="ghost_icon"
+                        onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                    >
                         <Icon
                             name="account_circle"
                             style={{ cursor: 'pointer' }}
@@ -90,11 +173,22 @@ const Bar = (props: any) => {
                             title="account"
                         />
                     </Button>
+                    <Menu
+                        id="menuButton"
+                        aria-labelledby="menuButton"
+                        open={isOpen}
+                        onClose={closeMenu}
+                        anchorEl={buttonEl}
+                        focus={focus}
+                    >
+                        {optionsTemplate}
+                    </Menu>
                 </Tooltip>
             </Icons>
         )
     };
-
+    */
+    /*
     useEffect(() => {
         document.addEventListener('keydown', listener, false);
         return () => {
@@ -103,21 +197,44 @@ const Bar = (props: any) => {
     }, []);
     const listener = (e: any) => {
         if (e.key === 'Escape') {
-            setToggle(false);
+            //setToggle(false);
         }
     };
-
-    const onChangelogClick = () => {
-        setToggle(false);
-    };
+*/
     return (
         <Wrapper>
-            <TopBar>
+            <TopBar style={{ position: 'initial' }}>
                 <Header>{LEFT_CHOICES[leftChoice]}</Header>
                 {CENTER_CHOICES[centerChoice]}
-                <Actions>{RIGHT_CHOICES[rightChoice]}</Actions>
+                {/*<Actions>{RIGHT_CHOICES[rightChoice]}</Actions>*/}
+                <TopBar.Actions>
+                    <Button
+                        id="menuButton"
+                        variant="ghost_icon"
+                        onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                    >
+                        <Icon
+                            name="account_circle"
+                            style={{ cursor: 'pointer' }}
+                            size={24}
+                            color="#007079"
+                            className="icon"
+                            title="account"
+                        />
+                    </Button>
+                    <Menu
+                        id="menuButton"
+                        aria-labelledby="menuButton"
+                        open={isOpen}
+                        onClose={closeMenu}
+                        anchorEl={buttonEl}
+                        focus={focus}
+                    >
+                        {optionsTemplate}
+                    </Menu>
+                </TopBar.Actions>
             </TopBar>
-            {toggle && (
+            {/*toggle && (
                 <LogoutWrapper ref={wrapperRef}>
                     <div>{user.getAllAccounts()[0] && user.getAllAccounts()[0].name}</div>
                     <Divider color="medium" variant="small" />
@@ -140,7 +257,7 @@ const Bar = (props: any) => {
                         Log Out
                     </EquinorLink>
                 </LogoutWrapper>
-            )}
+            )*/}
         </Wrapper>
     );
 };
