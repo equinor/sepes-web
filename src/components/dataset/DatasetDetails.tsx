@@ -167,10 +167,13 @@ const DatasetDetails = (props: any) => {
     const handleOnSearchValueChange = (event, _viewableFiles) => {
         if (event.target.value === '') {
             setViewableFiles(files.slice(0, 20));
+            setSearchValue('');
         }
         if (event.target.value.length >= 3) {
             setSearchValue(event.target.value.toLowerCase());
-            const temp = _viewableFiles.filter((x) => x.name.includes(event.target.value.toLowerCase())).slice(0, 20);
+            const temp = _viewableFiles
+                .filter((x) => x.name.toLowerCase().includes(event.target.value.toLowerCase()))
+                .slice(0, 20);
             setViewableFiles(temp);
         }
     };
