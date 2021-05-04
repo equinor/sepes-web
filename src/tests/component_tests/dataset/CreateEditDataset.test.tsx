@@ -77,10 +77,3 @@ test('renders stepbar component with create mode', () => {
     expect(linkElement).toBeInTheDocument();
     expect(getByTestId('dataset_save').hasAttribute('disabled')).toEqual(false);
 });
-
-// function sum(a, b) {
-//     return a + b;
-// }
-// test('adds 1 + 2 to equal 3', () => {
-//     expect(sum(1, 2)).toBe(3);
-// });
