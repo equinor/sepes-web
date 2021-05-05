@@ -1,0 +1,13 @@
+- task: AzureKeyVault@1
+    displayName: Get secrets from key vault
+    inputs:
+    azureSubscription: 's904-Sepes-Development'
+    KeyVaultName: 'kv-sepes-dev'
+    SecretsFilter: '*'
+    
+- task: CmdLine@2
+    displayName: Put access token in key vault
+    inputs:
+    script: |
+        echo Generating access token and storing it in key vault
+        dotnet $(Build.SourcesDirectory)/GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $(tenantId) --app-id $(mockuserAppId) --mock-user-client-secret $(mockappuserClientSecret) --authority $(mockUserAppScopes) --key-vault-name $(keyVaultCommon) --key-vault-secret-name $(cypressAccesstokenSecretname) --key-vault-user-client-secret $(scarchiveUsefrompipelineClientSecret) --key-vault-user-client-id $(keyVaultUserClientId)
