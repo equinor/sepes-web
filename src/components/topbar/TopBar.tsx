@@ -62,6 +62,7 @@ const Bar = (props: any) => {
     const { buttonEl, focus } = state;
     const isOpen = Boolean(buttonEl);
     const user = useContext(UserConfig);
+    const cyToken = localStorage.getItem('cyToken');
 
     const openMenu = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
@@ -86,7 +87,9 @@ const Bar = (props: any) => {
     const optionsTemplate = (
         <>
             <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
-                <Typography variant="h6">{user.getAllAccounts()[0] && user.getAllAccounts()[0].name}</Typography>
+                <Typography variant="h6">
+                    {cyToken ? 'Test User' : user.getAllAccounts()[0] && user.getAllAccounts()[0].name}
+                </Typography>
             </MenuItem>
             <MenuItem onClick={() => redirectToLink('/releasenotes')}>
                 <Icon

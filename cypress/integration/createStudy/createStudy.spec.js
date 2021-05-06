@@ -6,6 +6,7 @@ describe('Create study', () => {
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
+        cy.login();
     });
 
     it('visits page', () => {
