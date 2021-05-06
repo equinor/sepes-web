@@ -8,7 +8,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { account_circle, report_bug, exit_to_app } from '@equinor/eds-icons';
 import { requestChangeLink } from '../common/staticValues/commonLinks';
 
-const { MenuItem } = Menu;
 const { Header } = TopBar;
 
 const icons = {
@@ -86,12 +85,12 @@ const Bar = (props: any) => {
 
     const optionsTemplate = (
         <>
-            <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
+            <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
                 <Typography variant="h6">
                     {cyToken ? 'Test User' : user.getAllAccounts()[0] && user.getAllAccounts()[0].name}
                 </Typography>
-            </MenuItem>
-            <MenuItem onClick={() => redirectToLink('/releasenotes')}>
+            </Menu.Item>
+            <Menu.Item onClick={() => redirectToLink('/releasenotes')}>
                 <Icon
                     color="#6F6F6F"
                     name="info_circle"
@@ -101,8 +100,8 @@ const Bar = (props: any) => {
                     title="Release notes"
                 />
                 Release notes
-            </MenuItem>
-            <MenuItem onClick={() => redirectToExternalLink(requestChangeLink)}>
+            </Menu.Item>
+            <Menu.Item onClick={() => redirectToExternalLink(requestChangeLink)}>
                 <Icon
                     color="#6F6F6F"
                     name="report_bug"
@@ -112,7 +111,7 @@ const Bar = (props: any) => {
                     title="Release notes"
                 />
                 Report bug
-            </MenuItem>
+            </Menu.Item>
             <Menu.Section title="">
                 <Menu.Item onClick={() => user.logoutRedirect()}>
                     <Icon

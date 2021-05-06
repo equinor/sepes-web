@@ -17,8 +17,6 @@ import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 
-const { MenuItem } = Menu;
-
 const icons = {
     dollar,
     visibility,
@@ -245,8 +243,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.deleteStudy;
     const optionsTemplate = (
         <>
-            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left" open={studyDeleteEnabled}>
-                <MenuItem
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left">
+                <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
                     disabled={!studyDeleteEnabled}
@@ -256,7 +254,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 >
                     <Icon name="delete_forever" color="red" size={24} />
                     <span style={{ color: 'red' }}>Delete study</span>
-                </MenuItem>
+                </Menu.Item>
             </Tooltip>
         </>
     );

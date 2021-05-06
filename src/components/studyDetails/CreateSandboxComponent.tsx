@@ -113,7 +113,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 autoFocus
                 inputIcon={
                     <div>
-                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="topRight">
+                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="right">
                             <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
@@ -147,7 +147,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 <Tooltip
                     title={study.wbsCode ? '' : 'Need WBS code for this study code to create sandbox'}
                     placement="left"
-                    open={!study.wbsCode}
                 >
                     <Button
                         style={{ width: '76px', margin: '8px 0 8px auto' }}

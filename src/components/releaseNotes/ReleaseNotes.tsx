@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Typography, Tabs } from '@equinor/eds-core-react';
 import { webAppChangelog, apiChangelog } from '../common/staticValues/commonLinks';
 
-const { TabList, Tab } = Tabs;
+//const { TabList, Tab } = Tabs;
 
 const Wrapper = styled.div`
     background-color: #ffffff;
@@ -62,10 +62,10 @@ const ReleaseNotes = () => {
     return (
         <Wrapper>
             <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                <TabList style={divStyle}>
-                    <Tab style={{ marginLeft: '32px' }}>Web App</Tab>
-                    <Tab style={{ marginRight: '32px' }}>Api</Tab>
-                </TabList>
+                <Tabs.List style={divStyle}>
+                    <Tabs.Tab style={{ marginLeft: '32px' }}>Web App</Tabs.Tab>
+                    <Tabs.Tab style={{ marginRight: '32px' }}>Api</Tabs.Tab>
+                </Tabs.List>
             </Tabs>
             <div style={{ margin: '32px 32px 32px 32px' }}>{changeComponent()}</div>
         </Wrapper>
