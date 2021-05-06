@@ -22,11 +22,12 @@ const BtnWrapper = styled.div`
 const MoreActionsWrapper = styled.div`
     position: absolute;
     background-color: #ffffff;
-    box-shadow: 0 0 4px 4px #e7e7e7;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 3px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
     border-radius: 4px;
     margin-top: 196px;
     display: grid;
     grid-template-rows: 1fr 1fr;
+    width: 296px;
 `;
 
 const Item = styled.div<{ color: string }>`
@@ -178,6 +179,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                         : returnResetpasswordTooltip()
                                 }
                                 placement="right"
+                                style={{ justifyContent: 'left' }}
                             >
                                 <Item
                                     color="#000000"
@@ -187,7 +189,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                             permissions.update && vmProperties.linkToExternalSystem
                                                 ? 'initial'
                                                 : 'none',
-                                        width: '296px'
+                                        width: '248px'
                                     }}
                                     onClick={redirectToChangePassword}
                                 >
@@ -199,13 +201,14 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
                                 open={!permissions.update}
+                                style={{ justifyContent: 'left' }}
                             >
                                 <Item
                                     color="#EB0000"
                                     style={{
                                         opacity: permissions.update ? 1 : 0.5,
                                         pointerEvents: permissions.update ? 'initial' : 'none',
-                                        width: '296px'
+                                        width: '248px'
                                     }}
                                     onClick={() => {
                                         setUserClickedDelete(true);
