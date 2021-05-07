@@ -21,7 +21,7 @@ import {
     getDatasetSasTokenDelete
 } from '../../services/Api';
 import { arrow_back, delete_forever, folder, file, folder_open } from '@equinor/eds-icons';
-import { bytesToSize, round, truncate } from '../common/helpers/helpers';
+import { bytesToSize, isIterable, round, truncate } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
@@ -340,7 +340,7 @@ const DatasetDetails = (props: any) => {
                 setLoadingFiles(false);
                 if (result && (result.errors || result.Message)) {
                     console.log('Err');
-                } else if (result && isSubscribed) {
+                } else if (result && isSubscribed && isIterable(result)) {
                     const temp: any = [...result];
                     setFiles(temp);
                     setViewableFiles(result.slice(0, 20));
