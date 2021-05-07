@@ -80,6 +80,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
+        setToggle(false);
         if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
             return;
         }
