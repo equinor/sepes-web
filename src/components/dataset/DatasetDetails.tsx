@@ -352,7 +352,7 @@ const DatasetDetails = (props: any) => {
 
     const checkStatusOfStorageAccount = (resources: any) => {
         let res = false;
-        if (!resources && !Array.isArray(resources)) {
+        if (!resources || !Array.isArray(resources)) {
             return res;
         }
         resources.map((resource: DatasetResourcesObj) => {
