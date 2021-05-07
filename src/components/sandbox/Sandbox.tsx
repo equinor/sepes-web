@@ -128,10 +128,9 @@ const Sandbox: React.FC<SandboxProps> = () => {
     return !SandboxResponse.notFound ? (
         step !== undefined ? (
             <>
-                {SandboxResponse.loading ||
-                    (makeAvailableInProgress && (
-                        <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
-                    ))}
+                {SandboxResponse.loading && (
+                    <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
+                )}
                 <Wrapper>
                     <StepBar
                         sandbox={sandbox}
