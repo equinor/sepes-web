@@ -309,6 +309,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClose={closeMenu}
                     anchorEl={buttonEl}
                     focus={focus}
+                    placement="bottom-end"
                 >
                     {optionsTemplate}
                 </Menu>

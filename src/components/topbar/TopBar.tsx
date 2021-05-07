@@ -157,6 +157,7 @@ const Bar = (props: any) => {
                         onClose={closeMenu}
                         anchorEl={buttonEl}
                         focus={focus}
+                        placement="bottom-start"
                     >
                         {optionsTemplate}
                     </Menu>

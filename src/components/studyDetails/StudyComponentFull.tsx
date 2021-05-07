@@ -515,6 +515,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 >
                                     <Icon color="#007079" name="settings" size={24} />
                                 </Button>
+
                                 <Menu
                                     id="menuButton"
                                     aria-labelledby="menuButton"
@@ -522,6 +523,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     onClose={closeMenu}
                                     anchorEl={buttonEl}
                                     focus={focus}
+                                    placement="bottom-end"
                                 >
                                     {optionsTemplate}
                                 </Menu>
