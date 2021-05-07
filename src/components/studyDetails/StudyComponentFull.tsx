@@ -12,7 +12,7 @@ import CustomLogoComponent from '../common/customComponents/CustomLogoComponent'
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
 import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
-import { Label } from '../common/StyledComponents';
+import { EquinorIcon, Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
@@ -107,6 +107,13 @@ const SmallIconWrapper = styled.div`
 `;
 
 const SaveCancelWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 80px 160px 80px;
+    grid-gap: 8px;
+    margin-left: -165px;
+`;
+
+const SaveCancelWrapper2 = styled.div`
     display: grid;
     grid-template-columns: 80px 80px;
     grid-gap: 8px;
@@ -504,10 +511,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
                                     style={{
-                                        margin: '-13px',
+                                        margin: '0',
                                         display: study.permissions && study.permissions.closeStudy ? '' : 'none'
                                     }}
-                                    variant="ghost_icon"
+                                    variant="outlined"
                                     data-cy="study_options"
                                     id="menuButton"
                                     aria-labelledby="menuButton"
@@ -515,7 +522,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                                     data-testid="study_delete_settings"
                                 >
-                                    <Icon color="#007079" name="settings" size={24} />
+                                    <span style={{ marginLeft: '8px', marginRight: '4px' }}>More options</span>
+                                    {EquinorIcon('more_vertical', '#007079', 24)}
                                 </Button>
                                 <Menu
                                     id="menuButton"
@@ -561,7 +569,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             >
                                                 Change logo
                                             </Button>
-                                            <SaveCancelWrapper>
+                                            <SaveCancelWrapper2>
                                                 <Button
                                                     data-cy="create_study"
                                                     onClick={() => handleSave()}
@@ -569,10 +577,43 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>
+                                                {/*<div style={{ float: 'right', marginBottom: 'auto' }}>
+                                                    <Button
+                                                        style={{
+                                                            margin: '0',
+                                                            display:
+                                                                study.permissions && study.permissions.closeStudy
+                                                                    ? ''
+                                                                    : 'none'
+                                                        }}
+                                                        variant="outlined"
+                                                        data-cy="study_options"
+                                                        id="menuButton"
+                                                        aria-labelledby="menuButton"
+                                                        aria-expanded={isOpen}
+                                                        onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                                                        data-testid="study_delete_settings"
+                                                    >
+                                                        <span style={{ marginLeft: '8px', marginRight: '4px' }}>
+                                                            More options
+                                                        </span>
+                                                        {EquinorIcon('more_vertical', '#007079', 24)}
+                                                    </Button>
+                                                    <Menu
+                                                        id="menuButton"
+                                                        aria-labelledby="menuButton"
+                                                        open={isOpen}
+                                                        onClose={closeMenu}
+                                                        anchorEl={buttonEl}
+                                                        focus={focus}
+                                                    >
+                                                        {optionsTemplate}
+                                                    </Menu>
+                                                    </div>*/}
                                                 <Button variant="outlined" onClick={() => handleCancel()}>
                                                     Cancel
                                                 </Button>
-                                            </SaveCancelWrapper>
+                                            </SaveCancelWrapper2>
                                         </div>
                                     </>
                                 )}
