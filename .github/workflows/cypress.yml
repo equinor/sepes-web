@@ -22,4 +22,9 @@ jobs:
           az login --service-principal -u $Env:clientId --password "$Env:clientSecret" --tenant $Env:tenantId
           az account set -s "$Env:azureSubscriptionId"
 
-      #- name: Store accessToken in key vault
+      - uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+          secrets: 'mySecret'  # comma separated list of secret keys that need to be fetched from the Key Vault 
+        id: myGetSecretAction
+      
