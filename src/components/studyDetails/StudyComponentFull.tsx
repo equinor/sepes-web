@@ -108,9 +108,9 @@ const SmallIconWrapper = styled.div`
 
 const SaveCancelWrapper = styled.div`
     display: grid;
-    grid-template-columns: 80px 160px 80px;
+    grid-template-columns: 80px 128px 80px;
     grid-gap: 8px;
-    margin-left: -165px;
+    margin-left: -134px;
 `;
 
 const SaveCancelWrapper2 = styled.div`
@@ -507,7 +507,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                         </DescriptioTextfieldnWrapper>
                     )}
                     <div>
-                        {editMode && !newStudy && (
+                        {/*editMode && !newStudy && (
                             <div style={{ float: 'right', marginBottom: 'auto' }}>
                                 <Button
                                     style={{
@@ -536,7 +536,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     {optionsTemplate}
                                 </Menu>
                             </div>
-                        )}
+                                )*/}
                         <RightWrapper editMode={editMode}>
                             <div>
                                 {!showImagePicker && (
@@ -569,7 +569,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             >
                                                 Change logo
                                             </Button>
-                                            <SaveCancelWrapper2>
+                                            <SaveCancelWrapper>
                                                 <Button
                                                     data-cy="create_study"
                                                     onClick={() => handleSave()}
@@ -577,7 +577,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>
-                                                {/*<div style={{ float: 'right', marginBottom: 'auto' }}>
+                                                <div style={{ float: 'right', marginBottom: 'auto' }}>
                                                     <Button
                                                         style={{
                                                             margin: '0',
@@ -597,7 +597,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                         <span style={{ marginLeft: '8px', marginRight: '4px' }}>
                                                             More options
                                                         </span>
-                                                        {EquinorIcon('more_vertical', '#007079', 24)}
                                                     </Button>
                                                     <Menu
                                                         id="menuButton"
@@ -609,11 +608,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                     >
                                                         {optionsTemplate}
                                                     </Menu>
-                                                    </div>*/}
+                                                </div>
                                                 <Button variant="outlined" onClick={() => handleCancel()}>
                                                     Cancel
                                                 </Button>
-                                            </SaveCancelWrapper2>
+                                            </SaveCancelWrapper>
                                         </div>
                                     </>
                                 )}
