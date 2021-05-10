@@ -1,0 +1,25 @@
+name: Cypress Test
+
+on:
+  push:
+    branches:
+      - build/cypress_pipeline
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      # Azure login for CLI and Powershell AZ
+      - name: Azure login
+        shell: pwsh
+        env:
+          clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
+          tenantId: ${{ secrets.AZURE_TENANT_ID }}
+          azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+        run: |
+          az login --service-principal -u $Env:clientId --password "$Env:clientSecret" --tenant $Env:tenantId
+          az account set -s "$Env:azureSubscriptionId"
+
+      #- name: Store accessToken in key vault
