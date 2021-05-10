@@ -35,7 +35,7 @@ jobs:
 
       - name: build
         working-directory: GetAccessToken
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release
 
       - name: Put access token in key vault
         env:
