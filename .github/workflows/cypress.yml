@@ -54,8 +54,7 @@ jobs:
           tenantId: ${{ secrets.AZURE_TENANT_ID }}
           azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
         run: |
-          dir GetAccessToken
-          # dotnet $GITHUB_WORKSPACE/GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId \
-          # --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName \
-          # --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret \
-          # --key-vault-user-client-id $clientId
+          dotnet GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId \
+          --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName \
+          --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret \
+          --key-vault-user-client-id $clientId
