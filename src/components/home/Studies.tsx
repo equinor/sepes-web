@@ -9,11 +9,11 @@ type StudiesProps = {
 const Studies: React.FC<StudiesProps> = ({ studyList }) => {
     return (
         <div>
-            {studyList
-                ? studyList.map((study: StudyObj) => {
-                      return <StudyComponent study={study} key={study.id} />;
-                  })
-                : 'No studies yet'}
+            {studyList &&
+                Array.isArray(studyList) &&
+                studyList.map((study: StudyObj) => {
+                    return <StudyComponent study={study} key={study.id} />;
+                })}
         </div>
     );
 };
