@@ -11,16 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Azure login for CLI and Powershell AZ
-      - name: Azure login
-        shell: bash
-        env:
-          clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-          clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
-          tenantId: ${{ secrets.AZURE_TENANT_ID }}
-          azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
-        run: |
-          az login --service-principal -u $clientId --password "$clientSecret" --tenant $tenantId
-          az account set -s "$azureSubscriptionId"
+      # - name: Azure login
+      #   shell: bash
+      #   env:
+      #     clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+      #     clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
+      #     tenantId: ${{ secrets.AZURE_TENANT_ID }}
+      #     azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+      #   run: |
+      #     az login --service-principal -u $clientId --password "$clientSecret" --tenant $tenantId
+      #     az account set -s "$azureSubscriptionId"
+      - uses: Azure/login@v1
+        with:
+        creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
       - uses: Azure/get-keyvault-secrets@v1
         with:
