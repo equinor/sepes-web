@@ -23,7 +23,7 @@ jobs:
       #     az account set -s "$azureSubscriptionId"
       - uses: Azure/login@v1
         with:
-        creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
       - uses: Azure/get-keyvault-secrets@v1
         with:
