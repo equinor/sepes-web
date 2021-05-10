@@ -55,3 +55,17 @@ jobs:
           azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
         run: |
           dotnet GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret --key-vault-user-client-id $clientId
+
+      - uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+          secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault 
+        id: token
+
+      # Install Node dependencies
+      - run: npm ci
+
+      - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
+
+      - run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/test/test.spec.js" --env cyAccessToken=$token
+
