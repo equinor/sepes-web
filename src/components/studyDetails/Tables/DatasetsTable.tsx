@@ -54,6 +54,7 @@ const DatasetsTable = (props: any) => {
                                 {editMode && (
                                     <Cell>
                                         {row.sandboxes &&
+                                            row.sandboxes.length > 0 &&
                                             row.sandboxes.map((sandbox: any, index: number) => {
                                                 return (
                                                     <Link
