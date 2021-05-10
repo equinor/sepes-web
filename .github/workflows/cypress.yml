@@ -10,6 +10,8 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       # Azure login for CLI and Powershell AZ
       # - name: Azure login
       #   shell: bash
@@ -28,6 +30,27 @@ jobs:
       - uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          secrets: 'kvcytest'  # comma separated list of secret keys that need to be fetched from the Key Vault 
-        id: myGetSecretAction
-      
+          secrets: 'MockUserNonProdWeb, AzureAdClientId'  # comma separated list of secret keys that need to be fetched from the Key Vault 
+        id: keyVaultSecrets
+
+      - name: Put access token in key vault
+        env:
+          buildConfiguration: 'Release'
+          mockuserAppId: ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }}
+          mockappuserClientSecret: ${{ steps.keyVaultSecrets.outputs.MockUserNonProdWeb }}
+          mockUserAppScopes: ${{ steps.keyVaultSecrets.outputs.AzureAdClientId }}
+          keyVaultUserClientId: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+          keyVaultName: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+          cypressAccesstokenSecretname: 'cypressAccesstokenDev'
+          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget
+          NPM_PACKAGES: $(Pipeline.Workspace)/.npm
+          CYPRESS_BINARY: $(Pipeline.Workspace)/.cypressbinary
+          clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
+          tenantId: ${{ secrets.AZURE_TENANT_ID }}
+          azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+        run: |
+          dotnet ./GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId \
+          --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName \
+          --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret \
+          --key-vault-user-client-id $clientId
