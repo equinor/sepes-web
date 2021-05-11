@@ -9,6 +9,6 @@ describe('Create dataset', () => {
     });
 
     it('visits page', () => {
-        cy.visit('/datasets');
+        cy.visit('/');
     });
 });
