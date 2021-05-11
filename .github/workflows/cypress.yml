@@ -51,13 +51,14 @@ jobs:
         id: token
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
-    - name: Run cypress tests  
-      env:
-        token: $token
-        
+    
+
       - run: npm ci
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 #$token
-      - run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
+      - name: Run cypress tests  
+        env:
+          token: $token
+        run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
 
