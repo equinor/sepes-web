@@ -12,7 +12,7 @@
         "CLIENT_ID": "",
         "CLIENT_SECRET": "",
         "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
-        "SCOPE": "",
+        "SCOPE": "User.Read User.Read.All User.Impersonation",
         "RETRIES": 3
     },
     "viewportWidth": 1920,
