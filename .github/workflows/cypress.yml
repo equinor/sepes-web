@@ -59,6 +59,6 @@ jobs:
 #$token
       - name: Run cypress tests  
         env:
-          token: $steps.token.outputs.cypressAccesstokenDev
+          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
 
