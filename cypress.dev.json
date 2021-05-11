@@ -12,16 +12,9 @@
         "CLIENT_ID": "",
         "CLIENT_SECRET": "",
         "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
-        "SCOPE": "openid profile email offline_access Directory.Read.All User.Read",
+        "SCOPE": "",
         "RETRIES": 3
     },
     "viewportWidth": 1920,
-    "viewportHeight": 1080,
-    "reporter": "mochawesome",
-    "reporterOptions": {
-        "reportDir": "cypress/results",
-        "overwrite": false,
-        "html": false,
-        "json": true
-    }
+    "viewportHeight": 1080
 }
