@@ -11,6 +11,7 @@ describe('Create study', () => {
 
     it('visits page', () => {
         cy.visit('/');
+        cy.get('[data-cy=new_study]').should('be.visible');
     });
 
     it('clicks create new project not using the wizard', () => {
