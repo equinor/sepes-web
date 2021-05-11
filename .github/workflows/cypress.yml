@@ -1,9 +1,7 @@
 name: Cypress Test
 
 on:
-  push:
-    branches:
-      - build/cypress_pipeline
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -12,17 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      # Azure login for CLI and Powershell AZ
-      # - name: Azure login
-      #   shell: bash
-      #   env:
-      #     clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-      #     clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
-      #     tenantId: ${{ secrets.AZURE_TENANT_ID }}
-      #     azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
-      #   run: |
-      #     az login --service-principal -u $clientId --password "$clientSecret" --tenant $tenantId
-      #     az account set -s "$azureSubscriptionId"
+        
       - uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
@@ -62,10 +50,10 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault 
         id: token
 
-      # Install Node dependencies
+      # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
       - run: npm ci
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
-      - run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/test/test.spec.js" --env cyAccessToken=$token
+      - run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
 
