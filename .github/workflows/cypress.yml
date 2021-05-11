@@ -30,7 +30,7 @@ jobs:
           buildConfiguration: 'Release'
           mockuserAppId: ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }}
           mockappuserClientSecret: ${{ steps.keyVaultSecrets.outputs.MockUserNonProdWeb }}
-          mockUserAppScopes: ${{ steps.keyVaultSecrets.outputs.AzureAdClientIdScope }}
+          mockUserAppScopes: ${{ steps.keyVaultSecrets.outputssteps.keyVaultSecrets.outputs.AzureAdClientIdScope }}
           keyVaultUserClientId: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
           keyVaultName: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
           cypressAccesstokenSecretname: 'cypressAccesstokenDev'
@@ -59,6 +59,6 @@ jobs:
 #$token
       - name: Run cypress tests  
         env:
-          token: $token
+          token: $steps.token.outputs.cypressAccesstokenDev
         run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
 
