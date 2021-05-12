@@ -62,7 +62,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
     useEffect(() => {
@@ -77,7 +77,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setDebounce({
             cb: async () => {
                 api.getParticipantList(value || 'a').then((result: any) => {
-                    if (!result.Message) {
+                    if (!result.Message && Array.isArray(result)) {
                         const temp = result.map((_user) => {
                             return {
                                 label: `${_user.fullName} (${_user.emailAddress})`,
