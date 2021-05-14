@@ -110,9 +110,9 @@ export interface GeneralPermissions {
     canCreateStudy: boolean;
     datasetAdmin: boolean;
     sponsor: boolean;
-    emailAddress?: string;
-    fullName?: string;
-    userName?: string;
+    emailAddress: string;
+    fullName: string;
+    userName: string;
 }
 
 export interface DropdownObj {
