@@ -160,7 +160,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const allResourcesStatusOkAndAtleastOneVm = (resourcesIn) => {
         let res = true;
-        if (!resourcesIn || Array.isArray(resourcesIn)) {
+        if (!resourcesIn || !Array.isArray(resourcesIn)) {
             return res;
         }
         let hasVm = false;
