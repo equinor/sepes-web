@@ -33,6 +33,7 @@ describe('Create vm', () => {
     });
 
     it('clicks add study specific dataset', () => {
+        cy.wait(2000);
         cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
     });
 
@@ -52,10 +53,12 @@ describe('Create vm', () => {
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
     });
     it('clicks sandbox tab', () => {
+        cy.wait(2000);
         cy.get('[data-cy=sandbox_tab]').click({ force: true });
     });
 
     it('clicks sandbox', () => {
+        cy.wait(2000);
         cy.get('[data-cy=create_sandbox]').click({ force: true });
     });
     const sandboxName = Cypress._.random(0, 1e6);
@@ -68,6 +71,7 @@ describe('Create vm', () => {
     });
 
     it('fills out vm information', () => {
+        cy.wait(5000);
         cy.get('[data-cy=vm_name]').type('cy name');
         cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
         cy.contains('Windows Server 2019 Datacenter').click({ force: true });
@@ -78,12 +82,14 @@ describe('Create vm', () => {
 
         cy.get('[data-cy=vm_dataDisks]').click({ force: true });
         cy.contains('64 GB').click({ force: true });
-        cy.get('[data-cy=create_vm]').click({ force: true });
+        cy.wait(3000);
+        cy.get('[data-cy=create_vm]').click();
         cy.wait(3000);
     });
 
     it('creates VM rules', () => {
-        cy.get('[data-cy=vm_add_rule]').click({ force: true });
+        cy.wait(1000);
+        cy.get('[data-cy=vm_add_rule]').click();
         cy.wait(1000);
         cy.get('[data-cy=vm_rule_description]').type('cy rule description');
         cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
