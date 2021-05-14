@@ -87,7 +87,10 @@ const Bar = (props: any) => {
     const optionsTemplate = (
         <>
             <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
-                <Typography variant="h6">{permissions.userName}</Typography>
+                <div>
+                    <Typography variant="h6">{permissions.fullName}</Typography>
+                    <Typography variant="meta">{permissions.userName}</Typography>
+                </div>
             </MenuItem>
             <MenuItem onClick={() => redirectToLink('/releasenotes')}>
                 <Icon
