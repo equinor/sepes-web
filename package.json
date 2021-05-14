@@ -86,7 +86,7 @@
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.13.0",
-        "@cypress/code-coverage": "^3.7.5",
+        "@cypress/code-coverage": "^3.9.5",
         "@cypress/instrument-cra": "^1.1.1",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
@@ -108,7 +108,10 @@
         }
     },
     "nyc": {
-        "report-dir": "cypress-coverage"
+        "report-dir": "cypress-coverage",
+        "reporter": [
+            "html"
+        ]
     },
     "jest": {
         "moduleNameMapper": {

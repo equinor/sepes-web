@@ -11,6 +11,7 @@ describe('Create study', () => {
 
     it('visits page', () => {
         cy.visit('/');
+        cy.get('[data-cy=new_study]').should('be.visible');
     });
 
     it('clicks create new project not using the wizard', () => {
@@ -60,11 +61,11 @@ describe('Create study', () => {
         cy.get('[data-cy=datasets_tab]').click();
     });
 
-    it('clicks edit study', () => {
+    it('clicks add study specific dataset', () => {
         cy.get('[data-cy=add_study_specific_dataset]').click();
     });
 
-    it('fills out dataset information', () => {
+    it('fills out dataset information and create dataset', () => {
         cy.get('[data-cy=dataset_name]').type('cy name');
         /*
             cy.get('[data-cy=dataset_storage_name]')
@@ -80,7 +81,7 @@ describe('Create study', () => {
         cy.get('[data-cy=dataset_edit]').click();
     });
 
-    it('fills out dataset information again', () => {
+    it('fills out dataset information again (edit)', () => {
         cy.get('[data-cy=dataset_name]').type('cy name edit');
         cy.get('[data-cy=dataset_classification]').click();
         cy.contains('Internal').click();
@@ -94,7 +95,7 @@ describe('Create study', () => {
         cy.get('[data-cy=delete_resource_delete]').click();
     });
 
-    it('fills out dataset information again', () => {
+    it('Delete study', () => {
         cy.get('[data-cy=edit_study]').click();
         cy.get('[data-cy=study_options]').click();
         cy.get('[data-cy=study_delete]').click();
