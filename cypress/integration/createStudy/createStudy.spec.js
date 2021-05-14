@@ -18,7 +18,7 @@ describe('Create study', () => {
         cy.get('[data-cy=new_study]').click();
     });
     it('fills out study information', () => {
-        cy.get('[data-cy=study_name]').type('studyName');
+        cy.get('[data-cy=study_name]').type('Cypress Test');
         cy.get('[data-cy=study_vendor]').type('cy vendor');
         cy.get('[data-cy=study_wbs]').type('cy wbs');
         cy.get('[data-cy=study_description]').type('cy description');
@@ -34,7 +34,7 @@ describe('Create study', () => {
     });
 
     it('fills out study information again', () => {
-        cy.get('[data-cy=study_name]').type('cy Title edited');
+        cy.get('[data-cy=study_name]').type('Cypress Test edited');
         cy.get('[data-cy=study_vendor]').type('cy vendor edited');
         cy.get('[data-cy=study_wbs]').type('cy wbs edited');
         cy.get('[data-cy=study_description]').type('cy description edited');

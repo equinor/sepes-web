@@ -15,7 +15,7 @@ describe('Create vm', () => {
     it('clicks create new project not using the wizard', () => {
         cy.get('[data-cy=new_study]').click();
     });
-    const studyName = 'cy Title';
+    const studyName = 'Cypress Test';
     it('fills out study information', () => {
         cy.get('[data-cy=study_name]').type(studyName);
         cy.get('[data-cy=study_vendor]').type('cy vendor');
