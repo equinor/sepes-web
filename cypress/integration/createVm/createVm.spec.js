@@ -11,58 +11,29 @@ describe('Create vm', () => {
         cy.login();
     });
 
-    // it('visits page', () => {
-    //     cy.visit('/');
-    // });
-    // it('clicks create new project not using the wizard', () => {
-    //     cy.get('[data-cy=new_study]').click({ force: true });
-    // });
-    // it('fills out study information', () => {
-    //     cy.get('[data-cy=study_name]').type(studyName);
-    //     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    //     cy.get('[data-cy=study_wbs]').type('cy wbs');
-    //     cy.get('[data-cy=study_description]').type('cy description');
-    // });
-
-    // it('clicks create new study', () => {
-    //     cy.get('[data-cy=create_study]').click({ force: true });
-    //     cy.wait(2000);
-    // });
-
     it('clicks on data sets tab', () => {
         cy.get('[data-cy=datasets_tab]').click({ force: true });
     });
 
     it('clicks add study specific dataset', () => {
-        cy.wait(2000);
+        //cy.wait(2000);
         cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
     });
 
     it('fills out dataset information', () => {
-        cy.get('[data-cy=dataset_name]').type('cy name');
-        /*
-        cy.get('[data-cy=dataset_storage_name]')
-            .type('cy storage')
-            */
-        cy.get('[data-cy=dataset_location]').click({ force: true });
-        cy.contains('Norway East').click({ force: true });
-        cy.get('[data-cy=dataset_classification]').click({ force: true });
-        cy.contains('Open').click({ force: true });
-        cy.get('[data-cy=dataset_dataId]').type(1);
-        cy.get('[data-cy=dataset_save]').click({ force: true });
-        cy.wait(2000);
+        cy.createDataset();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
+        // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
-        cy.wait(2000);
-        cy.get('[data-cy=sandbox_tab]').click({ force: true });
+        cy.get('[data-cy=sandbox_tab]').click();
     });
 
-    it('clicks sandbox', () => {
+    it('clicks create sandbox', () => {
         cy.wait(2000);
-        cy.get('[data-cy=create_sandbox]').click({ force: true });
+        cy.get('[data-cy=create_sandbox]').click();
     });
-    const sandboxName = Cypress._.random(0, 1e6);
+    const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
 
     it('fills out sanbox information', () => {
         cy.get('[data-cy=sandbox_name]').type(sandboxName);
@@ -72,7 +43,8 @@ describe('Create vm', () => {
     });
 
     it('fills out vm information', () => {
-        cy.wait(5000);
+        // cy.wait(5000);
+        cy.waitForSandboxToLoad();
         cy.get('[data-cy=vm_name]').type('cy name');
         cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
         cy.contains('Windows Server 2019 Datacenter').click({ force: true });
@@ -83,15 +55,16 @@ describe('Create vm', () => {
 
         cy.get('[data-cy=vm_dataDisks]').click({ force: true });
         cy.contains('64 GB').click({ force: true });
-        cy.wait(3000);
+        // cy.wait(3000);
         cy.get('[data-cy=create_vm]').click();
-        cy.wait(3000);
+        cy.waitForVirtualMachineToBeCreated();
+        // cy.wait(3000);
     });
 
     it('creates VM rules', () => {
-        cy.wait(1000);
-        cy.get('[data-cy=vm_add_rule]').click();
-        cy.wait(1000);
+        // cy.wait(1000);
+        cy.get('[data-cy=vm_add_rule]').click({ force: true });
+        // cy.wait(1000);
         cy.get('[data-cy=vm_rule_description]').type('cy rule description');
         cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
 
@@ -103,7 +76,7 @@ describe('Create vm', () => {
 
     it('add data set to sandbox', () => {
         cy.get('[data-cy=add_dataset_to_sandbox]').click({ force: true });
-        cy.wait(1000);
+        // cy.wait(1000);
     });
 
     it('delete vm', () => {
@@ -121,10 +94,6 @@ describe('Create vm', () => {
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
     it('delete study', () => {
-        cy.get('[data-cy=edit_study]').click({ force: true });
-        cy.get('[data-cy=study_options]').click({ force: true });
-        cy.get('[data-cy=study_delete]').click({ force: true });
-        cy.get('[data-cy="delete_resource"]').type(studyName);
-        cy.get('[data-cy=delete_resource_delete]').click({ force: true });
+        cy.deleteStudy(studyName);
     });
 });
