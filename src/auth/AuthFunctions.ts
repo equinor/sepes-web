@@ -91,6 +91,7 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
 };
 
 const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
+    console.log(sessionStorage.getItem('accessToken'));
     return new Promise((resolve) => {
         const processAuthorizedResponse = async (response) => {
             if (!response.ok) {
@@ -108,8 +109,12 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                     //Unauthorized, need to re-authorize. Only try this once
                     await SignInSilentRedirect().then(() => {
                         console.log('Reload page 2');
-                        window.location.reload();
+                        // window.location.reload();
+                        console.log(sessionStorage.getItem('accessToken'));
                     });
+                    options.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                    console.log('call again');
+                    console.log(sessionStorage.getItem('accessToken'));
                     response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                 }
 
