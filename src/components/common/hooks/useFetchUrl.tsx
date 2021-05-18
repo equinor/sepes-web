@@ -48,7 +48,7 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
         setIsSubscribed(true);
         getData();
         return () => setIsSubscribed(false);
-    }, [url]);
+    }, [url, sessionStorage.getItem('accessToken')]);
 
     return { loading, setLoading, cache, intialValue, notFound };
 };
