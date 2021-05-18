@@ -31,3 +31,19 @@ Cypress.Commands.add('login', (accessType = 'ADMIN') => {
     // window.localStorage.setItem('cyToken', cyToken);
     window.localStorage.setItem('cyToken', Cypress.env('cyAccessToken'));
 });
+
+Cypress.Commands.add('createStudy', (studyName) => {
+    cy.visit('/');
+
+    cy.get('[data-cy=new_study]').click({ force: true });
+
+    cy.get('[data-cy=study_name]').type(studyName);
+    cy.get('[data-cy=study_vendor]').type('cy vendor');
+    cy.get('[data-cy=study_wbs]').type('cy wbs');
+    cy.get('[data-cy=study_description]').type('cy description');
+
+    cy.get('[data-cy=create_study]').click({ force: true });
+    cy.intercept('/api/studies/*').as('getStudy');
+    //cy.wait(2000);
+    cy.wait('@getStudy');
+});

@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 describe('Create study', () => {
+    const studyName = 'Cypress Test';
     before(() => {
         cy.login();
+        cy.createStudy(studyName);
     });
 
     beforeEach(() => {
@@ -9,25 +11,25 @@ describe('Create study', () => {
         cy.login();
     });
 
-    it('visits page', () => {
-        cy.visit('/');
-        cy.get('[data-cy=new_study]').should('be.visible');
-    });
+    // it('visits page', () => {
+    //     cy.visit('/');
+    //     cy.get('[data-cy=new_study]').should('be.visible');
+    // });
 
-    it('clicks create new project not using the wizard', () => {
-        cy.get('[data-cy=new_study]').click({ force: true });
-    });
-    it('fills out study information', () => {
-        cy.get('[data-cy=study_name]').type('Cypress Test');
-        cy.get('[data-cy=study_vendor]').type('cy vendor');
-        cy.get('[data-cy=study_wbs]').type('cy wbs');
-        cy.get('[data-cy=study_description]').type('cy description');
-    });
+    // it('clicks create new project not using the wizard', () => {
+    //     cy.get('[data-cy=new_study]').click({ force: true });
+    // });
+    // it('fills out study information', () => {
+    //     cy.get('[data-cy=study_name]').type('Cypress Test');
+    //     cy.get('[data-cy=study_vendor]').type('cy vendor');
+    //     cy.get('[data-cy=study_wbs]').type('cy wbs');
+    //     cy.get('[data-cy=study_description]').type('cy description');
+    // });
 
-    it('clicks create new study', () => {
-        cy.get('[data-cy=create_study]').click({ force: true });
-        cy.wait(2000);
-    });
+    // it('clicks create new study', () => {
+    //     cy.get('[data-cy=create_study]').click({ force: true });
+    //     cy.wait(2000);
+    // });
 
     it('clicks edit study', () => {
         cy.get('[data-cy=edit_study]').click({ force: true });
