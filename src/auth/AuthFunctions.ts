@@ -111,6 +111,14 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                         console.log('Reload page 2');
                         // window.location.reload();
                         console.log(sessionStorage.getItem('accessToken'));
+                        headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                        apiRequestInternal(url, headers, options);
+                        console.log('call again');
+                        // console.log(sessionStorage.getItem('accessToken'));
+                        // response = fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                        // return resolve(
+                        //     processAuthorizedResponse(fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options))
+                        // );
                     });
                     options.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     console.log('call again');
