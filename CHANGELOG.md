@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.23](https://github.com/equinor/sepes-web/compare/0.1.22...0.1.23) (2021-05-19)
+
+
+### Bug Fixes
+
+* vertically align study logos ([b9a0879](https://github.com/equinor/sepes-web/commit/b9a0879d863c3fdc38dcd6c4137fb380b37f9971))
+
 ### [0.1.22](https://github.com/equinor/sepes-web/compare/0.1.21...0.1.22) (2021-05-19)
 
 
