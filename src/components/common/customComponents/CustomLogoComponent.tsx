@@ -4,11 +4,15 @@ import styled from 'styled-components';
 const Logo = styled.img`
     max-width: 125px;
     max-height: 125px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
 `;
 
 const Wrapper = styled.div<{ center: boolean }>`
     width: 125px;
     height: 125px;
+    line-height: 125px;
     text-align: ${(props: any) => (props.center ? 'center' : 'end')};
 `;
 const Dot = styled.span`
