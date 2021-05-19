@@ -108,19 +108,21 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
                     await SignInSilentRedirect().then(() => {
-                        console.log('Reload page 2');
-                        // window.location.reload();
-                        console.log(sessionStorage.getItem('accessToken'));
-                        headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
-                        apiRequestInternal(url, headers, options);
-                        console.log('call again');
+                        //window.location.reload();
+                        console.log('Reload page 2aa');
+                        // console.log(sessionStorage.getItem('accessToken'));
+                        // headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                        // apiRequestInternal(url, headers, options);
+                        // console.log('call again');
                         // console.log(sessionStorage.getItem('accessToken'));
                         // response = fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                         // return resolve(
                         //     processAuthorizedResponse(fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options))
                         // );
                     });
-                    options.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                    headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                    apiRequestInternal(url, headers, options);
+                    // options.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     console.log('call again');
                     console.log(sessionStorage.getItem('accessToken'));
                     response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
