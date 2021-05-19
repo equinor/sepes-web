@@ -52,7 +52,6 @@ myMSALObj
             if (tokenResponse.account) {
                 sessionStorage.setItem('userName', tokenResponse.account.username);
             }
-            console.log('Reload page 1');
             window.location.reload();
         }
     })
@@ -91,7 +90,6 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
 };
 
 const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
-    console.log(sessionStorage.getItem('accessToken'));
     return new Promise((resolve) => {
         const processAuthorizedResponse = async (response) => {
             if (!response.ok) {
@@ -107,24 +105,9 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
 
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
-                    await SignInSilentRedirect().then(() => {
-                        //window.location.reload();
-                        console.log('Reload page 2aa');
-                        // console.log(sessionStorage.getItem('accessToken'));
-                        // headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
-                        // apiRequestInternal(url, headers, options);
-                        // console.log('call again');
-                        // console.log(sessionStorage.getItem('accessToken'));
-                        // response = fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                        // return resolve(
-                        //     processAuthorizedResponse(fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options))
-                        // );
-                    });
+                    await SignInSilentRedirect();
                     headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     apiRequestInternal(url, headers, options);
-                    // options.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
-                    console.log('call again');
-                    console.log(sessionStorage.getItem('accessToken'));
                     response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                 }
 
