@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/equinor/sepes-web/compare/0.1.21...0.1.22) (2021-05-19)
+
+
+### Features
+
+* add link to github's create an issue for users to report bugs ([#832](https://github.com/equinor/sepes-web/issues/832)) ([b4d476c](https://github.com/equinor/sepes-web/commit/b4d476ccb83ac2c965c3439d410105b37c340e25)), closes [#799](https://github.com/equinor/sepes-web/issues/799)
+
+
+### Bug Fixes
+
+* add back user name in top bar ([ddf3d6b](https://github.com/equinor/sepes-web/commit/ddf3d6b8fdc36fd6e13f594bc38509ed19e97dc0))
+* change component borders to EDS style ([9e08ca2](https://github.com/equinor/sepes-web/commit/9e08ca20633caf6f02b227a0dc22896f0bacb926))
+* change name to email in top bar and use api response ([#872](https://github.com/equinor/sepes-web/issues/872)) ([0f440e7](https://github.com/equinor/sepes-web/commit/0f440e79ee350c13903c531389bbdfbcdbeb7bb5)), closes [#870](https://github.com/equinor/sepes-web/issues/870)
+* change report bug link to service-now ([ceab0d7](https://github.com/equinor/sepes-web/commit/ceab0d718bd250ce1c74ecdbea656ee12919f29d))
+* codeQL errors and notes ([7e25f01](https://github.com/equinor/sepes-web/commit/7e25f01f4c97182f7dc8a5c5f49a8c9099e53afc))
+* cypress tests and update to new version ([bcd67cf](https://github.com/equinor/sepes-web/commit/bcd67cf504486bffe6f9a8546c4c88a7bb490689))
+* Error that appeared with expired access token ([38a21de](https://github.com/equinor/sepes-web/commit/38a21dee3c8fa8a09e5952e1fa3ae8a56b8f0bdf))
+* Javascript errors ([f620e11](https://github.com/equinor/sepes-web/commit/f620e11186c6f64dd47b2f335d75aae470e600f3))
+* nullcheck that caused error ([f325fb3](https://github.com/equinor/sepes-web/commit/f325fb30a5739da9ee231effebd0141596e98a6b))
+* package.json & package-lock.json to reduce vulnerabilities ([93ea134](https://github.com/equinor/sepes-web/commit/93ea134c70864d56a84cd5ea8aaf404503a47df3))
+* Pick specific version of jest reporter ([df501c2](https://github.com/equinor/sepes-web/commit/df501c2b918e0742de8296f9af6c036eccb2afdd)), closes [#850](https://github.com/equinor/sepes-web/issues/850)
+* reload page after token expire ([#873](https://github.com/equinor/sepes-web/issues/873)) ([c93282d](https://github.com/equinor/sepes-web/commit/c93282d1c127534f67032108612d6d6c4beaf8e4))
+* upgrade @azure/msal-browser from 2.14.0 to 2.14.1 ([0dd598f](https://github.com/equinor/sepes-web/commit/0dd598f7a39438b5cb1d97baf70e5b685b202f0d))
+* upgrade @material-ui/core from 4.11.3 to 4.11.4 ([53d9efc](https://github.com/equinor/sepes-web/commit/53d9efc78d075eb97854b8a879f4e61852c76ff0))
+* upgrade @microsoft/applicationinsights-web from 2.6.1 to 2.6.2 ([08f811a](https://github.com/equinor/sepes-web/commit/08f811a9b7dfac30ea8d867830d7690fec590206))
+* upgrade @types/node from 12.20.10 to 12.20.11 ([f7f107b](https://github.com/equinor/sepes-web/commit/f7f107bb20167d06df05a84c98f1180f25b2bd54))
+* upgrade @types/node from 12.20.9 to 12.20.10 ([1686b30](https://github.com/equinor/sepes-web/commit/1686b30aa54851b8ab13fa9a75fd499256162e86))
+* upgrade @types/react from 17.0.3 to 17.0.4 ([f4ecf84](https://github.com/equinor/sepes-web/commit/f4ecf842d31e0838e447dbc953e5315d50dd6cc5))
+* **dataset:** fix issues and performance of file overview and search ([#830](https://github.com/equinor/sepes-web/issues/830)) ([313da89](https://github.com/equinor/sepes-web/commit/313da8907407393220478da7a5f187b6f454c9d6)), closes [#828](https://github.com/equinor/sepes-web/issues/828) [#826](https://github.com/equinor/sepes-web/issues/826)
+* **dataset:** Issue with search and infinity scroll on file upload ([f7ccf6e](https://github.com/equinor/sepes-web/commit/f7ccf6e8ff0286d2705d46bc7b58c683292338bc))
+* **participants:** nullcheck list ([424da00](https://github.com/equinor/sepes-web/commit/424da00ac51fa92c6e09fedc02d594cc955b1e2f))
+* **sadbox:** close create sandbox dialog when clicking create ([3310eb3](https://github.com/equinor/sepes-web/commit/3310eb316106b7b92c1f4f853faaa4713f8d6bc0)), closes [#851](https://github.com/equinor/sepes-web/issues/851)
+* **sandbox:** A margin appeard a top of the page when clicking make a… ([#831](https://github.com/equinor/sepes-web/issues/831)) ([6d76d2f](https://github.com/equinor/sepes-web/commit/6d76d2fe2fc34e8302330e2812e808c4dfe6967a)), closes [#819](https://github.com/equinor/sepes-web/issues/819)
+* **sandbox:** loading did not display when clicking delete sandbox ([05c3c32](https://github.com/equinor/sepes-web/commit/05c3c329b747ea1626006d95fccc4794ca200dd6))
+* **sandbox:** make avaiable disabled bug ([f490842](https://github.com/equinor/sepes-web/commit/f490842929e68508a76270a8d7eda693583714fc)), closes [#868](https://github.com/equinor/sepes-web/issues/868)
+* upgrade @types/node from 12.20.7 to 12.20.9 ([df90a71](https://github.com/equinor/sepes-web/commit/df90a7103316cfcf8921fec7951f1964af4debd1))
+* upgrade @typescript-eslint/eslint-plugin from 4.21.0 to 4.22.0 ([#836](https://github.com/equinor/sepes-web/issues/836)) ([f960529](https://github.com/equinor/sepes-web/commit/f9605295925a72aa9f9e927b71a282a258990921))
+* upgrade @typescript-eslint/parser from 4.21.0 to 4.22.0 ([8f8ccc8](https://github.com/equinor/sepes-web/commit/8f8ccc8a9289e96a7621e91ae0c55a1df5ddf617))
+* upgrade ts-jest from 26.5.4 to 26.5.5 ([e0e93bd](https://github.com/equinor/sepes-web/commit/e0e93bd668b3d26dd2533051f06dc1b2ec656cb5))
+* upgrade typescript from 4.2.3 to 4.2.4 ([0ebbaec](https://github.com/equinor/sepes-web/commit/0ebbaec6620e21da65651707625fd21eb11506fa))
+
 ### [0.1.21](https://github.com/equinor/sepes-web/compare/0.1.20...0.1.21) (2021-04-29)
 
 
