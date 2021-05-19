@@ -52,7 +52,6 @@ myMSALObj
             if (tokenResponse.account) {
                 sessionStorage.setItem('userName', tokenResponse.account.username);
             }
-
             window.location.reload();
         }
     })
@@ -107,6 +106,8 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
                     await SignInSilentRedirect();
+                    headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+                    apiRequestInternal(url, headers, options);
                     response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                 }
 

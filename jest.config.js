@@ -14,7 +14,7 @@ module.exports = {
     },
     moduleNameMapper: {
         '\\.(css|less)$': 'identity-obj-proxy',
-        '^react-dnd$': 'react-dnd/dist/cjs',
+        '^react-dnd$': 'react-dnd/dist/cjs2',
         '^react-dnd-html5-backend$': 'identity-obj-proxy',
         '^dnd-core$': 'dnd-core/dist/cjs'
     },

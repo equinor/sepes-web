@@ -1,5 +1,5 @@
 {
-    "baseUrl": "http://localhost:3000/",
+    "baseUrl": "https://frontend-sepes-web-dev.radix.equinor.com/",
     "defaultCommandTimeout": 20000,
     "pageLoadTimeout": 200000,
     "requestTimeout": 200000,
@@ -11,8 +11,8 @@
         "TENANT_ID": "",
         "CLIENT_ID": "",
         "CLIENT_SECRET": "",
-        "API_URL": "http://localhost:44371/",
-        "SCOPE": "",
+        "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
+        "SCOPE": "User.Read User.Read.All User.Impersonation",
         "RETRIES": 3
     },
     "viewportWidth": 1920,

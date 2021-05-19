@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     padding: 24px;
     right: 48px;
     margin-top: -16px;
-    box-shadow: 0 0 4px 4px #e7e7e7;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 3px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
     border-radius: 4px;
 `;
 
@@ -80,6 +80,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     const CreateSandbox = () => {
         setHasChanged(false);
         setUserPressedCreate(true);
+        setToggle(false);
         if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
             return;
         }

@@ -5,7 +5,7 @@ import { Search, Checkbox } from '@equinor/eds-core-react';
 
 const Wrapper = styled.div`
     background-color: #ffffff;
-    box-shadow: 2px 2px #E7E7E7;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 3px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
     padding: 16px;
     border-radius: 4px;
     z-index:99;

@@ -172,7 +172,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const isVmCreatingOrReady = (): boolean => {
         let res = false;
-        if (!resources && !Array.isArray(resources)) {
+        if (!resources || !Array.isArray(resources)) {
             return res;
         }
         resources.map((resource: any) => {

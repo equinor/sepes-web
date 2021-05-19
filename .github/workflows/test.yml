@@ -8,7 +8,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
             - name: Test coverage
-              uses: ArtiomTr/jest-coverage-report-action@master
+              uses: ArtiomTr/jest-coverage-report-action@v1.3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"

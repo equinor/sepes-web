@@ -307,7 +307,7 @@ test('renders StudyComponent full component with  permission to delete', () => {
 
 test('renders StudyComponent full component with no permission to delete', () => {
     const history = createMemoryHistory();
-    const { getByText, container, getByTestId } = render(
+    const { getByText, getByTestId } = render(
         <Router history={history}>
             <StudyComponentFull
                 study={studyWithNoDelete}

@@ -19,7 +19,10 @@ export const Permissions = React.createContext<GeneralPermissions>({
     canEdit_PreApproved_Datasets: false,
     canCreateStudy: false,
     datasetAdmin: false,
-    sponsor: false
+    sponsor: false,
+    fullName: '',
+    emailAddress: '',
+    userName: ''
 });
 
 const renderApp = async (user) => {

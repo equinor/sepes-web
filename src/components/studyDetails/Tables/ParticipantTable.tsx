@@ -39,6 +39,7 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
                 </Head>
                 <Body>
                     {participants &&
+                        participants.length > 0 &&
                         participants.map((participant: ParticipantObj) => (
                             <Row key={participant.userId + participant.role} id="tableRowNoPointerNoColor">
                                 <Cell>{participant.fullName}</Cell>
