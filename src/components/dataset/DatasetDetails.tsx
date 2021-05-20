@@ -734,6 +734,7 @@ const DatasetDetails = (props: any) => {
                                                                         variant="ghost_icon"
                                                                         onClick={() => removeFile(_file, i)}
                                                                         style={{ marginTop: '-14px' }}
+                                                                        data-cy="dataset_remove_file"
                                                                         disabled={checkIfDeleteIsEnabled(
                                                                             _file,
                                                                             dataset,

@@ -25,10 +25,22 @@ describe('Create study', () => {
 
     it('Upload file to dataset', () => {
         cy.wait(40000);
-        // cy.get('[data-cy="file_upload"]').attachFile('example.json');
+        cy.get('[data-cy="file_upload"]').attachFile('example.json');
+        cy.wait(20000);
+    });
 
-        cy.fixture('example.json', 'base64').then((content) => {
-            cy.get('[data-cy=file_upload]').upload(content, 'example.json');
-        });
+    it('Remove file', () => {
+        cy.get('[data-cy="dataset_remove_file"]').click();
         cy.wait(10000);
     });
+
+    it('Delete study specific dataset', () => {
+        cy.get('[data-cy=dataset_delete]').click({ force: true });
+        cy.get('[data-cy="delete_resource"]').type('cy name');
+        cy.get('[data-cy=delete_resource_delete]').click({ force: true });
+    });
+
+    it('Delete study', () => {
+        cy.deleteStudy(studyName);
+    });
+});
