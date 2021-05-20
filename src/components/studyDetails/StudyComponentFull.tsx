@@ -203,6 +203,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             }
         }, 500);
         return () => {
+            setHasChanged(false);
             setWbsIsValid(undefined);
             clearTimeout(timeoutId);
         };
@@ -257,9 +258,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const validateWbs = (wbs: string) => {
-        validateWbsCode(wbs).then((result: any) => {
-            setWbsIsValid(result);
-        });
+        console.log(wbs);
+        if (wbs !== '') {
+            validateWbsCode(wbs).then((result: any) => {
+                setWbsIsValid(result);
+            });
+        } else {
+            setWbsIsValid(false);
+        }
     };
 
     const studyDeleteEnabled =
