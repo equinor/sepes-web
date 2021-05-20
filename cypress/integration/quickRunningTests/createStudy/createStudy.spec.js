@@ -54,16 +54,6 @@ describe('Create study', () => {
         cy.get('[data-cy=dataset_save]').click({ force: true });
     });
 
-    it('Upload file to dataset', () => {
-        cy.wait(40000);
-        // cy.get('[data-cy="file_upload"]').attachFile('example.json');
-
-        cy.fixture('example.json', 'base64').then((content) => {
-            cy.get('[data-cy=file_upload]').upload(content, 'example.json');
-        });
-        cy.wait(10000);
-    });
-
     it('Delete study specific dataset', () => {
         cy.get('[data-cy=dataset_delete]').click({ force: true });
         cy.get('[data-cy="delete_resource"]').type('cy namecy name edit');
