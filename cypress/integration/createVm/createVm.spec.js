@@ -62,7 +62,7 @@ describe('Create vm', () => {
     });
 
     it('creates VM rules', () => {
-        cy.wait(1000);
+        cy.wait(3000);
         cy.get('[data-cy=vm_add_rule]').click();
         // cy.wait(1000);
         cy.get('[data-cy=vm_rule_description]').type('cy rule description');

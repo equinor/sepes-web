@@ -164,6 +164,7 @@ const StudyDetails = () => {
                         loading={studyResponse.loading}
                         setStudy={setStudy}
                         setHasChanged={setHasChanged}
+                        hasChanged={hasChanged}
                         cache={studyResponse.cache}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}

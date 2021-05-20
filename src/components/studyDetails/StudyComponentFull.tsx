@@ -6,7 +6,7 @@ import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, updateStudy, closeStudy } from '../../services/Api';
+import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
@@ -134,6 +134,7 @@ type StudyComponentFullProps = {
     loading: boolean;
     setStudy: any;
     setHasChanged: any;
+    hasChanged: boolean;
     cache: any;
     setUpdateCache: any;
     updateCache: any;
@@ -148,6 +149,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     loading,
     setStudy,
     setHasChanged,
+    hasChanged,
     cache,
     setUpdateCache,
     updateCache,
@@ -161,6 +163,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+    const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -192,6 +195,18 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             document.removeEventListener('keydown', listener, false);
         };
     }, [studyOnChange, study]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (hasChanged) {
+                validateWbs(studyOnChange.wbsCode);
+            }
+        }, 500);
+        return () => {
+            setWbsIsValid(undefined);
+            clearTimeout(timeoutId);
+        };
+    }, [studyOnChange.wbsCode]);
 
     const listener = (e: any) => {
         if (e.key === 'Escape') {
@@ -239,6 +254,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             return 'Delete sandboxes before deleting study';
         }
         return 'You do not have permission to delete this study';
+    };
+
+    const validateWbs = (wbs: string) => {
+        validateWbsCode(wbs).then((result: any) => {
+            setWbsIsValid(result);
+        });
     };
 
     const studyDeleteEnabled =
@@ -305,6 +326,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setImageUrl('');
         setStudyOnChange(study);
         setShowImagePicker(false);
+    };
+
+    const returnWbsVariant = () => {
+        if (wbsIsValid === undefined) {
+            return 'default';
+        }
+        if (wbsIsValid) {
+            return 'success';
+        }
+        return 'error';
     };
 
     const handleChange = (columnName: string, value: string): void => {
@@ -417,6 +448,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
                                     inputIcon={<Icon name="dollar" />}
+                                    variant={returnWbsVariant()}
+                                    helperText={wbsIsValid === false ? 'Invalid WBS code' : ''}
                                 />
                             </>
                         )}

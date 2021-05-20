@@ -235,3 +235,9 @@ export const getStudyRoles = async () => {
 export const getPermissions = async () => {
     return apiRequestWithToken('api/permissions', 'GET');
 };
+
+// WBS
+
+export const validateWbsCode = async (wbsCode: string) => {
+    return apiRequestWithToken('api/wbsvalidation/' + wbsCode, 'GET');
+};
