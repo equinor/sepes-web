@@ -68,5 +68,5 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
-        if: {{ GITHUB_HEAD_REF}}
+        if: ${{ github.event_name == 'schedule' }}
 
