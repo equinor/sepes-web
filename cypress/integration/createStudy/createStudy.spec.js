@@ -27,17 +27,10 @@ describe('Create study', () => {
         cy.get('[data-cy=create_study]').click({ force: true });
     });
 
-    it('clicks edit results and learnings', () => {
+    it('Edit results and learnings', () => {
         cy.get('[data-cy=edit_results_and_learnings]').click({ force: true });
-    });
-
-    it('fills out study information again', () => {
         cy.get('[data-cy=results_and_learnings]').type('cy Results and learnings');
-    });
-
-    it('clicks save results and learnings', () => {
         cy.get('[data-cy=save_results_and_learnings]').click({ force: true });
-        //cy.wait(500);
     });
 
     it('clicks on data sets tab', () => {
@@ -50,15 +43,25 @@ describe('Create study', () => {
 
     it('fills out dataset information and create dataset', () => {
         cy.createDataset();
-        cy.get('[data-cy=dataset_edit]').click({ force: true });
     });
 
     it('fills out dataset information again (edit)', () => {
+        cy.get('[data-cy=dataset_edit]').click({ force: true });
         cy.get('[data-cy=dataset_name]').type('cy name edit');
         cy.get('[data-cy=dataset_classification]').click({ force: true });
         cy.contains('Internal').click({ force: true });
         cy.get('[data-cy=dataset_dataId]').type(2);
         cy.get('[data-cy=dataset_save]').click({ force: true });
+    });
+
+    it('Upload file to dataset', () => {
+        cy.wait(40000);
+        // cy.get('[data-cy="file_upload"]').attachFile('example.json');
+
+        cy.fixture('example.json', 'base64').then((content) => {
+            cy.get('[data-cy=file_upload]').upload(content, 'example.json');
+        });
+        cy.wait(10000);
     });
 
     it('Delete study specific dataset', () => {

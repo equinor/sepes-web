@@ -11,7 +11,11 @@ const FileDropzoneContainer = (props: any) => {
 
     return (
         <div style={{ position: 'relative' }}>
-            <Dropzone onDrop={(event: File[]) => handleImageUpload(event)} disabled={props.disabled} />
+            <Dropzone
+                onDrop={(event: File[]) => handleImageUpload(event)}
+                disabled={props.disabled}
+                data-cy="file_upload"
+            />
         </div>
     );
 };
