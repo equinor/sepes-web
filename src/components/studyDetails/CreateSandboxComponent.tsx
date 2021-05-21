@@ -146,7 +146,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             */}
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
-                    title={study.wbsCode ? '' : 'Need WBS code for this study code to create sandbox'}
+                    title={study.wbsCode ? '' : 'Need a valid WBS code for this study to create sandbox'}
                     placement="left"
                     open={!study.wbsCode}
                 >
