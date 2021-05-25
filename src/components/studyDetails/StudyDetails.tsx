@@ -32,8 +32,6 @@ const divStyle = {
     gridAutoColumns: 'minmax(1%,800px)'
 };
 
-const { TabList, Tab } = Tabs;
-
 let controller = new AbortController();
 
 interface passedProps {
@@ -177,12 +175,12 @@ const StudyDetails = () => {
                 {!newStudy && (
                     <div style={{ margin: '32px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                            <TabList style={divStyle}>
-                                <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                                <Tab data-cy="datasets_tab">Data sets</Tab>
-                                <Tab data-cy="sandbox_tab">Sandboxes</Tab>
-                                <Tab>Participants</Tab>
-                            </TabList>
+                            <Tabs.List style={divStyle}>
+                                <Tabs.Tab style={{ borderRadius: '4px' }}>Overview</Tabs.Tab>
+                                <Tabs.Tab data-cy="datasets_tab">Data sets</Tabs.Tab>
+                                <Tabs.Tab data-cy="sandbox_tab">Sandboxes</Tabs.Tab>
+                                <Tabs.Tab>Participants</Tabs.Tab>
+                            </Tabs.List>
                         </Tabs>
                         <div style={{ padding: '16px' }}>{changeComponent()}</div>
                     </div>

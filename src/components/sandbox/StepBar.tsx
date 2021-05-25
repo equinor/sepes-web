@@ -17,7 +17,7 @@ import LoadingFull from '../common/LoadingComponentFullscreen';
 
 const set = require('lodash/set');
 
-const { MenuItem } = Menu;
+//const { MenuItem } = Menu;
 
 const Wrapper = styled.div`
     display: grid;
@@ -275,9 +275,8 @@ const StepBar: React.FC<StepBarProps> = ({
                         : ''
                 }
                 placement="left"
-                open={sandbox.permissions && !sandbox.permissions.delete}
             >
-                <MenuItem
+                <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="sandbox_delete"
                     disabled={sandbox.permissions && !sandbox.permissions.delete}
@@ -285,7 +284,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 >
                     {EquinorIcon('delete_forever', 'red', 24)}
                     <span style={{ color: 'red' }}>Delete sandbox</span>
-                </MenuItem>
+                </Menu.Item>
             </Tooltip>
         </>
     );
@@ -312,6 +311,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClose={closeMenu}
                     anchorEl={buttonEl}
                     focus={focus}
+                    placement="bottom-end"
                 >
                     {optionsTemplate}
                 </Menu>

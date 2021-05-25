@@ -200,7 +200,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
-                                open={!permissions.update}
                                 style={{ justifyContent: 'left' }}
                             >
                                 <Item
