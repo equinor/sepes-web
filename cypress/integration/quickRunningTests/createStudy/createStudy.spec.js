@@ -34,15 +34,11 @@ describe('Create study', () => {
     });
 
     it('Add participant to study', () => {
-        cy.wait(3000);
         cy.get('[data-cy=participants_tab]').click({ force: true });
-        cy.wait(3000);
         cy.contains('Search or add').type('Mock User');
         cy.intercept('api/participants/*').as('getMockUser');
         cy.wait('@getMockUser');
-        cy.wait(3000);
         cy.focused().type('{enter}');
-        cy.wait(500);
         cy.get('[data-cy=participant_role]').click();
         cy.contains('Vendor Admin').click();
         cy.get('[data-cy=study_add_participant]').click();
