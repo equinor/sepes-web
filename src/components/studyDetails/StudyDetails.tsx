@@ -181,7 +181,7 @@ const StudyDetails = () => {
                                 <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
                                 <Tab data-cy="datasets_tab">Data sets</Tab>
                                 <Tab data-cy="sandbox_tab">Sandboxes</Tab>
-                                <Tab>Participants</Tab>
+                                <Tab data-cy="participants_tab">Participants</Tab>
                             </TabList>
                         </Tabs>
                         <div style={{ padding: '16px' }}>{changeComponent()}</div>

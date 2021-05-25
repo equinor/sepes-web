@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+require('cypress-plugin-tab');
 require('cypress-plugin-retries');
 require('cypress-dark');
 //import '@cypress/code-coverage/support'

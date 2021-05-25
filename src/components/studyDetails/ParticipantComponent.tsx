@@ -63,6 +63,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [loading, setLoading] = useState<boolean>(false);
 
     const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    // const cyToken = sessionStorage.getItem('accessToken');
+    const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
     useEffect(() => {
@@ -112,14 +114,15 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
+                if (!cyToken) {
+                    const accounts = user.getAllAccounts();
 
-                const accounts = user.getAllAccounts();
+                    if (accounts.length && accounts.length > 0) {
+                        const currentAccount = accounts[0];
 
-                if (accounts.length && accounts.length > 0) {
-                    const currentAccount = accounts[0];
-
-                    if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
-                        history.push('/');
+                        if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
+                            history.push('/');
+                        }
                     }
                 }
             }
@@ -203,6 +206,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             loadOptions={
                                 study.permissions && study.permissions.addRemoveParticipant ? loadOptions : null
                             }
+                            data-cy="participant_search"
                         />
                     </div>
                 </Tooltip>
@@ -224,6 +228,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             resetState={roleNotSelected}
                             disabled={participantNotSelected || loading}
                             tabIndex={0}
+                            data-cy="participant_role"
                         />
                     </Tooltip>
                 </div>
@@ -232,6 +237,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     disabled={checkIfButtonDisabled()}
                     onClick={addParticipant}
                     style={{ width: '136px' }}
+                    data-cy="study_add_participant"
                 >
                     {loading ? <DotProgress color="primary" /> : 'Add participant'}
                 </Button>
