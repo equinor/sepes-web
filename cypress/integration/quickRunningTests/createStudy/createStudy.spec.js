@@ -34,6 +34,7 @@ describe('Create study', () => {
     });
 
     it('Add participant to study', () => {
+        cy.wait(3000);
         cy.get('[data-cy=participants_tab]').click({ force: true });
         cy.wait(3000);
         cy.contains('Search or add').type('Mock User');
