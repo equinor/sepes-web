@@ -3,7 +3,7 @@ import React, { Fragment, useContext } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon, Button, Menu, Typography } from '@equinor/eds-core-react';
 import NavTabs from './NavTabs';
-import { UserConfig } from '../../index';
+import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
 import { account_circle, report_bug, exit_to_app } from '@equinor/eds-icons';
 import { requestChangeLink } from '../common/staticValues/commonLinks';
@@ -61,7 +61,7 @@ const Bar = (props: any) => {
     const { buttonEl, focus } = state;
     const isOpen = Boolean(buttonEl);
     const user = useContext(UserConfig);
-    const cyToken = localStorage.getItem('cyToken');
+    const permissions = useContext(Permissions);
 
     const openMenu = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
@@ -85,12 +85,13 @@ const Bar = (props: any) => {
 
     const optionsTemplate = (
         <>
-            <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
-                <Typography variant="h6">
-                    {cyToken ? 'Test User' : user.getAllAccounts()[0] && user.getAllAccounts()[0].name}
-                </Typography>
-            </Menu.Item>
-            <Menu.Item onClick={() => redirectToLink('/releasenotes')}>
+            <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
+                <div>
+                    <Typography variant="h6">{permissions.fullName}</Typography>
+                    <Typography variant="meta">{permissions.userName}</Typography>
+                </div>
+            </MenuItem>
+            <MenuItem onClick={() => redirectToLink('/releasenotes')}>
                 <Icon
                     color="#6F6F6F"
                     name="info_circle"

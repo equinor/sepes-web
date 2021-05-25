@@ -160,7 +160,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const allResourcesStatusOkAndAtleastOneVm = (resourcesIn) => {
         let res = true;
-        if (!resourcesIn) {
+        if (!resourcesIn || !Array.isArray(resourcesIn)) {
             return res;
         }
         let hasVm = false;
@@ -233,7 +233,9 @@ const StepBar: React.FC<StepBarProps> = ({
         setUserClickedMakeAvailable(false);
         setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
         setMakeAvailableInProgress(true);
+        setLoading(true);
         makeAvailable(sandboxId).then((result: any) => {
+            setLoading(false);
             setMakeAvailableInProgress(false);
             if (result.Message || result.errors) {
                 setNewPhase(0);

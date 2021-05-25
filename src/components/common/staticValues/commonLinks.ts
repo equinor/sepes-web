@@ -8,4 +8,5 @@ export const webAppChangelog = 'https://raw.githubusercontent.com/equinor/sepes-
 
 export const apiChangelog = 'https://raw.githubusercontent.com/equinor/sepes-api/master/CHANGELOG.md';
 
-export const requestChangeLink = 'https://github.com/equinor/sepes-web/issues/new/choose';
+export const requestChangeLink =
+    'https://equinor.service-now.com/selfservice?id=sc_cat_item&sys_id=3373cf4cdb97f200bc7af7461d96195b';

@@ -51,7 +51,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
             }}
             dragActive={isDragActive}
         >
-            <input className="dropzone-input" {...getInputProps()} />
+            <input className="dropzone-input" {...getInputProps()} data-cy="file_upload" />
             <div className="text-center">
                 {isDragActive && !disabled ? (
                     <div className="dropzone-content" style={{ textAlign: 'center' }}>

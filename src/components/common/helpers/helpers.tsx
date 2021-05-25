@@ -100,3 +100,11 @@ export const validateResourceName = (name: string): boolean => {
     const limit = /(?=.{3,123})/;
     return onlyLettersAndNumbers.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };
+
+export const isIterable = (obj) => {
+    // checks for null and undefined
+    if (obj == null) {
+        return false;
+    }
+    return typeof obj[Symbol.iterator] === 'function';
+};
