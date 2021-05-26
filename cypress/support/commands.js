@@ -48,6 +48,21 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.waitForStudyToLoad();
 });
 
+Cypress.Commands.add('createStudyWithLogo', (studyName) => {
+    cy.visit('/');
+
+    cy.get('[data-cy=new_study]').click({ force: true });
+    cy.get('[data-cy=change_logo]').click();
+    cy.get('[data-cy="logo_upload"]').attachFile('cypress.jpg');
+    cy.get('[data-cy=study_name]').type(studyName);
+    cy.get('[data-cy=study_vendor]').type('cy vendor');
+    cy.get('[data-cy=study_wbs]').type('cy wbs');
+    cy.get('[data-cy=study_description]').type('cy description');
+
+    cy.get('[data-cy=create_study]').click({ force: true });
+    cy.waitForStudyToLoad();
+});
+
 Cypress.Commands.add('createDataset', () => {
     cy.get('[data-cy=dataset_name]').type('cy name');
     cy.get('[data-cy=dataset_location]').click({ force: true });

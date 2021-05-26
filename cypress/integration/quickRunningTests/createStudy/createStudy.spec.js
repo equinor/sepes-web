@@ -3,7 +3,7 @@ describe('Create study', () => {
     let studyName = 'Cypress Test';
     before(() => {
         cy.login();
-        cy.createStudy(studyName);
+        cy.createStudyWithLogo(studyName);
     });
 
     beforeEach(() => {
