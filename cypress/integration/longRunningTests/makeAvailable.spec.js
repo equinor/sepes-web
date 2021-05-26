@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-describe('Create vm', () => {
+describe('Make available', () => {
     const studyName = 'Cypress Test';
     before(() => {
         cy.login();
@@ -48,8 +48,14 @@ describe('Create vm', () => {
     });
 
     it('add data set to sandbox', () => {
-        cy.get('[data-cy=add_dataset_to_sandbox]').click({ force: true });
-        // cy.wait(1000);
+        cy.get('[data-cy=add_dataset_to_sandbox]').click();
+    });
+
+    it('Click Make available', () => {
+        cy.wait(750000);
+        cy.get('[data-cy=sandbox_make_available]').click({ force: true });
+        cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
+        cy.wait(20000);
     });
 
     it('delete vm', () => {
