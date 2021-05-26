@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-describe('Create vm', () => {
+describe('Make available', () => {
     const studyName = 'Cypress Test';
     before(() => {
         cy.login();
