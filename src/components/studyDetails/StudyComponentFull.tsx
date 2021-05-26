@@ -596,6 +596,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 }}
                                                 variant="outlined"
                                                 style={{ margin: '16px 0 20px 56px' }}
+                                                data-cy="change_logo"
                                             >
                                                 Change logo
                                             </Button>
