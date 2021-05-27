@@ -39,6 +39,10 @@ describe('Make available', () => {
         cy.createSandbox(sandboxName);
     });
 
+    it('Ensure make available is disabled', () => {
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
+    });
+
     it('fills out vm information', () => {
         cy.createVm();
     });
@@ -46,13 +50,33 @@ describe('Make available', () => {
     it('creates VM rules', () => {
         cy.createVmRules();
     });
+    it('Open Internet', () => {
+        cy.get('[data-cy=open_close_internet]').click();
+    });
+
+    it('Wait for resources to be created', () => {
+        cy.wait(750000);
+        // cy.get('[data-cy=sandbox_make_available]').click({ force: true });
+        // cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
+        // cy.wait(20000);
+    });
+
+    it('Ensure make available is disabled', () => {
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
+    });
+
+    it('Close Internet', () => {
+        cy.get('[data-cy=open_close_internet]').click();
+        cy.wait(30000);
+    });
 
     it('add data set to sandbox', () => {
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
         cy.get('[data-cy=add_dataset_to_sandbox]').click();
     });
 
-    it('Click Make available', () => {
-        cy.wait(750000);
+    it('Wait for resources to be created', () => {
+        // cy.wait(750000);
         cy.get('[data-cy=sandbox_make_available]').click({ force: true });
         cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
         cy.wait(20000);
