@@ -92,8 +92,14 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
 const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
     return new Promise((resolve) => {
         const processAuthorizedResponse = async (response) => {
+            console.log(response);
             if (!response.ok) {
-                notify.show('danger', response.status, response);
+                const res = JSON.parse((await response.text()) ?? {});
+                if (!res.errors) {
+                    notify.show('danger', response.status, res.message, res.requestId);
+                } else {
+                    notify.show('danger', response.status, res.title, res.traceId);
+                }
             }
 
             return JSON.parse((await response.text()) ?? {});

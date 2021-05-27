@@ -45,7 +45,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
 }) => {
     const retryResource = () => {
         apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else {
                 getResources();

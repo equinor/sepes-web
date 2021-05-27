@@ -60,6 +60,7 @@ const getIcon = (type) => {
 };
 
 const CustomContent = (props) => {
+    console.log(props);
     const { type, code, message, requestId } = props;
     const icon = getIcon(type);
 
@@ -91,17 +92,11 @@ const CustomContent = (props) => {
     );
 };
 
-export const show = (type, code, result) => {
+export const show = (type, code, message, requestId) => {
+    console.log(code, message, requestId);
     store.addNotification({
         title: 'Error',
-        content: (
-            <CustomContent
-                type={type}
-                code={code}
-                message={result && result.Message}
-                requestId={result && result.RequestId}
-            />
-        ),
+        content: <CustomContent type={type} code={code} message={message} requestId={requestId} />,
         type: 'danger',
         insert: 'top',
         container: 'top-center',

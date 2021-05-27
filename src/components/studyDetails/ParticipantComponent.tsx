@@ -77,7 +77,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setDebounce({
             cb: async () => {
                 api.getParticipantList(value || 'a').then((result: any) => {
-                    if (!result.Message && Array.isArray(result)) {
+                    if (!result.message && Array.isArray(result)) {
                         const temp = result.map((_user) => {
                             return {
                                 label: `${_user.fullName} (${_user.emailAddress})`,
@@ -108,7 +108,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setStudy({ ...study, participants: participantList });
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
+            if (result && !result.message && isSubscribed) {
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
@@ -136,7 +136,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             setLoading(true);
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     const participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });

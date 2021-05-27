@@ -224,7 +224,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         closeStudy(study.id).then((result: any) => {
             setLoading(false);
-            if (result && result.Message) {
+            if (result && result.message) {
                 setDeleteStudyInProgress(true);
             } else {
                 history.push('/');
@@ -290,7 +290,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setLoading(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
@@ -309,7 +309,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             }
             setLoading(false);
             updateStudy(study, imageUrl).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                 } else {

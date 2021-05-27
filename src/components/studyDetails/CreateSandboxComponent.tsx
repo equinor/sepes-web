@@ -89,7 +89,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 setStudy(result);
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);

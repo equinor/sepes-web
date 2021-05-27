@@ -72,7 +72,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             [getDatasetsInStudyUrl(study.id)]: true
         });
         unlinkStudyDataset(studyId, row.id).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             }
             //datasetsResponse.setLoading(false);
@@ -109,7 +109,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             datasetList.push(row);
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
-                if (result && result.Message) {
+                if (result && result.message) {
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);

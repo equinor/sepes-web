@@ -92,7 +92,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setSizes(result);
@@ -102,7 +102,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVmDisks = () => {
         getVirtualMachineDisks(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setDisks(result);
@@ -112,7 +112,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVms = () => {
         getVirtualMachineOperatingSystems(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setOs(result);

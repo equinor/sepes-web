@@ -85,7 +85,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     const getResources = () => {
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
-            if (result && (result.errors || result.Message)) {
+            if (result && (result.errors || result.message)) {
                 console.log('Err');
             } else {
                 setResources(result);

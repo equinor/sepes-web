@@ -149,7 +149,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
                         ...updateCache,
@@ -165,7 +165,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         } else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
                         ...updateCache,
@@ -182,7 +182,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         } else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
                         ...updateCache,
@@ -199,7 +199,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         } else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
                     setDatasetFromDetails(result);
