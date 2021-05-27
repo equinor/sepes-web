@@ -32,8 +32,6 @@ const divStyle = {
     gridAutoColumns: 'minmax(1%,800px)'
 };
 
-const { TabList, Tab } = Tabs;
-
 let controller = new AbortController();
 
 interface passedProps {
