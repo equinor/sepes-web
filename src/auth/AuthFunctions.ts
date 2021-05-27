@@ -92,7 +92,6 @@ const makeHeaders = (skipSettingContentType?: boolean, skipSettingAccept?: boole
 const apiRequestInternal = async (url: string, headers: Headers, options: any) => {
     return new Promise((resolve) => {
         const processAuthorizedResponse = async (response) => {
-            console.log(response);
             if (!response.ok) {
                 const res = JSON.parse((await response.text()) ?? {});
                 if (!res.errors) {

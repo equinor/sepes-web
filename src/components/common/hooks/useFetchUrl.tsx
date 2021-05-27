@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { UpdateCache } from '../../../App';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
-import * as notify from '../notify';
 
 const cache = {};
 
@@ -25,7 +24,6 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
             setLoading(true);
             apiRequestWithToken('api/' + url, 'GET', undefined, (controller && controller.signal) || undefined).then(
                 (result: any) => {
-                    console.log(result);
                     setLoading(false);
                     if (isSubscribed && result && !result.message && !result.errors) {
                         if (url) {
