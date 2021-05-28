@@ -52,6 +52,7 @@ const StudyDetails = () => {
         resultsAndLearnings: '',
         datasets: [],
         participants: [],
+        wbsCodeValid: false,
         sandboxes: [],
         permissions: {
             addRemoveDataset: false,
@@ -96,6 +97,10 @@ const StudyDetails = () => {
             controller = new AbortController();
         };
     }, []);
+
+    useEffect(() => {
+        setWbsIsValid(study.wbsCodeValid);
+    }, [study]);
 
     const changeComponent = () => {
         Cookies.remove(id);

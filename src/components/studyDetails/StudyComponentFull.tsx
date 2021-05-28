@@ -261,12 +261,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const validateWbs = (wbs: string) => {
+        setWbsIsValid(false);
         if (wbs !== '') {
             validateWbsCode(wbs).then((result: any) => {
                 setWbsIsValid(result);
             });
-        } else {
-            setWbsIsValid(false);
         }
     };
 
