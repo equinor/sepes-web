@@ -77,7 +77,7 @@ const StudyDetails = () => {
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<Boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
-
+    const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const resultsAndLearningsResponse = useFetchUrl(
         getResultsAndLearningsUrl(id),
@@ -108,6 +108,7 @@ const StudyDetails = () => {
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        wbsIsValid={wbsIsValid}
                     />
                 );
             case 2:
@@ -121,6 +122,7 @@ const StudyDetails = () => {
                         disabled={study.permissions && !study.permissions.addRemoveSandbox}
                         study={study}
                         setLoading={setLoading}
+                        wbsIsValid={wbsIsValid}
                     />
                 );
             case 3:
@@ -167,6 +169,8 @@ const StudyDetails = () => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setDeleteStudyInProgress={setDeleteStudyInProgress}
+                        setWbsIsValid={setWbsIsValid}
+                        wbsIsValid={wbsIsValid}
                     />
                 ) : (
                     <LoadingWrapper />

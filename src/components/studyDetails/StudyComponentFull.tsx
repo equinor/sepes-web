@@ -137,6 +137,8 @@ type StudyComponentFullProps = {
     setUpdateCache: any;
     updateCache: any;
     setDeleteStudyInProgress: any;
+    wbsIsValid: boolean | undefined;
+    setWbsIsValid: any;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -151,7 +153,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     cache,
     setUpdateCache,
     updateCache,
-    setDeleteStudyInProgress
+    setDeleteStudyInProgress,
+    wbsIsValid,
+    setWbsIsValid
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
@@ -161,7 +165,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -197,12 +201,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             if (hasChanged) {
-                validateWbs(studyOnChange.wbsCode);
+                validateWbsOnChange(studyOnChange.wbsCode);
             }
         }, 500);
         return () => {
             setHasChanged(false);
-            setWbsIsValid(undefined);
+            setWbsOnChangeIsValid(undefined);
             clearTimeout(timeoutId);
         };
     }, [studyOnChange.wbsCode]);
@@ -237,6 +241,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
+        validateWbs(studyOnChange.wbsCode);
         if (!validateUserInputStudy(studyOnChange)) {
             return;
         }
@@ -262,6 +267,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             });
         } else {
             setWbsIsValid(false);
+        }
+    };
+
+    const validateWbsOnChange = (wbs: string) => {
+        if (wbs !== '') {
+            validateWbsCode(wbs).then((result: any) => {
+                setWbsOnChangeIsValid(result);
+            });
+        } else {
+            setWbsOnChangeIsValid(false);
         }
     };
 
@@ -332,10 +347,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const returnWbsVariant = () => {
-        if (wbsIsValid === undefined) {
+        if (wbsOnChangeIsValid === undefined) {
             return 'default';
         }
-        if (wbsIsValid) {
+        if (wbsOnChangeIsValid) {
             return 'success';
         }
         return 'error';
@@ -452,7 +467,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     data-cy="study_wbs"
                                     inputIcon={<Icon name="dollar" />}
                                     variant={returnWbsVariant()}
-                                    helperText={wbsIsValid === false ? 'Invalid WBS code' : ''}
+                                    helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
                                 />
                             </>
                         )}
