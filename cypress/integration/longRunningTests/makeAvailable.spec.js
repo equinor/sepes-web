@@ -80,7 +80,7 @@ describe('Make available', () => {
         cy.get('[data-cy=add_dataset_to_sandbox]').click();
     });
 
-    it('Wait for resources to be created', () => {
+    it('Click make available', () => {
         cy.wait(5000);
         cy.get('[data-cy=sandbox_make_available]').click();
         cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
