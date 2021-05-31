@@ -599,6 +599,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                     <Button
                                         variant="outlined"
                                         style={{ float: 'right' }}
+                                        data-cy="open_close_internet"
                                         disabled={!permissions.openInternet}
                                         onClick={() => {
                                             addOutBoundRule();

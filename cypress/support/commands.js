@@ -41,7 +41,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
 
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('cy wbs');
+    cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
     cy.get('[data-cy=study_description]').type('cy description');
 
     cy.get('[data-cy=create_study]').click({ force: true });
@@ -56,7 +56,7 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.get('[data-cy="logo_upload"]').attachFile('cypress.jpg');
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('cy wbs');
+    cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
     cy.get('[data-cy=study_description]').type('cy description');
 
     cy.get('[data-cy=create_study]').click({ force: true });
@@ -97,7 +97,7 @@ Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
 });
 
 Cypress.Commands.add('createVm', () => {
-    cy.waitForSandboxToLoad();
+    // cy.waitForSandboxToLoad();
     cy.get('[data-cy=vm_name]').type('cy name');
     cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
     cy.contains('Windows Server 2019 Datacenter').click({ force: true });
@@ -112,7 +112,7 @@ Cypress.Commands.add('createVm', () => {
 });
 
 Cypress.Commands.add('createVmRules', () => {
-    cy.wait(1500);
+    cy.wait(3000);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');

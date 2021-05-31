@@ -522,14 +522,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     ) : (
                         <DescriptioTextfieldnWrapper>
                             <TextField
-                                id="textfield4"
+                                id="studyDescription"
                                 autoComplete="off"
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}
                                 meta={returnLimitMeta(500, studyOnChange.description)}
                                 label="Description"
-                                style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
+                                style={{ height: '152px', resize: 'none' }}
                                 value={studyOnChange.description}
                                 data-cy="study_description"
                             />
