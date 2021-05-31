@@ -16,14 +16,12 @@ describe('Make available', () => {
     });
 
     it('clicks add study specific dataset', () => {
-        //cy.wait(2000);
         cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
     });
 
     it('fills out dataset information', () => {
         cy.createDataset();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
-        // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
         cy.get('[data-cy=sandbox_tab]').click();
@@ -59,9 +57,6 @@ describe('Make available', () => {
 
     it('Wait for resources to be created', () => {
         cy.wait(750000);
-        // cy.get('[data-cy=sandbox_make_available]').click({ force: true });
-        // cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
-        // cy.wait(20000);
     });
 
     it('Ensure make available is disabled', () => {
