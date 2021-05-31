@@ -19,7 +19,6 @@ describe('Create study', () => {
     it('fills out study information again', () => {
         cy.get('[data-cy=study_name]').clear().type(studyName);
         cy.get('[data-cy=study_vendor]').type('cy vendor edited');
-        cy.get('[data-cy=study_wbs]').type('cy wbs edited');
         cy.get('[data-cy=study_description]').type('cy description edited');
     });
 
