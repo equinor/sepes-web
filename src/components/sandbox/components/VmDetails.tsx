@@ -118,7 +118,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const getVmExtendedInfo = () => {
         if (!vm.extendedInfo && isVmCreatingOrReady()) {
             getVirtualMachineExtended(vm.id).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].extendedInfo = result;
                     setVms(tempsVms);
@@ -132,7 +132,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const getVmRules = () => {
         if (!vm.rules) {
             getVirtualMachineRule(vm.id).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].rules = result;
                     setVms(tempsVms);
@@ -148,7 +148,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         setHasChanged(false);
         updateHasChanged(false);
         getVirtualMachineRule(vm.id).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
@@ -160,7 +160,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const getExternalLink = () => {
         getVirtualExternalLink(vm.id).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
                 setVms(tempsVms);
@@ -257,7 +257,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         updateHasChanged(false);
         setOutboundRuleChanged(false);
         createVirtualMachineRule(rules, vm.id).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
@@ -599,6 +599,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                     <Button
                                         variant="outlined"
                                         style={{ float: 'right' }}
+                                        data-cy="open_close_internet"
                                         disabled={!permissions.openInternet}
                                         onClick={() => {
                                             addOutBoundRule();

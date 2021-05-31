@@ -45,7 +45,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
 }) => {
     const retryResource = () => {
         apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else {
                 getResources();
@@ -76,7 +76,6 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
             </SatusWrapperCentered>
             <SatusWrapper>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
-                    {' '}
                     {retryLink ? (
                         <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
                             {EquinorIcon('refresh', '#007079', 24)}

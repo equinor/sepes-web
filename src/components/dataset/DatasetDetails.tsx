@@ -268,7 +268,7 @@ const DatasetDetails = (props: any) => {
             }
             getDatasetSasToken(datasetId, controllerSas.signal)
                 .then((result: any) => {
-                    if (retries > 0 && result.Message) {
+                    if (retries > 0 && result.message) {
                         setTimeout(() => {
                             return getSasKey(retries - 1);
                         }, backoff);
@@ -296,7 +296,7 @@ const DatasetDetails = (props: any) => {
             }
             getDatasetSasTokenDelete(datasetId, controllerSas.signal)
                 .then((result: any) => {
-                    if (retries > 0 && result.Message) {
+                    if (retries > 0 && result.message) {
                         setTimeout(() => {
                             return getSasKeyDelete(retries - 1);
                         }, backoff);
@@ -324,7 +324,7 @@ const DatasetDetails = (props: any) => {
     const getDatasetResources = () => {
         if (!checkUrlIfGeneralDataset()) {
             getStudySpecificDatasetResources(datasetId, studyId).then((result: any) => {
-                if (result && (result.errors || result.Message)) {
+                if (result && (result.errors || result.message)) {
                     console.log('Err');
                 } else {
                     checkStatusOfStorageAccount(result);
@@ -338,7 +338,7 @@ const DatasetDetails = (props: any) => {
             setLoadingFiles(true);
             getStudySpecificDatasetFiles(datasetId, controllerFiles.signal).then((result: any) => {
                 setLoadingFiles(false);
-                if (result && (result.errors || result.Message)) {
+                if (result && (result.errors || result.message)) {
                     console.log('Err');
                 } else if (result && isSubscribed && isIterable(result)) {
                     const temp: any = [...result];
@@ -398,7 +398,7 @@ const DatasetDetails = (props: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
             setLoading(false);
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 history.push('/studies/' + studyId);
             } else {
                 console.log('Err');
@@ -439,7 +439,7 @@ const DatasetDetails = (props: any) => {
             setNumberOfFilesInProgress(numberOfFilesInProgress + _files.length);
             setFilesProgressToOnePercent(_files, abortArray);
             getSasKey().then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     _files.forEach(async (_file: any) => {
                         await makeFileBlobFromUrl(URL.createObjectURL(_file), _file.name)
                             .then((blob) => {

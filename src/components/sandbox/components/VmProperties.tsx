@@ -89,7 +89,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 getResources();
             }
         });
@@ -200,7 +200,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
-                                open={!permissions.update}
                                 style={{ justifyContent: 'left' }}
                             >
                                 <Item

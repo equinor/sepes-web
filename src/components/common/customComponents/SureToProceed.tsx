@@ -38,7 +38,7 @@ const SureToProceed: React.FC<SureToProceedComponentProps> = ({ setUserClickedBu
                     <Button onClick={() => setUserClickedButton(false)} variant="outlined">
                         Cancel
                     </Button>
-                    <Button style={{ marginLeft: '8px' }} onClick={onClick} data-cy="delete_resource_delete">
+                    <Button style={{ marginLeft: '8px' }} onClick={onClick} data-cy="Sure_to_procceed_yes">
                         Yes
                     </Button>
                 </div>

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-describe('Create study', () => {
+describe('Dataset file upload', () => {
     let studyName = 'Cypress Test';
     before(() => {
         cy.login();

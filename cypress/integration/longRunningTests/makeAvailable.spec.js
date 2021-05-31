@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-describe('Create vm', () => {
+describe('Make available', () => {
     const studyName = 'Cypress Test';
     before(() => {
         cy.login();
@@ -16,14 +16,12 @@ describe('Create vm', () => {
     });
 
     it('clicks add study specific dataset', () => {
-        //cy.wait(2000);
         cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
     });
 
     it('fills out dataset information', () => {
         cy.createDataset();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
-        // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
         cy.get('[data-cy=sandbox_tab]').click();
@@ -43,13 +41,45 @@ describe('Create vm', () => {
         cy.createVm();
     });
 
+    it('Ensure make available is disabled', () => {
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
+    });
+
     it('creates VM rules', () => {
         cy.createVmRules();
     });
+    it('Open Internet', () => {
+        cy.wait(5000);
+        cy.get('[data-cy=open_close_internet]').click();
+        cy.wait(1000);
+        cy.get('[data-cy=vm_rule_save]').click();
+    });
+
+    it('Wait for resources to be created', () => {
+        cy.wait(750000);
+    });
+
+    it('Ensure make available is disabled', () => {
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
+    });
+
+    it('Close Internet', () => {
+        cy.get('[data-cy=open_close_internet]').click();
+        cy.wait(1000);
+        cy.get('[data-cy=vm_rule_save]').click();
+        cy.wait(30000);
+    });
 
     it('add data set to sandbox', () => {
-        cy.get('[data-cy=add_dataset_to_sandbox]').click({ force: true });
-        // cy.wait(1000);
+        cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
+        cy.get('[data-cy=add_dataset_to_sandbox]').click();
+    });
+
+    it('Click make available', () => {
+        cy.wait(5000);
+        cy.get('[data-cy=sandbox_make_available]').click();
+        cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
+        cy.wait(20000);
     });
 
     it('delete vm', () => {

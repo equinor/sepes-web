@@ -25,7 +25,7 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
             apiRequestWithToken('api/' + url, 'GET', undefined, (controller && controller.signal) || undefined).then(
                 (result: any) => {
                     setLoading(false);
-                    if (isSubscribed && result && !result.Message && !result.errors) {
+                    if (isSubscribed && result && !result.message && !result.errors) {
                         if (url) {
                             cache[url] = result;
                         }
@@ -34,10 +34,8 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
                         }
                         setIntialValue(result);
                         setter(result);
-                    } else if (result && ((result.Message && result.RequestId) || result.errors)) {
+                    } else {
                         setNotFound(true);
-                        //
-                        console.log('Err');
                     }
                 }
             );
