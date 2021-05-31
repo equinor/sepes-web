@@ -29,7 +29,7 @@ const _ = Cypress._;
 import 'cypress-file-upload';
 
 Cypress.Commands.add('login', (accessType = 'ADMIN') => {
-    // const cyToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im';
+    // const cyToken = '';
     // window.localStorage.setItem('cyToken', cyToken);
     window.localStorage.setItem('cyToken', Cypress.env('cyAccessToken'));
 });
