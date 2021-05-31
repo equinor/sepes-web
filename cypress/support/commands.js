@@ -29,7 +29,7 @@ const _ = Cypress._;
 import 'cypress-file-upload';
 
 Cypress.Commands.add('login', (accessType = 'ADMIN') => {
-    // const cyToken = '';
+    // const cyToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im';
     // window.localStorage.setItem('cyToken', cyToken);
     window.localStorage.setItem('cyToken', Cypress.env('cyAccessToken'));
 });
@@ -42,6 +42,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
     cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
+    cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
     cy.get('[data-cy=create_study]').click({ force: true });
@@ -57,6 +58,7 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
     cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
+    cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
     cy.get('[data-cy=create_study]').click({ force: true });
@@ -89,6 +91,11 @@ Cypress.Commands.add('waitForStudyToLoad', () => {
 Cypress.Commands.add('waitForSandboxToLoad', () => {
     cy.intercept('/api/sandboxes/*').as('getSandbox');
     cy.wait('@getSandbox');
+});
+
+Cypress.Commands.add('waitForWbsCheck', () => {
+    cy.intercept('/api/wbsvalidation/*').as('checkWbs');
+    cy.wait('@checkWbs');
 });
 
 Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
