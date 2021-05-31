@@ -52,6 +52,7 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
                                                 variant="ghost_icon"
                                                 onClick={() => removeParticipant(participant)}
                                                 style={{ color: '#3D3D3D' }}
+                                                data-cy="study_remove_participant"
                                             >
                                                 <Icon name="close" style={{ cursor: 'pointer' }} size={24} />
                                             </Button>
