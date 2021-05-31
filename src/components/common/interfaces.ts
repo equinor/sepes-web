@@ -11,6 +11,7 @@ export interface StudyObj {
     participants: any;
     sandboxes: any;
     permissions: StudyPermissions;
+    wbsCodeValid: boolean;
 }
 
 export interface StudyPermissions {

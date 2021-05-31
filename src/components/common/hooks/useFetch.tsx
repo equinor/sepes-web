@@ -21,7 +21,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?, condi
         } else {
             setLoading(true);
             fetchFunction(para1 || null, para2 || null, para3 || null).then((result: any) => {
-                if (isSubscribed && result && !result.Message) {
+                if (isSubscribed && result && !result.message) {
                     if (cacheId) {
                         cache[cacheId] = result;
                     }
@@ -31,7 +31,7 @@ const useFetch = (fetchFunction, setter, cacheId?, para1?, para2?, para3?, condi
                     setter(result);
                     setIntialValue(result);
                     setLoading(false);
-                } else if (result && result.Message && result.RequestId) {
+                } else if (result && result.message && result.RequestId) {
                     console.log('Err');
                 }
             });

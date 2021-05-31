@@ -188,7 +188,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         setLoading(true);
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 getResources();
                 const vmsList: any = [...vms];
                 vmsList.push(result);
@@ -207,7 +207,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 operatingSystem: vm.operatingSystem
             };
             getVirtualMachineCost(sandbox?.id, vmPrice).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setVmEstimatedCost(result);
                 }
             });

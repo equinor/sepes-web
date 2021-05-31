@@ -35,6 +35,7 @@ type CreateSandboxComponentProps = {
     updateCache: any;
     study: StudyObj;
     setLoading: any;
+    wbsIsValid: boolean | undefined;
 };
 
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
@@ -44,7 +45,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setUpdateCache,
     updateCache,
     study,
-    setLoading
+    setLoading,
+    wbsIsValid
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
@@ -89,7 +91,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 setStudy(result);
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
@@ -146,14 +148,14 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             */}
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
-                    title={study.wbsCode ? '' : 'Need a valid WBS code for this study to create sandbox'}
+                    title={wbsIsValid ? '' : 'Need a valid WBS code for this study to create sandbox'}
                     placement="left"
                 >
                     <Button
                         style={{ width: '76px', margin: '8px 0 8px auto' }}
                         onClick={() => CreateSandbox()}
                         data-cy="create_actual_sandbox"
-                        disabled={!validateUserInputSandbox(sandbox, study.wbsCode)}
+                        disabled={!(validateUserInputSandbox(sandbox, study.wbsCode) && wbsIsValid)}
                     >
                         Create
                     </Button>

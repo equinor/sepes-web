@@ -147,7 +147,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getResources = () => {
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
-            if (result && (result.errors || result.Message)) {
+            if (result && (result.errors || result.message)) {
                 resourcesFailed = true;
 
                 console.log('Err');
@@ -186,7 +186,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getCostAnalysisLinkToSandbox = () => {
         getSandboxCostAnalysis(sandboxId).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 setNewCostanalysisLink(result);
                 setSandbox({ ...sandbox, linkToCostAnalysis: result });
             }
@@ -222,7 +222,7 @@ const StepBar: React.FC<StepBarProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             setLoading(false);
-            if (result && result.Message) {
+            if (result && result.message) {
                 setDeleteSandboxInProgress(false);
             }
             history.push('/studies/' + studyId);
@@ -237,7 +237,7 @@ const StepBar: React.FC<StepBarProps> = ({
         makeAvailable(sandboxId).then((result: any) => {
             setLoading(false);
             setMakeAvailableInProgress(false);
-            if (result.Message || result.errors) {
+            if (result.message || result.errors) {
                 setNewPhase(0);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));

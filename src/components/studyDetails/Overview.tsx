@@ -61,7 +61,7 @@ const Overview: React.FC<OverviewProps> = ({
         resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             }
         });
