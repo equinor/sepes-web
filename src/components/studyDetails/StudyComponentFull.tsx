@@ -137,7 +137,6 @@ type StudyComponentFullProps = {
     setUpdateCache: any;
     updateCache: any;
     setDeleteStudyInProgress: any;
-    wbsIsValid: boolean | undefined;
     setWbsIsValid: any;
 };
 
@@ -154,7 +153,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     setUpdateCache,
     updateCache,
     setDeleteStudyInProgress,
-    wbsIsValid,
     setWbsIsValid
 }) => {
     const history = useHistory();

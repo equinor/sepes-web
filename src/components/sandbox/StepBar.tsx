@@ -13,7 +13,6 @@ import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
-import LoadingFull from '../common/LoadingComponentFullscreen';
 
 const set = require('lodash/set');
 
@@ -48,7 +47,7 @@ const BtnThreeWrapper = styled.div`
 `;*/
 
 type StepBarProps = {
-    setStep: (value: any) => void;
+    setStep: any;
     step: number;
     studyId: string;
     sandboxId: string;
@@ -165,7 +164,7 @@ const StepBar: React.FC<StepBarProps> = ({
         }
         let hasVm = false;
         let noOpenInternet = true;
-        resourcesIn.map((resource: any, i: number) => {
+        resourcesIn.map((resource: any) => {
             if (resource.status !== resourceStatus.ok) {
                 res = false;
             }

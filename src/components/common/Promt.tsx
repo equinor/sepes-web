@@ -34,7 +34,7 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
         <div>
             <ReactPrompt
                 when={hasChanged}
-                message={(location) => {
+                message={() => {
                     if (!confirmedNavigation) {
                         setVisibleScrim(true);
                         return false;

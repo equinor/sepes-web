@@ -28,8 +28,8 @@ const Wrapper = styled.div`
 `;
 
 type CreateSandboxComponentProps = {
-    setToggle: (value: any) => void;
-    setStudy: (value: any) => void;
+    setToggle: any;
+    setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;

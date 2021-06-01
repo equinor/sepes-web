@@ -201,8 +201,8 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
 
     function combineArray(array: any) {
         const newArray: any = [];
-        array.map((res: any, i: number) => {
-            res.map((dataset: any, j: number) => {
+        array.map((res: any) => {
+            res.map((dataset: any) => {
                 newArray.push(dataset);
             });
         });

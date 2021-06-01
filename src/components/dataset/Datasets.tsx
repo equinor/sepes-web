@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     border-radius: 4px;
 `;
 
-const Dataset = (props: any) => {
+const Dataset = () => {
     const permissions = useContext(Permissions);
     const [datasets, setDatasets] = useState([]);
     const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasets);
