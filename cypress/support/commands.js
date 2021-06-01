@@ -41,7 +41,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
 
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
+    cy.get('[data-cy=study_wbs]').type('C.BAX.30.010');
     cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
@@ -57,7 +57,7 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.get('[data-cy="logo_upload"]').attachFile('cypress.jpg');
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('c.gbx.da.efc10');
+    cy.get('[data-cy=study_wbs]').type('C.BAX.30.010');
     cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
@@ -94,8 +94,8 @@ Cypress.Commands.add('waitForSandboxToLoad', () => {
 });
 
 Cypress.Commands.add('waitForWbsCheck', () => {
-    cy.intercept('/api/wbsvalidation/*').as('checkWbs');
-    cy.wait('@checkWbs');
+    cy.intercept('/api/wbsvalidation/*', 'true');
+    // cy.wait('@checkWbs');
 });
 
 Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
