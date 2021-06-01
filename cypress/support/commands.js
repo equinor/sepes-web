@@ -84,7 +84,13 @@ Cypress.Commands.add('deleteStudy', (studyName) => {
 });
 
 Cypress.Commands.add('waitForStudyToLoad', () => {
-    cy.intercept('/api/studies/*').as('getStudy');
+    cy.intercept('/api/studies/*', (req) => {
+        req.on('response', (res) => {
+            // this will be called after all `before:response` handlers and after the `req.continue` handler
+            // but before the response is sent to the browser
+            res.body.wbsCodeValid = true;
+        });
+    }).as('getStudy');
     cy.wait('@getStudy');
 });
 
