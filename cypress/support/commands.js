@@ -94,8 +94,8 @@ Cypress.Commands.add('waitForSandboxToLoad', () => {
 });
 
 Cypress.Commands.add('waitForWbsCheck', () => {
-    cy.intercept('/api/wbsvalidation/*').as('checkWbs');
-    cy.wait('@checkWbs');
+    cy.intercept('/api/wbsvalidation/*', 'true');
+    // cy.wait('@checkWbs');
 });
 
 Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
