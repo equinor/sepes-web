@@ -155,7 +155,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                 disabled={!vmProperties.linkToExternalSystem}
                             >
                                 Connect to virtual machine
-                                <div style={{ marginLeft: 'auto', paddingLeft: '-32px' }}>
+                                <div style={{ marginLeft: 'auto' }}>
                                     {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
                                 </div>
                             </Button>
@@ -170,7 +170,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     data-cy="vm_more_actions"
                 >
                     More actions
-                    <div style={{ marginLeft: 'auto', paddingLeft: '0px' }}>
+                    <div style={{ marginLeft: 'auto' }}>
                         {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
                     </div>
                     {displayMoreActions && (
