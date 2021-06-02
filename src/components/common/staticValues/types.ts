@@ -10,7 +10,3 @@ export const resourceType = {
 export const resourceStatus = {
     ok: 'Ok'
 };
-
-export const validTestWbs = {
-    wbs: 'C.BAX.30.010'
-};

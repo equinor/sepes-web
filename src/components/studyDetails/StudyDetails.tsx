@@ -19,7 +19,6 @@ import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCa
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
 import { getStudyId } from 'utils/CommonUtil';
-import { validTestWbs } from 'components/common/staticValues/types';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -100,11 +99,7 @@ const StudyDetails = () => {
     }, []);
 
     useEffect(() => {
-        if (study.wbsCode === validTestWbs.wbs) {
-            setWbsIsValid(true);
-        } else {
-            setWbsIsValid(study.wbsCodeValid);
-        }
+        setWbsIsValid(study.wbsCodeValid);
     }, [study]);
 
     const changeComponent = () => {

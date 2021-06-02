@@ -32,7 +32,7 @@ describe('Create study', () => {
         cy.get('[data-cy=save_results_and_learnings]').click({ force: true });
     });
 
-    it.skip('Add participant to study', () => {
+    it('Add participant to study', () => {
         cy.get('[data-cy=participants_tab]').click({ force: true });
         cy.contains('Search or add').type('Mock User');
         cy.intercept('api/participants/*').as('getMockUser');
@@ -70,7 +70,7 @@ describe('Create study', () => {
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
 
-    it.skip('Remove participant from study', () => {
+    it('Remove participant from study', () => {
         cy.get('[data-cy=participants_tab]').click({ force: true });
         cy.get('[data-cy=study_remove_participant]').click({ force: true });
     });
