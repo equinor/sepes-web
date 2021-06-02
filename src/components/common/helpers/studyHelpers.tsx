@@ -16,7 +16,7 @@ export const filterRoleList = (roles: any, selectedParticipant: ParticipantObj |
     if (!selectedParticipant) {
         return roles;
     }
-    if (!isIterable(roles)) {
+    if (!isIterable(roles) || roles.length === 0) {
         return [];
     }
     let partAsSelected: any = [];
