@@ -41,7 +41,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
 
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('C.BAX.30.010');
+    cy.get('[data-cy=study_wbs]').type('Automatic_test_cost');
     cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
@@ -57,7 +57,7 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.get('[data-cy="logo_upload"]').attachFile('cypress.jpg');
     cy.get('[data-cy=study_name]').type(studyName);
     cy.get('[data-cy=study_vendor]').type('cy vendor');
-    cy.get('[data-cy=study_wbs]').type('C.BAX.30.010');
+    cy.get('[data-cy=study_wbs]').type('Automatic_test_cost');
     cy.waitForWbsCheck();
     cy.get('[data-cy=study_description]').type('cy description');
 
@@ -125,7 +125,7 @@ Cypress.Commands.add('createVm', () => {
 });
 
 Cypress.Commands.add('createVmRules', () => {
-    cy.wait(3000);
+    cy.wait(6000);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
