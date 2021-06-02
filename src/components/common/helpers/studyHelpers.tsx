@@ -1,5 +1,5 @@
 import { DropdownObj, ParticipantObj, StudyObj } from '../interfaces';
-import { validateResourceName } from './helpers';
+import { isIterable, validateResourceName } from './helpers';
 
 export const validateUserInputStudy = (study: StudyObj): boolean => {
     let result = true;
@@ -15,6 +15,9 @@ export const validateUserInputStudy = (study: StudyObj): boolean => {
 export const filterRoleList = (roles: any, selectedParticipant: ParticipantObj | undefined, study: StudyObj) => {
     if (!selectedParticipant) {
         return roles;
+    }
+    if (!isIterable(roles)) {
+        return [];
     }
     let partAsSelected: any = [];
     partAsSelected = study.participants.filter(
