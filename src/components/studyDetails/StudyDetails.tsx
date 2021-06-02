@@ -175,7 +175,6 @@ const StudyDetails = () => {
                         updateCache={updateCache}
                         setDeleteStudyInProgress={setDeleteStudyInProgress}
                         setWbsIsValid={setWbsIsValid}
-                        wbsIsValid={wbsIsValid}
                     />
                 ) : (
                     <LoadingWrapper />

@@ -90,8 +90,8 @@ interface passedProps {
 
 type CreateEditDatasetProps = {
     datasetFromDetails: DatasetObj;
-    setDatasetFromDetails: (value: any) => void;
-    setShowEditDataset: (value: any) => void;
+    setDatasetFromDetails: any;
+    setShowEditDataset: any;
     editingDataset: boolean;
 };
 
@@ -126,7 +126,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     const listener = (e: any) => {
         if (e.key === 'Escape') {
-            handleCancel(e);
+            handleCancel();
         }
     };
 
@@ -240,7 +240,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         });
     };
 
-    const handleCancel = (evt) => {
+    const handleCancel = () => {
         let studySpecificDataset = false;
         if (window.location.pathname.split('/')[1] === 'studies') {
             studySpecificDataset = true;

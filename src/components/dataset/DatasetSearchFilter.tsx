@@ -3,7 +3,7 @@ import React from 'react';
 import { Search } from '@equinor/eds-core-react';
 
 type DatasetSearchFilterProps = {
-    setFilter: (value: any) => void;
+    setFilter: any;
     filter: any;
     column: string;
 };

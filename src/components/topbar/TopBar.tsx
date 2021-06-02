@@ -46,7 +46,7 @@ const CENTER_CHOICES = {
     text: ''
 };
 
-const Bar = (props: any) => {
+const Bar = () => {
     const leftChoice = 'text+icon';
     const centerChoice = 'tabs';
     const history = useHistory();

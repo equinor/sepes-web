@@ -119,7 +119,7 @@ export interface FileObj {
     modified: string;
 }
 
-const DatasetDetails = (props: any) => {
+const DatasetDetails = () => {
     const datasetId = getDatasetId();
     const studyId = getStudyId();
     const isStandard = checkUrlIfGeneralDataset();
