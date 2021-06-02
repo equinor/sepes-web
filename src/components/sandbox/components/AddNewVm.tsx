@@ -62,7 +62,7 @@ const HelperTextWrapper = styled.div`
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.2px;
-    padding-top: 34px;
+    padding-top: 26px;
 `;
 
 const UnstyledList = styled.ul`
