@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GetAccessToken</name>
+    </assembly>
+    <members>
+        <member name="M:GetAccessToken.Program.Main(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Retrieves an access token without using intervention using client secret.
+            Note: This requries that an app registration has been set up.
+            </summary>
+            <param name="tenantId">Required</param>
+            <param name="appId">Required</param>
+            <param name="mockUserClientSecret">Required. Client secret of app registration to call our application</param>
+            <param name="keyVaultUserClientSecret">Optional. Client secret of an app registration that can write to key vault</param>
+            <param name="keyVaultUserClientId">Optional. Client id of the app that can write to key vault</param>
+            <param name="authority">Required</param>
+            <param name="outputDestinationFile">Optional. If not set then accesstoken will be output to screen.</param>
+            <param name="keyVaultName">Optional. Name of key vault to store access token</param>
+            <param name="keyVaultSecretName">Optional. Name of secret in key vault to store access token</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
