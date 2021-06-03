@@ -38,7 +38,7 @@ describe('Create study', () => {
         cy.intercept('api/participants/*').as('getMockUser');
         cy.wait('@getMockUser');
         cy.focused().type('{enter}');
-        cy.get('[data-cy=participant_role]').click();
+        cy.get('[data-cy=participant_role]').click({ force: true });
         cy.contains('Vendor Admin').click();
         cy.get('[data-cy=study_add_participant]').click();
     });

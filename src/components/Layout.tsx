@@ -8,6 +8,7 @@ const Layout = (props: any) => {
     return (
         <>
             <Bar />
+            <div style={{ marginBottom: '88px' }} />
             <ErrorBoundary appInsights={props.appInsights}>
                 <ReactNotification />
                 {props.children}

@@ -28,10 +28,11 @@ const RightWrapper = styled.div`
     margin-right: 32px;
     max-height: 451px;
     text-align: center;
-
+    position: fixed;
     @media (max-width: 768px) {
         display: block;
         margin: 0 32px 32px 32px;
+        position: initial;
     }
 `;
 
@@ -52,30 +53,32 @@ const Home = () => {
                     <LoadingFull />
                 </div>
             )}
-            <RightWrapper>
-                <div style={{ textAlign: 'initial' }} id="test3">
-                    <Typography variant="body_long" key="yaasd">
-                        {lineBreak(sepesInfoText)}
-                    </Typography>
-                </div>
-                <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
-                    <Tooltip
-                        title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
-                        placement="top"
-                    >
-                        <Button
-                            disabled={!permissions.canCreateStudy}
-                            data-cy="new_study"
-                            style={{ width: '336px' }}
-                            onClick={() => {
-                                history.push('/studies');
-                            }}
+            <div>
+                <RightWrapper>
+                    <div style={{ textAlign: 'initial' }} id="test3">
+                        <Typography variant="body_long" key="yaasd">
+                            {lineBreak(sepesInfoText)}
+                        </Typography>
+                    </div>
+                    <div style={{ bottom: '16px', width: '100%', marginTop: '16px' }}>
+                        <Tooltip
+                            title={permissions.canCreateStudy ? '' : 'You do not have access to create a study'}
+                            placement="top"
                         >
-                            New study
-                        </Button>
-                    </Tooltip>
-                </div>
-            </RightWrapper>
+                            <Button
+                                disabled={!permissions.canCreateStudy}
+                                data-cy="new_study"
+                                style={{ width: '336px' }}
+                                onClick={() => {
+                                    history.push('/studies');
+                                }}
+                            >
+                                New study
+                            </Button>
+                        </Tooltip>
+                    </div>
+                </RightWrapper>
+            </div>
         </Wrapper>
     );
 };
