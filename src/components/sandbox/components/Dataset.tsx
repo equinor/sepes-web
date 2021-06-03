@@ -94,58 +94,62 @@ const Dataset: React.FC<datasetProps> = ({
     };
 
     return (
-        <Table style={{ width: '100%', marginBottom: '24px' }}>
-            <Head>
-                <Row>
-                    <Cell scope="col">Data sets in sandbox</Cell>
-                    <Cell scope="col">{''}</Cell>
-                </Row>
-            </Head>
-            <Body>
-                {availableDatasets.datasets && availableDatasets.datasets.length > 0 ? (
-                    availableDatasets.datasets.map((dataset: AvailableDatasetObj) => {
-                        return (
-                            <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
-                                <Cell>
-                                    <SatusWrapper style={{ paddingBottom: '6px' }}>
-                                        <span data-cy="add_dataset_to_sandbox">
-                                            <Tooltip
-                                                title={
-                                                    permissions && permissions.update
-                                                        ? ''
-                                                        : 'You do not have access to update data sets in sandbox'
-                                                }
-                                                placement="right"
-                                            >
-                                                <Checkbox
-                                                    defaultChecked={dataset.addedToSandbox}
-                                                    label={dataset.name}
-                                                    disabled={
-                                                        (permissions && !permissions.update) ||
-                                                        addDatasetInProgress[dataset.datasetId] === true
-                                                    }
-                                                    onChange={(e: any) => {
-                                                        handleCheck(e, dataset);
-                                                    }}
-                                                />
-                                            </Tooltip>
-                                        </span>
-                                    </SatusWrapper>
-                                </Cell>
-                                <Cell style={{ width: '32px' }}>{dataset.classification}</Cell>
-                            </Row>
-                        );
-                    })
-                ) : (
-                    <Row key="1" id="tableRowNoPointerNoColor">
-                        <Cell>
-                            {availableDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
-                        </Cell>
-                        <Cell>{''}</Cell>
+        <div>
+            <Table style={{ width: '100%', marginBottom: '24px' }}>
+                <Head>
+                    <Row>
+                        <Cell scope="col">Data sets in sandbox</Cell>
+                        <Cell scope="col">{''}</Cell>
                     </Row>
-                )}
-            </Body>
-        </Table>
+                </Head>
+                <Body>
+                    {availableDatasets.datasets && availableDatasets.datasets.length > 0 ? (
+                        availableDatasets.datasets.map((dataset: AvailableDatasetObj) => {
+                            return (
+                                <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
+                                    <Cell>
+                                        <SatusWrapper style={{ paddingBottom: '6px' }}>
+                                            <span data-cy="add_dataset_to_sandbox">
+                                                <Tooltip
+                                                    title={
+                                                        permissions && permissions.update
+                                                            ? ''
+                                                            : 'You do not have access to update data sets in sandbox'
+                                                    }
+                                                    placement="right"
+                                                >
+                                                    <Checkbox
+                                                        defaultChecked={dataset.addedToSandbox}
+                                                        label={dataset.name}
+                                                        disabled={
+                                                            (permissions && !permissions.update) ||
+                                                            addDatasetInProgress[dataset.datasetId] === true
+                                                        }
+                                                        onChange={(e: any) => {
+                                                            handleCheck(e, dataset);
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </span>
+                                        </SatusWrapper>
+                                    </Cell>
+                                    <Cell>
+                                        <div>{dataset.classification}</div>
+                                    </Cell>
+                                </Row>
+                            );
+                        })
+                    ) : (
+                        <Row key="1" id="tableRowNoPointerNoColor">
+                            <Cell>
+                                {availableDatasetsResponse.loading ? 'loading data sets..' : 'No data sets in study'}
+                            </Cell>
+                            <Cell>{''}</Cell>
+                        </Row>
+                    )}
+                </Body>
+            </Table>
+        </div>
     );
 };
 
