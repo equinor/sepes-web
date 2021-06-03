@@ -54,9 +54,16 @@ type DatasetComponentProps = {
     setStudy: any;
     setUpdateCache: any;
     updateCache: any;
+    wbsIsValid: boolean | undefined;
 };
 
-const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const DataSetComponent: React.FC<DatasetComponentProps> = ({
+    study,
+    setStudy,
+    setUpdateCache,
+    updateCache,
+    wbsIsValid
+}) => {
     const history = useHistory();
     //const [datasetsList, setDatasetsList] = useState<any>([]);
     //const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -72,7 +79,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             [getDatasetsInStudyUrl(study.id)]: true
         });
         unlinkStudyDataset(studyId, row.id).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             }
             //datasetsResponse.setLoading(false);
@@ -94,8 +101,8 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
         if (study.permissions && !study.permissions.addRemoveDataset) {
             return 'You do not have access to create a study specific data set';
         }
-        if (study.wbsCode === '') {
-            return 'Please add a WBS code to study before creating data set';
+        if (!wbsIsValid) {
+            return 'WBS code for study is invalid. Can not create data set';
         }
         return '';
     };
@@ -109,7 +116,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
             datasetList.push(row);
             setStudy({ ...study, datasets: datasetList });
             addStudyDataset(studyId, row.id).then((result: any) => {
-                if (result && result.Message) {
+                if (result && result.message) {
                     console.log('Err');
                 }
                 datasetsResponse.setLoading(false);
@@ -131,14 +138,14 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({ study, setStudy, se
         <Wrapper>
             {/*<Bar>*/}
             <div style={{ marginLeft: 'auto', marginTop: '32px', marginBottom: '8px' }}>
-                <Tooltip title={canCreateDataset ? '' : returnTooltipText()} placement="left">
+                <Tooltip title={canCreateDataset && wbsIsValid ? '' : returnTooltipText()} placement="left">
                     <Button
                         variant="outlined"
                         data-cy="add_study_specific_dataset"
                         onClick={() => {
                             redirectToStudySpecificDataset();
                         }}
-                        disabled={!canCreateDataset}
+                        disabled={!(canCreateDataset && wbsIsValid)}
                         data-testid="study_add_dataset"
                     >
                         Create study specific data set

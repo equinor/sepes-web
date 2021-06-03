@@ -13,11 +13,10 @@ import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
-import LoadingFull from '../common/LoadingComponentFullscreen';
 
 const set = require('lodash/set');
 
-const { MenuItem } = Menu;
+//const { MenuItem } = Menu;
 
 const Wrapper = styled.div`
     display: grid;
@@ -48,7 +47,7 @@ const BtnThreeWrapper = styled.div`
 `;*/
 
 type StepBarProps = {
-    setStep: (value: any) => void;
+    setStep: any;
     step: number;
     studyId: string;
     sandboxId: string;
@@ -147,7 +146,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getResources = () => {
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
-            if (result && (result.errors || result.Message)) {
+            if (result && (result.errors || result.message)) {
                 resourcesFailed = true;
 
                 console.log('Err');
@@ -165,7 +164,7 @@ const StepBar: React.FC<StepBarProps> = ({
         }
         let hasVm = false;
         let noOpenInternet = true;
-        resourcesIn.map((resource: any, i: number) => {
+        resourcesIn.map((resource: any) => {
             if (resource.status !== resourceStatus.ok) {
                 res = false;
             }
@@ -186,7 +185,7 @@ const StepBar: React.FC<StepBarProps> = ({
 
     const getCostAnalysisLinkToSandbox = () => {
         getSandboxCostAnalysis(sandboxId).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 setNewCostanalysisLink(result);
                 setSandbox({ ...sandbox, linkToCostAnalysis: result });
             }
@@ -222,7 +221,7 @@ const StepBar: React.FC<StepBarProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         deleteSandbox(sandboxId).then((result: any) => {
             setLoading(false);
-            if (result && result.Message) {
+            if (result && result.message) {
                 setDeleteSandboxInProgress(false);
             }
             history.push('/studies/' + studyId);
@@ -237,7 +236,7 @@ const StepBar: React.FC<StepBarProps> = ({
         makeAvailable(sandboxId).then((result: any) => {
             setLoading(false);
             setMakeAvailableInProgress(false);
-            if (result.Message || result.errors) {
+            if (result.message || result.errors) {
                 setNewPhase(0);
             } else {
                 setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
@@ -275,9 +274,8 @@ const StepBar: React.FC<StepBarProps> = ({
                         : ''
                 }
                 placement="left"
-                open={sandbox.permissions && !sandbox.permissions.delete}
             >
-                <MenuItem
+                <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="sandbox_delete"
                     disabled={sandbox.permissions && !sandbox.permissions.delete}
@@ -285,7 +283,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 >
                     {EquinorIcon('delete_forever', 'red', 24)}
                     <span style={{ color: 'red' }}>Delete sandbox</span>
-                </MenuItem>
+                </Menu.Item>
             </Tooltip>
         </>
     );
@@ -312,6 +310,7 @@ const StepBar: React.FC<StepBarProps> = ({
                     onClose={closeMenu}
                     anchorEl={buttonEl}
                     focus={focus}
+                    placement="bottom-end"
                 >
                     {optionsTemplate}
                 </Menu>

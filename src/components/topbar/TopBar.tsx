@@ -8,7 +8,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { account_circle, report_bug, exit_to_app } from '@equinor/eds-icons';
 import { requestChangeLink } from '../common/staticValues/commonLinks';
 
-const { MenuItem } = Menu;
 const { Header } = TopBar;
 
 const icons = {
@@ -47,7 +46,7 @@ const CENTER_CHOICES = {
     text: ''
 };
 
-const Bar = (props: any) => {
+const Bar = () => {
     const leftChoice = 'text+icon';
     const centerChoice = 'tabs';
     const history = useHistory();
@@ -86,13 +85,13 @@ const Bar = (props: any) => {
 
     const optionsTemplate = (
         <>
-            <MenuItem style={{ borderBottom: '1px solid #dcdcdc' }}>
+            <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
                 <div>
                     <Typography variant="h6">{permissions.fullName}</Typography>
                     <Typography variant="meta">{permissions.userName}</Typography>
                 </div>
-            </MenuItem>
-            <MenuItem onClick={() => redirectToLink('/releasenotes')}>
+            </Menu.Item>
+            <Menu.Item onClick={() => redirectToLink('/releasenotes')}>
                 <Icon
                     color="#6F6F6F"
                     name="info_circle"
@@ -102,8 +101,8 @@ const Bar = (props: any) => {
                     title="Release notes"
                 />
                 Release notes
-            </MenuItem>
-            <MenuItem onClick={() => redirectToExternalLink(requestChangeLink)}>
+            </Menu.Item>
+            <Menu.Item onClick={() => redirectToExternalLink(requestChangeLink)}>
                 <Icon
                     color="#6F6F6F"
                     name="report_bug"
@@ -113,7 +112,7 @@ const Bar = (props: any) => {
                     title="Release notes"
                 />
                 Report bug
-            </MenuItem>
+            </Menu.Item>
             <Menu.Section title="">
                 <Menu.Item onClick={() => user.logoutRedirect()}>
                     <Icon
@@ -159,6 +158,7 @@ const Bar = (props: any) => {
                         onClose={closeMenu}
                         anchorEl={buttonEl}
                         focus={focus}
+                        placement="bottom-start"
                     >
                         {optionsTemplate}
                     </Menu>

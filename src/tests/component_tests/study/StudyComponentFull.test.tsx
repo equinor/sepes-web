@@ -31,7 +31,7 @@ const permissionsDeleteNotAllowed = {
     addRemoveDataset: true,
     addRemoveParticipant: true,
     addRemoveSandbox: true,
-    closeStudy: true,
+    closeStudy: false,
     deleteStudy: false,
     readResulsAndLearnings: true,
     updateMetadata: true,
@@ -236,7 +236,7 @@ test('renders StudyComponent full component with new study', () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
-            <StudyComponentFull study={{}} newStudy />
+            <StudyComponentFull study={{}} newStudy setHasChanged={mockFunc} />
         </Router>
     );
     let linkElement = getByText('Create');
@@ -358,6 +358,7 @@ test('renders StudyComponent full component with sandbox in study', () => {
                 setUpdateCache={mockFunc}
                 updateCache={mockFunc}
                 setDeleteStudyInProgress={mockFunc}
+                hasChanged={false}
             />
         </Router>
     );

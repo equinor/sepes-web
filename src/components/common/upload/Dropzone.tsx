@@ -33,7 +33,7 @@ const Dropzone = ({ onDrop, accept }: props) => {
 
     return (
         <ChooseImgdiv {...getRootProps()} dragActive={isDragActive}>
-            <input className="dropzone-input" {...getInputProps()} />
+            <input className="dropzone-input" {...getInputProps()} data-cy="logo_upload" />
             <div className="text-center">
                 {isDragActive ? (
                     <div className="dropzone-content">Drop here</div>

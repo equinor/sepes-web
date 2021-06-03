@@ -3,6 +3,9 @@ name: Cypress Test
 on:
   pull_request:
   workflow_dispatch:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+  - cron:  '0 4 * * 1,2,3,4,5'
 
 jobs:
   ci:
@@ -52,13 +55,18 @@ jobs:
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
     
-
       - run: npm ci
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
-#$token
-      - name: Run cypress tests  
+
+      - name: Run quick running cypress tests  
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --config-file "cypress.dev.json" --env cyAccessToken=$token
+        run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+
+      - name: Run long running cypress tests  
+        env:
+          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+        run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
+        if: ${{ github.event_name == 'schedule' }}
 

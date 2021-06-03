@@ -63,6 +63,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [loading, setLoading] = useState<boolean>(false);
 
     const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    // const cyToken = sessionStorage.getItem('accessToken');
+    const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
     useEffect(() => {
@@ -77,7 +79,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setDebounce({
             cb: async () => {
                 api.getParticipantList(value || 'a').then((result: any) => {
-                    if (!result.Message && Array.isArray(result)) {
+                    if (!result.message && Array.isArray(result)) {
                         const temp = result.map((_user) => {
                             return {
                                 label: `${_user.fullName} (${_user.emailAddress})`,
@@ -108,18 +110,19 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
         setStudy({ ...study, participants: participantList });
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
-            if (result && !result.Message && isSubscribed) {
+            if (result && !result.message && isSubscribed) {
                 const participantsWithuserid = study.participants.filter(
                     (part: any) => part.userId === participant.userId
                 );
+                if (!cyToken) {
+                    const accounts = user.getAllAccounts();
 
-                const accounts = user.getAllAccounts();
+                    if (accounts.length && accounts.length > 0) {
+                        const currentAccount = accounts[0];
 
-                if (accounts.length && accounts.length > 0) {
-                    const currentAccount = accounts[0];
-
-                    if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
-                        history.push('/');
+                        if (currentAccount.username === participant.userName && participantsWithuserid.length === 1) {
+                            history.push('/');
+                        }
                     }
                 }
             }
@@ -136,7 +139,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
             setLoading(true);
             api.addStudyParticipant(studyId, role, selectedParticipant).then((result: any) => {
                 setLoading(false);
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     const participantList: any = [...study.participants];
                     participantList.push(result);
                     setStudy({ ...study, participants: participantList });
@@ -203,6 +206,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             loadOptions={
                                 study.permissions && study.permissions.addRemoveParticipant ? loadOptions : null
                             }
+                            data-cy="participant_search"
                         />
                     </div>
                 </Tooltip>
@@ -224,6 +228,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             resetState={roleNotSelected}
                             disabled={participantNotSelected || loading}
                             tabIndex={0}
+                            data-cy="participant_role"
                         />
                     </Tooltip>
                 </div>
@@ -232,6 +237,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     disabled={checkIfButtonDisabled()}
                     onClick={addParticipant}
                     style={{ width: '136px' }}
+                    data-cy="study_add_participant"
                 >
                     {loading ? <DotProgress color="primary" /> : 'Add participant'}
                 </Button>

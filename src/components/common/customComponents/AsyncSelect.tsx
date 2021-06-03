@@ -38,7 +38,6 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
     selectedOption,
     onInputChange,
     style,
-    dataType,
     isRequired,
     disabled,
     loadOptions

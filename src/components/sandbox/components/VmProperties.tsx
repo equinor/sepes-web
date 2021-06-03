@@ -24,7 +24,7 @@ const MoreActionsWrapper = styled.div`
     background-color: #ffffff;
     box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 3px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
     border-radius: 4px;
-    margin-top: 196px;
+    margin-top: 40px;
     display: grid;
     grid-template-rows: 1fr 1fr;
     width: 296px;
@@ -89,7 +89,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         currentVms.splice(vms.indexOf(vmProperties), 1);
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 getResources();
             }
         });
@@ -150,9 +150,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                             }
                             placement="top"
                         >
-                            <Button style={{ width: '296px' }} disabled={!vmProperties.linkToExternalSystem}>
+                            <Button
+                                style={{ width: '296px', textAlign: 'end' }}
+                                disabled={!vmProperties.linkToExternalSystem}
+                            >
                                 Connect to virtual machine
-                                <div style={{ marginLeft: 'auto', paddingLeft: '39px' }}>
+                                <div style={{ marginLeft: 'auto' }}>
                                     {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
                                 </div>
                             </Button>
@@ -162,12 +165,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
 
                 <Button
                     variant="outlined"
-                    style={{ marginTop: '8px', width: '296px' }}
+                    style={{ marginTop: '8px', width: '296px', textAlign: 'end' }}
                     onClick={() => handleToggle()}
                     data-cy="vm_more_actions"
                 >
                     More actions
-                    <div style={{ marginLeft: 'auto', paddingLeft: '39px' }}>
+                    <div style={{ marginLeft: 'auto' }}>
                         {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
                     </div>
                     {displayMoreActions && (
@@ -200,7 +203,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                             <Tooltip
                                 title={permissions.update ? '' : 'You do not have access to delete VMs'}
                                 placement="right"
-                                open={!permissions.update}
                                 style={{ justifyContent: 'left' }}
                             >
                                 <Item

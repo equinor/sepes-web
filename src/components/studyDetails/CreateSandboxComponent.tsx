@@ -28,13 +28,14 @@ const Wrapper = styled.div`
 `;
 
 type CreateSandboxComponentProps = {
-    setToggle: (value: any) => void;
-    setStudy: (value: any) => void;
+    setToggle: any;
+    setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
     study: StudyObj;
     setLoading: any;
+    wbsIsValid: boolean | undefined;
 };
 
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
@@ -44,7 +45,8 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setUpdateCache,
     updateCache,
     study,
-    setLoading
+    setLoading,
+    wbsIsValid
 }) => {
     const history = useHistory();
     const [regions, setRegions] = useState<DropdownObj>();
@@ -89,7 +91,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
-            if (result && !result.Message) {
+            if (result && !result.message) {
                 setStudy(result);
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
@@ -114,7 +116,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 autoFocus
                 inputIcon={
                     <div>
-                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="topRight">
+                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="right">
                             <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>
@@ -146,15 +148,14 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             */}
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
-                    title={study.wbsCode ? '' : 'Need WBS code for this study code to create sandbox'}
+                    title={wbsIsValid ? '' : 'Need a valid WBS code for this study to create sandbox'}
                     placement="left"
-                    open={!study.wbsCode}
                 >
                     <Button
                         style={{ width: '76px', margin: '8px 0 8px auto' }}
                         onClick={() => CreateSandbox()}
                         data-cy="create_actual_sandbox"
-                        disabled={!validateUserInputSandbox(sandbox, study.wbsCode)}
+                        disabled={!(validateUserInputSandbox(sandbox, study.wbsCode) && wbsIsValid)}
                     >
                         Create
                     </Button>

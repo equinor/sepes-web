@@ -91,17 +91,10 @@ const CustomContent = (props) => {
     );
 };
 
-export const show = (type, code, result) => {
+export const show = (type, code, message, requestId) => {
     store.addNotification({
         title: 'Error',
-        content: (
-            <CustomContent
-                type={type}
-                code={code}
-                message={result && result.Message}
-                requestId={result && result.RequestId}
-            />
-        ),
+        content: <CustomContent type={type} code={code} message={message} requestId={requestId} />,
         type: 'danger',
         insert: 'top',
         container: 'top-center',

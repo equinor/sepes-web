@@ -18,8 +18,6 @@ import VmDetails from './VmDetails';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
-const { TabList, Tab } = Tabs;
-
 type VmConfigProps = {
     showAddNewVm: boolean;
     sandbox: SandboxObj;
@@ -94,7 +92,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setSizes(result);
@@ -104,7 +102,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVmDisks = () => {
         getVirtualMachineDisks(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setDisks(result);
@@ -114,7 +112,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const getVms = () => {
         getVirtualMachineOperatingSystems(sandbox.id, controller.signal).then((result: any) => {
-            if (result && result.Message) {
+            if (result && result.message) {
                 console.log('Err');
             } else if (result) {
                 setOs(result);
@@ -166,28 +164,28 @@ const VmConfig: React.FC<VmConfigProps> = ({
     return (
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
-                <TabList>
+                <Tabs.List>
                     {showAddNewVm && !loadingSandbox ? (
-                        <Tab key={1} style={{ borderRadius: '4px' }}>
+                        <Tabs.Tab key={1} style={{ borderRadius: '4px' }}>
                             Add new vm
-                        </Tab>
+                        </Tabs.Tab>
                     ) : (
-                        <Tab style={{ display: 'none' }} />
+                        <Tabs.Tab style={{ display: 'none' }} />
                     )}
                     {vms.length > 0 ? (
                         vms.map((vm: any) => {
                             return (
-                                <Tab key={vm.id} style={{ borderRadius: '4px' }}>
+                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }}>
                                     {vm.name}
-                                </Tab>
+                                </Tabs.Tab>
                             );
                         })
                     ) : (
-                        <Tab key={2} disabled>
+                        <Tabs.Tab key={2} disabled>
                             {vmsReponse.loading ? 'loading..' : 'No virtual machines yet..'}
-                        </Tab>
+                        </Tabs.Tab>
                     )}
-                </TabList>
+                </Tabs.List>
             </Tabs>
             {returnStepComponent()}
         </div>

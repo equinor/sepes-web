@@ -16,7 +16,8 @@
         "jsx": "react-jsx",
         "noImplicitAny": false,
         "noFallthroughCasesInSwitch": true,
-        "baseUrl": "src"
+        "baseUrl": "src",
+        "types": ["cypress", "cypress-file-upload"]
     },
     "include": ["src", "jest.setup.js"],
     "types": ["node", "jest", "@testing-library/jest-dom"],

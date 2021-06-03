@@ -93,9 +93,16 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
     return new Promise((resolve) => {
         const processAuthorizedResponse = async (response) => {
             if (!response.ok) {
-                notify.show('danger', response.status, response);
+                const res = JSON.parse((await response.text()) ?? {});
+                if (!res.errors) {
+                    notify.show('danger', response.status, res.message, res.requestId);
+                } else {
+                    notify.show('danger', response.status, res.title, res.traceId);
+                }
             }
-
+            if (response.status === 204) {
+                return {};
+            }
             return JSON.parse((await response.text()) ?? {});
         };
 

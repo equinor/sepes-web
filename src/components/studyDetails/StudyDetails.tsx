@@ -32,8 +32,6 @@ const divStyle = {
     gridAutoColumns: 'minmax(1%,800px)'
 };
 
-const { TabList, Tab } = Tabs;
-
 let controller = new AbortController();
 
 interface passedProps {
@@ -54,6 +52,7 @@ const StudyDetails = () => {
         resultsAndLearnings: '',
         datasets: [],
         participants: [],
+        wbsCodeValid: false,
         sandboxes: [],
         permissions: {
             addRemoveDataset: false,
@@ -79,7 +78,7 @@ const StudyDetails = () => {
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
     const [loading, setLoading] = useState<Boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
-
+    const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const resultsAndLearningsResponse = useFetchUrl(
         getResultsAndLearningsUrl(id),
@@ -99,6 +98,10 @@ const StudyDetails = () => {
         };
     }, []);
 
+    useEffect(() => {
+        setWbsIsValid(study.wbsCodeValid);
+    }, [study]);
+
     const changeComponent = () => {
         Cookies.remove(id);
         Cookies.set(id, activeTab, { expires: 1 });
@@ -110,6 +113,7 @@ const StudyDetails = () => {
                         setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
+                        wbsIsValid={wbsIsValid}
                     />
                 );
             case 2:
@@ -123,6 +127,7 @@ const StudyDetails = () => {
                         disabled={study.permissions && !study.permissions.addRemoveSandbox}
                         study={study}
                         setLoading={setLoading}
+                        wbsIsValid={wbsIsValid}
                     />
                 );
             case 3:
@@ -164,10 +169,12 @@ const StudyDetails = () => {
                         loading={studyResponse.loading}
                         setStudy={setStudy}
                         setHasChanged={setHasChanged}
+                        hasChanged={hasChanged}
                         cache={studyResponse.cache}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setDeleteStudyInProgress={setDeleteStudyInProgress}
+                        setWbsIsValid={setWbsIsValid}
                     />
                 ) : (
                     <LoadingWrapper />
@@ -176,12 +183,12 @@ const StudyDetails = () => {
                 {!newStudy && (
                     <div style={{ margin: '32px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                            <TabList style={divStyle}>
-                                <Tab style={{ borderRadius: '4px' }}>Overview</Tab>
-                                <Tab data-cy="datasets_tab">Data sets</Tab>
-                                <Tab data-cy="sandbox_tab">Sandboxes</Tab>
-                                <Tab>Participants</Tab>
-                            </TabList>
+                            <Tabs.List style={divStyle}>
+                                <Tabs.Tab style={{ borderRadius: '4px' }}>Overview</Tabs.Tab>
+                                <Tabs.Tab data-cy="datasets_tab">Data sets</Tabs.Tab>
+                                <Tabs.Tab data-cy="sandbox_tab">Sandboxes</Tabs.Tab>
+                                <Tabs.Tab data-cy="participants_tab">Participants</Tabs.Tab>
+                            </Tabs.List>
                         </Tabs>
                         <div style={{ padding: '16px' }}>{changeComponent()}</div>
                     </div>

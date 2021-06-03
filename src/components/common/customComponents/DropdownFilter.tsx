@@ -24,7 +24,7 @@ const options = [
 ];
 
 type DatasetSearchFilterProps = {
-    setFilter: (value: any) => void;
+    setFilter: any;
     filter: any;
     column: string;
 };

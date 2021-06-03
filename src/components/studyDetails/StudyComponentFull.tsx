@@ -6,7 +6,7 @@ import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
-import { createStudy, updateStudy, closeStudy } from '../../services/Api';
+import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
@@ -16,8 +16,6 @@ import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
-
-const { MenuItem } = Menu;
 
 const icons = {
     dollar,
@@ -134,10 +132,12 @@ type StudyComponentFullProps = {
     loading: boolean;
     setStudy: any;
     setHasChanged: any;
+    hasChanged: boolean;
     cache: any;
     setUpdateCache: any;
     updateCache: any;
     setDeleteStudyInProgress: any;
+    setWbsIsValid: any;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -148,10 +148,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     loading,
     setStudy,
     setHasChanged,
+    hasChanged,
     cache,
     setUpdateCache,
     updateCache,
-    setDeleteStudyInProgress
+    setDeleteStudyInProgress,
+    setWbsIsValid
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
@@ -161,6 +163,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -193,6 +196,19 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         };
     }, [studyOnChange, study]);
 
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (hasChanged) {
+                validateWbsOnChange(studyOnChange.wbsCode);
+            }
+        }, 500);
+        return () => {
+            setHasChanged(false);
+            setWbsOnChangeIsValid(undefined);
+            clearTimeout(timeoutId);
+        };
+    }, [studyOnChange.wbsCode]);
+
     const listener = (e: any) => {
         if (e.key === 'Escape') {
             handleCancel();
@@ -210,7 +226,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         closeStudy(study.id).then((result: any) => {
             setLoading(false);
-            if (result && result.Message) {
+            if (result && result.message) {
                 setDeleteStudyInProgress(true);
             } else {
                 history.push('/');
@@ -223,6 +239,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
+        validateWbs(studyOnChange.wbsCode);
         if (!validateUserInputStudy(studyOnChange)) {
             return;
         }
@@ -241,12 +258,31 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         return 'You do not have permission to delete this study';
     };
 
+    const validateWbs = (wbs: string) => {
+        setWbsIsValid(false);
+        if (wbs !== '') {
+            validateWbsCode(wbs).then((result: any) => {
+                setWbsIsValid(result);
+            });
+        }
+    };
+
+    const validateWbsOnChange = (wbs: string) => {
+        if (wbs !== '') {
+            validateWbsCode(wbs).then((result: any) => {
+                setWbsOnChangeIsValid(result);
+            });
+        } else {
+            setWbsOnChangeIsValid(false);
+        }
+    };
+
     const studyDeleteEnabled =
-        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.deleteStudy;
+        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.closeStudy;
     const optionsTemplate = (
         <>
-            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left" open={studyDeleteEnabled}>
-                <MenuItem
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left">
+                <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
                     disabled={!studyDeleteEnabled}
@@ -256,7 +292,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 >
                     <Icon name="delete_forever" color="red" size={24} />
                     <span style={{ color: 'red' }}>Delete study</span>
-                </MenuItem>
+                </Menu.Item>
             </Tooltip>
         </>
     );
@@ -266,7 +302,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     setLoading(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
@@ -285,7 +321,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             }
             setLoading(false);
             updateStudy(study, imageUrl).then((result: any) => {
-                if (result && !result.Message) {
+                if (result && !result.message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                 } else {
@@ -305,6 +341,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setImageUrl('');
         setStudyOnChange(study);
         setShowImagePicker(false);
+    };
+
+    const returnWbsVariant = () => {
+        if (wbsOnChangeIsValid === undefined) {
+            return 'default';
+        }
+        if (wbsOnChangeIsValid) {
+            return 'success';
+        }
+        return 'error';
     };
 
     const handleChange = (columnName: string, value: string): void => {
@@ -417,6 +463,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
                                     inputIcon={<Icon name="dollar" />}
+                                    variant={returnWbsVariant()}
+                                    helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
                                 />
                             </>
                         )}
@@ -486,14 +534,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     ) : (
                         <DescriptioTextfieldnWrapper>
                             <TextField
-                                id="textfield4"
+                                id="studyDescription"
                                 autoComplete="off"
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}
                                 meta={returnLimitMeta(500, studyOnChange.description)}
                                 label="Description"
-                                style={{ margin: 'auto', marginLeft: '0', height: '152px' }}
+                                style={{ height: '152px', resize: 'none' }}
                                 value={studyOnChange.description}
                                 data-cy="study_description"
                             />
@@ -517,6 +565,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 >
                                     <Icon color="#007079" name="settings" size={24} />
                                 </Button>
+
                                 <Menu
                                     id="menuButton"
                                     aria-labelledby="menuButton"
@@ -524,6 +573,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     onClose={closeMenu}
                                     anchorEl={buttonEl}
                                     focus={focus}
+                                    placement="bottom-end"
                                 >
                                     {optionsTemplate}
                                 </Menu>
@@ -558,6 +608,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 }}
                                                 variant="outlined"
                                                 style={{ margin: '16px 0 20px 56px' }}
+                                                data-cy="change_logo"
                                             >
                                                 Change logo
                                             </Button>

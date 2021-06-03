@@ -15,7 +15,7 @@ const Wrapper = styled.div`
     }
 `;
 
-const NavTabs = (props: any) => {
+const NavTabs = () => {
     /*
     const history = useHistory();
     const permissions = useContext(Permissions);
