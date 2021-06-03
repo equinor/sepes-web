@@ -278,7 +278,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const studyDeleteEnabled =
-        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.deleteStudy;
+        study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.closeStudy;
     const optionsTemplate = (
         <>
             <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left">
