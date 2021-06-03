@@ -21,6 +21,13 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
+export const returnTextfieldTypeBasedOninput = (value: any) => {
+    if (!validateResourceName(value) && value !== '') {
+        return 'error';
+    }
+    return 'default';
+};
+
 export const bytesToSize = (bytes: any, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
 

@@ -9,7 +9,12 @@ import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
-import { checkIfRequiredFieldsAreNull, returnLimitMeta } from '../common/helpers/helpers';
+import {
+    checkIfRequiredFieldsAreNull,
+    returnLimitMeta,
+    returnTextfieldTypeBasedOninput,
+    validateResourceName
+} from '../common/helpers/helpers';
 import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
@@ -424,7 +429,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 <TextField
                                     id="textfield1"
                                     placeholder="Name of study"
-                                    variant={checkIfRequiredFieldsAreNull(studyOnChange.name, userPressedCreate)}
+                                    variant={returnTextfieldTypeBasedOninput(studyOnChange.name)}
                                     onChange={(e: any) => handleChange('name', e.target.value)}
                                     label="Name"
                                     meta="(required)"
