@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
-import { checkIfRequiredFieldsAreNull, returnTextfieldTypeBasedOninput } from '../common/helpers/helpers';
+import { returnTextfieldTypeBasedOninput } from '../common/helpers/helpers';
 import { validateUserInputSandbox } from '../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     useEffect(() => {
         return () => setHasChanged(false);
     }, []);
-    const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
+
     const [sandbox, setSandbox] = useState<SandboxCreateObj>({
         name: '',
         region: '',
@@ -81,7 +81,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 
     const CreateSandbox = () => {
         setHasChanged(false);
-        setUserPressedCreate(true);
         setToggle(false);
         if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
             return;

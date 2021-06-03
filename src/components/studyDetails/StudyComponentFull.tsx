@@ -12,8 +12,7 @@ import CustomLogoComponent from '../common/customComponents/CustomLogoComponent'
 import {
     checkIfRequiredFieldsAreNull,
     returnLimitMeta,
-    returnTextfieldTypeBasedOninput,
-    validateResourceName
+    returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
 import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
