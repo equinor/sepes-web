@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/equinor/sepes-web/compare/0.1.23...0.1.24) (2021-06-03)
+
+
+### Features
+
+* **study:** validate wbs code ([#890](https://github.com/equinor/sepes-web/issues/890)) ([387b058](https://github.com/equinor/sepes-web/commit/387b0589ab5c6829ee528abcf5274c800ea0ff17))
+
+
+### Bug Fixes
+
+* **study:** delete button visibility check for studyClose instead of studyDelete ([#948](https://github.com/equinor/sepes-web/issues/948)) ([fbb4b05](https://github.com/equinor/sepes-web/commit/fbb4b057487db71a318d98c7a19f52cbc85fcf47))
+* **vm:** more options button issue ([#939](https://github.com/equinor/sepes-web/issues/939)) ([26efe74](https://github.com/equinor/sepes-web/commit/26efe74f0e1b7c116591fb71530e9d21b9c391e0)), closes [#936](https://github.com/equinor/sepes-web/issues/936) [#935](https://github.com/equinor/sepes-web/issues/935)
+* console warnings ([85565ca](https://github.com/equinor/sepes-web/commit/85565ca137ec8ffa19744b3e14f7ee32c4958565))
+* do not call api with empty wbs ([#894](https://github.com/equinor/sepes-web/issues/894)) ([816e3c2](https://github.com/equinor/sepes-web/commit/816e3c2408e63994c78880daa8d15212da6559ab))
+* issues with notification component ([#907](https://github.com/equinor/sepes-web/issues/907)) ([a78e708](https://github.com/equinor/sepes-web/commit/a78e70835d9a89280700892309875b194f2edb27))
+* update eds to 0.12.1 ([b5c4c61](https://github.com/equinor/sepes-web/commit/b5c4c619f8b2bec2587759e85233a7a37abb7401))
+* update react and react-dom to version 17.0.2 ([72750c6](https://github.com/equinor/sepes-web/commit/72750c6f7e975c7c6edc610dbd769db71f7d56a5))
+* update to EDS 0.12.0 ([#844](https://github.com/equinor/sepes-web/issues/844)) ([4335ec0](https://github.com/equinor/sepes-web/commit/4335ec0fa9afc37f4e32a4f87935ef1821777a41))
+* upgrade @azure/msal-browser from 2.14.1 to 2.14.2 ([d932349](https://github.com/equinor/sepes-web/commit/d932349b1ab79cf3be0c2b76ba39877334d6423c))
+* upgrade @peculiar/webcrypto from 1.1.6 to 1.1.7 ([17b0bdb](https://github.com/equinor/sepes-web/commit/17b0bdb8d496496cfa14e3500ad00df0306adc12))
+* upgrade @types/node from 12.20.11 to 12.20.12 ([a690612](https://github.com/equinor/sepes-web/commit/a6906123393f255ef7d70a66a5954db760350f8b))
+* upgrade @types/node from 12.20.12 to 12.20.13 ([d4c9b67](https://github.com/equinor/sepes-web/commit/d4c9b67da2eeab9bb98da5176f4e87ce67a923ea))
+* upgrade @typescript-eslint/eslint-plugin from 4.22.1 to 4.23.0 ([ffc8219](https://github.com/equinor/sepes-web/commit/ffc821928e72c3a6a08f102b306e63e8bd076225))
+* upgrade @typescript-eslint/parser from 4.22.1 to 4.23.0 ([#926](https://github.com/equinor/sepes-web/issues/926)) ([61e9042](https://github.com/equinor/sepes-web/commit/61e9042d336d7f65a272231bedea25aeb6cb5dce))
+* **create vm:** center text in helper text box ([a0a6b1b](https://github.com/equinor/sepes-web/commit/a0a6b1b99b8f96388443a1b780e98af2365f8196))
+* **study:** not redirecting after delete ([#922](https://github.com/equinor/sepes-web/issues/922)) ([6a39a98](https://github.com/equinor/sepes-web/commit/6a39a98c0b1f1614ac00df60df42bdd487f48f42)), closes [#921](https://github.com/equinor/sepes-web/issues/921)
+* upgrade @types/react from 17.0.4 to 17.0.5 ([9cd1621](https://github.com/equinor/sepes-web/commit/9cd1621d8e7a2220efad138af09574ac01fef6a4))
+* upgrade @types/react-router from 5.1.13 to 5.1.14 ([6ed9845](https://github.com/equinor/sepes-web/commit/6ed98453ad05e6922b3184c3a8fd7fb290833716))
+* upgrade @typescript-eslint/eslint-plugin from 4.22.0 to 4.22.1 ([6bdb553](https://github.com/equinor/sepes-web/commit/6bdb5534406370a124685d23be3f618232c6a305))
+* upgrade @typescript-eslint/parser from 4.22.0 to 4.22.1 ([#900](https://github.com/equinor/sepes-web/issues/900)) ([64e6361](https://github.com/equinor/sepes-web/commit/64e6361857a447b279db74662e6fce0c5adf6b72))
+* upgrade styled-components from 5.2.3 to 5.3.0 ([96d2de2](https://github.com/equinor/sepes-web/commit/96d2de200bab7974d190860a2f7cb6831208f980))
+* upgrade ts-jest from 26.5.5 to 26.5.6 ([#916](https://github.com/equinor/sepes-web/issues/916)) ([054deed](https://github.com/equinor/sepes-web/commit/054deedb8267f1645da68b04d7cb68bba8af1549))
+
 ### [0.1.23](https://github.com/equinor/sepes-web/compare/0.1.22...0.1.23) (2021-05-19)
 
 
