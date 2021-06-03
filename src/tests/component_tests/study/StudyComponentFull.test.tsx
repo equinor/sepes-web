@@ -31,7 +31,7 @@ const permissionsDeleteNotAllowed = {
     addRemoveDataset: true,
     addRemoveParticipant: true,
     addRemoveSandbox: true,
-    closeStudy: true,
+    closeStudy: false,
     deleteStudy: false,
     readResulsAndLearnings: true,
     updateMetadata: true,
