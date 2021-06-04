@@ -24,7 +24,7 @@ export const validateUserInput = (
         vm.size !== '' &&
         vm.dataDisks.length > 0 &&
         usernameIsValid &&
-        validateResourceName(vm.name)
+        validateVmName(vm.name)
     ) {
         return true;
     }
@@ -59,4 +59,14 @@ export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boole
         return 'success';
     }
     return 'error';
+};
+
+export const validateVmName = (vmName: string) => {
+    if (vmName === '' || vmName === undefined) {
+        return false;
+    }
+    const nameWithoutSpaces = vmName.split(' ').join('');
+    const onlyLettersAndNumbersAndDashes = /^[a-zA-Z0-9-]+$/;
+    const limit = /(?=.{3,123})/;
+    return onlyLettersAndNumbersAndDashes.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };
