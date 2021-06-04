@@ -17,6 +17,6 @@
 import './commands';
 require('cypress-plugin-retries');
 require('cypress-dark');
-//import '@cypress/code-coverage/support'
+import '@cypress/code-coverage/support';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

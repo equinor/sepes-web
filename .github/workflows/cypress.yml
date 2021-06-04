@@ -80,5 +80,12 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}        
+        if: ${{ github.event_name == 'schedule' }}
 
+      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: coverage/Icov-report/index.html
+# npx nyc report --reporter lcov --reporter text --report-dir coverage
