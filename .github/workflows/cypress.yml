@@ -89,14 +89,14 @@ jobs:
           name: Coverage-report
           path: coverage/lcov-report/
 
-      - id: Create cypress result summary
+      - id: cypress-summary
         run: npx nyc report --reporter=text-summary
 
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: 1
-          body: ${{ steps.get-comment-body.outputs.body }}
+          body: ${{ steps.cypress-summary.outputs.body }}
 
       # - name: Prepare reports
       #   if: always()
