@@ -88,4 +88,19 @@ jobs:
         with:
           name: Coverage-report
           path: coverage/lcov-report/
+
+
+      - name: Prepare reports
+        if: always()
+        run: |
+          npm i -g mochawesome-merge
+          npm i -g mochawesome-report-generator
+          mochawesome-merge test/cypress/reports/mocha/*.json > ./test/cypress/reports/mocha/index.json
+          marge --charts=true --showPassed=false -o ./test/cypress/reports/mocha/ ./test/cypress/reports/mocha/index.json
+      - name: Cypress report
+        uses: dmitry/cypress-report-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pathname: cypress/reports/mocha/index.json
+        if: always()
 # npx nyc report --reporter lcov --reporter text --report-dir coverage
