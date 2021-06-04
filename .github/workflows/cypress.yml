@@ -87,5 +87,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: coverage/Icov-report/index.html
+          path: coverage/
 # npx nyc report --reporter lcov --reporter text --report-dir coverage
