@@ -83,9 +83,9 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
-      - run: dir
+      - run: dir coverage
       - uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
+          name: Coverage-report
           path: coverage/
 # npx nyc report --reporter lcov --reporter text --report-dir coverage
