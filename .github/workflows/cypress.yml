@@ -89,8 +89,9 @@ jobs:
           name: Coverage-report
           path: coverage/lcov-report/
 
-      - id: cypress-summary
-        run: npx nyc report --reporter=text-summary
+      - id: cypress-summary 
+        run: |
+          body=$(npx nyc report --reporter=text-summary)
 
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
