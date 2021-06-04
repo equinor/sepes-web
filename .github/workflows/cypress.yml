@@ -89,18 +89,26 @@ jobs:
           name: Coverage-report
           path: coverage/lcov-report/
 
+      - id: Create cypress result summary
+        run: npx nyc report --reporter=text-summary
 
-      - name: Prepare reports
-        if: always()
-        run: |
-          npm i -g mochawesome-merge
-          npm i -g mochawesome-report-generator
-          mochawesome-merge test/cypress/reports/mocha/*.json > ./test/cypress/reports/mocha/index.json
-          marge --charts=true --showPassed=false -o ./test/cypress/reports/mocha/ ./test/cypress/reports/mocha/index.json
-      - name: Cypress report
-        uses: dmitry/cypress-report-action@v1
+      - name: Post result in comment
+        uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pathname: cypress/reports/mocha/index.json
-        if: always()
+          issue-number: 1
+          body: ${{ steps.get-comment-body.outputs.body }}
+
+      # - name: Prepare reports
+      #   if: always()
+      #   run: |
+      #     npm i -g mochawesome-merge
+      #     npm i -g mochawesome-report-generator
+      #     mochawesome-merge test/cypress/reports/mocha/*.json > ./test/cypress/reports/mocha/index.json
+      #     marge --charts=true --showPassed=false -o ./test/cypress/reports/mocha/ ./test/cypress/reports/mocha/index.json
+      # - name: Cypress report
+      #   uses: dmitry/cypress-report-action@v1
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     pathname: cypress/reports/mocha/index.json
+      #   if: always()
 # npx nyc report --reporter lcov --reporter text --report-dir coverage
