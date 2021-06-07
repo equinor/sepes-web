@@ -104,6 +104,7 @@ jobs:
           cy_coverage2: ${{ steps.cypress-summary.outputs.cy_coverage }}
         with:
           body: $cy_coverage2
+          issue-number: ${{ github.event.pull_request.number }}
 
       # - name: Prepare reports
       #   if: always()
