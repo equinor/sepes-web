@@ -92,13 +92,7 @@ jobs:
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
 
-      - run: sed 's/a//g' cypress_test_summary.txt
-
-      - name: Post result in comment
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          body: cypress_test_summary.txt
-          issue-number: ${{ github.event.pull_request.number }}
+      - run: sed 's/=//g' cypress_test_summary.txt > cypress_test_summary.txt
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
