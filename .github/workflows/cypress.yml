@@ -92,7 +92,7 @@ jobs:
 
 
       - name: cypress_summary 
-        run: echo "::set-output name=cy_coverage::$(npx nyc report --reporter=text-summary)"
+        run: echo "::set-output name=cy_coverage::$(echo "npx nyc report --reporter=text-summary")"
         id: cypress_summary 
 
       - run: $cy_coverage2
