@@ -90,20 +90,19 @@ jobs:
           name: Coverage-report
           path: coverage/lcov-report/
 
-      - id: cypress-summary 
+
+      - id: cypress_summary 
         run: |
           echo "::set-output name=cy_coverage::$(npx nyc report --reporter=text-summary)"
 
       - run: $cy_coverage2
         env: 
-          cy_coverage2: ${{ steps.cypress-summary.outputs.cy_coverage }}
+          cy_coverage2: ${{ steps.cypress_summary.outputs.cy_coverage }}
 
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
-        env: 
-          cy_coverage2: ${{ steps.cypress-summary.outputs.cy_coverage }}
         with:
-          body: $cy_coverage2
+          body: ${{ steps.cypress_summary.outputs.cy_coverage }}
           issue-number: ${{ github.event.pull_request.number }}
 
       # - name: Prepare reports
