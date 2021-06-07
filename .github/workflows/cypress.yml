@@ -92,14 +92,14 @@ jobs:
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
 
-      - run: sed 's/=//g' cypress_test_summary.txt > cypress_test_summary.txt
+      - run: sed 's/a//g' cypress_test_summary.txt > cypress_test_summary2.txt
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: cypress_test_summary.txt
+          path: cypress_test_summary2.txt
       # - name: cypress_summary 
       #   run: echo "::set-output name=cy_coverage::$(echo "npx nyc report --reporter=text-summary")"
       #   id: cypress_summary 
