@@ -100,7 +100,6 @@ jobs:
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: 1
           body: $cy_coverage2
 
       # - name: Prepare reports
