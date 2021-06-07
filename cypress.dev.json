@@ -7,6 +7,17 @@
     "chromeWebSecurity": false,
     "video": false,
     "nodeVersion": "system",
+    "reporter": "cypress-multi-reporters",
+    "reporterOptions": {
+        "reporterEnabled": "mochawesome",
+        "mochawesomeReporterOptions": {
+            "reportDir": "test/cypress/reports/mocha",
+            "quiet": true,
+            "overwrite": false,
+            "html": false,
+            "json": true
+        }
+    },
     "env": {
         "TENANT_ID": "",
         "CLIENT_ID": "",

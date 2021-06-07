@@ -59,7 +59,8 @@ jobs:
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
-      - name: Run quick running cypress tests  
+      - name: Run quick running cypress tests
+        continue-on-error: true
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
@@ -80,5 +81,25 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}        
+        if: ${{ github.event_name == 'schedule' }}
 
+      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+      - run: dir coverage
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Coverage-report
+          path: coverage/lcov-report/
+
+      - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
+        if: ${{ github.event_name != 'schedule' }}
+
+      - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
+        if: ${{ github.event_name != 'schedule' }}
+
+      - name: comment PR
+        uses: machine-learning-apps/pr-comment@master
+        if: ${{ github.event_name != 'schedule' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: cypress_test_summary2.txt
