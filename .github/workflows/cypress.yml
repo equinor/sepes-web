@@ -92,7 +92,7 @@ jobs:
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
 
-      - run: sed 's/a//g' cypress_test_summary.txt > cypress_test_summary2.txt
+      - run: sed '1d' cypress_test_summary.txt > cypress_test_summary2.txt
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
