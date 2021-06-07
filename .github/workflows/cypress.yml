@@ -101,7 +101,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: 1
-          body: ${{ steps.cypress-summary.outputs.cy_coverage }}
+          body: $cy_coverage2
 
       # - name: Prepare reports
       #   if: always()
