@@ -100,31 +100,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: cypress_test_summary2.txt
-      # - name: cypress_summary 
-      #   run: echo "::set-output name=cy_coverage::$(echo "npx nyc report --reporter=text-summary")"
-      #   id: cypress_summary 
-
-      # - run: $cy_coverage2
-      #   env: 
-      #     cy_coverage2: ${{ steps.cypress_summary.outputs.cy_coverage }}
-
-      # - name: Post result in comment
-      #   uses: peter-evans/create-or-update-comment@v1
-      #   with:
-      #     body: ${{ steps.cypress_summary.outputs.cy_coverage }}
-      #     issue-number: ${{ github.event.pull_request.number }}
-
-      # - name: Prepare reports
-      #   if: always()
-      #   run: |
-      #     npm i -g mochawesome-merge
-      #     npm i -g mochawesome-report-generator
-      #     mochawesome-merge test/cypress/reports/mocha/*.json > ./test/cypress/reports/mocha/index.json
-      #     marge --charts=true --showPassed=false -o ./test/cypress/reports/mocha/ ./test/cypress/reports/mocha/index.json
-      # - name: Cypress report
-      #   uses: dmitry/cypress-report-action@v1
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     pathname: cypress/reports/mocha/index.json
-      #   if: always()
-# npx nyc report --reporter lcov --reporter text --report-dir coverage
