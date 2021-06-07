@@ -91,9 +91,11 @@ jobs:
 
       - id: cypress-summary 
         run: |
-          echo "::set-output name=cy_coverage::$(npx nyc report --reporter=text-summary)\n"
+          echo "::set-output name=cy_coverage::$(npx nyc report --reporter=text-summary)"
 
-      - run: ${{ steps.cypress-summary.outputs.cy_coverage }}
+      - run: $cy_coverage2
+        env: 
+          cy_coverage2: ${{ steps.cypress-summary.outputs.cy_coverage }}
 
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
