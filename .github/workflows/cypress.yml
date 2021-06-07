@@ -91,11 +91,14 @@ jobs:
           path: coverage/lcov-report/
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
+        if: ${{ github.event_name != 'schedule' }}
 
       - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
+        if: ${{ github.event_name != 'schedule' }}
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
+        if: ${{ github.event_name != 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
