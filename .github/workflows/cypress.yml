@@ -93,6 +93,8 @@ jobs:
         run: |
           echo "::set-output name=cy_coverage::$(npx nyc report --reporter=text-summary)\n"
 
+      - run: ${{ steps.cypress-summary.outputs.cy_coverage }}
+
       - name: Post result in comment
         uses: peter-evans/create-or-update-comment@v1
         with:
