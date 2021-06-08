@@ -15,7 +15,7 @@ import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getResultsAndLearningsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
 import { getStudyId } from 'utils/CommonUtil';
@@ -80,12 +80,6 @@ const StudyDetails = () => {
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
-    const resultsAndLearningsResponse = useFetchUrl(
-        getResultsAndLearningsUrl(id),
-        setResultsAndLearnings,
-        id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
-        controller
-    );
 
     const permissions = useContext(Permissions);
     const displayStudyInfo = !studyResponse.loading && study;
@@ -148,7 +142,6 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
-                        resultsAndLearningsResponse={resultsAndLearningsResponse}
                         controller={controller}
                     />
                 );

@@ -39,7 +39,6 @@ type OverviewProps = {
     setHasChanged: any;
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
-    resultsAndLearningsResponse: any;
     controller: AbortController;
 };
 
