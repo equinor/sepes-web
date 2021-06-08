@@ -87,6 +87,7 @@
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/plugin-syntax-typescript": "^7.12.13",
         "@cypress/code-coverage": "^3.9.6",
         "@cypress/instrument-cra": "^1.1.1",
         "@typescript-eslint/eslint-plugin": "^4.24.0",
@@ -123,7 +124,11 @@
             "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
             "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
             "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs"
-        }
+        },
+        "coverageReporters": [
+            "text-summary",
+            "lcov"
+        ]
     },
     "resolutions": {
         "**/@typescript-eslint/eslint-plugin": "^4.1.1",
@@ -131,13 +136,14 @@
     },
     "babel": {
         "presets": [
-            "@babel/react",
             "@babel/preset-env",
-            "@babel/preset-typescript"
+            "@babel/preset-typescript",
+            "@babel/preset-react"
         ],
         "plugins": [
             "@babel/plugin-proposal-class-properties",
-            "istanbul"
+            "@babel/plugin-syntax-jsx",
+            "@babel/plugin-syntax-typescript"
         ]
     }
 }
