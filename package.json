@@ -126,8 +126,7 @@
             "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs"
         },
         "coverageReporters": [
-            "json",
-            "html"
+            "text-summary"
         ]
     },
     "resolutions": {
