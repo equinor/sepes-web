@@ -121,4 +121,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Total coverage report
-          path: coverage.json
+          path: totalCoverage
