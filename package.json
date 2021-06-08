@@ -126,7 +126,8 @@
             "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs"
         },
         "coverageReporters": [
-            "text-summary"
+            "text-summary",
+            "lcov"
         ]
     },
     "resolutions": {
