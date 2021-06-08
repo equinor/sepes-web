@@ -149,6 +149,7 @@ const StudyDetails = () => {
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         resultsAndLearningsResponse={resultsAndLearningsResponse}
+                        controller={controller}
                     />
                 );
         }

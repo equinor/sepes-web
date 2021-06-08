@@ -9,6 +9,7 @@ import { lineBreak } from '../common/helpers/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
+import useFetchUrl from 'components/common/hooks/useFetchUrl';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -39,6 +40,7 @@ type OverviewProps = {
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
     resultsAndLearningsResponse: any;
+    controller: AbortController;
 };
 
 const Overview: React.FC<OverviewProps> = ({
@@ -46,10 +48,17 @@ const Overview: React.FC<OverviewProps> = ({
     setHasChanged,
     setResultsAndLearnings,
     resultsAndLearnings,
-    resultsAndLearningsResponse
+    controller
 }) => {
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
+
+    const resultsAndLearningsResponse = useFetchUrl(
+        getResultsAndLearningsUrl(id),
+        setResultsAndLearnings,
+        id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        controller
+    );
 
     const handleChange = (evt) => {
         setHasChanged(true);
