@@ -71,10 +71,10 @@ jobs:
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         if: ${{ github.event_name == 'schedule' }}
         
-      - name: Run all tests in Edge browser  
+      - name: Run all tests in Chromium browser  
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --browser edge --config-file "cypress.dev.json" --env cyAccessToken=$token
+        run: npx cypress run --browser chromium --config-file "cypress.dev.json" --env cyAccessToken=$token
         if: ${{ github.event_name == 'schedule' }}
         
       - name: Run all tests in Firefox browser  
