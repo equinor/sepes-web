@@ -128,7 +128,8 @@
         },
         "coverageReporters": [
             "text-summary",
-            "lcov"
+            "lcov",
+            "json"
         ]
     },
     "resolutions": {
