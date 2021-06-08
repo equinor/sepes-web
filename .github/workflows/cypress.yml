@@ -60,7 +60,6 @@ jobs:
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - name: Run quick running cypress tests
-        continue-on-error: true
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
