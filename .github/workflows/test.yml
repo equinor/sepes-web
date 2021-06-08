@@ -14,7 +14,8 @@ jobs:
                   test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
             - name: Create coverage report
-              run: npx react-scripts test -- --coverage
+              run: npm test -- --coverage
+              continue-on-error: true
 
             - uses: actions/upload-artifact@v2
               with:
