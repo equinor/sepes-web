@@ -106,16 +106,15 @@ jobs:
 
 
 
-      -  name: Test coverage
 
-            - name: Create coverage report
-              run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-              continue-on-error: true
-            - run: dir
+      - name: Create coverage report
+        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+        continue-on-error: true
+      - run: dir
 
-            - run: npx istanbul-merge --out coverage.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+      - run: npx istanbul-merge --out coverage.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
-            - uses: actions/upload-artifact@v2
-              with:
-                name: Total coverage report
-                path: coverage.json
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Total coverage report
+          path: coverage.json
