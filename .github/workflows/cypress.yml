@@ -11,11 +11,6 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: izhangzhihao/delete-comment@master
-        with: 
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_user_name: github-actions
-          issue_number: ${{ github.event.number }}
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -109,9 +104,6 @@ jobs:
         with:
           path: cypress_test_summary2.txt
 
-
-
-
       - name: Create coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
         continue-on-error: true
@@ -121,7 +113,7 @@ jobs:
 
       - run: dir coverage
 
-      - run: cypress-coverage
+      - run: dir cypress-coverage
 
       - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./cypress-coverage/coverage-final.json
 
