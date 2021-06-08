@@ -16,7 +16,7 @@ jobs:
             - name: Create coverage report
               run: npm test -- --coverage
               continue-on-error: true
-
+            - run: dir
             - uses: actions/upload-artifact@v2
               with:
                 name: Coverage-report
