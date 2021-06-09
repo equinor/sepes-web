@@ -95,13 +95,16 @@ jobs:
       - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
         if: ${{ github.event_name != 'schedule' }}
 
+      - run: sed '1 a Cypress Test Result' cypress_test_summary.txt > cypress_test_summary3.txt
+        if: ${{ github.event_name != 'schedule' }}
+
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         if: ${{ github.event_name != 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: cypress_test_summary2.txt
+          path: cypress_test_summary3.txt
 
 
       - run: npx nyc report --reporter json  --report-dir coverage
