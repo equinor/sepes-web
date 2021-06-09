@@ -109,6 +109,14 @@ jobs:
         continue-on-error: true
       - run: dir
 
+      - run: dir test
+
+      - run: dir test/cypress
+
+      - run: dir test/cypress/reports
+
+      - run: dir test/cypress/reports/mocha
+
       - run: dir jest-coverage
 
       - run: dir coverage
