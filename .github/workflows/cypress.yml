@@ -100,6 +100,7 @@ jobs:
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
+        continue-on-error: true
         if: ${{ github.event_name != 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
