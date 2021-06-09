@@ -22,7 +22,6 @@ export const validateUserInput = (
         vm.name !== '' &&
         vm.operatingSystem !== '' &&
         vm.size !== '' &&
-        vm.dataDisks.length > 0 &&
         usernameIsValid &&
         validateVmName(vm.name)
     ) {

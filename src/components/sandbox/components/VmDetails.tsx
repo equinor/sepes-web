@@ -22,11 +22,11 @@ const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
     min-height: 400px;
-    padding: 16px;
+    padding: 32px 16px 16px 16px;
     margin-bottom: 128px;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-gap: 16px;
+    grid-template-columns: 298px 1fr;
+    grid-gap: 40px;
     @media (max-width: 700px) {
         display: block;
     }
@@ -435,7 +435,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     />
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '18px' }}>
+                                                    <div style={{ paddingBottom: '4px' }}>
                                                         <CoreDevDropdown
                                                             options={ipMethod}
                                                             onChange={(e: any) =>
@@ -485,7 +485,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     )}
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '18px' }}>
+                                                    <div style={{ paddingBottom: '4px' }}>
                                                         <CoreDevDropdown
                                                             options={portsOptions}
                                                             onChange={(e: any) => {

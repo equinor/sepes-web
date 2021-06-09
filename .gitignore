@@ -30,3 +30,4 @@ yarn-error.log*
 /jest-coverage
 /.env
 /cypress/screenshots
+/totalCoverage
