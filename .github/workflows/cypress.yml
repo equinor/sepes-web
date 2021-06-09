@@ -60,7 +60,6 @@ jobs:
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - name: Run quick running cypress tests
-        continue-on-error: true
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
@@ -84,7 +83,7 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
-      - run: dir coverage
+
       - uses: actions/upload-artifact@v2
         with:
           name: Coverage-report
@@ -109,27 +108,9 @@ jobs:
       - name: Create coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
         continue-on-error: true
-      - run: dir
-
-      - run: dir test
-
-      - run: dir test/cypress
-
-      - run: dir test/cypress/reports
-
-      - run: dir test/cypress/reports/mocha
-
-      - run: dir jest-coverage
-
-      - run: dir coverage
-
-      - run: dir cypress-coverage
-
       - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
       - run: npx istanbul report --include coverage2.json --dir totalCoverage html
-
-      - run: dir
 
       - uses: actions/upload-artifact@v2
         with:
