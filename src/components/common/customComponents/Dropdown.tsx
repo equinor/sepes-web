@@ -15,7 +15,7 @@ const icons = {
 Icon.add(icons);
 
 const Dropdown = styled.div<{ isOpen: any; color: any }>`
-    height: 37px;
+    height: 35px;
     width: ${(props: any) => (props.width ? props.width : '220px')};
     font-size: 16px;
     display: flex;
