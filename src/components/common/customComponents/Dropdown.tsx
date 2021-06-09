@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useClickOutside from './useClickOutside';
 import styled from 'styled-components';
-import { Icon, Typography } from '@equinor/eds-core-react';
+import { Icon, Typography, Label } from '@equinor/eds-core-react';
 import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
 import { truncate } from '../helpers/helpers';
@@ -25,13 +25,15 @@ const Dropdown = styled.div<{ isOpen: any; color: any }>`
     font-family: Equinor;
     letter-spacing: 0.4px;
     outline-color: #007079;
-    border-bottom: 1px solid #6f6f6f;
-
+    border-bottom: ${(props: any) => (props.isOpen ? '0px' : '1px solid #6f6f6f')};
+    outline: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
     &:hover {
         cursor: pointer;
     }
 `;
 /*
+border-bottom: 1px solid #6f6f6f;
+${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
     border-bottom: ${(props: any) => (props.isOpen ? '2px solid #007079' : '1px solid #6f6f6f')};
     border-top: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
     border-right: ${(props: any) => (props.isOpen ? '2px solid #007079' : '0px')};
@@ -45,17 +47,17 @@ const DropdownOption = styled.div`
     padding: 16px;
 `;
 
-const Label = styled.p`
-    height: 16px;
-    font-size: 12px;
-    line-height: 16px;
-    display: flex;
-    align-items: center;
-    color: #6f6f6f;
-    margin: 0px;
-    font-weight: 400;
-    line-height: 1.333em;
-`;
+// const Label = styled.p`
+//     height: 16px;
+//     font-size: 12px;
+//     line-height: 16px;
+//     display: flex;
+//     align-items: center;
+//     color: #6f6f6f;
+//     margin: 0px;
+//     font-weight: 400;
+//     line-height: 1.333em;
+// `;
 /*
 const Meta = styled.div`
     margin-left: auto;
@@ -72,7 +74,7 @@ const Meta = styled.div`
 */
 
 const CoreDevDropdown = (props: any) => {
-    const { options, label, meta } = props;
+    const { options, label, meta, helperText } = props;
     const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
     const useOverflow = props.useOverflow || false;
     const [selectedOption, setSelectedOption] = useState({
@@ -114,7 +116,8 @@ const CoreDevDropdown = (props: any) => {
                     style={{
                         width: width ? width : '220px',
                         maxHeight: '500px',
-                        overflow: useOverflow ? 'auto' : 'visible'
+                        overflow: useOverflow ? 'auto' : 'visible',
+                        marginTop: '1px'
                     }}
                 >
                     {options.map((option: any, i: number) => {
@@ -157,9 +160,9 @@ const CoreDevDropdown = (props: any) => {
             }}
         >
             <div style={{ display: 'flex' }}>
-                <Label>{label}</Label>
+                <Label style={{ marginLeft: '0' }} label={label} />
                 <div style={{ marginLeft: 'auto' }}>
-                    <Label>{meta}</Label>
+                    <Label label={meta} />
                 </div>
             </div>
             <Dropdown
@@ -173,6 +176,7 @@ const CoreDevDropdown = (props: any) => {
                 <span>{truncate(selectedOption.displayValue, 40)}</span>
                 {isOpen ? arrowUp : arrowDown}
             </Dropdown>
+            {helperText && !isOpen && <Label style={{ marginLeft: '0', marginTop: '8px' }} label={helperText} />}
             {isOpen && renderOptions(props.width)}
         </div>
     );
