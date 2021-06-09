@@ -11,13 +11,6 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr 30px;
 `;
 
-const SatusWrapper = styled.div`
-    margin-left: auto;
-    display: flex;
-    justify-content: center;
-    margin-top: 4px;
-`;
-
 const SatusWrapperCentered = styled.div`
     display: flex;
     justify-content: start;
@@ -74,7 +67,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                     <div>{type}</div>
                 )}
             </SatusWrapperCentered>
-            <SatusWrapper>
+            <SatusWrapperCentered>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {retryLink ? (
                         <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
@@ -86,7 +79,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                         EquinorIcon('check', '#007079', 24)
                     )}
                 </Tooltip>
-            </SatusWrapper>
+            </SatusWrapperCentered>
         </Wrapper>
     );
 };
