@@ -95,7 +95,7 @@ jobs:
       - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
         if: ${{ github.event_name != 'schedule' }}
 
-      - run: sed '1 a Cypress Test Result' cypress_test_summary.txt > cypress_test_summary3.txt
+      - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
         if: ${{ github.event_name != 'schedule' }}
 
       - name: comment PR
