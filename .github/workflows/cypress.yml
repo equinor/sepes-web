@@ -104,6 +104,8 @@ jobs:
         with:
           path: cypress_test_summary2.txt
 
+
+      - run: npx nyc report --reporter json  --report-dir coverage
       - name: Create coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
         continue-on-error: true
@@ -123,7 +125,7 @@ jobs:
 
       - run: dir cypress-coverage
 
-      - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./test/cypress/reports/mocha/mochawesome.json
+      - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
       - run: npx istanbul report --include coverage2.json --dir totalCoverage html
 
