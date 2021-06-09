@@ -60,7 +60,6 @@ jobs:
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - name: Run quick running cypress tests
-        continue-on-error: true
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
@@ -84,7 +83,7 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
-      - run: dir coverage
+
       - uses: actions/upload-artifact@v2
         with:
           name: Coverage-report
@@ -96,10 +95,27 @@ jobs:
       - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
         if: ${{ github.event_name != 'schedule' }}
 
+      - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
+        if: ${{ github.event_name != 'schedule' }}
+
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         if: ${{ github.event_name != 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: cypress_test_summary2.txt
+          path: cypress_test_summary3.txt
+
+
+      - run: npx nyc report --reporter json  --report-dir coverage
+      - name: Create coverage report
+        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+        continue-on-error: true
+      - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+
+      - run: npx istanbul report --include coverage2.json --dir totalCoverage html
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Total coverage report
+          path: totalCoverage
