@@ -1,5 +1,6 @@
 name: delete comments from Github actions
 on:
+  pull_request:
   workflow_dispatch:
 jobs:
   delete-comments:
