@@ -68,19 +68,19 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'pull_request' }}
         
       - name: Run all tests in Chromium browser  
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --browser chromium --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'pull_request' }}
         
       - name: Run all tests in Firefox browser  
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'pull_request' }}
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
@@ -90,17 +90,17 @@ jobs:
           path: coverage/lcov-report/
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
-        if: ${{ github.event_name != 'schedule' }}
+        if: ${{ github.event_name == 'pull_request' }}
 
       - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
-        if: ${{ github.event_name != 'schedule' }}
+        if: ${{ github.event_name == 'pull_request' }}
 
       - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
-        if: ${{ github.event_name != 'schedule' }}
+        if: ${{ github.event_name == 'pull_request' }}
 
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
-        if: ${{ github.event_name != 'schedule' }}
+        if: ${{ github.event_name == 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
