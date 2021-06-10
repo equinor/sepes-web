@@ -24,6 +24,12 @@ The command "npx cypress open" will open a new window containg all the cypress t
 5. Paste access token into the variable "cyToken" in cypress/support/commands.js
 6. Run npx cypress open
 
+### Testing in pipeline and coverage raport
+
+Jest and cypress test will run with every pull request. Long cypress test will be put in it's own folder and rund at night time. To get the coverage report, click on either the jest or cypress action, and it will be an artifact there. 
+
+With pull request, the pipeline will create comments with a short overview of the results from testing.
+
 ## Setup locally
 
 1. Clone project into local folder
