@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.25](https://github.com/equinor/sepes-web/compare/0.1.24...0.1.25) (2021-06-10)
+
+
+### Bug Fixes
+
+* **vm:** added retry mechanism for ip address ([#983](https://github.com/equinor/sepes-web/issues/983)) ([daaa537](https://github.com/equinor/sepes-web/commit/daaa53732b8f05166e3c79e32bad0ca91f9ed02a)), closes [#978](https://github.com/equinor/sepes-web/issues/978)
+* change cypress test browser ([e0afa93](https://github.com/equinor/sepes-web/commit/e0afa93269bb8d2ec7430358ffe1fc0563f112bf)), closes [#965](https://github.com/equinor/sepes-web/issues/965)
+* changed to fixed position of topbar and new study component ([5b363bc](https://github.com/equinor/sepes-web/commit/5b363bc12665870c28950859adb4e8681a3ba6ad)), closes [#942](https://github.com/equinor/sepes-web/issues/942) [#951](https://github.com/equinor/sepes-web/issues/951)
+* run lon running tests on manual trigger ([#988](https://github.com/equinor/sepes-web/issues/988)) ([0afd56b](https://github.com/equinor/sepes-web/commit/0afd56b20b124df31ae8656f13d2d4bf0740ba9c))
+* **vm:** remove data disk as a requirement ([#981](https://github.com/equinor/sepes-web/issues/981)) ([870d69b](https://github.com/equinor/sepes-web/commit/870d69b3f030e834451da704129bacdb3f1984da)), closes [#980](https://github.com/equinor/sepes-web/issues/980) [#977](https://github.com/equinor/sepes-web/issues/977)
+* Textfield validations ([#953](https://github.com/equinor/sepes-web/issues/953)) ([f5ce19c](https://github.com/equinor/sepes-web/commit/f5ce19c07f9df55748de691f57eb7008ac04e2e5)), closes [#945](https://github.com/equinor/sepes-web/issues/945) [#944](https://github.com/equinor/sepes-web/issues/944) [#943](https://github.com/equinor/sepes-web/issues/943)
+* upgrade @types/react from 17.0.5 to 17.0.6 ([#976](https://github.com/equinor/sepes-web/issues/976)) ([a2ac99a](https://github.com/equinor/sepes-web/commit/a2ac99a3a67213c38d4295e895927ae7cca771dc))
+* **study:** results and learnings bug ([#973](https://github.com/equinor/sepes-web/issues/973)) ([75c375b](https://github.com/equinor/sepes-web/commit/75c375bc2fa7e85a55c6015e066f58f33f90fe76)), closes [#967](https://github.com/equinor/sepes-web/issues/967)
+* change standard link desciprion ([f87de6e](https://github.com/equinor/sepes-web/commit/f87de6ee08bdee5f9075a15741d3acf19376bd42)), closes [#969](https://github.com/equinor/sepes-web/issues/969)
+* upgrade @typescript-eslint/eslint-plugin from 4.23.0 to 4.24.0 ([#964](https://github.com/equinor/sepes-web/issues/964)) ([782be4f](https://github.com/equinor/sepes-web/commit/782be4fb04a869f3201f495bb70ab30172112edb))
+* upgrade @typescript-eslint/parser from 4.23.0 to 4.24.0 ([12ec491](https://github.com/equinor/sepes-web/commit/12ec4916e04477703c79113460a5ba96a0a162e7))
+
 ### [0.1.24](https://github.com/equinor/sepes-web/compare/0.1.23...0.1.24) (2021-06-03)
 
 
