@@ -76,11 +76,11 @@ jobs:
         run: npx cypress run --browser chromium --config-file "cypress.dev.json" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' }}
         
-      - name: Run all tests in Firefox browser  
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' }}
+      # - name: Run all tests in Firefox browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
