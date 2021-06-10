@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress } from '@equinor/eds-core-react';
+import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress, Label } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
@@ -8,7 +8,7 @@ import {
     returnPasswordVariant,
     returnUsernameVariant
 } from '../../common/helpers/sandboxHelpers';
-import { Label } from '../../common/StyledComponents';
+// import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
 import {
@@ -290,8 +290,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     }
                 />
                 <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-                    <Label>Actual VM name</Label>
-                    <Typography variant="h6">{actualVmName || '-'}</Typography>
+                    <Label label="Actual VM name" />
+                    <Typography style={{ marginLeft: '8px' }} variant="h6">
+                        {actualVmName || '-'}
+                    </Typography>
                 </div>
                 <CoreDevDropdown
                     label="Operating system"
@@ -388,13 +390,17 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 onChange={handleDropdownChange}
                 name="dataDisks"
                 data-cy="vm_dataDisks"
-                meta="(required)"
                 useOverflow
                 tabIndex={0}
+                helperText={
+                    vm.dataDisks.length > 0
+                        ? 'Data disk is not accessible until you initalize and partition the hardrive within the operating system'
+                        : ''
+                }
             />
             <div>
-                <Label>Estimated total</Label>
-                <Typography variant="h6">
+                <Label label="Estimated total" />
+                <Typography variant="h6" style={{ marginLeft: '8px' }}>
                     {' '}
                     {vmEstimatedCost ? '$' + roundUp(vmEstimatedCost, 10) + '/month' : '-'}
                 </Typography>

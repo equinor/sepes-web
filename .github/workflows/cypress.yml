@@ -55,11 +55,11 @@ jobs:
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
     
-      - run: npm ci
+      #- run: npm ci
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
-      - name: Run quick running cypress tests  
+      - name: Run quick running cypress tests
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
@@ -68,5 +68,54 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name != 'pull_request' }}
+        
+      - name: Run all tests in Chromium browser  
+        env:
+          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+        run: npx cypress run --browser chromium --config-file "cypress.dev.json" --env cyAccessToken=$token
+        if: ${{ github.event_name != 'pull_request' }}
+        
+      # - name: Run all tests in Firefox browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
 
+      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Coverage-report
+          path: coverage/lcov-report/
+
+      - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - name: comment PR
+        uses: machine-learning-apps/pr-comment@master
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: cypress_test_summary3.txt
+
+
+      - run: npx nyc report --reporter json  --report-dir coverage
+      - name: Create coverage report
+        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+        continue-on-error: true
+      - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+
+      - run: npx istanbul report --include coverage2.json --dir totalCoverage html
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Total coverage report
+          path: totalCoverage

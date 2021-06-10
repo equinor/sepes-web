@@ -19,6 +19,12 @@ const icons = {
 Icon.add(icons);
 
 const Wrapper = styled.div`
+    z-index: 99;
+    top: 0;
+    position: fixed;
+    width: 100%;
+    flex: 0 1 auto;
+    margin-bottom: 32px;
     overflow: auto;
 `;
 
@@ -133,7 +139,7 @@ const Bar = () => {
 
     return (
         <Wrapper>
-            <TopBar style={{ position: 'initial' }}>
+            <TopBar>
                 <Header>{LEFT_CHOICES[leftChoice]}</Header>
                 {CENTER_CHOICES[centerChoice]}
                 <TopBar.Actions>

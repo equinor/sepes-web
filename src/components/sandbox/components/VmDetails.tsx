@@ -22,11 +22,11 @@ const { Body, Row, Cell, Head } = Table;
 
 const Wrapper = styled.div`
     min-height: 400px;
-    padding: 16px;
+    padding: 32px 16px 16px 16px;
     margin-bottom: 128px;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-gap: 16px;
+    grid-template-columns: 298px 1fr;
+    grid-gap: 40px;
     @media (max-width: 700px) {
         display: block;
     }
@@ -102,7 +102,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         getVmExtendedInfo();
     }, [index, vm, resources]);
     useEffect(() => {
-        getMyIp();
+        callGetMyIp();
         getVmRules();
     }, [index]);
 
@@ -364,15 +364,26 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         return enabled;
     };
 
-    const getMyIp = () => {
-        fetch('https://api.ipify.org?format=json')
+    const getMyIp = async () => {
+        return fetch('https://api.ipify.org?format=json')
             .then((response) => {
                 return response.json();
             })
             .then((res: any) => {
                 setClientIp(res.ip);
+                return res.ip;
             })
             .catch((err: any) => console.error('Problem fetching my IP', err));
+    };
+
+    const callGetMyIp = async () => {
+        // const ip = await getMyIp();
+        let ip = '';
+        let tryCount = 0;
+        while (!ip && tryCount < 3) {
+            ip = await getMyIp();
+            tryCount++;
+        }
     };
 
     const returnOpenClosed = (type: 'text' | 'button') => {
@@ -435,23 +446,17 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     />
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '18px' }}>
-                                                        <CoreDevDropdown
-                                                            options={ipMethod}
-                                                            onChange={(e: any) =>
-                                                                handleDropdownChangeClientIp(
-                                                                    e,
-                                                                    'useClientIp',
-                                                                    ruleNumber
-                                                                )
-                                                            }
-                                                            name="useClientIp"
-                                                            tabIndex={0}
-                                                            preSlectedValue={'Custom'}
-                                                            data-cy="vm_rule_useClientIp"
-                                                            disabled={!permissions.editInboundRules}
-                                                        />
-                                                    </div>
+                                                    <CoreDevDropdown
+                                                        options={ipMethod}
+                                                        onChange={(e: any) =>
+                                                            handleDropdownChangeClientIp(e, 'useClientIp', ruleNumber)
+                                                        }
+                                                        name="useClientIp"
+                                                        tabIndex={0}
+                                                        preSlectedValue={'Custom'}
+                                                        data-cy="vm_rule_useClientIp"
+                                                        disabled={!permissions.editInboundRules}
+                                                    />
                                                 </Cell>
                                                 <Cell>
                                                     {rule.useClientIp ? (
@@ -485,20 +490,18 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                     )}
                                                 </Cell>
                                                 <Cell>
-                                                    <div style={{ paddingBottom: '18px' }}>
-                                                        <CoreDevDropdown
-                                                            options={portsOptions}
-                                                            onChange={(e: any) => {
-                                                                handleDropdownChange('protocol', ruleNumber, e);
-                                                            }}
-                                                            name="protocol"
-                                                            preSlectedValue={rule.protocol || 'Custom'}
-                                                            data-cy="vm_rule_protocol"
-                                                            disabled={!permissions.editInboundRules}
-                                                            width="240px"
-                                                            tabIndex={1}
-                                                        />
-                                                    </div>
+                                                    <CoreDevDropdown
+                                                        options={portsOptions}
+                                                        onChange={(e: any) => {
+                                                            handleDropdownChange('protocol', ruleNumber, e);
+                                                        }}
+                                                        name="protocol"
+                                                        preSlectedValue={rule.protocol || 'Custom'}
+                                                        data-cy="vm_rule_protocol"
+                                                        disabled={!permissions.editInboundRules}
+                                                        width="240px"
+                                                        tabIndex={1}
+                                                    />
                                                 </Cell>
                                                 <Cell>
                                                     {rule.protocol !== protocolOptions.CUSTOM ? (

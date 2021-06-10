@@ -74,7 +74,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                     <div>{type}</div>
                 )}
             </SatusWrapperCentered>
-            <SatusWrapper>
+            <SatusWrapperCentered>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
                     {retryLink ? (
                         <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
@@ -86,7 +86,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                         EquinorIcon('check', '#007079', 24)
                     )}
                 </Tooltip>
-            </SatusWrapper>
+            </SatusWrapperCentered>
         </Wrapper>
     );
 };

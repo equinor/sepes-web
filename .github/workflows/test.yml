@@ -13,3 +13,12 @@ jobs:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
+            - name: Create coverage report
+              run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+              continue-on-error: true
+            - run: dir
+            - uses: actions/upload-artifact@v2
+              with:
+                name: Coverage-report
+                path: jest-coverage/lcov-report/
+

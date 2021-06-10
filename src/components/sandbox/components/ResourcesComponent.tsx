@@ -23,7 +23,7 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, p
                 </Row>
             </Head>
             <Body>
-                {resources && Array.isArray(resources) ? (
+                {resources && resources.length > 0 && Array.isArray(resources) ? (
                     resources.map((resource: any, i: number) => {
                         return (
                             <Row key={i} id="tableRowNoPointerNoColor">
