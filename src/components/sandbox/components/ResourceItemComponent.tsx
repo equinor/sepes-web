@@ -11,6 +11,13 @@ const Wrapper = styled.div`
     grid-template-columns: 1fr 30px;
 `;
 
+const SatusWrapper = styled.div`
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+`;
+
 const SatusWrapperCentered = styled.div`
     display: flex;
     justify-content: start;
