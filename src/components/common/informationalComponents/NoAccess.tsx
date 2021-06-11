@@ -29,5 +29,5 @@ const NoAccess = () => {
         </div>
     );
 };
-//It seems like you don´t have access to this content.
+
 export default NoAccess;
