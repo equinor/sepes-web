@@ -22,7 +22,8 @@ const NoAccess = () => {
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
                     You do not have the required study role to view this page.
-                    <td /> Asks relevant study owner/sponsor rep to give you a role that allows you do to this action.
+                    <td /> Contact relevant study owner/sponsor rep to give you a role that allows you do to this
+                    action.
                 </Typography>
             </div>
         </div>
