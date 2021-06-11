@@ -363,17 +363,19 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         data-cy="dataset_dataId"
                         autoComplete="off"
                     />
-                    <StyledLink
-                        href={dataInventoryLink}
-                        style={{ marginTop: '-8px' }}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <LinkWrapper>
-                            {EquinorIcon('external_link', '#007079', 24)}
-                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
-                        </LinkWrapper>
-                    </StyledLink>
+                    {checkUrlIfGeneralDataset() && (
+                        <StyledLink
+                            href={dataInventoryLink}
+                            style={{ marginTop: '-8px' }}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <LinkWrapper>
+                                {EquinorIcon('external_link', '#007079', 24)}
+                                <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
+                            </LinkWrapper>
+                        </StyledLink>
+                    )}
                     <SaveCancelWrapper>
                         <Button
                             disabled={checkForInputErrors(dataset) || loading}
