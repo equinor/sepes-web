@@ -8,7 +8,6 @@ import {
     returnPasswordVariant,
     returnUsernameVariant
 } from '../../common/helpers/sandboxHelpers';
-// import { Label } from '../../common/StyledComponents';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
 import {
