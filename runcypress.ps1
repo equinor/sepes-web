@@ -1,53 +1,189 @@
-##This script requires the Powershell Azure Module installed, see https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
-##Usually it's enough to run the following command from a PowerShell opened as Administrator: Install-Module -Name Az -AllowClobber
+. .\src\functions\helpers
 
-## Remember to run Connect-AzAccount to login first
-#Connect-AzureAD
-
-# Write-Host "Getting secrets from KeyVault"
-$mockUserAppClientSecret = (Get-AzKeyVaultSecret -vaultName "eq-sc-archive-common-kv" -name "mockUserAppClientSecret").SecretValueText
-$mockUserAppId = (Get-AzKeyVaultSecret -vaultName "eq-sc-archive-common-kv" -name "mockuserAppId").SecretValueText
-$mockUserAppScopes = (Get-AzKeyVaultSecret -vaultName "eq-sc-archive-common-kv" -name "mockUserAppScopes").SecretValueText
+# Configuration
+$appId = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypress-appId" -AsPlainText
+$scope = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "AzureAdClientIdScope" -AsPlainText
 $tenantId = "3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
+$clientSecret = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypress-clientSecret" -AsPlainText
+$localDatabase = "thelma-cypress"
+$localSqlInstance = "PF1K0W2Y\SQLEXPRESS"
+$localTestDatabase = "Server=PF1K0W2Y;Database=SepesIntegrationTest;Trusted_Connection=True;MultipleActiveResultSets=False;Integrated Security=true;Connection Timeout=30;"
+$localApiRelativePath = "../../sepes-api-2/sepes-api/src/Sepes.RestApi"
 
-# #Improve reliability of this bin/debug stuff, investigate dotnet run
-Write-Host "Retrieving access token"
-dotnet GetAccessToken/bin/debug/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockUserAppId --mock-user-client-secret $mockUserAppClientSecret --authority $mockUserAppScopes --output-destination-file accesstoken.txt
-$accessToken = Get-Content -Path accessToken.txt
-Remove-Item -path accessToken.txt
-#Write-Host $accessToken
+$currentConnectionString = "Server=PF1K0W2Y;Database=SepesIntegrationTest;Trusted_Connection=True;MultipleActiveResultSets=False;Integrated Security=true;Connection Timeout=30;"
+$modulesNotFound = $false;
+$accessToken = "abc"
 
-# ### Re-add it later when we include a step for deleting all secrets in KeyVault
-# ### Can use PowerShell command Remove-AzureADApplicationPasswordCredential for this
-# Write-Host "Generate new client secret"
-# #Sourced from: https://social.msdn.microsoft.com/Forums/en-US/6024e3b4-6814-479f-b527-622d60c8621c/create-client-secret-for-registered-app-in-aad-using-powershell?forum=WindowsAzureAD
-# $startDate = Get-Date
-# $endDate = $startDate.AddYears(3)
-# $mockUserAppClientSecret = New-AzureADApplicationPasswordCredential -ObjectId <object-id of mockuser app registration> -CustomKeyIdentifier "Secret01Jsoi" -StartDate $startDate -EndDate $endDate
-# #Write-Host "Writing value:"
-# #Write-Host $mockUserAppClientSecret.Value
+function MenuEnvironment() {
+    ClearLines -Count 8
+    $Opts = @(
+        $(New-MenuItem -DisplayName "Run Cypress test in console" -Script { 
+            RunCypressInConsole
+        }),
+        $(New-MenuItem -DisplayName "Run Cypress test in browser" -Script { 
+            RunCypressInBrowser
+        }),
+        $(New-MenuItem -DisplayName "Run cypress in browser light version (Use this)" -Script { 
+            RunCypressInBrowserLightVersion
+        }),
+        $(New-MenuItem -DisplayName "Run cypress in conosole light version (Use this)" -Script { 
+            RunCypressInConsoleLightVersion
+        })
+    )
 
-# # Seems we need to give Azure some time sync stuff
-# Write-Host "Waiting for Azure to update stuff"
-# Start-Sleep -s 7
+    $Chosen = Show-Menu -MenuItems $Opts
+    & $Chosen.Script
+}
 
-# #Improve reliability of this bin/debug stuff, investigate dotnet run
-# Write-Host "Retrieving access token"
-# dotnet GetAccessToken/bin/debug/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockUserAppId --client-secret $mockUserAppClientSecret.Value --authority $mockUserAppScopes --output-destination-file accesstoken.txt
-# $accessToken = Get-Content -Path accessToken.txt
-# Remove-Item -path accessToken.txt
-# #Write-Host $accessToken
+# Prepare database for running cypress tests
+function Prepare() {
+    Write-Host "Prepare database" -ForegroundColor Blue
+    Set-Location $localApiRelativePath
 
-# Write-Host "Delete client secret"
-# #Temporarily only delete those which expire before 2030 as a workaround not to mess up the workflow for people using the old script
-# #Change to delete all keys later
-# #Sourced from https://goodworkaround.com/2020/03/13/script-for-getting-azure-ad-app-registration-secrets-and-certificates-that-expire-soon/
-# Get-AzureADApplicationPasswordCredential -ObjectId <object-id of mockuser app registration> | Where-Object {
-#     $_.EndDate -lt (Get-Date 2030-01-01)
-# } | ForEach-Object {
-#     Remove-AzureADApplicationPasswordCredential -ObjectId <object-id of mockuser app registration> -KeyId $_.KeyId
-# }
+    # Backup current Connection string
+    $secrets = dotnet user-secrets list --json | ConvertFrom-Json
+    $script:currentConnectionString = $secrets."ConnectionStrings:SqlDatabase"
 
-Write-Host "Starting Cypress"
-npx cypress open --env scaAccessToken=$accessToken
-Pop-Location
+    Remove-DbaDatabase -SqlInstance $localSqlInstance -Database $localDatabase -Confirm:$false
+    New-DbaDatabase -SqlInstance $localSqlInstance -Name $localDatabase
+    dotnet user-secrets set "ConnectionStrings:SqlDatabase" "$localTestDatabase"
+
+    Write-Host "`nUpdate database`n" -ForegroundColor Blue
+
+    dotnet ef database update
+
+    # Seed database
+    $scriptFile = "../cypress.sql"
+    Invoke-DbaQuery –SqlInstance $localSqlInstance –File $scriptFile –Database $localDatabase
+
+    cd -
+}
+
+function CleanUp() {
+    Write-Host "`nClean environment`n" -ForegroundColor Blue
+
+    # If the previous ConnectionString is the same as used in the testing, we don't bother changing it back
+    if ($localTestDatabase -ne $currentConnectionString) {
+        Set-Location $localApiRelativePath
+        dotnet user-secrets set "ConnectionStrings:SqlDatabase" "$currentConnectionString"
+        cd -
+    }
+}
+
+function GetAccessToken() {
+    Write-Host "`nRetrieve access token`n" -ForegroundColor Blue
+    ./GetAccessToken.exe --tenant-id $tenantId --app-id $appId --mock-user-client-secret $clientSecret --authority $scope --output-destination-file ./tmp/accesstoken.txt
+    $accessToken = Get-Content -Path ./tmp/accessToken.txt
+    Remove-Item -path ./tmp/accessToken.txt
+
+    Write-Host "-------------------------------------------------------------------------`n$accessToken`n-------------------------------------------------------------------------`n"
+    Return $accessToken
+}
+
+function RunCypressInConsole() {
+    Write-Host "`n"
+
+    Prepare
+    $accessToken = GetAccessToken
+
+    $task1 = { Set-Location $localApiRelativePath; dotnet run }
+    $task1 = $(npx cypress open --env scaAccessToken=$accessToken)
+    $task3 = { npm start }
+
+    Write-Host "`nStart React app`n" -ForegroundColor Blue
+    $job3 = Start-Job -ScriptBlock $task3
+
+    Write-Host "Start API Server`n" -ForegroundColor Blue
+    $job1 = Start-Job -ScriptBlock $task1
+
+    Write-Host "Run Cypress in console" -ForegroundColor Blue
+    Invoke-Command -ScriptBlock $task2
+
+    Stop-Job -Job $job1, $job3
+    Remove-Job -Job $job1, $job3
+
+    CleanUp
+}
+
+function RunCypressInBrowser() {
+    Write-Host "`n"
+
+    Prepare
+    $accessToken = GetAccessToken
+
+    $task1 = { npx cypress open --env scaAccessToken=$Using:accessToken }
+    $task2 = { npm start }
+
+    Write-Host "   Please start API with 'dotnet run' in another terminal window, then press Enter...`n" -ForegroundColor Yellow
+    $null = [Console]::ReadKey('NoEcho')
+
+    Write-Host "Run Cypress in browser`n" -ForegroundColor Blue
+    $job1 = Start-Job -ScriptBlock $task1
+
+    Write-Host "`nStart React app`n" -ForegroundColor Blue
+    $job2 = Start-Job -ScriptBlock $task2
+
+    $null = Wait-Job -Job $job1
+
+    Stop-Job -Job $job1, $job2
+    Remove-Job -Job $job1, $job2
+
+    CleanUp
+}
+
+function RunCypressInBrowserLightVersion() {
+    Write-Host "`n"
+    $accessToken = GetAccessToken
+    Write-Host "Run Cypress in browser $accessToken `n" -ForegroundColor Blue
+    $task1 = { npx cypress open --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
+    $job1 = Start-Job -ScriptBlock $task1
+}
+
+function RunCypressInConsoleLightVersion() {
+    Write-Host "`n"
+    $accessToken = GetAccessToken
+    Write-Host "Run Cypress in browser $accessToken `n" -ForegroundColor Blue
+    $task1 = { npx cypress run --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
+    $job1 = Start-Job -ScriptBlock $task1
+}
+
+# MAIN
+clear
+
+if (-Not (Get-Module -ListAvailable -Name dbatools)) {
+    $modulesNotFound = $true;
+    Write-Host -ForegroundColor Red "   Module 'dbatools' does not exist. Install it by running powershell as admin:`n"
+    Write-Host -ForegroundColor White "  Install-Module dbatools`n"
+} 
+
+if (-Not (Get-Module -ListAvailable -Name PSMenu)) {
+    $modulesNotFound = $true;
+    Write-Host -ForegroundColor Red "   Module 'PSMenu' does not exist. Install it by running powershell as admin:`n"
+    Write-Host -ForegroundColor White "  Install-Module PSMenu`n"
+} 
+
+if (-Not (Get-Module -ListAvailable -Name PSReadLine)) {
+    $modulesNotFound = $true;
+    Write-Host -ForegroundColor Red "   Module 'PSReadLine' does not exist. Install it by running powershell as admin:`n"
+    Write-Host -ForegroundColor White "  Install-Module PSReadLine`n"
+} 
+
+if ($modulesNotFound) {
+    exit
+}
+
+$isApiRunning =  $(netstat -ano | findstr :44368)
+If ($isApiRunning -ne $null) {
+
+    Write-Host -ForegroundColor Red "`n   You need to shut down any active Api Server running on port :44368 before continuing"
+    exit
+}
+
+# $start = Get-Date
+.\src\functions\text -Text 'Thelma Testing' -Online -FontColor Yellow -Fontname standard
+DrawLine -y 6 -x 0 -length 70
+
+MenuEnvironment
+# $end = Get-Date
+
+# Write-Host -ForegroundColor Red ($end - $start).TotalSeconds
