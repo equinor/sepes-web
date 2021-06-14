@@ -377,7 +377,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const callGetMyIp = async () => {
-        // const ip = await getMyIp();
         let ip = '';
         let tryCount = 0;
         while (!ip && tryCount < 3) {
