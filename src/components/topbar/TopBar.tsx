@@ -153,7 +153,7 @@ const Bar = () => {
         if (hostname === 'localhost') return 'LOCALHOST';
         if (hostname === 'frontend-sepes-web-dev.radix.equinor.com') return 'DEV';
         if (hostname === 'frontend-sepes-web-qa.radix.equinor.com') return 'QA';
-        if (hostname === 'frontend-sepes-web-prod.radix.equinor.com' || hostname === 'thelma.equinor.com') {
+        if (hostname === 'frontend-sepes-web-prod.radix.equinor.com' || hostname === 'sepes.equinor.com') {
             return 'PROD';
         }
 
