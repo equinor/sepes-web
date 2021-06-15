@@ -1,0 +1,31 @@
+{
+    "baseUrl": "https://frontend-sepes-web-dev.radix.equinor.com/",
+    "defaultCommandTimeout": 20000,
+    "pageLoadTimeout": 200000,
+    "requestTimeout": 200000,
+    "responseTimeout": 200000,
+    "video": false,
+    "nodeVersion": "system",
+    "chromeWebSecurity": false,
+    "reporter": "cypress-multi-reporters",
+    "reporterOptions": {
+        "reporterEnabled": "mochawesome",
+        "mochawesomeReporterOptions": {
+            "reportDir": "test/cypress/reports/mocha",
+            "quiet": true,
+            "overwrite": false,
+            "html": false,
+            "json": true
+        }
+    },
+    "env": {
+        "TENANT_ID": "",
+        "CLIENT_ID": "",
+        "CLIENT_SECRET": "",
+        "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
+        "SCOPE": "User.Read User.Read.All User.Impersonation",
+        "RETRIES": 3
+    },
+    "viewportWidth": 1920,
+    "viewportHeight": 1080
+}

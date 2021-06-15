@@ -27,8 +27,14 @@ function MenuEnvironment() {
         $(New-MenuItem -DisplayName "Run cypress in browser light version" -Script { 
             RunCypressInBrowserLightVersion
         }),
-        $(New-MenuItem -DisplayName "Run cypress in conosole light version" -Script { 
-            RunCypressInConsoleLightVersion
+        $(New-MenuItem -DisplayName "Run all tests with cypress in console light version (against localhost)" -Script { 
+            RunCypressInBrowserLightVersionAgainstLocalhost
+        }),
+        $(New-MenuItem -DisplayName "Run all tests with cypress in console light version (against dev enviroment)" -Script { 
+            RunCypressInBrowserLightVersionLocalAgainstDev
+        }),
+        $(New-MenuItem -DisplayName "Run only quick tests in cypress in console light version" -Script { 
+            RunCypressInConsoleLightVersionOnlyQuickTests
         })
     )
      
@@ -132,11 +138,19 @@ function RunCypressInBrowser() {
     CleanUp
 }
 
-function RunCypressInBrowserLightVersion() {
+function RunCypressInBrowserLightVersionAgainstLocalhost() {
     Write-Host "`n"
     $accessToken = GetAccessToken
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress open --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
+    $job1 = Start-Job -ScriptBlock $task1
+}
+
+function RunCypressInBrowserLightVersionLocalAgainstDev() {
+    Write-Host "`n"
+    $accessToken = GetAccessToken
+    Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
+    $task1 = { npx cypress open --config-file "cypress.dev.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
 
@@ -146,6 +160,16 @@ function RunCypressInConsoleLightVersion() {
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress run --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
+}
+
+function RunCypressInConsoleLightVersionOnlyQuickTests() {
+    Write-Host "`n"
+    $accessToken = GetAccessToken
+    Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
+    $task1 = { npx cypress run --config-file "cypress.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$Using:accessToken }
+    $job1 = Start-Job -ScriptBlock $task1
+
+    $null = Wait-Job -Job $job1
 }
 
 # MAIN
