@@ -13,7 +13,11 @@ We use commitizen to make our commits. To make a commit, run "npm run commi" to 
 
 The command "npm run test" or "npm test" runs all tests with filename including .test.filename. There are two dummy tests in the projects already under the folder named "tests". To get coverage, append the command "-- --coverage". So it will be "npm run test -- --coverage".
 
-Cypress:
+## Run Cypress locally
+
+There is a script named runcypress.ps1 in the repo. When you run this script you will get two options: One for running cypress in console, and one in window mode. These tests will run as a mock user and is a true E2E test.
+
+Old way:
 
 The command "npx cypress open" will open a new window containg all the cypress tests in the project. Clicking one will open a broweser window and run the test. The tests need an Token to work. To get this token is now a manual process. Before running a test. do these steps:
 
