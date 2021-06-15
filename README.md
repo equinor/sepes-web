@@ -1,5 +1,5 @@
 # sepes-web
-Source code for the Sepes web application
+Source code for the Sepes web application test
 
 ## Making commits
 
