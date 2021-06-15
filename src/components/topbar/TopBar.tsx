@@ -2,7 +2,7 @@
 import React, { Fragment, useContext } from 'react';
 import styled from 'styled-components';
 import { TopBar, Icon, Button, Menu, Typography } from '@equinor/eds-core-react';
-import NavTabs from './NavTabs';
+// import NavTabs from './NavTabs';
 import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
 import { account_circle, report_bug, exit_to_app } from '@equinor/eds-icons';
