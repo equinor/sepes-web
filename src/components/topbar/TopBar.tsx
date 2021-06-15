@@ -28,6 +28,16 @@ const Wrapper = styled.div`
     overflow: auto;
 `;
 
+const EnvironmentMessage = styled(Typography)`
+    margin-left: 15px;
+    margin-right: 15px;
+    font-weight: 600;
+    line-height: 36px;
+    font-style: italic;
+    color: #eb0000;
+    text-align: center;
+`;
+
 export const LinkToReport = styled.a`
     font-size: 14px;
     color: #007079;
@@ -46,15 +56,15 @@ const LEFT_CHOICES = {
     )
 };
 
-const CENTER_CHOICES = {
-    none: null,
-    tabs: <NavTabs />,
-    text: ''
-};
+// const CENTER_CHOICES = {
+//     none: null,
+//     tabs: <NavTabs />,
+//     text: ''
+// };
 
 const Bar = () => {
     const leftChoice = 'text+icon';
-    const centerChoice = 'tabs';
+    // const centerChoice = 'tabs';
     const history = useHistory();
 
     const [state, setState] = React.useState<{
@@ -137,11 +147,29 @@ const Bar = () => {
         </>
     );
 
+    const getEnvironment = () => {
+        const { hostname } = window.location;
+
+        if (hostname === 'localhost') return 'LOCALHOST';
+        if (hostname === 'frontend-sepes-web-dev.radix.equinor.com') return 'DEV';
+        if (hostname === 'frontend-sepes-web-qa.radix.equinor.com') return 'QA';
+        if (hostname === 'frontend-sepes-web-prod.radix.equinor.com' || hostname === 'thelma.equinor.com') {
+            return 'PROD';
+        }
+
+        return '';
+    };
+
     return (
         <Wrapper>
             <TopBar>
                 <Header>{LEFT_CHOICES[leftChoice]}</Header>
-                {CENTER_CHOICES[centerChoice]}
+                {/*CENTER_CHOICES[centerChoice]*/}
+                {getEnvironment() !== 'PROD' && (
+                    <EnvironmentMessage>
+                        This is a non-production build. Data can and will be removed. Environment: {getEnvironment()}
+                    </EnvironmentMessage>
+                )}
                 <TopBar.Actions>
                     <Button
                         id="menuButton"
