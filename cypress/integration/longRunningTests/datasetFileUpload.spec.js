@@ -30,7 +30,7 @@ describe('Dataset file upload', () => {
     });
 
     it('Remove file', () => {
-        cy.get('[data-cy="dataset_remove_file"]').click();
+        cy.get('[data-cy="dataset_remove_file"]').click({ force: true });
         cy.wait(10000);
     });
 
