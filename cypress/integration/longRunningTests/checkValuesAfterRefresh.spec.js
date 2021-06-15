@@ -30,12 +30,10 @@ describe('Check values after refresh', () => {
 
     it('Add participant to study', () => {
         cy.addMockUserAsParticipant();
-        // cy.wait(7000);
     });
 
     it('Check participants are saved', () => {
         cy.reload();
-        // cy.wait(5000);
         cy.get('[data-cy=participants_tab]').click({ force: true });
         cy.contains('Mock User').should('be.visible');
         cy.contains('Vendor Admin').should('be.visible');
