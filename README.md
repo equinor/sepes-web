@@ -15,7 +15,7 @@ The command "npm run test" or "npm test" runs all tests with filename including 
 
 ## Run Cypress locally
 
-There is a script named runcypress.ps1. When you run this script, you will get two options. One for running cypress in console, and one in window mode. These tests will run as a mock user and is a true E2E test.
+There is a script named runcypress.ps1 in the repo. When you run this script you will get two options: One for running cypress in console, and one in window mode. These tests will run as a mock user and is a true E2E test.
 
 Old way:
 
