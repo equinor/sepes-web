@@ -131,7 +131,7 @@ Cypress.Commands.add('createVm', () => {
 });
 
 Cypress.Commands.add('createVmRules', () => {
-    cy.wait(6000);
+    cy.wait(8000);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
