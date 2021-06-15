@@ -5,32 +5,33 @@ $appId = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypress-app
 $scope = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "AzureAdClientIdScope" -AsPlainText
 $tenantId = "3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
 $clientSecret = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypress-clientSecret" -AsPlainText
-$localDatabase = "thelma-cypress"
-$localSqlInstance = "PF1K0W2Y\SQLEXPRESS"
-$localTestDatabase = "Server=PF1K0W2Y;Database=SepesIntegrationTest;Trusted_Connection=True;MultipleActiveResultSets=False;Integrated Security=true;Connection Timeout=30;"
+$localDatabase = "sepes-cypress"
+$localSqlInstance = ""
+$localTestDatabase = ""
 $localApiRelativePath = "../../sepes-api-2/sepes-api/src/Sepes.RestApi"
 
-$currentConnectionString = "Server=PF1K0W2Y;Database=SepesIntegrationTest;Trusted_Connection=True;MultipleActiveResultSets=False;Integrated Security=true;Connection Timeout=30;"
+$currentConnectionString = ""
 $modulesNotFound = $false;
 $accessToken = "abc"
+
+#    $(New-MenuItem -DisplayName "Run Cypress test in console" -Script { 
+#         RunCypressInConsole
+#     }),
+#     $(New-MenuItem -DisplayName "Run Cypress test in browser" -Script { 
+#         RunCypressInBrowser
+#     }),
 
 function MenuEnvironment() {
     ClearLines -Count 8
     $Opts = @(
-        $(New-MenuItem -DisplayName "Run Cypress test in console" -Script { 
-            RunCypressInConsole
-        }),
-        $(New-MenuItem -DisplayName "Run Cypress test in browser" -Script { 
-            RunCypressInBrowser
-        }),
-        $(New-MenuItem -DisplayName "Run cypress in browser light version (Use this)" -Script { 
+        $(New-MenuItem -DisplayName "Run cypress in browser light version" -Script { 
             RunCypressInBrowserLightVersion
         }),
-        $(New-MenuItem -DisplayName "Run cypress in conosole light version (Use this)" -Script { 
+        $(New-MenuItem -DisplayName "Run cypress in conosole light version" -Script { 
             RunCypressInConsoleLightVersion
         })
     )
-
+     
     $Chosen = Show-Menu -MenuItems $Opts
     & $Chosen.Script
 }
@@ -134,7 +135,7 @@ function RunCypressInBrowser() {
 function RunCypressInBrowserLightVersion() {
     Write-Host "`n"
     $accessToken = GetAccessToken
-    Write-Host "Run Cypress in browser $accessToken `n" -ForegroundColor Blue
+    Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress open --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
@@ -142,7 +143,7 @@ function RunCypressInBrowserLightVersion() {
 function RunCypressInConsoleLightVersion() {
     Write-Host "`n"
     $accessToken = GetAccessToken
-    Write-Host "Run Cypress in browser $accessToken `n" -ForegroundColor Blue
+    Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress run --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
@@ -180,7 +181,7 @@ If ($isApiRunning -ne $null) {
 }
 
 # $start = Get-Date
-.\src\functions\text -Text 'Thelma Testing' -Online -FontColor Yellow -Fontname standard
+.\src\functions\text -Text 'Sepes Testing' -Online -FontColor Yellow -Fontname standard
 DrawLine -y 6 -x 0 -length 70
 
 MenuEnvironment

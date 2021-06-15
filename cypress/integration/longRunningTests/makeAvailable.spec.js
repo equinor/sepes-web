@@ -77,7 +77,7 @@ describe('Make available', () => {
 
     it('Click make available', () => {
         cy.wait(5000);
-        cy.get('[data-cy=sandbox_make_available]').click();
+        cy.get('[data-cy=sandbox_make_available]').click({ force: true });
         cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
         cy.wait(20000);
     });
