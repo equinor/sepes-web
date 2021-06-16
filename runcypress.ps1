@@ -27,10 +27,10 @@ function MenuEnvironment() {
         $(New-MenuItem -DisplayName "Run cypress in browser light version" -Script { 
             RunCypressInBrowserLightVersion
         }),
-        $(New-MenuItem -DisplayName "Run all tests with cypress in console light version (against localhost)" -Script { 
+        $(New-MenuItem -DisplayName "Run all tests with cypress in browser light version (against localhost)" -Script { 
             RunCypressInBrowserLightVersionAgainstLocalhost
         }),
-        $(New-MenuItem -DisplayName "Run all tests with cypress in console light version (against dev enviroment)" -Script { 
+        $(New-MenuItem -DisplayName "Run all tests with cypress in browser light version (against dev enviroment)" -Script { 
             RunCypressInBrowserLightVersionLocalAgainstDev
         }),
         $(New-MenuItem -DisplayName "Run only quick tests in cypress in console light version" -Script { 

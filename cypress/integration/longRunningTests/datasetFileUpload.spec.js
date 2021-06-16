@@ -36,7 +36,7 @@ describe('Dataset file upload', () => {
 
     it('Delete study specific dataset', () => {
         cy.get('[data-cy=dataset_delete]').click({ force: true });
-        cy.get('[data-cy="delete_resource"]').type('cy name');
+        cy.get('[data-cy="delete_resource"]').type('cy dataset name');
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
 
