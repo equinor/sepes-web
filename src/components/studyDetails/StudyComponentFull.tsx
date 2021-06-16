@@ -11,6 +11,7 @@ import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import {
     checkIfRequiredFieldsAreNull,
+    returnAllowedLengthOfString,
     returnLimitMeta,
     returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
@@ -359,33 +360,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const handleChange = (columnName: string, value: string): void => {
         setHasChanged(true);
-        const inputLength = value.length;
-        if (columnName === 'description' && inputLength > limits.description) {
-            returnAllowedLengthOfString(value, limits.description, columnName);
-            return;
-        }
-        if (columnName === 'name' && inputLength > limits.name) {
-            returnAllowedLengthOfString(value, limits.name, columnName);
-            return;
-        }
-        if (columnName === 'vendor' && inputLength > limits.vendor) {
-            returnAllowedLengthOfString(value, limits.vendor, columnName);
-            return;
-        }
-        if (columnName === 'wbsCode' && inputLength > limits.wbsCode) {
-            returnAllowedLengthOfString(value, limits.wbsCode, columnName);
-            return;
-        }
+        const setterValue = returnAllowedLengthOfString(limits, value, columnName);
         setStudyOnChange({
             ...studyOnChange,
-            [columnName]: value
-        });
-    };
-
-    const returnAllowedLengthOfString = (input: string, limit: number, columnName: string) => {
-        setStudyOnChange({
-            ...studyOnChange,
-            [columnName]: input.substr(0, limit)
+            [columnName]: setterValue
         });
     };
 

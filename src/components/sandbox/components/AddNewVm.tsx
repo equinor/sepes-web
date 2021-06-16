@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress, Label } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
-import { returnLimitMeta, roundUp } from '../../common/helpers/helpers';
+import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
     validateUserInput,
     filterSizes,
@@ -168,13 +168,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const handleChange = (field: string, value: string) => {
-        if (field === 'name' && value.length > limits.name) {
-            return;
-        }
-        if (field === 'username' && value.length > limits.username) {
-            return;
-        }
-        if (field === 'password' && value.length > limits.password) {
+        if (!checkColumDoesNotExceedInputLength(limits, value, field)) {
             return;
         }
         setVm({
