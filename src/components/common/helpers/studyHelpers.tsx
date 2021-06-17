@@ -4,7 +4,7 @@ import { isIterable, validateResourceName } from './helpers';
 export const validateUserInputStudy = (study: StudyObj, validWBS: boolean | undefined): boolean => {
     let result = true;
 
-    if (!validWBS && (study.sandboxes.length || study.datasets.length)) {
+    if (!validWBS && ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))) {
         result = false;
     }
 
