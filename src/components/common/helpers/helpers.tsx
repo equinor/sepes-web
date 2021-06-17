@@ -115,3 +115,17 @@ export const isIterable = (obj) => {
     }
     return typeof obj[Symbol.iterator] === 'function';
 };
+
+export const checkColumDoesNotExceedInputLength = (limits: any, value: string, columnName: string) => {
+    if (limits[columnName] < value.length) {
+        return false;
+    }
+    return true;
+};
+
+export const returnAllowedLengthOfString = (limits: any, value: string, columnName: string) => {
+    if (!checkColumDoesNotExceedInputLength(limits, value, columnName)) {
+        return value.substr(0, limits[columnName]);
+    }
+    return value;
+};
