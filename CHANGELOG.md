@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.26](https://github.com/equinor/sepes-web/compare/0.1.25...0.1.26) (2021-06-17)
+
+
+### Bug Fixes
+
+* **dataset:** no name length validation ([#1015](https://github.com/equinor/sepes-web/issues/1015)) ([27647e3](https://github.com/equinor/sepes-web/commit/27647e34bebb0e9391c664428cd13109398d002d)), closes [#1010](https://github.com/equinor/sepes-web/issues/1010)
+* add enviroment to the top bar ([#1007](https://github.com/equinor/sepes-web/issues/1007)) ([e7e768f](https://github.com/equinor/sepes-web/commit/e7e768f729f55dacbe09823903d8a98746a031e6)), closes [#1006](https://github.com/equinor/sepes-web/issues/1006)
+* better explain no access page ([#996](https://github.com/equinor/sepes-web/issues/996)) ([bd08ab1](https://github.com/equinor/sepes-web/commit/bd08ab1bfef506dfbf99bd099c83a5a289e7609a))
+* hide data invetory link for study specific data sets ([#993](https://github.com/equinor/sepes-web/issues/993)) ([ab9bf9d](https://github.com/equinor/sepes-web/commit/ab9bf9d11d8025e788ed19cd293402eab0a19ca4)), closes [#992](https://github.com/equinor/sepes-web/issues/992)
+* remove commented code ([32171d4](https://github.com/equinor/sepes-web/commit/32171d4e9745a4e5272d31c4d52b05e63d9d105a))
+* upgrade @types/react from 17.0.6 to 17.0.7 ([93c2e8c](https://github.com/equinor/sepes-web/commit/93c2e8cbd8a4179e9d3b498494a39c8aa50897fb))
+* upgrade @typescript-eslint/eslint-plugin from 4.24.0 to 4.25.0 ([972e23a](https://github.com/equinor/sepes-web/commit/972e23a5fe5be7fff85da330601eeb8045c74737))
+* upgrade @typescript-eslint/parser from 4.24.0 to 4.25.0 ([#1001](https://github.com/equinor/sepes-web/issues/1001)) ([46217eb](https://github.com/equinor/sepes-web/commit/46217eb564ac5893b14acba5ec6d43b0119565fd))
+
 ### [0.1.25](https://github.com/equinor/sepes-web/compare/0.1.24...0.1.25) (2021-06-10)
 
 
