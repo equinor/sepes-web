@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.27](https://github.com/equinor/sepes-web/compare/0.1.26...0.1.27) (2021-06-17)
+
+
+### Bug Fixes
+
+* **vm:** data disk should not be required ([#1027](https://github.com/equinor/sepes-web/issues/1027)) ([aafb824](https://github.com/equinor/sepes-web/commit/aafb824c09e7dbe19846003e6d217697d33da969)), closes [#1025](https://github.com/equinor/sepes-web/issues/1025)
+* upgrade @types/react from 17.0.7 to 17.0.8 ([4c2a963](https://github.com/equinor/sepes-web/commit/4c2a96306651a4639fb153cdacc14d54c77e475b))
+
 ### [0.1.26](https://github.com/equinor/sepes-web/compare/0.1.25...0.1.26) (2021-06-17)
 
 
