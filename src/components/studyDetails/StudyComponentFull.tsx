@@ -1,7 +1,7 @@
 /*eslint-disable no-shadow, react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, TextField, Icon, Tooltip, Menu, Typography } from '@equinor/eds-core-react';
+import { Button, TextField, Icon, Tooltip, Menu, Typography, DotProgress } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
@@ -169,6 +169,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
     const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
+    const [validateWbsInProgress, setValidateWbsInProgress] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -245,7 +246,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setHasChanged(false);
         setUserPressedCreate(true);
         validateWbs(studyOnChange.wbsCode);
-        if (!validateUserInputStudy(studyOnChange)) {
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)) {
             return;
         }
         if (imageUrl) {
@@ -274,7 +275,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const validateWbsOnChange = (wbs: string) => {
         if (wbs !== '') {
+            setValidateWbsInProgress(true);
             validateWbsCode(wbs).then((result: any) => {
+                setValidateWbsInProgress(false);
                 setWbsOnChangeIsValid(result);
             });
         } else {
@@ -444,13 +447,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     label="WBS"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
-                                    inputIcon={<Icon name="dollar" />}
+                                    inputIcon={validateWbsInProgress ? <DotProgress /> : <Icon name="dollar" />}
                                     variant={returnWbsVariant()}
                                     helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
-                                    readOnly={
-                                        (study.sandboxes && study.sandboxes.length) ||
-                                        (study.datasets && study.datasets.length)
-                                    }
                                 />
                             </>
                         )}
@@ -602,7 +601,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 <Button
                                                     data-cy="create_study"
                                                     onClick={() => handleSave()}
-                                                    disabled={!validateUserInputStudy(studyOnChange)}
+                                                    disabled={
+                                                        !validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)
+                                                    }
                                                 >
                                                     {newStudy ? 'Create' : 'Save'}
                                                 </Button>
@@ -623,5 +624,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         </div>
     );
 };
+
+// readOnly={
+//     wbsOnChangeIsValid &&
+//     ((study.sandboxes && study.sandboxes.length) ||
+//         (study.datasets && study.datasets.length))
+// }
 
 export default StudyComponentFull;
