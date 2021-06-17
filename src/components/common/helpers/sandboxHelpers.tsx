@@ -15,7 +15,6 @@ export const validateUserInput = (
     usernameIsValid: boolean | undefined
 ) => {
     if (loading || !vmEstimatedCost) {
-        console.log('a');
         return false;
     }
     if (
@@ -28,7 +27,6 @@ export const validateUserInput = (
     ) {
         return true;
     }
-    console.log('b');
     return false;
 };
 
