@@ -143,6 +143,7 @@ type StudyComponentFullProps = {
     updateCache: any;
     setDeleteStudyInProgress: any;
     setWbsIsValid: any;
+    wbsIsValid: boolean | undefined;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -158,7 +159,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     setUpdateCache,
     updateCache,
     setDeleteStudyInProgress,
-    setWbsIsValid
+    setWbsIsValid,
+    wbsIsValid
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
@@ -168,7 +170,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(wbsIsValid);
     const [validateWbsInProgress, setValidateWbsInProgress] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
@@ -257,11 +259,24 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setNewStudy(false);
     };
 
-    const returnTooltipText = () => {
+    const returnTooltipTextDeleteStudy = () => {
         if (study.sandboxes && study.sandboxes.length > 0) {
             return 'Delete sandboxes before deleting study';
         }
         return 'You do not have permission to delete this study';
+    };
+
+    const returnTooltipTextSaveStudy = () => {
+        if (
+            wbsOnChangeIsValid === false &&
+            ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
+        ) {
+            return 'Can not change WBS to invalid wbs with active resources';
+        }
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)) {
+            return 'Please fill out all required fields';
+        }
+        return '';
     };
 
     const validateWbs = (wbs: string) => {
@@ -289,7 +304,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.closeStudy;
     const optionsTemplate = (
         <>
-            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipText()} placement="left">
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipTextDeleteStudy()} placement="left">
                 <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
@@ -598,15 +613,20 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 Change logo
                                             </Button>
                                             <SaveCancelWrapper>
-                                                <Button
-                                                    data-cy="create_study"
-                                                    onClick={() => handleSave()}
-                                                    disabled={
-                                                        !validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)
-                                                    }
-                                                >
-                                                    {newStudy ? 'Create' : 'Save'}
-                                                </Button>
+                                                <Tooltip title={returnTooltipTextSaveStudy()} placement="left">
+                                                    <Button
+                                                        data-cy="create_study"
+                                                        onClick={() => handleSave()}
+                                                        disabled={
+                                                            !validateUserInputStudy(
+                                                                studyOnChange,
+                                                                wbsOnChangeIsValid ?? wbsIsValid
+                                                            )
+                                                        }
+                                                    >
+                                                        {newStudy ? 'Create' : 'Save'}
+                                                    </Button>
+                                                </Tooltip>
                                                 <Button variant="outlined" onClick={() => handleCancel()}>
                                                     Cancel
                                                 </Button>
