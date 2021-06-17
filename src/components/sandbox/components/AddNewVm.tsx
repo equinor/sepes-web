@@ -193,7 +193,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const calculateVmPrice = () => {
-        if (vm.operatingSystem !== '' && vm.size !== '' && vm.dataDisks.length > 0) {
+        if (vm.operatingSystem !== '' && vm.size !== '') {
             const vmPrice = {
                 size: vm.size,
                 dataDisks: vm.dataDisks,
