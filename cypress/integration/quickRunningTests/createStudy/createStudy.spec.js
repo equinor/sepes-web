@@ -27,20 +27,11 @@ describe('Create study', () => {
     });
 
     it('Edit results and learnings', () => {
-        cy.get('[data-cy=edit_results_and_learnings]').click({ force: true });
-        cy.get('[data-cy=results_and_learnings]').type('cy Results and learnings');
-        cy.get('[data-cy=save_results_and_learnings]').click({ force: true });
+        cy.editResultsAndLearnings();
     });
 
     it('Add participant to study', () => {
-        cy.get('[data-cy=participants_tab]').click({ force: true });
-        cy.contains('Search or add').type('Mock User');
-        cy.intercept('api/participants/*').as('getMockUser');
-        cy.wait('@getMockUser');
-        cy.focused().type('{enter}');
-        cy.get('[data-cy=participant_role]').click({ force: true });
-        cy.contains('Vendor Admin').click();
-        cy.get('[data-cy=study_add_participant]').click();
+        cy.addMockUserAsParticipant();
     });
 
     it('clicks on data sets tab', () => {
@@ -66,7 +57,7 @@ describe('Create study', () => {
 
     it('Delete study specific dataset', () => {
         cy.get('[data-cy=dataset_delete]').click({ force: true });
-        cy.get('[data-cy="delete_resource"]').type('cy namecy name edit');
+        cy.get('[data-cy="delete_resource"]').type('cy dataset namecy name edit');
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
 

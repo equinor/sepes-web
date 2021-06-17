@@ -21,7 +21,9 @@ const NoAccess = () => {
             <FontAwesomeIcon icon={faTimesCircle} size="5x" style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
-                    It seems like you don´t have access to this content.
+                    You do not have the required study role to view this page.
+                    <td /> Contact relevant study owner/sponsor rep to give you a role that allows you do to this
+                    action.
                 </Typography>
             </div>
         </div>

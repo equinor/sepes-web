@@ -6,6 +6,14 @@ import { webAppChangelog, apiChangelog } from '../common/staticValues/commonLink
 
 //const { TabList, Tab } = Tabs;
 
+const OuterWrapper = styled.div`
+    position: absolute;
+    top: 64px;
+    bottom: 0px;
+    background-color: #ffffff;
+    width: 100%;
+`;
+
 const Wrapper = styled.div`
     background-color: #ffffff;
     width: 100%;
@@ -60,15 +68,17 @@ const ReleaseNotes = () => {
     };
 
     return (
-        <Wrapper>
-            <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                <Tabs.List style={divStyle}>
-                    <Tabs.Tab style={{ marginLeft: '32px' }}>Web App</Tabs.Tab>
-                    <Tabs.Tab style={{ marginRight: '32px' }}>Api</Tabs.Tab>
-                </Tabs.List>
-            </Tabs>
-            <div style={{ margin: '32px 32px 32px 32px' }}>{changeComponent()}</div>
-        </Wrapper>
+        <OuterWrapper>
+            <Wrapper>
+                <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
+                    <Tabs.List style={divStyle}>
+                        <Tabs.Tab style={{ marginLeft: '32px' }}>Web App</Tabs.Tab>
+                        <Tabs.Tab style={{ marginRight: '32px' }}>Api</Tabs.Tab>
+                    </Tabs.List>
+                </Tabs>
+                <div style={{ margin: '32px 32px 32px 32px' }}>{changeComponent()}</div>
+            </Wrapper>
+        </OuterWrapper>
     );
 };
 //

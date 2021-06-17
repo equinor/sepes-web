@@ -63,7 +63,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [loading, setLoading] = useState<boolean>(false);
 
     const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
-    // const cyToken = sessionStorage.getItem('accessToken');
     const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.

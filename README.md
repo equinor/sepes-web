@@ -13,7 +13,11 @@ We use commitizen to make our commits. To make a commit, run "npm run commi" to 
 
 The command "npm run test" or "npm test" runs all tests with filename including .test.filename. There are two dummy tests in the projects already under the folder named "tests". To get coverage, append the command "-- --coverage". So it will be "npm run test -- --coverage".
 
-Cypress:
+## Run Cypress locally
+
+There is a script named runcypress.ps1 in the repo. When you run this script you will get two options: One for running cypress in console, and one in window mode. These tests will run as a mock user and is a true E2E test.
+
+Old way:
 
 The command "npx cypress open" will open a new window containg all the cypress tests in the project. Clicking one will open a broweser window and run the test. The tests need an Token to work. To get this token is now a manual process. Before running a test. do these steps:
 
@@ -23,6 +27,12 @@ The command "npx cypress open" will open a new window containg all the cypress t
 4. Find "Session Store" and look after "access token". A very long string of numbers and charachters. Copy it
 5. Paste access token into the variable "cyToken" in cypress/support/commands.js
 6. Run npx cypress open
+
+### Testing in pipeline and coverage raport
+
+Jest and cypress test will run with every pull request. Long cypress test will be put in it's own folder and rund at night time. To get the coverage report, click on either the jest or cypress action, and it will be an artifact there. 
+
+With pull request, the pipeline will create comments with a short overview of the results from testing.
 
 ## Setup locally
 

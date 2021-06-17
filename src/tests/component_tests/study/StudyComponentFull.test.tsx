@@ -293,7 +293,6 @@ test('renders StudyComponent full component with  permission to delete', () => {
 
     linkElement = getByTestId('study_delete');
     expect(linkElement).toBeInTheDocument();
-    // Clicks the Edit button
     linkElement.click();
 
     linkElement = getByText('Delete study');
@@ -331,7 +330,6 @@ test('renders StudyComponent full component with no permission to delete', () =>
 
     linkElement = getByTestId('study_delete_settings');
     expect(linkElement).toBeInTheDocument();
-    // Clicks the Edit button
     linkElement.click();
 
     expect(getByText('Delete study')).toBeInTheDocument();
@@ -364,12 +362,10 @@ test('renders StudyComponent full component with sandbox in study', () => {
     );
     let linkElement = getByText('Edit');
     expect(linkElement).toBeInTheDocument();
-    // Clicks the Edit button
     linkElement.click();
 
     linkElement = getByTestId('study_delete_settings');
     expect(linkElement).toBeInTheDocument();
-    // Clicks the Edit button
     linkElement.click();
 
     expect(getByText('Delete study')).toBeInTheDocument();
@@ -379,7 +375,3 @@ test('renders StudyComponent full component with sandbox in study', () => {
     linkElement = getByTestId('study_delete');
     linkElement.click();
 });
-
-// test('dummy', () => {
-//     expect(2+2).toBe(4);
-// });

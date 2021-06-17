@@ -66,13 +66,19 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
 });
 
 Cypress.Commands.add('createDataset', () => {
-    cy.get('[data-cy=dataset_name]').type('cy name');
+    cy.get('[data-cy=dataset_name]').type('cy dataset name');
     cy.get('[data-cy=dataset_location]').click({ force: true });
     cy.contains('Norway East').click({ force: true });
     cy.get('[data-cy=dataset_classification]').click({ force: true });
     cy.contains('Open').click({ force: true });
     cy.get('[data-cy=dataset_dataId]').type(1);
     cy.get('[data-cy=dataset_save]').click({ force: true });
+});
+
+Cypress.Commands.add('deleteDataset', (datasetName) => {
+    cy.get('[data-cy=dataset_delete]').click({ force: true });
+    cy.get('[data-cy="delete_resource"]').type(datasetName);
+    cy.get('[data-cy=delete_resource_delete]').click({ force: true });
 });
 
 Cypress.Commands.add('deleteStudy', (studyName) => {
@@ -95,7 +101,7 @@ Cypress.Commands.add('waitForStudyToLoad', () => {
 });
 
 Cypress.Commands.add('waitForSandboxToLoad', () => {
-    cy.intercept('/api/sandboxes/*').as('getSandbox');
+    cy.intercept('/api/sandboxes/**').as('getSandbox');
     cy.wait('@getSandbox');
 });
 
@@ -125,7 +131,7 @@ Cypress.Commands.add('createVm', () => {
 });
 
 Cypress.Commands.add('createVmRules', () => {
-    cy.wait(6000);
+    cy.wait(8000);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
@@ -153,4 +159,21 @@ Cypress.Commands.add('createSandbox', (sandboxName) => {
     cy.get('[data-cy=sandbox_region]').click({ force: true });
     cy.contains('Norway East').click({ force: true });
     cy.get('[data-cy=create_actual_sandbox]').click({ force: true });
+});
+
+Cypress.Commands.add('editResultsAndLearnings', () => {
+    cy.get('[data-cy=edit_results_and_learnings]').click({ force: true });
+    cy.get('[data-cy=results_and_learnings]').type('cy Results and learnings');
+    cy.get('[data-cy=save_results_and_learnings]').click({ force: true });
+});
+
+Cypress.Commands.add('addMockUserAsParticipant', () => {
+    cy.get('[data-cy=participants_tab]').click({ force: true });
+    cy.contains('Search or add').type('Mock User');
+    cy.intercept('api/participants/*').as('getMockUser');
+    cy.wait('@getMockUser');
+    cy.focused().type('{enter}');
+    cy.get('[data-cy=participant_role]').click({ force: true });
+    cy.contains('Vendor Admin').click({ force: true });
+    cy.get('[data-cy=study_add_participant]').click({ force: true });
 });

@@ -6,6 +6,7 @@
     "responseTimeout": 200000,
     "video": false,
     "nodeVersion": "system",
+    "chromeWebSecurity": false,
     "reporter": "cypress-multi-reporters",
     "reporterOptions": {
         "reporterEnabled": "mochawesome",

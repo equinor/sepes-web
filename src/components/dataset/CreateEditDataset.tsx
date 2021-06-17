@@ -9,7 +9,7 @@ import {
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
+import { checkColumDoesNotExceedInputLength, checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
 import { checkForInputErrors } from '../common/helpers/datasetHelpers';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
@@ -80,6 +80,11 @@ const dataClassificationsList = [
     { displayValue: 'Internal', key: 'Internal' },
     { displayValue: 'Restricted', key: 'Restricted' }
 ];
+
+const limits = {
+    name: 64
+};
+
 const width = '512px';
 
 interface passedProps {
@@ -214,6 +219,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const handleChange = (columName: string, value: any) => {
+        if (!checkColumDoesNotExceedInputLength(limits, value, columName)) {
+            return;
+        }
         if (columName === 'dataId') {
             if (value < 0 || value === '') {
                 setDataset({ ...dataset, dataId: undefined });
@@ -363,17 +371,19 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         data-cy="dataset_dataId"
                         autoComplete="off"
                     />
-                    <StyledLink
-                        href={dataInventoryLink}
-                        style={{ marginTop: '-8px' }}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <LinkWrapper>
-                            {EquinorIcon('external_link', '#007079', 24)}
-                            <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
-                        </LinkWrapper>
-                    </StyledLink>
+                    {checkUrlIfGeneralDataset() && (
+                        <StyledLink
+                            href={dataInventoryLink}
+                            style={{ marginTop: '-8px' }}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <LinkWrapper>
+                                {EquinorIcon('external_link', '#007079', 24)}
+                                <span style={{ marginLeft: '8px', marginTop: '4px' }}>Data inventory</span>
+                            </LinkWrapper>
+                        </StyledLink>
+                    )}
                     <SaveCancelWrapper>
                         <Button
                             disabled={checkForInputErrors(dataset) || loading}
