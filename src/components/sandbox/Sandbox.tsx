@@ -18,7 +18,6 @@ const Wrapper = styled.div`
     grid-template-rows: auto 4fr;
     grid-gap: 16px;
     margin: 8px 32px 32px 32px;
-    padding-top: 16px;
 `;
 
 type SandboxProps = {};
