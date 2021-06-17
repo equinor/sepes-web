@@ -447,6 +447,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     inputIcon={<Icon name="dollar" />}
                                     variant={returnWbsVariant()}
                                     helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
+                                    readOnly={study.sandboxes.length > 0 || study.datasets.length}
                                 />
                             </>
                         )}
