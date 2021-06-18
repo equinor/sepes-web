@@ -94,7 +94,7 @@ const Dataset: React.FC<datasetProps> = ({
     };
 
     return (
-        <div>
+        <div style={{ height: '331px', overflow: 'auto' }}>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                 <Head>
                     <Row>
@@ -108,7 +108,7 @@ const Dataset: React.FC<datasetProps> = ({
                             return (
                                 <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                     <Cell>
-                                        <SatusWrapper style={{ paddingBottom: '6px' }}>
+                                        <SatusWrapper style={{ paddingBottom: '0px' }}>
                                             <span data-cy="add_dataset_to_sandbox">
                                                 <Tooltip
                                                     title={

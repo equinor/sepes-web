@@ -71,12 +71,12 @@ describe('Check values after refresh', () => {
         cy.wait(20000);
     });
 
-    it('Check if file is saved', () => {
+    it.skip('Check if file is saved', () => {
         cy.reload();
         cy.contains('example.json').should('be.visible');
     });
 
-    it('Remove file', () => {
+    it.skip('Remove file', () => {
         cy.get('[data-cy="dataset_remove_file"]').click({ force: true });
         cy.wait(10000);
     });
