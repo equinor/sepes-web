@@ -170,7 +170,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(wbsIsValid);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
     const [validateWbsInProgress, setValidateWbsInProgress] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
@@ -248,7 +248,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setHasChanged(false);
         setUserPressedCreate(true);
         validateWbs(studyOnChange.wbsCode);
-        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)) {
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress)) {
             return;
         }
         if (imageUrl) {
@@ -273,7 +273,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         ) {
             return 'Can not change WBS to invalid wbs with active resources';
         }
-        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid)) {
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress)) {
             return 'Please fill out all required fields';
         }
         return '';
@@ -620,7 +620,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                         disabled={
                                                             !validateUserInputStudy(
                                                                 studyOnChange,
-                                                                wbsOnChangeIsValid ?? wbsIsValid
+                                                                wbsOnChangeIsValid !== undefined
+                                                                    ? wbsOnChangeIsValid
+                                                                    : wbsIsValid,
+                                                                validateWbsInProgress
                                                             )
                                                         }
                                                     >
