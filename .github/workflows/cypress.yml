@@ -70,11 +70,11 @@ jobs:
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' }}
         
-      - name: Run all tests in Chromium browser  
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' }}
+      # - name: Run all tests in Chromium browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
         
       - name: Run all tests in Firefox browser  
         env:
