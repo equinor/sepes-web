@@ -4,11 +4,12 @@ import { isIterable, validateResourceName } from './helpers';
 export const validateUserInputStudy = (
     study: StudyObj,
     validWBS: boolean | undefined,
-    wbsLoading: boolean
+    wbsLoading: boolean,
+    newStudy: boolean
 ): boolean => {
     let result = true;
 
-    if (wbsLoading) {
+    if (wbsLoading && !newStudy) {
         result = false;
     }
 
