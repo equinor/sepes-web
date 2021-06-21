@@ -1,5 +1,10 @@
 . .\src\functions\helpers
 
+# How to use:
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+# Connect-AzAccount
+# Set-AzContext <CorrectAZSubscription> - in this case - S904-Sepes-Development
+
 # Configuration
 $appId = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypress-appId" -AsPlainText
 $scope = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "AzureAdClientIdScope" -AsPlainText
