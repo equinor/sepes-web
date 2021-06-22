@@ -248,7 +248,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setHasChanged(false);
         setUserPressedCreate(true);
         validateWbs(studyOnChange.wbsCode);
-        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress)) {
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
         }
         if (imageUrl) {
@@ -269,11 +269,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const returnTooltipTextSaveStudy = () => {
         if (
             wbsOnChangeIsValid === false &&
+            !newStudy &&
             ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
         ) {
             return 'Can not change WBS to invalid wbs with active resources';
         }
-        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress)) {
+        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return 'Please fill out all required fields';
         }
         return '';
@@ -623,7 +624,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                                 wbsOnChangeIsValid !== undefined
                                                                     ? wbsOnChangeIsValid
                                                                     : wbsIsValid,
-                                                                validateWbsInProgress
+                                                                validateWbsInProgress,
+                                                                newStudy
                                                             )
                                                         }
                                                     >
