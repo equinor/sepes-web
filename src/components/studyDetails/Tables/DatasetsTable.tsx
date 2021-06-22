@@ -4,6 +4,7 @@ import { Table } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import { EquinorIcon } from '../../common/StyledComponents';
 import '../../../styles/Table.scss';
+import { truncate } from 'components/common/helpers/helpers';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -65,8 +66,8 @@ const DatasetsTable = (props: any) => {
                                                         onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
                                                         {index === row.sandboxes.length - 1
-                                                            ? sandbox && sandbox.name
-                                                            : sandbox.name && sandbox.name + ', '}
+                                                            ? sandbox && truncate(sandbox.name, 48)
+                                                            : sandbox.name && truncate(sandbox.name, 48) + ', '}
                                                     </Link>
                                                 );
                                             })}

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Button, Typography, TextField, Scrim } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, Scrim, Tooltip, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import useClickOutside from './useClickOutside';
+import { truncate } from '../helpers/helpers';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const Wrapper = styled.div`
     display: grid;
@@ -36,6 +38,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
     const [text, setText] = useState<string>('');
     const wrapperRef = useRef(null);
     useClickOutside(wrapperRef, setUserClickedDelete);
+    const [copied, setCopied] = useState<boolean>(false);
 
     const checkSandboxNameToText = (): boolean => {
         if (text === ResourceName) {
@@ -52,7 +55,20 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
         <Scrim>
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">
-                    Sure you want to delete the {type} with name "{ResourceName}"?
+                    Sure you want to delete the {type} with name "{truncate(ResourceName, 24)}"?
+                    <Tooltip title="Copy to clipboard" placement="top">
+                        <div style={{ display: 'inline-block' }}>
+                            <CopyToClipboard text={ResourceName} onCopy={() => setCopied(true)}>
+                                <Icon
+                                    name={copied ? 'check' : 'copy'}
+                                    style={{ marginLeft: '8px', marginBottom: '-4px' }}
+                                    size={24}
+                                    color="#007079"
+                                    className="icon"
+                                />
+                            </CopyToClipboard>
+                        </div>
+                    </Tooltip>
                 </Typography>
                 <TextField
                     id="textfield11"
