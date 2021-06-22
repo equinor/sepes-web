@@ -425,7 +425,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 <TextField
                                     id="textfield1"
                                     placeholder="Name of study"
-                                    variant={returnTextfieldTypeBasedOninput(studyOnChange.name)}
+                                    variant={returnTextfieldTypeBasedOninput(studyOnChange.name, true)}
                                     onChange={(e: any) => handleChange('name', e.target.value)}
                                     label="Name"
                                     meta="(required)"

@@ -20,7 +20,7 @@ export const validateUserInputStudy = (
         result = false;
     }
 
-    if (!validateResourceName(study.name)) {
+    if (!validateResourceName(study.name, true)) {
         result = false;
     }
     if (study.name === '' || study === undefined || study.vendor === '' || study.vendor === undefined) {
