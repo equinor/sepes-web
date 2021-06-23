@@ -60,14 +60,20 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                     <div>
                         <Label style={{ marginBottom: '-24px' }}>{type}</Label> <br />
                         <div>
-                            <a
-                                style={{ color: '#007079' }}
-                                href={linkToResource}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <Tooltip
+                                title={linkToResource ? '' : 'Link will be active when VM is ready'}
+                                placement="top"
+                                enterDelay={500}
                             >
-                                {name}
-                            </a>
+                                <a
+                                    style={{ color: '#007079' }}
+                                    href={linkToResource}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {name}
+                                </a>
+                            </Tooltip>
                         </div>
                     </div>
                 ) : (
