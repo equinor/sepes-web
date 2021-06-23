@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
-import { returnTextfieldTypeBasedOninput } from '../common/helpers/helpers';
+import { returnAllowedLengthOfString, returnTextfieldTypeBasedOninput } from '../common/helpers/helpers';
 import { validateUserInputSandbox } from '../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
@@ -38,6 +38,10 @@ type CreateSandboxComponentProps = {
     wbsIsValid: boolean | undefined;
 };
 
+const limits = {
+    name: 127
+};
+
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setToggle,
     setStudy,
@@ -66,9 +70,10 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     });
     const handleChange = (columnName: string, value: string) => {
         setHasChanged(true);
+        const setterValue = returnAllowedLengthOfString(limits, value, columnName);
         setSandbox({
             ...sandbox,
-            [columnName]: value
+            [columnName]: setterValue
         });
     };
     const handleDropdownChange = (value, name: string): void => {

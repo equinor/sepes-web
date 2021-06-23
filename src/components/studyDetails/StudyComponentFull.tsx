@@ -13,7 +13,8 @@ import {
     checkIfRequiredFieldsAreNull,
     returnAllowedLengthOfString,
     returnLimitMeta,
-    returnTextfieldTypeBasedOninput
+    returnTextfieldTypeBasedOninput,
+    truncate
 } from '../common/helpers/helpers';
 import { validateUserInputStudy } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
@@ -128,6 +129,8 @@ const limits = {
     vendor: 128,
     wbsCode: 64
 };
+
+const truncateLength = 48;
 
 type StudyComponentFullProps = {
     study: StudyObj;
@@ -410,11 +413,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     <TitleWrapper editMode={editMode}>
                         {!editMode ? (
                             <>
-                                <TitleText>{name}</TitleText>
-                                <SmallIconWrapper>
-                                    <Icon color="#007079" name="business" size={24} />
-                                    <SmallText>{vendor}</SmallText>
-                                </SmallIconWrapper>
+                                <Tooltip
+                                    title={name && name.length > truncateLength ? name : ''}
+                                    placement="top"
+                                    enterDelay={200}
+                                >
+                                    <TitleText>{truncate(name, truncateLength)}</TitleText>
+                                </Tooltip>
+                                <Tooltip
+                                    title={vendor && vendor.length > truncateLength ? vendor : ''}
+                                    placement="top"
+                                    enterDelay={500}
+                                >
+                                    <SmallIconWrapper>
+                                        <Icon color="#007079" name="business" size={24} />
+                                        <SmallText>{truncate(vendor, truncateLength)}</SmallText>
+                                    </SmallIconWrapper>
+                                </Tooltip>
                                 <SmallIconWrapper>
                                     <Icon color="#007079" name="dollar" size={24} />
                                     <SmallText>{wbsCode || '-'}</SmallText>
@@ -436,7 +451,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     autoFocus
                                     inputIcon={
                                         <Tooltip
-                                            title="The value must be between 3 and 20 characters long (A-Z)"
+                                            title="The value must be between 3 and 128 characters long (A-Z)"
                                             placement="right"
                                         >
                                             <Icon name="info_circle" />
