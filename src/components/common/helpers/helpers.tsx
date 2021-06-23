@@ -21,8 +21,8 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
-export const returnTextfieldTypeBasedOninput = (value: any) => {
-    if (!validateResourceName(value) && value !== '') {
+export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true) => {
+    if (!validateResourceName(value, dashAllowed) && value !== '') {
         return 'error';
     }
     return 'default';
@@ -98,12 +98,15 @@ export const checkIfInputIsNumberWihoutCharacters = (number: string) => {
     return numberValidate.test(number);
 };
 
-export const validateResourceName = (name: string): boolean => {
+export const validateResourceName = (name: string, dashAllowed = false): boolean => {
     if (name === '' || name === undefined) {
         return false;
     }
     const nameWithoutSpaces = name.split(' ').join('');
-    const onlyLettersAndNumbers = /^[a-zA-Z0-9]+$/;
+    let onlyLettersAndNumbers = /^[a-zA-Z0-9]+$/;
+    if (dashAllowed) {
+        onlyLettersAndNumbers = /^[a-zA-Z0-9-]+$/;
+    }
     const limit = /(?=.{3,123})/;
     return onlyLettersAndNumbers.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };
