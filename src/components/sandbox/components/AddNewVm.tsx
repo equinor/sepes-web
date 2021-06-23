@@ -127,6 +127,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     const [usernameHelpText, setUsernameHelpText] = useState<string>(
         'You need to pick operating system before username'
     );
+    const [validatingUsername, setValidatingUsername] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [filter, setFilter] = useState<any>([]);
     const width = '400px';
@@ -237,7 +238,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             }
         });
         const username: VmUsernameObj = { username: value, operativeSystemType: operatingSystemType };
+        setValidatingUsername(true);
         validateVmUsername(username).then((result: any) => {
+            setValidatingUsername(false);
             if (result) {
                 setUsernameIsValid(result.isValid);
                 if (!result.isValid) {
@@ -314,7 +317,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     helperText={usernameHelpText}
                     inputIcon={
                         <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
-                            <Icon name="info_circle" />
+                            {validatingUsername ? <DotProgress /> : <Icon name="info_circle" />}
                         </Tooltip>
                     }
                 />
