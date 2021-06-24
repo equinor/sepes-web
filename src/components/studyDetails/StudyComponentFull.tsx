@@ -275,7 +275,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             !newStudy &&
             ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
         ) {
-            return 'Can not change WBS to invalid wbs with active resources';
+            return 'Can not change from valid to invalid WBS with active resources';
         }
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return 'Please fill out all required fields';
