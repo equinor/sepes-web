@@ -168,9 +168,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const handleInputChange = (value: string) => {
         setRole('');
         setRoleNotSelected(true);
-        if (value !== '') {
-            setText(value);
-        } else if (value === '' && text.length === 1) {
+        if (value === '' && text.length === 1) {
             setText('');
             setParticipantNotSelected(true);
         }

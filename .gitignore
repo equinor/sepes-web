@@ -32,3 +32,4 @@ yarn-error.log*
 /cypress/screenshots
 /totalCoverage
 /cypress/videos/longRunningTests
+/temp

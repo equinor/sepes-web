@@ -65,23 +65,23 @@ describe('Check values after refresh', () => {
         cy.contains('cy dataset name').should('be.visible');
     });
 
-    it('Upload file to dataset', () => {
+    it.skip('Upload file to dataset', () => {
         cy.wait(100000);
         cy.get('[data-cy="file_upload"]').attachFile('example.json');
         cy.wait(20000);
     });
 
-    it('Check if file is saved', () => {
+    it.skip('Check if file is saved', () => {
         cy.reload();
         cy.contains('example.json').should('be.visible');
     });
 
-    it('Remove file', () => {
+    it.skip('Remove file', () => {
         cy.get('[data-cy="dataset_remove_file"]').click({ force: true });
         cy.wait(10000);
     });
 
-    it('Check if file is removed', () => {
+    it.skip('Check if file is removed', () => {
         cy.reload();
         cy.contains('example.json').should('not.exist');
     });

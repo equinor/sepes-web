@@ -1,9 +1,26 @@
 import { DropdownObj, ParticipantObj, StudyObj } from '../interfaces';
 import { isIterable, validateResourceName } from './helpers';
 
-export const validateUserInputStudy = (study: StudyObj): boolean => {
+export const validateUserInputStudy = (
+    study: StudyObj,
+    validWBS: boolean | undefined,
+    wbsLoading: boolean,
+    newStudy: boolean
+): boolean => {
     let result = true;
-    if (!validateResourceName(study.name)) {
+
+    if (wbsLoading && !newStudy) {
+        result = false;
+    }
+
+    if (
+        validWBS === false &&
+        ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
+    ) {
+        result = false;
+    }
+
+    if (!validateResourceName(study.name, true)) {
         result = false;
     }
     if (study.name === '' || study === undefined || study.vendor === '' || study.vendor === undefined) {

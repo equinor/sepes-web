@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, DatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
@@ -13,6 +13,7 @@ import {
 } from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
+import { truncate } from 'components/common/helpers/helpers';
 
 const SatusWrapper = styled.div`
     display: flex;
@@ -93,8 +94,18 @@ const Dataset: React.FC<datasetProps> = ({
         }
     };
 
+    const returnTooltipTextDataset = (_dataset: AvailableDatasetObj) => {
+        if (permissions && !permissions.update) {
+            return 'You do not have access to update data sets in sandbox';
+        }
+        if (_dataset.name.length > 23) {
+            return _dataset.name;
+        }
+        return '';
+    };
+
     return (
-        <div>
+        <div style={{ height: '331px', overflow: 'auto' }}>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
                 <Head>
                     <Row>
@@ -108,19 +119,16 @@ const Dataset: React.FC<datasetProps> = ({
                             return (
                                 <Row key={dataset.datasetId} id="tableRowNoPointerNoColor">
                                     <Cell>
-                                        <SatusWrapper style={{ paddingBottom: '6px' }}>
-                                            <span data-cy="add_dataset_to_sandbox">
-                                                <Tooltip
-                                                    title={
-                                                        permissions && permissions.update
-                                                            ? ''
-                                                            : 'You do not have access to update data sets in sandbox'
-                                                    }
-                                                    placement="right"
-                                                >
+                                        <SatusWrapper style={{ paddingBottom: '0px' }}>
+                                            <Tooltip
+                                                title={returnTooltipTextDataset(dataset)}
+                                                placement="right"
+                                                enterDelay={500}
+                                            >
+                                                <span data-cy="add_dataset_to_sandbox">
                                                     <Checkbox
                                                         defaultChecked={dataset.addedToSandbox}
-                                                        label={dataset.name}
+                                                        label={truncate(dataset.name, 23)}
                                                         disabled={
                                                             (permissions && !permissions.update) ||
                                                             addDatasetInProgress[dataset.datasetId] === true
@@ -129,8 +137,8 @@ const Dataset: React.FC<datasetProps> = ({
                                                             handleCheck(e, dataset);
                                                         }}
                                                     />
-                                                </Tooltip>
-                                            </span>
+                                                </span>
+                                            </Tooltip>
                                         </SatusWrapper>
                                     </Cell>
                                     <Cell>

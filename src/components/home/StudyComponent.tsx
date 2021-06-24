@@ -5,6 +5,7 @@ import { visibility, visibility_off } from '@equinor/eds-icons';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
+import { truncate } from 'components/common/helpers/helpers';
 
 const icons = {
     visibility,
@@ -66,6 +67,8 @@ type StudyComponentProps = {
     study: StudyObj;
 };
 
+const truncateLength = 48;
+
 const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
     const { name, description, restricted, id, vendor, logoUrl } = study;
     const url = '/studies/' + id;
@@ -76,9 +79,8 @@ const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
             <LogoTitleWrapper>
                 <CustomLogoComponent logoUrl={logoUrl} center />
                 <div>
-                    <Typography variant="h6">{name}</Typography>
-                    <SmallText>{vendor}</SmallText>
-
+                    <Typography variant="h6">{truncate(name, truncateLength)}</Typography>
+                    <SmallText>{truncate(vendor, truncateLength)}</SmallText>
                     <HiddenWrapper>
                         <SmallText style={{ marginTop: '4px' }}>{restricted ? 'Hidden' : 'Not hidden'}</SmallText>
                         <div>
