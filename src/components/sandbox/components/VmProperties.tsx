@@ -156,6 +156,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                         setUserClickedDelete(true);
                     }}
                     disabled={permissions.update && vmProperties.linkToExternalSystem === ''}
+                    data-cy="vm_delete"
                 >
                     {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}
                     <ItemText style={{ color: '#EB0000' }}>Delete virtual machine</ItemText>
