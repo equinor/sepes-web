@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.28](https://github.com/equinor/sepes-web/compare/0.1.27...0.1.28) (2021-06-24)
+
+
+### Bug Fixes
+
+* **sandbox:** add tooltip to inactive VM links ([5b14a37](https://github.com/equinor/sepes-web/commit/5b14a3729bf3227dcb9809ec097d60f5653b6bb4)), closes [#1049](https://github.com/equinor/sepes-web/issues/1049)
+* **study:** change tooltip text when adding a invalid wbs with active resources ([89da65b](https://github.com/equinor/sepes-web/commit/89da65b41f8d566b731a86016a4c51f1353fd563))
+* **vm:** add loading icon when validatin username ([ec1e030](https://github.com/equinor/sepes-web/commit/ec1e03084db2c482efcfc42020c5895d8fef5748)), closes [#1047](https://github.com/equinor/sepes-web/issues/1047)
+* **vm:** tooltips not displaying for more actions ([4905af8](https://github.com/equinor/sepes-web/commit/4905af8fcd0535bef4060e483f544130d57861d8)), closes [#1043](https://github.com/equinor/sepes-web/issues/1043)
+* allow dashes in study name ([e56569d](https://github.com/equinor/sepes-web/commit/e56569d6d16318d311c97c3725516a55b19d78f2)), closes [#1041](https://github.com/equinor/sepes-web/issues/1041)
+* issue with saving study and wbs validation ([471f46f](https://github.com/equinor/sepes-web/commit/471f46fa64796b67087105aec8eeb68f08840d14))
+* truncate and fix ui issues with long names ([749cab7](https://github.com/equinor/sepes-web/commit/749cab7b6d25624118279d9ce25b004708b454fd)), closes [#1042](https://github.com/equinor/sepes-web/issues/1042) [#1013](https://github.com/equinor/sepes-web/issues/1013)
+* upgrade @typescript-eslint/eslint-plugin from 4.25.0 to 4.26.0 ([#1039](https://github.com/equinor/sepes-web/issues/1039)) ([213f1fa](https://github.com/equinor/sepes-web/commit/213f1fa668fdb3809089ba807e31f471ae82363c))
+* upgrade @typescript-eslint/parser from 4.25.0 to 4.26.0 ([163f546](https://github.com/equinor/sepes-web/commit/163f5460f190d912c850dbf32be9889f82884b94))
+* **sandbox:** add scroll effect to data set and resource list ([0f8b146](https://github.com/equinor/sepes-web/commit/0f8b1466aee115ff87da440f307dfb219290a04e)), closes [#1024](https://github.com/equinor/sepes-web/issues/1024)
+* **study:** clear participant search box after typing ([70ce624](https://github.com/equinor/sepes-web/commit/70ce62400532a7619924c41b3a64378ff31b8816)), closes [#1033](https://github.com/equinor/sepes-web/issues/1033)
+* upgrade typescript from 4.2.4 to 4.3.2 ([#1017](https://github.com/equinor/sepes-web/issues/1017)) ([abfcab8](https://github.com/equinor/sepes-web/commit/abfcab8f6c330ac513a2f0c24f73657982c0a7df))
+* **study:** not allow changing wbs after creating resources ([#1020](https://github.com/equinor/sepes-web/issues/1020)) ([ae669f6](https://github.com/equinor/sepes-web/commit/ae669f6a1dd9fca9eb76f8b912d1ee4f36bd80f3))
+
 ### [0.1.27](https://github.com/equinor/sepes-web/compare/0.1.26...0.1.27) (2021-06-17)
 
 
