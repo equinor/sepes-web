@@ -8,7 +8,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 const Wrapper = styled.div`
     display: grid;
     grid-gap: 16px;
-    max-width: 400px;
+    max-width: 448px;
     position: fixed;
     margin-left: auto;
     margin-right: auto;
@@ -55,7 +55,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
         <Scrim>
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">
-                    Sure you want to delete the {type} with name "{truncate(ResourceName, 24)}"?
+                    Sure you want to delete the {type} with name "{truncate(ResourceName, 30)}"?
                     <Tooltip title="Copy to clipboard" placement="top">
                         <div style={{ display: 'inline-block' }}>
                             <CopyToClipboard text={ResourceName} onCopy={() => setCopied(true)}>
