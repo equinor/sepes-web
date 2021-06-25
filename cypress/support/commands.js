@@ -126,7 +126,7 @@ Cypress.Commands.add('createVm', () => {
     cy.get('[data-cy=vm_size]').click({ force: true });
     cy.contains('Standard_F1').click({ force: true });
     cy.get('[data-cy=vm_dataDisks]').click({ force: true });
-    cy.contains('64 GB').click({ force: true });
+    cy.contains('4 GB').click({ force: true });
     cy.get('[data-cy=create_vm]').click();
     cy.waitForVirtualMachineToBeCreated();
 });

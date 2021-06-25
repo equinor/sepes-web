@@ -1,12 +1,11 @@
 /*eslint-disable no-shadow */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Typography, Tooltip, Menu, Icon } from '@equinor/eds-core-react';
+import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
-import useClickOutside from '../../common/customComponents/useClickOutside';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 
 const Wrapper = styled.div`
@@ -18,31 +17,6 @@ const Wrapper = styled.div`
 
 const BtnWrapper = styled.div`
     display: block;
-`;
-
-const MoreActionsWrapper = styled.div`
-    position: absolute;
-    background-color: #ffffff;
-    box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 3px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
-    border-radius: 4px;
-    margin-top: 40px;
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    width: 296px;
-`;
-
-const Item = styled.div<{ color: string }>`
-    padding: 24px;
-    color: ${(props: any) => props.color};
-    z-index: 99;
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    text-align: left;
-    grid-gap: 16px;
-    cursor: pointer;
-    &:hover {
-        background-color: #d5eaf4;
-    }
 `;
 
 const ItemText = styled.div`
@@ -73,7 +47,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const sandboxId = window.location.pathname.split('/')[4];
     const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { MemoryGB, numberOfCores } = size || {};
-    const [displayMoreActions, setDisplayMoreActions] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
@@ -86,8 +59,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
 
     const { buttonEl, focus } = state;
     const isOpen = Boolean(buttonEl);
-    const wrapperRef = useRef(null);
-    useClickOutside(wrapperRef, setDisplayMoreActions);
 
     const openMenu = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
@@ -101,9 +72,6 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setState({ ...state, buttonEl: null, focus });
     };
 
-    const handleToggle = () => {
-        // setDisplayMoreActions(!displayMoreActions);
-    };
     useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
