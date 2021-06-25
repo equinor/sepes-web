@@ -54,7 +54,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
-    const [text, setText] = useState<string>('Search or add by e-mail');
+    const [text, setText] = useState<string>('Type minimum three characters to search');
     const [role, setRole] = useState<string>('');
     const rolesResponse = useFetchUrl('lookup/studyroles/' + studyId, setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
@@ -75,27 +75,32 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     }, [debounce]);
 
     const loadOptions = (value: string, callback: any) => {
-        setDebounce({
-            cb: async () => {
-                api.getParticipantList(value || 'a').then((result: any) => {
-                    if (!result.message && Array.isArray(result)) {
-                        const temp = result.map((_user) => {
-                            return {
-                                label: `${_user.fullName} (${_user.emailAddress})`,
-                                value: _user.objectId,
-                                emailAddress: _user.emailAddress,
-                                source: _user.source,
-                                objectId: _user.objectId,
-                                name: _user.fullName,
-                                databaseId: _user.databaseId
-                            };
-                        });
-                        callback(temp);
-                    }
-                });
-            },
-            delay: 500 // ms
-        });
+        console.log(value.length);
+        if (value.length > 2) {
+            setDebounce({
+                cb: async () => {
+                    api.getParticipantList(value || 'a').then((result: any) => {
+                        if (!result.message && Array.isArray(result)) {
+                            const temp = result.map((_user) => {
+                                return {
+                                    label: `${_user.fullName} (${_user.emailAddress})`,
+                                    value: _user.objectId,
+                                    emailAddress: _user.emailAddress,
+                                    source: _user.source,
+                                    objectId: _user.objectId,
+                                    name: _user.fullName,
+                                    databaseId: _user.databaseId
+                                };
+                            });
+                            callback(temp);
+                        }
+                    });
+                },
+                delay: 500 // ms
+            });
+        } else {
+            callback([]);
+        }
     };
 
     useEffect(() => {
@@ -192,7 +197,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                     }
                     placement="top"
                 >
-                    <div style={{ width: '300px', marginTop: '-16px' }}>
+                    <div style={{ width: '380px', marginTop: '-16px' }}>
                         <AsynchSelect
                             label="Add participants"
                             onChange={(option: any) => selectParticipant(option)}
