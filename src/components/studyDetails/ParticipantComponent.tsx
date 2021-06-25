@@ -75,7 +75,6 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     }, [debounce]);
 
     const loadOptions = (value: string, callback: any) => {
-        console.log(value.length);
         if (value.length > 2) {
             setDebounce({
                 cb: async () => {
