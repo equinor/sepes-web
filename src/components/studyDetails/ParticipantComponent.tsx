@@ -56,13 +56,13 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
     const [text, setText] = useState<string>('Type minimum three characters to search');
     const [role, setRole] = useState<string>('');
-    const rolesResponse = useFetchUrl('lookup/studyroles/' + studyId, setRoles);
+    const rolesResponse = useFetchUrl('studies/' + studyId + '/availableroles', setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const user = useContext(UserConfig);
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
     const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.

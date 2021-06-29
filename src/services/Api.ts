@@ -220,16 +220,6 @@ export const getVirtualExternalLink = async (vmId: string) => {
     return apiRequestWithToken('api/virtualmachines/' + vmId + '/externalLink', 'GET');
 };
 
-//Lookup
-
-export const getAzureRegions = async () => {
-    return apiRequestWithToken('api/lookup/regions', 'GET');
-};
-
-export const getStudyRoles = async () => {
-    return apiRequestWithToken('api/lookup/studyroles', 'GET');
-};
-
 //Permission
 
 export const getPermissions = async () => {
