@@ -26,7 +26,7 @@ describe('Create vm', () => {
         // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
-        cy.get('[data-cy=sandbox_tab]').click();
+        cy.switchToSandboxesTab();
     });
 
     it('clicks create sandbox', () => {
@@ -39,7 +39,7 @@ describe('Create vm', () => {
         cy.createSandbox(sandboxName);
     });
 
-    it('fills out vm information', () => {
+    it('create vm', () => {
         cy.createVm();
     });
 

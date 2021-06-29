@@ -49,6 +49,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    console.log(sandbox);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
 
