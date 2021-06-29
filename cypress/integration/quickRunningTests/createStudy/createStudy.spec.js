@@ -35,7 +35,7 @@ describe('Create study', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.switchToDatasetsTab()<
+        cy.switchToDatasetsTab();
     });
 
     it('clicks add study specific dataset', () => {
