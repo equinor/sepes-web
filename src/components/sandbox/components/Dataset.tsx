@@ -129,6 +129,7 @@ const Dataset: React.FC<datasetProps> = ({
                                                     <Checkbox
                                                         defaultChecked={dataset.addedToSandbox}
                                                         label={truncate(dataset.name, 23)}
+                                                        data-cy="add_dataset_to_sandbox_check"
                                                         disabled={
                                                             (permissions && !permissions.update) ||
                                                             addDatasetInProgress[dataset.datasetId] === true

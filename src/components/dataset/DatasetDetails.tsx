@@ -851,7 +851,8 @@ const DatasetDetails = () => {
                                         <Tooltip
                                             title={
                                                 !(
-                                                    permissions.canEdit_PreApproved_Datasets ||
+                                                    (checkUrlIfGeneralDataset() &&
+                                                        permissions.canEdit_PreApproved_Datasets) ||
                                                     dataset.permissions?.editDataset
                                                 )
                                                     ? 'You do not have permission to edit metadata'
@@ -866,7 +867,8 @@ const DatasetDetails = () => {
                                                 data-cy="dataset_edit"
                                                 disabled={
                                                     !(
-                                                        permissions.canEdit_PreApproved_Datasets ||
+                                                        (checkUrlIfGeneralDataset() &&
+                                                            permissions.canEdit_PreApproved_Datasets) ||
                                                         dataset.permissions?.editDataset
                                                     )
                                                 }
@@ -881,7 +883,7 @@ const DatasetDetails = () => {
                                                 title={
                                                     !(
                                                         permissions.canEdit_PreApproved_Datasets ||
-                                                        dataset.permissions?.editDataset
+                                                        dataset.permissions?.deleteDataset
                                                     )
                                                         ? 'You do not have permission to edit metadata'
                                                         : ''

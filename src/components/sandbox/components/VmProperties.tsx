@@ -94,12 +94,10 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     };
 
     const returnResetpasswordTooltip = () => {
-        console.log(vmProperties);
         if (!permissions.update) {
             return 'You do not have permission to reset password';
         }
         if (vmProperties.linkToExternalSystem == null) {
-            console.log('hey');
             return 'VM has to be ready before changing password';
         }
 
@@ -123,7 +121,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     onClick={() => {
                         setUserClickedDelete(true);
                     }}
-                    disabled={permissions.update && vmProperties.linkToExternalSystem === ''}
+                    disabled={!permissions.update}
                     data-cy="vm_delete"
                 >
                     {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}
