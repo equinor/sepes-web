@@ -170,11 +170,63 @@ Cypress.Commands.add('editResultsAndLearnings', () => {
 
 Cypress.Commands.add('addMockUserAsParticipant', () => {
     cy.get('[data-cy=participants_tab]').click({ force: true });
-    cy.contains('Search or add').type('Mock User');
+    cy.contains('Type minimum three chara').type('Mock User');
     cy.intercept('api/participants/*').as('getMockUser');
     cy.wait('@getMockUser');
     cy.focused().type('{enter}');
     cy.get('[data-cy=participant_role]').click({ force: true });
     cy.contains('Vendor Admin').click({ force: true });
     cy.get('[data-cy=study_add_participant]').click({ force: true });
+});
+
+Cypress.Commands.add('switchToParticipantsTab', () => {
+    cy.get('[data-cy=participants_tab]').click({ force: true });
+});
+
+Cypress.Commands.add('switchToDatasetsTab', () => {
+    cy.get('[data-cy=datasets_tab]').click({ force: true });
+});
+
+Cypress.Commands.add('switchToSandboxesTab', () => {
+    cy.get('[data-cy=sandbox_tab]').click();
+});
+
+Cypress.Commands.add('switchToParticipantsTab', () => {
+    cy.get('[data-cy=participants_tab]').click({ force: true });
+});
+
+Cypress.Commands.add('refreshPage', () => {
+    cy.location('href', { log: false }).then((url) => {
+        cy.visit(url, {
+            onBeforeLoad: (win) => (win.fetch = null)
+        });
+    });
+});
+
+Cypress.Commands.add('isNotActionable', function (selector, done) {
+    cy.get(selector).click({ force: true });
+    cy.once('fail', (err) => {
+        expect(err.message).to.include('cy.click() failed because this element');
+        expect(err.message).to.include('is being covered by another element');
+        done();
+    });
+    cy.get('#button-covered-in-span')
+        .click()
+        .then((x) => {
+            done(new Error('Expected element NOT to be clickable, but click() succeeded'));
+        });
+});
+
+let LOCAL_STORAGE_MEMORY = {};
+
+Cypress.Commands.add('saveLocalStorageCache', () => {
+    Object.keys(localStorage).forEach((key) => {
+        LOCAL_STORAGE_MEMORY[key] = localStorage[key];
+    });
+});
+
+Cypress.Commands.add('restoreLocalStorageCache', () => {
+    Object.keys(LOCAL_STORAGE_MEMORY).forEach((key) => {
+        localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
+    });
 });

@@ -45,6 +45,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
                 pointerEvents: disabled ? 'none' : 'initial'
             }}
             dragActive={isDragActive}
+            data-cy="file_upload_check"
         >
             <input className="dropzone-input" {...getInputProps()} data-cy="file_upload" />
             <div className="text-center">
