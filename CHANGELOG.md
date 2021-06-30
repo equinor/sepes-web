@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.29](https://github.com/equinor/sepes-web/compare/0.1.28...0.1.29) (2021-06-30)
+
+
+### Bug Fixes
+
+* codeQL warnings and errors ([#1069](https://github.com/equinor/sepes-web/issues/1069)) ([51da7b9](https://github.com/equinor/sepes-web/commit/51da7b922a3e3756608f7b97b44d67c1f9486396))
+* upgrade @types/react from 17.0.8 to 17.0.9 ([0756697](https://github.com/equinor/sepes-web/commit/0756697e6f72a364f0669fdb4586958d181a09a6))
+* upgrade @typescript-eslint/eslint-plugin from 4.26.0 to 4.26.1 ([#1079](https://github.com/equinor/sepes-web/issues/1079)) ([ed25cb2](https://github.com/equinor/sepes-web/commit/ed25cb29b7a24655c55765488c1bc3fc19ccb3ad))
+* upgrade @typescript-eslint/parser from 4.26.0 to 4.26.1 ([#1078](https://github.com/equinor/sepes-web/issues/1078)) ([d0f7f5b](https://github.com/equinor/sepes-web/commit/d0f7f5be49f9aacaec6d0e266d07534a3a9abed0))
+* **participants:** not search before writing three charachters ([#1071](https://github.com/equinor/sepes-web/issues/1071)) ([5f01d87](https://github.com/equinor/sepes-web/commit/5f01d879d840e7b5b5d92bd1d23425754362304f)), closes [#1070](https://github.com/equinor/sepes-web/issues/1070)
+* upgrade react-keyed-file-browser from 1.10.0 to 1.11.0 ([9618ca7](https://github.com/equinor/sepes-web/commit/9618ca77ad849e8c1520df1a584a1d3078c3fa59))
+
 ### [0.1.28](https://github.com/equinor/sepes-web/compare/0.1.27...0.1.28) (2021-06-24)
 
 
