@@ -1,3 +1,5 @@
+[![Cypress Test](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml)
+
 # sepes-web
 Source code for the Sepes web application
 

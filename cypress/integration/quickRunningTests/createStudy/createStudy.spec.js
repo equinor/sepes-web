@@ -35,7 +35,7 @@ describe('Create study', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.get('[data-cy=datasets_tab]').click({ force: true });
+        cy.switchToDatasetsTab();
     });
 
     it('clicks add study specific dataset', () => {
@@ -62,7 +62,7 @@ describe('Create study', () => {
     });
 
     it('Remove participant from study', () => {
-        cy.get('[data-cy=participants_tab]').click({ force: true });
+        cy.switchToParticipantsTab();
         cy.get('[data-cy=study_remove_participant]').click({ force: true });
     });
 

@@ -82,6 +82,13 @@ jobs:
         run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' }}
 
+      - name: Save screenshots if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
       - uses: actions/upload-artifact@v2
