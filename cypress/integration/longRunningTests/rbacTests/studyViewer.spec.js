@@ -3,10 +3,6 @@ describe('Study viewer vm', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.location().then((loc) => {
-            console.log(loc);
-            console.log(loc.pathname);
-        });
         cy.intercept('/api/permissions', {
             statusCode: 200,
             body: {
@@ -17,7 +13,7 @@ describe('Study viewer vm', () => {
                 datasetAdmin: false,
                 emailAddress: 'mock@test.com',
                 fullName: 'Mock User',
-                sponsor: true,
+                sponsor: false,
                 userName: 'mock@test.com'
             }
         });
