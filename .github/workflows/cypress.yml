@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        if: contains(github.event.pull_request.labels.*.name, 'bug')
 
       # - run: echo "$github.event.label.name}"
 
