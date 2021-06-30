@@ -68,7 +68,7 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, 'runAllTests') }}
+        if: ${{ contains(github.event.head_commit.message, '[runAllTests]') }}
         
       # - name: Run all tests in Chromium browser  
       #   env:
