@@ -13,8 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        if: contains(github.event.pull_request.labels.*.name, 'Run All Tests')
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run All Tests') }}
 
       - uses: Azure/login@v1
         with:
