@@ -250,7 +250,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setShowImagePicker(false);
         setHasChanged(false);
         setUserPressedCreate(true);
-        validateWbs(studyOnChange.wbsCode);
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
         }
