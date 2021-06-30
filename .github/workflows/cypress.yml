@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        if: contains(github.event.pull_request.labels.*.name, 'Run All Tests') || ${{ github.event_name != 'pull_request' }}
 
       - uses: Azure/login@v1
         with:
@@ -69,7 +70,7 @@ jobs:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         # if: ${{ github.event_name != 'pull_request' }}
-        if: contains(github.event.pull_request.labels.*.name, 'Run All Tests')
+        if: contains(github.event.pull_request.labels.*.name, 'Run All Tests') || ${{ github.event_name != 'pull_request' }}
         
       # - name: Run all tests in Chromium browser  
       #   env:
