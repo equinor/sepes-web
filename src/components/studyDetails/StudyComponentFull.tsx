@@ -131,6 +131,7 @@ const limits = {
 };
 
 const truncateLength = 48;
+let wbsController = new AbortController();
 
 type StudyComponentFullProps = {
     study: StudyObj;
@@ -208,6 +209,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     }, [studyOnChange, study]);
 
     useEffect(() => {
+        if (validateWbsInProgress) {
+            wbsController.abort();
+            wbsController = new AbortController();
+        }
+
         const timeoutId = setTimeout(() => {
             if (hasChanged) {
                 validateWbsOnChange(studyOnChange.wbsCode);
@@ -249,6 +255,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setShowImagePicker(false);
         setHasChanged(false);
+        console.log(wbsOnChangeIsValid);
+        setWbsIsValid(wbsOnChangeIsValid);
+        // validateWbs(studyOnChange.wbsCode);
         setUserPressedCreate(true);
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
@@ -282,19 +291,23 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         return '';
     };
 
-    const validateWbs = (wbs: string) => {
-        setWbsIsValid(false);
-        if (wbs !== '') {
-            validateWbsCode(wbs).then((result: any) => {
-                setWbsIsValid(result);
-            });
-        }
-    };
+    // const validateWbs = (wbs: string) => {
+    //     setWbsIsValid(false);
+    //     if (wbs !== '') {
+    //         validateWbsCode(wbs).then((result: any) => {
+    //             setWbsIsValid(result);
+    //         });
+    //     }
+    // };
 
     const validateWbsOnChange = (wbs: string) => {
+        if (validateWbsInProgress) {
+            // wbsController.abort();
+        }
+        //
         if (wbs !== '') {
             setValidateWbsInProgress(true);
-            validateWbsCode(wbs).then((result: any) => {
+            validateWbsCode(wbs, wbsController.signal).then((result: any) => {
                 setValidateWbsInProgress(false);
                 setWbsOnChangeIsValid(result);
             });
@@ -325,7 +338,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const sendStudyToApi = (study: StudyObj) => {
         setLoading(true);
-
+        // setWbsIsValid(false);
+        console.log('oi');
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.message) {

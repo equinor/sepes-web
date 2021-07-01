@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Tooltip, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { close } from '@equinor/eds-icons';
@@ -69,7 +69,8 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     //const [isOpen, setIsOpen] = useState<boolean>(false);
     //const permissions = useContext(Permissions);
     //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
-    const canCreateDataset = study.permissions && study.permissions.addRemoveDataset && study.wbsCode;
+    const [canCreateDataset, setCanCreateDataset] = useState<any>(false);
+    // const canCreateDataset = study.permissions && study.permissions.addRemoveDataset && study.wbsCode;
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
@@ -85,6 +86,10 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
             //datasetsResponse.setLoading(false);
         });
     };
+
+    useEffect(() => {
+        setCanCreateDataset(study.permissions && study.permissions.addRemoveDataset && study.wbsCode && wbsIsValid);
+    }, [wbsIsValid]);
 
     const redirectToStudySpecificDataset = () => {
         const studyId = getStudyId();
