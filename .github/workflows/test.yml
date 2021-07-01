@@ -9,15 +9,17 @@ jobs:
               uses: actions/checkout@v2
             - name: Test coverage
               uses: ArtiomTr/jest-coverage-report-action@v1.3
+              if: contains(github.event.pull_request.labels.*.name, 'Don't run tests') == false 
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
             - name: Create coverage report
               run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+              if: contains(github.event.pull_request.labels.*.name, 'Don't run tests') == false 
               continue-on-error: true
-            - run: dir
             - uses: actions/upload-artifact@v2
+              if: contains(github.event.pull_request.labels.*.name, 'Don't run tests') == false 
               with:
                 name: Coverage-report
                 path: jest-coverage/lcov-report/
