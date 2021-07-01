@@ -1,6 +1,5 @@
 describe('Study viewer vm', () => {
     const studyName = 'Cypress Test';
-    Cypress.Cookies.debug(true);
     before(() => {
         cy.login();
         cy.visit('/');
