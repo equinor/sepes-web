@@ -255,9 +255,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setShowImagePicker(false);
         setHasChanged(false);
-        console.log(wbsOnChangeIsValid);
         setWbsIsValid(wbsOnChangeIsValid);
-        // validateWbs(studyOnChange.wbsCode);
         setUserPressedCreate(true);
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
@@ -291,20 +289,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         return '';
     };
 
-    // const validateWbs = (wbs: string) => {
-    //     setWbsIsValid(false);
-    //     if (wbs !== '') {
-    //         validateWbsCode(wbs).then((result: any) => {
-    //             setWbsIsValid(result);
-    //         });
-    //     }
-    // };
-
     const validateWbsOnChange = (wbs: string) => {
-        if (validateWbsInProgress) {
-            // wbsController.abort();
-        }
-        //
         if (wbs !== '') {
             setValidateWbsInProgress(true);
             validateWbsCode(wbs, wbsController.signal).then((result: any) => {
@@ -338,8 +323,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const sendStudyToApi = (study: StudyObj) => {
         setLoading(true);
-        // setWbsIsValid(false);
-        console.log('oi');
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.message) {

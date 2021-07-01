@@ -70,7 +70,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     //const permissions = useContext(Permissions);
     //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
     const [canCreateDataset, setCanCreateDataset] = useState<any>(false);
-    // const canCreateDataset = study.permissions && study.permissions.addRemoveDataset && study.wbsCode;
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
         setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
