@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, DatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
@@ -129,6 +129,7 @@ const Dataset: React.FC<datasetProps> = ({
                                                     <Checkbox
                                                         defaultChecked={dataset.addedToSandbox}
                                                         label={truncate(dataset.name, 23)}
+                                                        data-cy="add_dataset_to_sandbox_check"
                                                         disabled={
                                                             (permissions && !permissions.update) ||
                                                             addDatasetInProgress[dataset.datasetId] === true

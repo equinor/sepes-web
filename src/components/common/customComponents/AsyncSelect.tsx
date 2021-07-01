@@ -46,7 +46,6 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
         <span style={style}>
             {isRequired ? <RequiredLabel label={label} /> : <Label>{label}</Label>}
             <AsyncSelect
-                defaultOptions
                 loadOptions={loadOptions}
                 placeholder={placeholder}
                 value={selectedOption}

@@ -220,16 +220,6 @@ export const getVirtualExternalLink = async (vmId: string) => {
     return apiRequestWithToken('api/virtualmachines/' + vmId + '/externalLink', 'GET');
 };
 
-//Lookup
-
-export const getAzureRegions = async () => {
-    return apiRequestWithToken('api/lookup/regions', 'GET');
-};
-
-export const getStudyRoles = async () => {
-    return apiRequestWithToken('api/lookup/studyroles', 'GET');
-};
-
 //Permission
 
 export const getPermissions = async () => {
@@ -238,6 +228,6 @@ export const getPermissions = async () => {
 
 // WBS
 
-export const validateWbsCode = async (wbsCode: string) => {
-    return apiRequestWithToken('api/wbsvalidation/' + wbsCode, 'GET');
+export const validateWbsCode = async (wbsCode: string, signal: any) => {
+    return apiRequestWithToken('api/wbsvalidation/' + wbsCode, 'GET', undefined, signal);
 };

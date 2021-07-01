@@ -1,13 +1,16 @@
+[![Cypress Test](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml)
+
 # sepes-web
+
 Source code for the Sepes web application
 
 ## Making commits
 
 We use commitizen to make our commits. To make a commit, run "npm run commi" to start the questionare. We use these rules to say if a change is MAJOR, MINOR or a PATCH:
 
-- MAJOR version when you make incompatible API changes,
-- MINOR version when you add functionality in a backwards compatible manner, and
-- PATCH version when you make backwards compatible bug fixes.
+-   MAJOR version when you make incompatible API changes,
+-   MINOR version when you add functionality in a backwards compatible manner, and
+-   PATCH version when you make backwards compatible bug fixes.
 
 ## Run Tests
 
@@ -30,9 +33,15 @@ The command "npx cypress open" will open a new window containg all the cypress t
 
 ### Testing in pipeline and coverage raport
 
-Jest and cypress test will run with every pull request. Long cypress test will be put in it's own folder and rund at night time. To get the coverage report, click on either the jest or cypress action, and it will be an artifact there. 
+Jest and cypress test will run with every pull request. Long cypress test will be put in it's own folder and rund at night time. To get the coverage report, click on either the jest or cypress action, and it will be an artifact there.
 
 With pull request, the pipeline will create comments with a short overview of the results from testing.
+
+### Run all/none tests in pull request
+
+When creating a PR, you can pick a label named "Run all tests" to run all the cypress tests in the project. If you are wondering what tests will run, look in the cypress folder.
+
+If you do not want to run any tests, pick the label named "Do not run tests".
 
 ## Setup locally
 
@@ -42,18 +51,19 @@ With pull request, the pipeline will create comments with a short overview of th
 
 ```javascript
 version: "3.7"
-services: 
+services:
   web:
     build: .
-    ports: 
+    ports:
       - 8080:3000
-    environment: 
+    environment:
       - REACT_APP_SEPES_REDIRECT_URI=http://localhost:8080/
       - REACT_APP_SEPES_BASE_API_URL=http://localhost:8081/
       - REACT_APP_SEPES_AUTHORITY=https://login.microsoftonline.com/placeyourIdHere
       - REACT_APP_SEPES_CLIENTID=123
 ```
+
 4. The environment variables are used in the AuthConfig and AuthFunctions files under the "Auth" folder. These needs to be the same as the radixconfig variables (used in the pipeline) and docker-compose.yml (local variables) files.
 5. To run the app, run "Docker-compose up -d --build
-	- If it does not work properly, try a different version of docker compose. Top line in docker-compose.yml.
+    - If it does not work properly, try a different version of docker compose. Top line in docker-compose.yml.
 6. To take down the app, run Docker-compose down
