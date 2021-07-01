@@ -37,9 +37,11 @@ Jest and cypress test will run with every pull request. Long cypress test will b
 
 With pull request, the pipeline will create comments with a short overview of the results from testing.
 
-### Run all tests in pull request
+### Run all/none tests in pull request
 
-When creating a PR, you can pick a label named "Run All Tests" to run all the cypress tests in the project. If you are wondering what tests will run, look in the cypress folder.
+When creating a PR, you can pick a label named "Run all tests" to run all the cypress tests in the project. If you are wondering what tests will run, look in the cypress folder.
+
+If you do not want to run any tests, pick the label named "Do not run tests".
 
 ## Setup locally
 
