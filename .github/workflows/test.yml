@@ -3,6 +3,7 @@ on: [pull_request]
 jobs:
     custom_test:
         runs-on: ubuntu-latest
+        if: contains(github.event.pull_request.labels.*.name, 'Do not run tests') == false 
         name: Test locally using act
         steps:
             - name: Checkout
