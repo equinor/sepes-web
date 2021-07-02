@@ -47,7 +47,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.wait(2000);
     cy.get('[data-cy=create_study]').click({ force: true });
 
-    cy.waitForStudyToLoad();
+    // cy.waitForStudyToLoad();
 });
 
 Cypress.Commands.add('createStudyWithLogo', (studyName) => {

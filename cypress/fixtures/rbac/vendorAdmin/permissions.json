@@ -1,0 +1,11 @@
+{
+    "admin": false,
+    "canCreateStudy": false,
+    "canEdit_PreApproved_Datasets": false,
+    "canRead_PreApproved_Datasets": true,
+    "datasetAdmin": false,
+    "emailAddress": "mock@test.com",
+    "fullName": "Mock User",
+    "sponsor": false,
+    "userName": "mock@test.com"
+}
