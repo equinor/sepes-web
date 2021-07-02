@@ -3,20 +3,7 @@ describe('Study viewer vm', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.intercept('/api/permissions', {
-            statusCode: 200,
-            body: {
-                admin: false,
-                canCreateStudy: false,
-                canEdit_PreApproved_Datasets: false,
-                canRead_PreApproved_Datasets: false,
-                datasetAdmin: false,
-                emailAddress: 'mock@test.com',
-                fullName: 'Mock User',
-                sponsor: false,
-                userName: 'mock@test.com'
-            }
-        });
+        cy.intercept('/api/permissions', { fixture: 'rbac/studyViewer/permissions.json' });
     });
 
     beforeEach(() => {
@@ -43,30 +30,7 @@ describe('Study viewer vm', () => {
         cy.wait(2000);
         cy.reload();
         cy.intercept('/api/studies/*', {
-            statusCode: 200,
-            body: {
-                name: studyName,
-                vendor: 'Bouvet',
-                wbsCode: 'abc123',
-                restricted: false,
-                description: 'Study about fishes',
-                logoUrl: 'asdwasdasd',
-                id: '1',
-                resultsAndLearnings: 'We learned a lot',
-                datasets: [],
-                participants: [],
-                sandboxes: [],
-                permissions: {
-                    addRemoveDataset: false,
-                    addRemoveParticipant: false,
-                    addRemoveSandbox: false,
-                    closeStudy: false,
-                    deleteStudy: false,
-                    readResulsAndLearnings: false,
-                    updateMetadata: false,
-                    updateResulsAndLearnings: false
-                }
-            }
+            fixture: 'rbac/studyViewer/study.json'
         });
         cy.get('[data-cy=edit_study]').should('be.disabled');
     });
@@ -100,29 +64,7 @@ describe('Study viewer vm', () => {
     it('check that edit dataset is disabled', () => {
         cy.wait(2000);
         cy.reload();
-        cy.intercept('/api/studies/*/datasets/*', {
-            statusCode: 200,
-            body: {
-                areaL1: null,
-                areaL2: null,
-                asset: null,
-                baDataOwner: null,
-                classification: 'Open',
-                countryOfOrigin: null,
-                dataId: 2,
-                description: null,
-                id: 1103,
-                location: 'northeurope',
-                lraId: 0,
-                name: 'Dataset Test',
-                permissions: { editDataset: false, deleteDataset: false },
-                sandboxDatasets: [],
-                sourceSystem: null,
-                storageAccountLink: 'thisisalink.com',
-                storageAccountName: 'test',
-                studies: []
-            }
-        });
+        cy.intercept('/api/studies/*/datasets/*', { fixture: 'rbac/studyViewer/dataset.json' });
 
         cy.intercept('/api/datasets/*/files', {
             statusCode: 200,
