@@ -43,7 +43,7 @@ When creating a PR, you can pick a label named "Run all tests" to run all the cy
 
 If you do not want to run any tests, pick the label named "Do not run tests".
 
-If you change labels, they will only apply if you do a new commit, or create a new pull request. You can not add a label and rerun the tests after creating a pull request
+If you change labels, they will only apply if you push a new commit or create a new pull request. You can not add a label and rerun the tests after creating a pull request (Without commiting).
 
 ## Setup locally
 
