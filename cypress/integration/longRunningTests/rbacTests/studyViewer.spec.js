@@ -30,7 +30,7 @@ describe('Study viewer vm', () => {
         cy.saveLocalStorageCache();
     });
 
-    it('check that create study is disabled', () => {
+    it.skip('check that create study is disabled', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
     });
 
