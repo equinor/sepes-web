@@ -12,7 +12,8 @@ describe('Create vm', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.wait(2000);
+        cy.waitForStudyToLoad();
+        // cy.wait(2000);
         cy.get('[data-cy=datasets_tab]').click({ force: true });
     });
 
