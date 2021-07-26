@@ -21,7 +21,7 @@ describe('Study viewer vm', () => {
     it('check that create study is disabled', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.refreshPage();
-        cy.createStudy(studyName);
+        cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/studyViewer/study.json' });
         cy.get('[data-cy=edit_study]').should('be.disabled');
 

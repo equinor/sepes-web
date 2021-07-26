@@ -66,6 +66,20 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.waitForStudyToLoad();
 });
 
+Cypress.Commands.add('createStudyWithoutInterceptingStudy', (studyName) => {
+    cy.visit('/');
+
+    cy.get('[data-cy=new_study]').click({ force: true });
+
+    cy.get('[data-cy=study_name]').type(studyName);
+    cy.get('[data-cy=study_vendor]').type('cy vendor');
+    cy.get('[data-cy=study_wbs]').type('Automatic_test_cost');
+    cy.waitForWbsCheck();
+    cy.get('[data-cy=study_description]').type('cy description');
+    cy.wait(2000);
+    cy.get('[data-cy=create_study]').click({ force: true });
+});
+
 Cypress.Commands.add('createDataset', () => {
     cy.get('[data-cy=dataset_name]').type('cy dataset name');
     cy.get('[data-cy=dataset_location]').click({ force: true });
