@@ -18,7 +18,7 @@ describe('Study viewer vm', () => {
         cy.saveLocalStorageCache();
     });
 
-    it('check that create study is disabled', () => {
+    it('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.refreshPage();
         cy.createStudyWithoutInterceptingStudy(studyName);
