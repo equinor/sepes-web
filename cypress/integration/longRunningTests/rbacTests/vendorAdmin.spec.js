@@ -24,39 +24,6 @@ describe('Study viewer vm', () => {
         cy.createStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });
-        // cy.wait(2000);
-        // cy.reload();
-
-        // cy.intercept(
-        //     '/api/studies/*',
-        //     { times: 1 },
-        //     {
-        //         statusCode: 200,
-        //         body: {
-        //             name: studyName,
-        //             vendor: 'Bouvet',
-        //             wbsCode: 'abc123',
-        //             restricted: false,
-        //             description: 'Study about fishes',
-        //             logoUrl: 'asdwasdasd',
-        //             id: '1',
-        //             resultsAndLearnings: 'We learned a lot',
-        //             datasets: [],
-        //             participants: [],
-        //             sandboxes: [],
-        //             permissions: {
-        //                 addRemoveDataset: false,
-        //                 addRemoveParticipant: false,
-        //                 addRemoveSandbox: false,
-        //                 closeStudy: false,
-        //                 deleteStudy: false,
-        //                 readResulsAndLearnings: false,
-        //                 updateMetadata: false,
-        //                 updateResulsAndLearnings: false
-        //             }
-        //         }
-        //     }
-        // );
         cy.get('[data-cy=edit_study]').should('be.disabled');
 
         cy.get('[data-cy=edit_results_and_learnings]').should('be.disabled');
@@ -66,9 +33,6 @@ describe('Study viewer vm', () => {
 
         cy.switchToSandboxesTab();
         cy.get('[data-cy=create_sandbox]').should('be.disabled');
-
-        // cy.switchToParticipantsTab();
-        // cy.get('Type minimum three characters to search').type('test');
 
         cy.switchToDatasetsTab();
         cy.reload();
@@ -186,88 +150,4 @@ describe('Study viewer vm', () => {
 
         cy.deleteStudy(studyName);
     });
-
-    // it('create study', () => {
-
-    // });
-
-    // it('check that edit is disabled', () => {
-
-    // });
-
-    // it('check that edit results and learnings is disabled', () => {
-
-    // });
-
-    // it('check that create study specific data set is disabled', () => {
-
-    // });
-
-    // it('check that create sandbox is disabled', () => {
-
-    // });
-
-    // it.skip('check that add participant is disabled', () => {
-
-    // });
-
-    // it('check that create study specific data set is disabled', () => {
-
-    // });
-
-    // it('check that edit dataset is disabled', () => {
-
-    // });
-
-    // it('check that delete dataset is disabled', () => {
-
-    // });
-
-    // it('check that delete dataset is disabled', () => {
-
-    // });
-
-    // it('create sandbox', () => {
-
-    // });
-
-    // it('create VM', () => {
-
-    // });
-
-    // it('creates VM rules', () => {
-
-    // });
-
-    // it('check that add new vm is not visible', () => {
-
-    // });
-
-    // it('check that make available  is disabled', () => {
-
-    // });
-
-    // it('check that adding data sets to sandbox is disabled', () => {
-
-    // });
-
-    // it('check that delete vm is disabled', () => {
-
-    // });
-
-    // it('check that adding vm rules is disabled', () => {
-
-    // });
-
-    // it('check that delete sandbox is disabled', () => {
-
-    // });
-
-    // it('delete sandbox', () => {
-
-    // });
-
-    // it('delete study', () => {
-
-    // });
 });
