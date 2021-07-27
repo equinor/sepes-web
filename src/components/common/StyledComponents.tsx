@@ -15,7 +15,8 @@ import {
     check,
     error_outlined,
     more_vertical,
-    refresh
+    refresh,
+    hourglass_empty
 } from '@equinor/eds-icons';
 
 const icons = {
@@ -31,7 +32,8 @@ const icons = {
     check,
     error_outlined,
     more_vertical,
-    refresh
+    refresh,
+    hourglass_empty
 };
 Icon.add(icons);
 
