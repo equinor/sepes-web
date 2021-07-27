@@ -94,7 +94,7 @@
         "@typescript-eslint/eslint-plugin": "^4.27.0",
         "@typescript-eslint/parser": "^4.27.0",
         "babel-plugin-istanbul": "^6.0.0",
-        "cypress": "^7.2.0",
+        "cypress": "^7.6.0",
         "cypress-dark": "^1.7.14",
         "cypress-file-upload": "^5.0.7",
         "cypress-plugin-retries": "^1.5.2",
