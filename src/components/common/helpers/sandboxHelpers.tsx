@@ -69,3 +69,27 @@ export const validateVmName = (vmName: string) => {
     const limit = /(?=.{3,123})/;
     return onlyLettersAndNumbersAndDashes.test(nameWithoutSpaces) && limit.test(nameWithoutSpaces);
 };
+
+export const arrayObjectsToArrayString = (array: any): string[] => {
+    if (!array) {
+        return [];
+    }
+    const returnArray: string[] = [];
+    array.forEach((element: any) => {
+        returnArray.push(element.displayValue);
+    });
+    return returnArray;
+};
+
+export const returnKeyOfDisplayValue = (displayValue: string | null | undefined, array: any): string => {
+    if (displayValue === '') {
+        return '';
+    }
+    let key = '';
+    array.forEach((element: any) => {
+        if (element.displayValue === displayValue) {
+            key = element.key;
+        }
+    });
+    return key;
+};

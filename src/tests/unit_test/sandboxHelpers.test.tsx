@@ -194,3 +194,13 @@ test('test returnUsernameVariant, invalid password', () => {
     const expectedResult = 'error';
     expect(helpers.returnUsernameVariant('admin', false)).toEqual(expectedResult);
 });
+
+test('test arrayObjectsToArrayString, check output', () => {
+    const expectedResult = ['banana', 'orange'];
+    expect(
+        helpers.arrayObjectsToArrayString([
+            { displayValue: 'banana', id: 1 },
+            { displayValue: 'orange', id: 2 }
+        ])
+    ).toEqual(expectedResult);
+});

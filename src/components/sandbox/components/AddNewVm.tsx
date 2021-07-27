@@ -1,12 +1,25 @@
+/* eslint-disable react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
-import { TextField, Typography, Button, Checkbox, Icon, Tooltip, DotProgress, Label } from '@equinor/eds-core-react';
+import {
+    TextField,
+    Typography,
+    Button,
+    Checkbox,
+    Icon,
+    Tooltip,
+    DotProgress,
+    Label,
+    SingleSelect
+} from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
     validateUserInput,
     filterSizes,
     returnPasswordVariant,
-    returnUsernameVariant
+    returnUsernameVariant,
+    arrayObjectsToArrayString,
+    returnKeyOfDisplayValue
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
@@ -21,6 +34,7 @@ import {
 } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import '../../../styles/addNewVm.scss';
 
 const icons = {
     info_circle
@@ -291,7 +305,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         {actualVmName || '-'}
                     </Typography>
                 </div>
-                <CoreDevDropdown
+                {/*<CoreDevDropdown
                     label="Operating system"
                     options={os}
                     width={width}
@@ -301,6 +315,17 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     meta="(required)"
                     useOverflow
                     tabIndex={0}
+                />*/}
+                <SingleSelect
+                    handleSelectedItemChange={({ selectedItem }) =>
+                        handleDropdownChange(returnKeyOfDisplayValue(selectedItem, os), 'operatingSystem')
+                    }
+                    label="Operating system"
+                    items={arrayObjectsToArrayString(os)}
+                    meta="(required)"
+                    placeholder="Please search/select..."
+                    style={{ color: 'black' }}
+                    className="singleSelect"
                 />
                 <div style={{ marginTop: '24px' }} />
                 <TextField
@@ -368,7 +393,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     empty if you have no special requirements.
                 </HelperTextWrapper>
             </SizeFilterWrapper>
-            <CoreDevDropdown
+            {/*<CoreDevDropdown
                 label="VM size"
                 options={filterSizes(sizes, filter)}
                 width={width}
@@ -378,6 +403,17 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 meta="(required)"
                 useOverflow
                 tabIndex={0}
+            />*/}
+            <SingleSelect
+                handleSelectedItemChange={({ selectedItem }) =>
+                    handleDropdownChange(returnKeyOfDisplayValue(selectedItem, sizes), 'size')
+                }
+                label="VM size"
+                items={arrayObjectsToArrayString(filterSizes(sizes, filter))}
+                meta="(required)"
+                className="singleSelect"
+                placeholder="Please search/select..."
+                style={{ color: 'black' }}
             />
             <CoreDevDropdown
                 label="Data disk"

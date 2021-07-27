@@ -139,8 +139,8 @@ const CoreDevDropdown = (props: any) => {
     //} else {
     //}
 
-    const arrowUp = <Icon name="arrow_drop_up" size={16} style={{ marginRight: '8px' }} />;
-    const arrowDown = <Icon name="arrow_drop_down" size={16} style={{ marginRight: '8px' }} />;
+    const arrowUp = <Icon name="arrow_drop_up" size={24} style={{ marginRight: '8px' }} color="#6F6F6F" />;
+    const arrowDown = <Icon name="arrow_drop_down" size={24} style={{ marginRight: '8px' }} color="#6F6F6F" />;
 
     //setSelectedOption(options[0].name);
 
