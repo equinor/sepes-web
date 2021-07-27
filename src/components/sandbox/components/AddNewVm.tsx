@@ -324,8 +324,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     items={arrayObjectsToArrayString(os)}
                     meta="(required)"
                     placeholder="Please search/select..."
-                    style={{ color: 'black' }}
                     className="singleSelect"
+                    data-cy="vm_operatingSystem"
                 />
                 <div style={{ marginTop: '24px' }} />
                 <TextField
@@ -413,7 +413,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 meta="(required)"
                 className="singleSelect"
                 placeholder="Please search/select..."
-                style={{ color: 'black' }}
+                data-cy="vm_size"
             />
             <CoreDevDropdown
                 label="Data disk"
