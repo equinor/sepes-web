@@ -88,6 +88,13 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
 
+      - name: Save videos if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/videos
+
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
       - uses: actions/upload-artifact@v2
