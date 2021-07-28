@@ -109,7 +109,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
             <Tooltip title={returnResetpasswordTooltip()} placement="right">
                 <Menu.Item
                     onClick={redirectToChangePassword}
-                    disabled={permissions.update && vmProperties.linkToExternalSystem !== ''}
+                    disabled={!(permissions.update && vmProperties.linkToExternalSystem !== null)}
                     className="reset_password"
                 >
                     {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
