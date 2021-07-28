@@ -56,7 +56,7 @@ describe('Make available', () => {
     });
 
     it('Wait for resources to be created', () => {
-        cy.wait(750000);
+        cy.wait(600000);
     });
 
     it('Ensure make available is disabled', () => {
@@ -76,6 +76,7 @@ describe('Make available', () => {
     });
 
     it('Click make available', () => {
+        cy.scrollTo('top');
         cy.wait(5000);
         cy.get('[data-cy=sandbox_make_available]').click({ force: true });
         cy.get('[data-cy=Sure_to_procceed_yes]').click({ force: true });
