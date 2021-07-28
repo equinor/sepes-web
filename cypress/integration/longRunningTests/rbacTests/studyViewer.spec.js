@@ -4,7 +4,7 @@ describe('Study viewer vm', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.intercept('/api/permissions', { times: 1 }, { fixture: 'rbac/studyViewer/permissions.json' });
+        cy.intercept('/api/permissions', { times: 10 }, { fixture: 'rbac/studyViewer/permissions.json' });
     });
 
     beforeEach(() => {
