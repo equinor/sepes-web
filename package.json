@@ -48,7 +48,7 @@
         "react-dnd-html5-backend": "^14.0.0",
         "react-dnd-html5-backend-cjs": "^9.5.1",
         "react-dom": "^16.13.1",
-        "react-dropzone": "^11.3.2",
+        "react-dropzone": "^11.3.4",
         "react-keyed-file-browser": "^1.11.0",
         "react-markdown": "^5.0.3",
         "react-notifications-component": "^2.4.1",
