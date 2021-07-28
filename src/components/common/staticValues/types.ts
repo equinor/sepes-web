@@ -8,5 +8,6 @@ export const resourceType = {
 };
 
 export const resourceStatus = {
-    ok: 'Ok'
+    ok: 'Ok',
+    queued: 'queued'
 };

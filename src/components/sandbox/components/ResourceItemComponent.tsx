@@ -2,20 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Label, EquinorIcon } from '../../common/StyledComponents';
 import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
-import { resourceType } from '../../common/staticValues/types';
+import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 import { SandboxPermissions } from 'components/common/interfaces';
 
 const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 30px;
-`;
-
-const SatusWrapper = styled.div`
-    margin-left: auto;
-    display: flex;
-    justify-content: center;
-    margin-top: 4px;
 `;
 
 const SatusWrapperCentered = styled.div`
@@ -53,6 +46,23 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
         });
     };
 
+    const returnNotReadyIcon = (_status: string) => {
+        if (retryLink) {
+            return (
+                <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
+                    {EquinorIcon('refresh', '#007079', 24)}
+                </Button>
+            );
+        }
+        if (_status === resourceStatus.ok) {
+            return EquinorIcon('check', '#007079', 24);
+        }
+        if (_status.includes(resourceStatus.queued)) {
+            return EquinorIcon('hourglass_empty', '#007079', 24);
+        }
+        return <DotProgress color="primary" />;
+    };
+
     return (
         <Wrapper>
             <SatusWrapperCentered>
@@ -82,15 +92,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
             </SatusWrapperCentered>
             <SatusWrapperCentered>
                 <Tooltip title={retryLink ? 'Try Again' : status} placement="top">
-                    {retryLink ? (
-                        <Button variant="ghost_icon" onClick={() => retryResource()} disabled={!permission.update}>
-                            {EquinorIcon('refresh', '#007079', 24)}
-                        </Button>
-                    ) : status !== 'Ok' ? (
-                        <DotProgress color="primary" />
-                    ) : (
-                        EquinorIcon('check', '#007079', 24)
-                    )}
+                    {returnNotReadyIcon(status)}
                 </Tooltip>
             </SatusWrapperCentered>
         </Wrapper>
