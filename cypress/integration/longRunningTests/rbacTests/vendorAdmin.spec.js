@@ -4,7 +4,7 @@ describe('Vendor admin', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.intercept('/api/permissions', { times: 1 }, { fixture: 'rbac/vendorAdmin/permissions.json' });
+        cy.intercept('/api/permissions', { fixture: 'rbac/vendorAdmin/permissions.json' });
     });
 
     beforeEach(() => {
@@ -21,6 +21,7 @@ describe('Vendor admin', () => {
     it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.refreshPage();
+        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });

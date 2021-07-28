@@ -21,7 +21,7 @@ describe('Study viewer vm', () => {
     it('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.refreshPage();
-        cy.intercept('/api/permissions', { fixture: 'rbac/sponsorRep/permissions.json' });
+        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/studyViewer/study.json' });
         cy.get('[data-cy=edit_study]').should('be.disabled');
