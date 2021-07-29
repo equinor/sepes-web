@@ -474,7 +474,15 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     label="WBS"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
-                                    inputIcon={validateWbsInProgress ? <DotProgress /> : <Icon name="dollar" />}
+                                    inputIcon={
+                                        validateWbsInProgress ? (
+                                            <Tooltip title="Validating WBS..." placement="top">
+                                                <DotProgress />
+                                            </Tooltip>
+                                        ) : (
+                                            <Icon name="dollar" />
+                                        )
+                                    }
                                     variant={returnWbsVariant()}
                                     helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
                                 />
