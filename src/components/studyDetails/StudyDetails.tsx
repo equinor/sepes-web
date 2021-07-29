@@ -76,7 +76,8 @@ const StudyDetails = () => {
 
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
-    const [loading, setLoading] = useState<Boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [studySaveInProgress, setStudySaveInProgress] = useState<boolean>(false);
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
@@ -94,7 +95,8 @@ const StudyDetails = () => {
 
     useEffect(() => {
         setWbsIsValid(study.wbsCodeValid);
-    }, [study]);
+        console.log(study.wbsCodeValid);
+    }, [study.wbsCodeValid]);
 
     const changeComponent = () => {
         Cookies.remove(id);
@@ -108,6 +110,7 @@ const StudyDetails = () => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         wbsIsValid={wbsIsValid}
+                        studySaveInProgress={studySaveInProgress}
                     />
                 );
             case 2:
@@ -118,7 +121,7 @@ const StudyDetails = () => {
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        disabled={study.permissions && !study.permissions.addRemoveSandbox}
+                        disabled={!(study.permissions && study.permissions.addRemoveSandbox && !studySaveInProgress)}
                         study={study}
                         setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
@@ -170,6 +173,7 @@ const StudyDetails = () => {
                         setDeleteStudyInProgress={setDeleteStudyInProgress}
                         setWbsIsValid={setWbsIsValid}
                         wbsIsValid={wbsIsValid}
+                        setStudySaveInProgress={setStudySaveInProgress}
                     />
                 ) : (
                     <LoadingWrapper />

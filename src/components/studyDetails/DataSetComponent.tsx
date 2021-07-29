@@ -55,6 +55,7 @@ type DatasetComponentProps = {
     setUpdateCache: any;
     updateCache: any;
     wbsIsValid: boolean | undefined;
+    studySaveInProgress: boolean;
 };
 
 const DataSetComponent: React.FC<DatasetComponentProps> = ({
@@ -62,7 +63,8 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     setStudy,
     setUpdateCache,
     updateCache,
-    wbsIsValid
+    wbsIsValid,
+    studySaveInProgress
 }) => {
     const history = useHistory();
     //const [datasetsList, setDatasetsList] = useState<any>([]);
@@ -87,8 +89,14 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     };
 
     useEffect(() => {
-        setCanCreateDataset(study.permissions && study.permissions.addRemoveDataset && study.wbsCode && wbsIsValid);
-    }, [wbsIsValid]);
+        setCanCreateDataset(
+            study.permissions &&
+                study.permissions.addRemoveDataset &&
+                study.wbsCode &&
+                wbsIsValid &&
+                !studySaveInProgress
+        );
+    }, [wbsIsValid, studySaveInProgress]);
 
     const redirectToStudySpecificDataset = () => {
         const studyId = getStudyId();
