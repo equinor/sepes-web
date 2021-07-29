@@ -3,44 +3,22 @@ describe('Vendor admin', () => {
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
-        cy.intercept('/api/permissions', {
-            admin: false,
-            canCreateStudy: false,
-            canEdit_PreApproved_Datasets: false,
-            canRead_PreApproved_Datasets: true,
-            datasetAdmin: false,
-            emailAddress: 'mock@test.com',
-            fullName: 'Mock User',
-            sponsor: false,
-            userName: 'mock@test.com'
-        });
+        cy.intercept('/api/permissions', { fixture: 'rbac/vendorAdmin/permissions.json' });
         cy.visit('/');
     });
 
     beforeEach(() => {
-        // cy.restoreLocalStorageCache();
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
     });
 
     afterEach(() => {
         cy.login();
-        // cy.saveLocalStorageCache();
     });
 
     it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
-        cy.intercept('/api/permissions', {
-            admin: true,
-            canCreateStudy: true,
-            canEdit_PreApproved_Datasets: true,
-            canRead_PreApproved_Datasets: true,
-            datasetAdmin: true,
-            emailAddress: 'mock@test.com',
-            fullName: 'Mock User',
-            sponsor: true,
-            userName: 'mock@test.com'
-        });
+        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();
 
         cy.createStudyWithoutInterceptingStudy(studyName);
