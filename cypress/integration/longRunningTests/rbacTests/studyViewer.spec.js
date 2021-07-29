@@ -4,7 +4,17 @@ describe('Study viewer vm', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.intercept('/api/permissions', { fixture: 'rbac/studyViewer/permissions.json' });
+        cy.intercept('/api/permissions', {
+            admin: false,
+            canCreateStudy: false,
+            canEdit_PreApproved_Datasets: false,
+            canRead_PreApproved_Datasets: false,
+            datasetAdmin: false,
+            emailAddress: 'mock@test.com',
+            fullName: 'Mock User',
+            sponsor: false,
+            userName: 'mock@test.com'
+        });
     });
 
     beforeEach(() => {
@@ -21,7 +31,17 @@ describe('Study viewer vm', () => {
     it('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.refreshPage();
-        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
+        cy.intercept('/api/permissions', {
+            admin: true,
+            canCreateStudy: true,
+            canEdit_PreApproved_Datasets: true,
+            canRead_PreApproved_Datasets: true,
+            datasetAdmin: true,
+            emailAddress: 'mock@test.com',
+            fullName: 'Mock User',
+            sponsor: true,
+            userName: 'mock@test.com'
+        });
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/studyViewer/study.json' });
         cy.get('[data-cy=edit_study]').should('be.disabled');
