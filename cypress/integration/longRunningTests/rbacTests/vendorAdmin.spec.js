@@ -3,7 +3,6 @@ describe('Vendor admin', () => {
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
-        cy.visit('/');
         cy.intercept('/api/permissions', {
             admin: false,
             canCreateStudy: false,
@@ -15,6 +14,7 @@ describe('Vendor admin', () => {
             sponsor: false,
             userName: 'mock@test.com'
         });
+        cy.visit('/');
     });
 
     beforeEach(() => {
@@ -30,7 +30,6 @@ describe('Vendor admin', () => {
 
     it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
-        cy.refreshPage();
         cy.intercept('/api/permissions', {
             admin: true,
             canCreateStudy: true,
@@ -42,6 +41,8 @@ describe('Vendor admin', () => {
             sponsor: true,
             userName: 'mock@test.com'
         });
+        cy.refreshPage();
+
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });

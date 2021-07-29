@@ -3,7 +3,6 @@ describe('Study viewer vm', () => {
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
-        cy.visit('/');
         cy.intercept('/api/permissions', {
             admin: false,
             canCreateStudy: false,
@@ -15,6 +14,7 @@ describe('Study viewer vm', () => {
             sponsor: false,
             userName: 'mock@test.com'
         });
+        cy.visit('/');
     });
 
     beforeEach(() => {
@@ -30,7 +30,6 @@ describe('Study viewer vm', () => {
 
     it('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
-        cy.refreshPage();
         cy.intercept('/api/permissions', {
             admin: true,
             canCreateStudy: true,
@@ -42,6 +41,8 @@ describe('Study viewer vm', () => {
             sponsor: true,
             userName: 'mock@test.com'
         });
+        cy.refreshPage();
+
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/studyViewer/study.json' });
         cy.get('[data-cy=edit_study]').should('be.disabled');
