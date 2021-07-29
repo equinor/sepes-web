@@ -6,11 +6,13 @@ Source code for the Sepes web application
 
 ## Making commits
 
-We use commitizen to make our commits. To make a commit, run "npm run commi" to start the questionare. We use these rules to say if a change is MAJOR, MINOR or a PATCH:
+Use conventional commits as described in https://github.com/equinor/sdscoredev-handbook#git-commits
 
--   MAJOR version when you make incompatible API changes,
--   MINOR version when you add functionality in a backwards compatible manner, and
--   PATCH version when you make backwards compatible bug fixes.
+Valid `scope`-s for Sepes are:
+
+- study
+- sandbox
+- dataset
 
 ## Run Tests
 
