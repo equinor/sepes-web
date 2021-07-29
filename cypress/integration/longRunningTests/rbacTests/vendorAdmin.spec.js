@@ -8,14 +8,14 @@ describe('Vendor admin', () => {
     });
 
     beforeEach(() => {
-        cy.restoreLocalStorageCache();
+        // cy.restoreLocalStorageCache();
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
     });
 
     afterEach(() => {
         cy.login();
-        cy.saveLocalStorageCache();
+        // cy.saveLocalStorageCache();
     });
 
     it('check that that vendor admin can do what the role allows', () => {
