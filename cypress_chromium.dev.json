@@ -4,7 +4,7 @@
     "pageLoadTimeout": 200000,
     "requestTimeout": 200000,
     "responseTimeout": 200000,
-    "video": false,
+    "video": true,
     "nodeVersion": "system",
     "chromeWebSecurity": false,
     "reporter": "cypress-multi-reporters",
