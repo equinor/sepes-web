@@ -1,0 +1,23 @@
+{
+    "name": "Cypress test",
+    "vendor": "Bouvet",
+    "wbsCode": "abc123",
+    "restricted": false,
+    "description": "Study about fishes",
+    "logoUrl": "asdwasdasd",
+    "id": "1",
+    "resultsAndLearnings": "We learned a lot",
+    "datasets": [],
+    "participants": [],
+    "sandboxes": [],
+    "permissions": {
+        "addRemoveDataset": true,
+        "addRemoveParticipant": true,
+        "addRemoveSandbox": true,
+        "closeStudy": true,
+        "deleteStudy": true,
+        "readResulsAndLearnings": true,
+        "updateMetadata": true,
+        "updateResulsAndLearnings": true
+    }
+}

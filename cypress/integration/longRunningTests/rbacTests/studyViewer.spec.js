@@ -3,8 +3,8 @@ describe('Study viewer vm', () => {
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
+        cy.intercept('/api/permissions', { fixture: 'rbac/studyViewer/permissions.json' });
         cy.visit('/');
-        cy.intercept('/api/permissions', { times: 1 }, { fixture: 'rbac/studyViewer/permissions.json' });
     });
 
     beforeEach(() => {
@@ -20,6 +20,7 @@ describe('Study viewer vm', () => {
 
     it('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
+        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/studyViewer/study.json' });

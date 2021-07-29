@@ -3,24 +3,24 @@ describe('Vendor admin', () => {
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
+        cy.intercept('/api/permissions', { fixture: 'rbac/vendorAdmin/permissions.json' });
         cy.visit('/');
-        cy.intercept('/api/permissions', { times: 1 }, { fixture: 'rbac/vendorAdmin/permissions.json' });
     });
 
     beforeEach(() => {
-        cy.restoreLocalStorageCache();
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
     });
 
     afterEach(() => {
         cy.login();
-        cy.saveLocalStorageCache();
     });
 
     it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
+        cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();
+
         cy.createStudyWithoutInterceptingStudy(studyName);
         cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });
