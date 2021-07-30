@@ -148,6 +148,7 @@ type StudyComponentFullProps = {
     setDeleteStudyInProgress: any;
     setWbsIsValid: any;
     wbsIsValid: boolean | undefined;
+    setStudySaveInProgress: any;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -164,7 +165,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     updateCache,
     setDeleteStudyInProgress,
     setWbsIsValid,
-    wbsIsValid
+    wbsIsValid,
+    setStudySaveInProgress
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
@@ -174,7 +176,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(wbsIsValid);
     const [validateWbsInProgress, setValidateWbsInProgress] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
@@ -255,7 +257,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setShowImagePicker(false);
         setHasChanged(false);
-        setWbsIsValid(wbsOnChangeIsValid);
+        if (wbsOnChangeIsValid !== undefined) {
+            setWbsIsValid(wbsOnChangeIsValid);
+        }
+
         setUserPressedCreate(true);
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
@@ -323,10 +328,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const sendStudyToApi = (study: StudyObj) => {
         setLoading(true);
+        setStudySaveInProgress(true);
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.message) {
                     setLoading(false);
+                    setStudySaveInProgress(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     setStudy(newStudy);
@@ -343,7 +350,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 setStudy(studyOnChange);
             }
             setLoading(false);
+
             updateStudy(study, imageUrl).then((result: any) => {
+                setStudySaveInProgress(false);
                 if (result && !result.message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
