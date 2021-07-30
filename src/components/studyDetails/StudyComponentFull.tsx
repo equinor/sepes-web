@@ -455,7 +455,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     data-cy="study_name"
                                     autoComplete="off"
                                     autoFocus
-                                    helperText={returnHelperText(studyOnChange.name.length, 50, 'study')}
+                                    helperText={
+                                        studyOnChange.name && returnHelperText(studyOnChange.name.length, 50, 'study')
+                                    }
                                     helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
                                         <Tooltip
