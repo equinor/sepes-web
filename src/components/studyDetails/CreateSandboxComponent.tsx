@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
-import { EquinorIcon, Label } from '../common/StyledComponents';
 import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
-import { returnAllowedLengthOfString, returnTextfieldTypeBasedOninput } from '../common/helpers/helpers';
+import {
+    returnAllowedLengthOfString,
+    returnHelperText,
+    returnTextfieldTypeBasedOninput
+} from '../common/helpers/helpers';
 import { validateUserInputSandbox } from '../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
@@ -16,7 +19,7 @@ import { getStudyId } from 'utils/CommonUtil';
 const Wrapper = styled.div`
     position: absolute;
     display: grid;
-    grid-template-rows: 1fr 24px 1fr auto;
+    grid-template-rows: 1fr 64px 48px;
     grid-gap: 8px;
     background-color: #ffffff;
     width: 300px;
@@ -112,8 +115,14 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
                 meta="(required)"
-                variant={returnTextfieldTypeBasedOninput(sandbox.name)}
+                variant={returnTextfieldTypeBasedOninput(sandbox.name, false)}
                 onChange={(e: any) => handleChange('name', e.target.value)}
+                helperText={
+                    sandbox.name.length > 50
+                        ? returnHelperText(sandbox.name.length, 50, 'sandbox')
+                        : 'Name cannot be changed later'
+                }
+                helperIcon={<Icon name="warning_outlined" title="Warning" />}
                 value={sandbox.name}
                 data-cy="sandbox_name"
                 autoComplete="off"
@@ -126,10 +135,10 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                     </div>
                 }
             />
-            <Label>
+            {/*<Label>
                 <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot
                 be changed later
-            </Label>
+            </Label>*/}
             <CoreDevDropdown
                 label="Location"
                 options={regions}
@@ -156,7 +165,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                     placement="left"
                 >
                     <Button
-                        style={{ width: '76px', margin: '8px 0 8px auto' }}
+                        style={{ width: '76px' }}
                         onClick={() => CreateSandbox()}
                         data-cy="create_actual_sandbox"
                         disabled={!(validateUserInputSandbox(sandbox, study.wbsCode) && wbsIsValid)}

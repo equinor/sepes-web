@@ -5,7 +5,7 @@ import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip, Typography } from '@equinor/eds-core-react';
 import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
-import { lineBreak } from '../common/helpers/helpers';
+import { lineBreak, returnLimitMeta } from '../common/helpers/helpers';
 import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
@@ -34,6 +34,8 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 `;
 */
 
+const resultsAndLearningsLimit = 4096;
+
 type OverviewProps = {
     study: StudyObj;
     setHasChanged: any;
@@ -60,6 +62,9 @@ const Overview: React.FC<OverviewProps> = ({
     );
 
     const handleChange = (evt) => {
+        if (evt.target.value && evt.target.value.length > resultsAndLearningsLimit) {
+            return;
+        }
         setHasChanged(true);
         setResultsAndLearnings({ resultsAndLearnings: evt.target.value });
     };
@@ -111,6 +116,7 @@ const Overview: React.FC<OverviewProps> = ({
                             value={resultsAndLearnings.resultsAndLearnings}
                             autoComplete="off"
                             autoFocus
+                            meta={returnLimitMeta(resultsAndLearningsLimit, resultsAndLearnings.resultsAndLearnings)}
                         />
                     )}
                     <div style={{ display: 'flex' }}>

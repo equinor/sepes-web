@@ -4,7 +4,15 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu, Typography, DotProgress } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
+import {
+    dollar,
+    visibility,
+    visibility_off,
+    business,
+    settings,
+    info_circle,
+    warning_filled
+} from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
@@ -12,6 +20,7 @@ import CustomLogoComponent from '../common/customComponents/CustomLogoComponent'
 import {
     checkIfRequiredFieldsAreNull,
     returnAllowedLengthOfString,
+    returnHelperText,
     returnLimitMeta,
     returnTextfieldTypeBasedOninput,
     truncate
@@ -29,7 +38,8 @@ const icons = {
     visibility_off,
     business,
     settings,
-    info_circle
+    info_circle,
+    warning_filled
 };
 Icon.add(icons);
 
@@ -124,7 +134,7 @@ const PictureWrapper = styled.div<{ editMode: any }>`
 `;
 
 const limits = {
-    description: 500,
+    description: 512,
     name: 128,
     vendor: 128,
     wbsCode: 64
@@ -454,6 +464,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     data-cy="study_name"
                                     autoComplete="off"
                                     autoFocus
+                                    helperText={
+                                        studyOnChange.name && returnHelperText(studyOnChange.name.length, 50, 'study')
+                                    }
+                                    helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
                                         <Tooltip
                                             title="The value must be between 3 and 128 characters long (A-Z)"
@@ -568,7 +582,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}
-                                meta={returnLimitMeta(500, studyOnChange.description)}
+                                meta={returnLimitMeta(512, studyOnChange.description)}
                                 label="Description"
                                 style={{ height: '152px', resize: 'none' }}
                                 value={studyOnChange.description}
