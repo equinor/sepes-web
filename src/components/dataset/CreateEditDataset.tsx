@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
-import { Button, Typography, TextField, DotProgress, Tooltip } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
 import { DatasetObj, DropdownObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
@@ -9,7 +9,12 @@ import {
     createStandardDataset,
     updateStandardDataset
 } from '../../services/Api';
-import { checkColumDoesNotExceedInputLength, checkIfRequiredFieldsAreNull } from '../common/helpers/helpers';
+import {
+    checkColumDoesNotExceedInputLength,
+    checkIfRequiredFieldsAreNull,
+    returnHelperText,
+    returnTextfieldTypeBasedOninput
+} from '../common/helpers/helpers';
 import { checkForInputErrors } from '../common/helpers/datasetHelpers';
 import Promt from '../common/Promt';
 import { UpdateCache } from '../../App';
@@ -294,7 +299,9 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
-                        variant={checkIfRequiredFieldsAreNull(dataset?.name, userPressedCreate)}
+                        variant={returnTextfieldTypeBasedOninput(dataset?.name)}
+                        helperText={returnHelperText(dataset?.name.length, 50, 'dataset')}
+                        helperIcon={<Icon name="warning_filled" title="Warning" />}
                         style={{ width, backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('name', e.target.value)}
                         value={dataset?.name}
