@@ -134,7 +134,7 @@ const PictureWrapper = styled.div<{ editMode: any }>`
 `;
 
 const limits = {
-    description: 500,
+    description: 512,
     name: 128,
     vendor: 128,
     wbsCode: 64
@@ -565,7 +565,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}
-                                meta={returnLimitMeta(500, studyOnChange.description)}
+                                meta={returnLimitMeta(512, studyOnChange.description)}
                                 label="Description"
                                 style={{ height: '152px', resize: 'none' }}
                                 value={studyOnChange.description}
