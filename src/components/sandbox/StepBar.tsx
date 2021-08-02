@@ -1,7 +1,7 @@
 /*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Menu, Tooltip, Icon, Breadcrumbs } from '@equinor/eds-core-react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
