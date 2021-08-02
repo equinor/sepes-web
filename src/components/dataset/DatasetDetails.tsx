@@ -620,6 +620,7 @@ const DatasetDetails = () => {
                                 ) : (
                                     <Breadcrumbs>
                                         <Breadcrumbs.Breadcrumb
+                                            style={{ marginBottom: '16px' }}
                                             onClick={() => {
                                                 history.push('/studies/' + studyId);
                                             }}
