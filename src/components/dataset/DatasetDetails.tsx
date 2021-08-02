@@ -623,6 +623,7 @@ const DatasetDetails = () => {
                                             onClick={() => {
                                                 history.push('/studies/' + studyId);
                                             }}
+                                            data-cy="dataset_back_to_study"
                                         >
                                             {getStudyName()}
                                         </Breadcrumbs.Breadcrumb>
