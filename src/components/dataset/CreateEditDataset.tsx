@@ -180,7 +180,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                     setUpdateCache({
                         ...updateCache,
                         [getStudyByIdUrl(studyId)]: true,
-                        [getStudySpecificDatasetUrl(result.id, result.studyId)]: true
+                        [getStudySpecificDatasetUrl(result.id, studyId)]: true
                     });
                     setDatasetFromDetails(result);
                     setShowEditDataset(false);

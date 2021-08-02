@@ -1,6 +1,6 @@
 /*eslint-disable consistent-return, no-shadow, react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Menu, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Button, Typography, Menu, Tooltip, Icon, Breadcrumbs } from '@equinor/eds-core-react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
@@ -398,20 +398,18 @@ const StepBar: React.FC<StepBarProps> = ({
     return (
         <Wrapper>
             <div style={{ display: 'flex' }}>
-                <Link to={'/studies/' + studyId} style={{ color: '#007079', fontSize: '22px' }}>
-                    <Button variant="ghost_icon">
-                        <Icon
-                            style={{ marginBottom: '' }}
-                            color="#007079"
-                            name="chevron_left"
-                            size={24}
-                            title="chevron_left"
-                        />
-                    </Button>
-                </Link>
-                <Typography style={{ display: 'inline-block', marginLeft: '8px' }} variant="h2">
-                    {sandbox && sandbox.name}
-                </Typography>
+                <Breadcrumbs>
+                    <Breadcrumbs.Breadcrumb
+                        onClick={() => {
+                            history.push('/studies/' + studyId);
+                        }}
+                    >
+                        {sandbox.studyName}
+                    </Breadcrumbs.Breadcrumb>
+                    <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
+                        {sandbox.name}
+                    </Breadcrumbs.Breadcrumb>
+                </Breadcrumbs>
                 <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
             </div>
             <Stepper activeStep={step} alternativeLabel nonLinear color="red">

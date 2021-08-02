@@ -95,7 +95,6 @@ const StudyDetails = () => {
 
     useEffect(() => {
         setWbsIsValid(study.wbsCodeValid);
-        console.log(study.wbsCodeValid);
     }, [study.wbsCodeValid]);
 
     const changeComponent = () => {
