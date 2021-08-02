@@ -51,7 +51,7 @@ export interface DatasetObj {
     areaL2?: string;
     tags?: string;
     description?: string;
-    studies?: [];
+    studies?: any;
     id?: string;
     added?: boolean;
     studyId?: string;

@@ -10,7 +10,8 @@ import {
     DotProgress,
     Chip,
     Search,
-    Switch
+    Switch,
+    Breadcrumbs
 } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
@@ -141,7 +142,8 @@ const DatasetDetails = () => {
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
         setDataset,
         undefined,
-        controller
+        controller,
+        false
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
@@ -583,6 +585,13 @@ const DatasetDetails = () => {
         }
     };
 
+    const getStudyName = (): string => {
+        if (dataset.studies && dataset.studies.length) {
+            return dataset.studies[0].name;
+        }
+        return '';
+    };
+
     return !showEditDataset ? (
         !loadingFiles && !dataset.id && datasetResponse.notFound ? (
             <NotFound />
@@ -606,27 +615,28 @@ const DatasetDetails = () => {
                     <Wrapper>
                         <div style={{}}>
                             <div style={{ marginBottom: '16px' }}>
-                                <Typography variant="h2">{dataset?.name}</Typography>
-                                {!checkUrlIfGeneralDataset() ? (
+                                {checkUrlIfGeneralDataset() ? (
+                                    <Typography variant="h2">{dataset?.name}</Typography>
+                                ) : (
+                                    <Breadcrumbs>
+                                        <Breadcrumbs.Breadcrumb
+                                            onClick={() => {
+                                                history.push('/studies/' + studyId);
+                                            }}
+                                            data-cy="dataset_back_to_study"
+                                        >
+                                            {getStudyName()}
+                                        </Breadcrumbs.Breadcrumb>
+                                        <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
+                                            {dataset?.name}
+                                        </Breadcrumbs.Breadcrumb>
+                                    </Breadcrumbs>
+                                )}
+                                {!checkUrlIfGeneralDataset() && (
                                     <Typography variant="h6">This data set is only available for this study</Typography>
-                                ) : null}
+                                )}
                             </div>
-                            {!checkUrlIfGeneralDataset() ? (
-                                <Link
-                                    to={'/studies/' + studyId}
-                                    style={{
-                                        color: '#007079',
-                                        fontSize: '16px',
-                                        margin: '32px 0 0 16px',
-                                        display: 'flex',
-                                        lineHeight: '16px'
-                                    }}
-                                    data-cy="dataset_back_to_study"
-                                >
-                                    <Icon color="#007079" name="arrow_back" size={16} style={{ marginRight: '16px' }} />
-                                    Back to study
-                                </Link>
-                            ) : (
+                            {checkUrlIfGeneralDataset() && (
                                 <Link
                                     to="/datasets"
                                     style={{ color: '#007079', fontSize: '22px', margin: '0 0 0 16px' }}
