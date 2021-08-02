@@ -4,7 +4,15 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu, Typography, DotProgress } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { dollar, visibility, visibility_off, business, settings, info_circle } from '@equinor/eds-icons';
+import {
+    dollar,
+    visibility,
+    visibility_off,
+    business,
+    settings,
+    info_circle,
+    warning_filled
+} from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
@@ -12,6 +20,7 @@ import CustomLogoComponent from '../common/customComponents/CustomLogoComponent'
 import {
     checkIfRequiredFieldsAreNull,
     returnAllowedLengthOfString,
+    returnHelperText,
     returnLimitMeta,
     returnTextfieldTypeBasedOninput,
     truncate
@@ -29,7 +38,8 @@ const icons = {
     visibility_off,
     business,
     settings,
-    info_circle
+    info_circle,
+    warning_filled
 };
 Icon.add(icons);
 
@@ -124,13 +134,14 @@ const PictureWrapper = styled.div<{ editMode: any }>`
 `;
 
 const limits = {
-    description: 500,
+    description: 512,
     name: 128,
     vendor: 128,
     wbsCode: 64
 };
 
 const truncateLength = 48;
+let wbsController = new AbortController();
 
 type StudyComponentFullProps = {
     study: StudyObj;
@@ -147,6 +158,7 @@ type StudyComponentFullProps = {
     setDeleteStudyInProgress: any;
     setWbsIsValid: any;
     wbsIsValid: boolean | undefined;
+    setStudySaveInProgress: any;
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
@@ -163,7 +175,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     updateCache,
     setDeleteStudyInProgress,
     setWbsIsValid,
-    wbsIsValid
+    wbsIsValid,
+    setStudySaveInProgress
 }) => {
     const history = useHistory();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
@@ -173,7 +186,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [showImagePicker, setShowImagePicker] = useState<boolean>(false);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(undefined);
+    const [wbsOnChangeIsValid, setWbsOnChangeIsValid] = useState<boolean | undefined>(wbsIsValid);
     const [validateWbsInProgress, setValidateWbsInProgress] = useState<boolean>(false);
 
     const [state, setState] = React.useState<{
@@ -208,6 +221,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     }, [studyOnChange, study]);
 
     useEffect(() => {
+        if (validateWbsInProgress) {
+            wbsController.abort();
+            wbsController = new AbortController();
+        }
+
         const timeoutId = setTimeout(() => {
             if (hasChanged) {
                 validateWbsOnChange(studyOnChange.wbsCode);
@@ -249,8 +267,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setShowImagePicker(false);
         setHasChanged(false);
+        if (wbsOnChangeIsValid !== undefined) {
+            setWbsIsValid(wbsOnChangeIsValid);
+        }
+
         setUserPressedCreate(true);
-        validateWbs(studyOnChange.wbsCode);
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
         }
@@ -283,19 +304,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         return '';
     };
 
-    const validateWbs = (wbs: string) => {
-        setWbsIsValid(false);
-        if (wbs !== '') {
-            validateWbsCode(wbs).then((result: any) => {
-                setWbsIsValid(result);
-            });
-        }
-    };
-
     const validateWbsOnChange = (wbs: string) => {
         if (wbs !== '') {
             setValidateWbsInProgress(true);
-            validateWbsCode(wbs).then((result: any) => {
+            validateWbsCode(wbs, wbsController.signal).then((result: any) => {
                 setValidateWbsInProgress(false);
                 setWbsOnChangeIsValid(result);
             });
@@ -326,11 +338,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
 
     const sendStudyToApi = (study: StudyObj) => {
         setLoading(true);
-
+        setStudySaveInProgress(true);
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
                 if (result && !result.message) {
                     setLoading(false);
+                    setStudySaveInProgress(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     setStudy(newStudy);
@@ -347,7 +360,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 setStudy(studyOnChange);
             }
             setLoading(false);
+
             updateStudy(study, imageUrl).then((result: any) => {
+                setStudySaveInProgress(false);
                 if (result && !result.message) {
                     cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
@@ -449,6 +464,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     data-cy="study_name"
                                     autoComplete="off"
                                     autoFocus
+                                    helperText={
+                                        studyOnChange.name && returnHelperText(studyOnChange.name.length, 50, 'study')
+                                    }
+                                    helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
                                         <Tooltip
                                             title="The value must be between 3 and 128 characters long (A-Z)"
@@ -478,7 +497,15 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     label="WBS"
                                     value={studyOnChange.wbsCode}
                                     data-cy="study_wbs"
-                                    inputIcon={validateWbsInProgress ? <DotProgress /> : <Icon name="dollar" />}
+                                    inputIcon={
+                                        validateWbsInProgress ? (
+                                            <Tooltip title="Validating WBS..." placement="top">
+                                                <DotProgress />
+                                            </Tooltip>
+                                        ) : (
+                                            <Icon name="dollar" />
+                                        )
+                                    }
                                     variant={returnWbsVariant()}
                                     helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
                                 />
@@ -555,7 +582,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                 placeholder="Describe the study"
                                 multiline
                                 onChange={(e: any) => handleChange('description', e.target.value)}
-                                meta={returnLimitMeta(500, studyOnChange.description)}
+                                meta={returnLimitMeta(512, studyOnChange.description)}
                                 label="Description"
                                 style={{ height: '152px', resize: 'none' }}
                                 value={studyOnChange.description}

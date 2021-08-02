@@ -21,9 +21,12 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
-export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true) => {
-    if (!validateResourceName(value, dashAllowed) && value !== '') {
+export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true, limit = 50) => {
+    if (!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) {
         return 'error';
+    }
+    if (value && value.length > limit) {
+        return 'warning';
     }
     return 'default';
 };
@@ -131,4 +134,11 @@ export const returnAllowedLengthOfString = (limits: any, value: string, columnNa
         return value.substr(0, limits[columnName]);
     }
     return value;
+};
+
+export const returnHelperText = (inputLength: number, limit: number, type: string) => {
+    if (inputLength === undefined || inputLength <= limit) {
+        return '';
+    }
+    return `ProTip! Good ${type} names contain fewer than ${limit} characters.`;
 };

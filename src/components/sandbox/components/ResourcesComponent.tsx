@@ -23,7 +23,7 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, p
     }, [resources]);
 
     return (
-        <div style={{ height: '331px', overflow: 'auto' }}>
+        <div style={{ height: '331px', overflowX: 'hidden' }}>
             <Table style={{ width: '100%', marginBottom: '24px', height: '200px' }}>
                 <Head>
                     <Row>

@@ -66,6 +66,20 @@ Cypress.Commands.add('createStudyWithLogo', (studyName) => {
     cy.waitForStudyToLoad();
 });
 
+Cypress.Commands.add('createStudyWithoutInterceptingStudy', (studyName) => {
+    cy.visit('/');
+
+    cy.get('[data-cy=new_study]').click({ force: true });
+
+    cy.get('[data-cy=study_name]').type(studyName);
+    cy.get('[data-cy=study_vendor]').type('cy vendor');
+    cy.get('[data-cy=study_wbs]').type('Automatic_test_cost');
+    cy.waitForWbsCheck();
+    cy.get('[data-cy=study_description]').type('cy description');
+    cy.wait(2000);
+    cy.get('[data-cy=create_study]').click({ force: true });
+});
+
 Cypress.Commands.add('createDataset', () => {
     cy.get('[data-cy=dataset_name]').type('cy dataset name');
     cy.get('[data-cy=dataset_location]').click({ force: true });
@@ -119,11 +133,13 @@ Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
 Cypress.Commands.add('createVm', () => {
     // cy.waitForSandboxToLoad();
     cy.get('[data-cy=vm_name]').type('cy name');
-    cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
+    // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
+    cy.get('[data-cy=vm_operatingSystem]').type('Windows Server 2019 Datacenter');
     cy.contains('Windows Server 2019 Datacenter').click({ force: true });
     cy.get('[data-cy=vm_username]').type('cy username');
     cy.get('[data-cy=vm_password]').type('Cypassword123!!');
-    cy.get('[data-cy=vm_size]').click({ force: true });
+    // cy.get('[data-cy=vm_size]').click({ force: true });
+    cy.get('[data-cy=vm_size]').type('Standard_F1');
     cy.contains('Standard_F1').click({ force: true });
     cy.get('[data-cy=vm_dataDisks]').click({ force: true });
     cy.contains('4 GB').click({ force: true });

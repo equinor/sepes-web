@@ -53,7 +53,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     });
 
     const [resources, setResources] = useState<any>([]);
-    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox);
+    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox, undefined, undefined, false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);

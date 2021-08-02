@@ -1,0 +1,20 @@
+{
+    "areaL1": null,
+    "areaL2": null,
+    "asset": null,
+    "baDataOwner": null,
+    "classification": "Open",
+    "countryOfOrigin": null,
+    "dataId": 2,
+    "description": null,
+    "id": 1103,
+    "location": "northeurope",
+    "lraId": 0,
+    "name": "Dataset Test",
+    "permissions": { "editDataset": true, "deleteDataset": true },
+    "sandboxDatasets": [],
+    "sourceSystem": null,
+    "storageAccountLink": "thisisalink.com",
+    "storageAccountName": "test",
+    "studies": []
+}

@@ -4,12 +4,12 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    # * is a special character in YAML so you have to quote this string
   - cron:  '0 4 * * 1,2,3,4,5'
 
 jobs:
   ci:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'Do not run tests') == false 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -50,12 +50,10 @@ jobs:
       - uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault 
+          secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
-    
-      #- run: npm ci
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
@@ -68,9 +66,9 @@ jobs:
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
         
-      # - name: Run all tests in Chromium browser  
+      # - name: Run all tests in Chromium browser
       #   env:
       #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
       #   run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
@@ -88,6 +86,13 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
+
+      - name: Save videos if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
