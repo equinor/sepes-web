@@ -618,19 +618,22 @@ const DatasetDetails = () => {
                                 {checkUrlIfGeneralDataset() ? (
                                     <Typography variant="h2">{dataset?.name}</Typography>
                                 ) : (
-                                    <Breadcrumbs>
-                                        <Breadcrumbs.Breadcrumb
-                                            onClick={() => {
-                                                history.push('/studies/' + studyId);
-                                            }}
-                                            data-cy="dataset_back_to_study"
-                                        >
-                                            {getStudyName()}
-                                        </Breadcrumbs.Breadcrumb>
-                                        <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
-                                            {dataset?.name}
-                                        </Breadcrumbs.Breadcrumb>
-                                    </Breadcrumbs>
+                                    <>
+                                        <Breadcrumbs>
+                                            <Breadcrumbs.Breadcrumb
+                                                style={{ marginBottom: '16px' }}
+                                                onClick={() => {
+                                                    history.push('/studies/' + studyId);
+                                                }}
+                                                data-cy="dataset_back_to_study"
+                                            >
+                                                {getStudyName()}
+                                            </Breadcrumbs.Breadcrumb>
+                                            <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
+                                                {dataset?.name}
+                                            </Breadcrumbs.Breadcrumb>
+                                        </Breadcrumbs>
+                                    </>
                                 )}
                                 {!checkUrlIfGeneralDataset() && (
                                     <Typography variant="h6">This data set is only available for this study</Typography>
