@@ -935,6 +935,7 @@ const DatasetDetails = () => {
             setDatasetFromDetails={setDataset}
             setShowEditDataset={setShowEditDataset}
             editingDataset
+            isStandardDataset={isStandard}
         />
     );
 };

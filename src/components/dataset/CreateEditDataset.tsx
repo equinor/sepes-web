@@ -32,7 +32,7 @@ import {
     getStudyByIdUrl,
     getStudySpecificDatasetUrl
 } from '../../services/ApiCallStrings';
-import { checkUrlIfGeneralDataset, checkUrlNewDataset } from '../../utils/DatasetUtil';
+import { checkUrlNewDataset } from '../../utils/DatasetUtil';
 import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 
 const OuterWrapper = styled.div`
@@ -103,13 +103,15 @@ type CreateEditDatasetProps = {
     setDatasetFromDetails: any;
     setShowEditDataset: any;
     editingDataset: boolean;
+    isStandardDataset: boolean;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     datasetFromDetails,
     setDatasetFromDetails,
     setShowEditDataset,
-    editingDataset
+    editingDataset,
+    isStandardDataset
 }) => {
     const studyId = getStudyId();
     const datasetId = getDatasetId();
@@ -141,10 +143,10 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const checkIfEditMode = () => {
-        if (!checkUrlIfGeneralDataset() && datasetId) {
+        if (!isStandardDataset && datasetId) {
             setEditDataset(true);
         }
-        if (checkUrlIfGeneralDataset() && !checkUrlNewDataset()) {
+        if (isStandardDataset && !checkUrlNewDataset()) {
             setEditDataset(true);
         }
     };
@@ -155,7 +157,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             return;
         }
         setLoading(true);
-        const isDatasetspecificDataset = !checkUrlIfGeneralDataset();
+        const isDatasetspecificDataset = !isStandardDataset;
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 setLoading(false);
@@ -278,20 +280,23 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
-    return (checkUrlIfGeneralDataset() && generalDatasetpermissions.canEdit_PreApproved_Datasets) ||
-        (datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset) ||
-        (location && location.state && location.state.canCreateStudySpecificDataset) ? (
+    const isStandardDatasetAndCantEdit = isStandardDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets;
+    const canEditDataset =
+        datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset;
+    const canCreateStudySpecificDataset = location && location.state && location.state.canCreateStudySpecificDataset;
+
+    return isStandardDatasetAndCantEdit || canEditDataset || canCreateStudySpecificDataset ? (
         <>
             <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
                 <Wrapper>
                     <div>
                         <Typography variant="h2">{!editDataset ? 'Create dataset' : 'Edit dataset'}</Typography>
-                        {!checkUrlIfGeneralDataset() && <span>This data is only available for this study</span>}
+                        {!isStandardDataset && <span>This data is only available for this study</span>}
                     </div>
                     <HelperTextWrapper>
                         <Typography variant="body_long">
-                            {!checkUrlIfGeneralDataset() ? studySpecificHelpText : standardHelpText}
+                            {!isStandardDataset ? studySpecificHelpText : standardHelpText}
                         </Typography>
                     </HelperTextWrapper>
                     <TextField
@@ -310,7 +315,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         autoFocus
                     />
                     {editDataset && returnField('Storage account name', dataset?.storageAccountName)}
-                    {!editDataset && checkUrlIfGeneralDataset() && (
+                    {!editDataset && isStandardDataset && (
                         <TextField
                             id="textfield2"
                             autoComplete="off"
@@ -378,7 +383,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         data-cy="dataset_dataId"
                         autoComplete="off"
                     />
-                    {checkUrlIfGeneralDataset() && (
+                    {isStandardDataset && (
                         <StyledLink
                             href={dataInventoryLink}
                             style={{ marginTop: '-8px' }}
