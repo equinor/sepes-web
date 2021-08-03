@@ -4,8 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import { Typography, Tabs } from '@equinor/eds-core-react';
 import { webAppChangelog, apiChangelog } from '../common/staticValues/commonLinks';
 
-//const { TabList, Tab } = Tabs;
-
 const OuterWrapper = styled.div`
     position: absolute;
     top: 64px;
@@ -86,5 +84,5 @@ const ReleaseNotes = () => {
         </OuterWrapper>
     );
 };
-//
+
 export default ReleaseNotes;
