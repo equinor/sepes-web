@@ -87,7 +87,7 @@ describe('Check values after refresh', () => {
         cy.contains(studyName).should('not.exist');
     });
 
-    // it('Check if study values are saved', () => {
+    // it('Check if study values are saved and correct', () => {
     //     cy.reload();
     //     cy.contains(studyName).should('be.visible');
     //     cy.contains('cy vendor').should('be.visible');
