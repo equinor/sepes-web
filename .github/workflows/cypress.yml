@@ -74,11 +74,11 @@ jobs:
       #   run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
       #   if: ${{ github.event_name != 'pull_request' }}
         
-      - name: Run all tests in Firefox browser  
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' }}
+      # - name: Run all tests in Firefox browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
 
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
