@@ -186,8 +186,9 @@ Cypress.Commands.add('editResultsAndLearnings', () => {
 
 Cypress.Commands.add('addMockUserAsParticipant', () => {
     cy.get('[data-cy=participants_tab]').click({ force: true });
-    cy.contains('Type minimum three chara').type('Mock User');
     cy.intercept('api/participants/*').as('getMockUser');
+    cy.contains('Type minimum three chara').type('Mock User');
+
     cy.wait('@getMockUser');
     cy.focused().type('{enter}');
     cy.get('[data-cy=participant_role]').click({ force: true });
