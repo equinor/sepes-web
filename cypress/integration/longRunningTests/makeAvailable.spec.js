@@ -67,7 +67,7 @@ describe('Make available', () => {
         cy.get('[data-cy=open_close_internet]').click();
         cy.wait(1000);
         cy.get('[data-cy=vm_rule_save]').click();
-        cy.wait(30000);
+        cy.wait(70000);
     });
 
     it('add data set to sandbox', () => {
