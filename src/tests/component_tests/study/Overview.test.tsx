@@ -78,34 +78,13 @@ test('renders StudyComponent full component with invalid study name', () => {
     expect(linkElement).toBeInTheDocument();
     linkElement.click();
 
-    // linkElement = getByText('this is a good study');
-    // expect(linkElement).toBeInTheDocument();
-
     linkElement = getByText('Cancel');
     expect(linkElement).toBeInTheDocument();
-    // linkElement.click();
 
-    // linkElement = getByText('this is a good study');
-    // expect(linkElement).toBeInTheDocument();
+    linkElement = getByText('Save');
+    expect(linkElement).toBeInTheDocument();
+    linkElement.click();
 
-    // linkElement = getByText('Edit results and learnings');
-    // expect(linkElement).toBeInTheDocument();
-    // linkElement.click();
-
-    // linkElement = getByText('Save');
-    // expect(linkElement).toBeInTheDocument();
-    // linkElement.click();
-
-    // linkElement = getByText('this is a good study');
-    // expect(linkElement).toBeInTheDocument();
-
-    //expect(getByText('Save').closest('button').disabled).toBeTruthy();
+    linkElement = getByText('this is a good study');
+    expect(linkElement).toBeInTheDocument();
 });
-
-// function sum(a, b) {
-//     return a + b;
-// }
-
-// test('adds 1 + 2 to equal 3', () => {
-//     expect(sum(1, 2)).toBe(3);
-// });
