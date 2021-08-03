@@ -112,7 +112,7 @@ const Overview: React.FC<OverviewProps> = ({
                             data-cy="results_and_learnings"
                             multiline
                             onChange={handleChange}
-                            style={{ margin: 'auto', marginLeft: '0', height: '300px' }}
+                            style={{ margin: 'auto', marginLeft: '0', height: '300px', resize: 'none' }}
                             value={resultsAndLearnings.resultsAndLearnings}
                             autoComplete="off"
                             autoFocus
