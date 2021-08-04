@@ -52,3 +52,40 @@ export const filterRoleList = (roles: any, selectedParticipant: ParticipantObj |
     });
     return tempRoles;
 };
+
+export const returnWbsVariant = (wbsOnChangeIsValid: boolean | undefined) => {
+    if (wbsOnChangeIsValid === undefined) {
+        return 'default';
+    }
+    if (wbsOnChangeIsValid) {
+        return 'success';
+    }
+    return 'error';
+};
+
+export const returnTooltipTextDeleteStudy = (study: StudyObj) => {
+    if (study.sandboxes && study.sandboxes.length > 0) {
+        return 'Delete sandboxes before deleting study';
+    }
+    return 'You do not have permission to delete this study';
+};
+
+export const returnTooltipTextSaveStudy = (
+    wbsOnChangeIsValid,
+    newStudy: boolean,
+    study: StudyObj,
+    studyOnChange: StudyObj,
+    validateWbsInProgress
+) => {
+    if (
+        wbsOnChangeIsValid === false &&
+        !newStudy &&
+        ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
+    ) {
+        return 'Can not change from valid to invalid WBS with active resources';
+    }
+    if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
+        return 'Please fill out all required fields';
+    }
+    return '';
+};
