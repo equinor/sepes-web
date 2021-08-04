@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Icon, Button, DotProgress, Tooltip, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { bytesToSize, truncate } from '../common/helpers/helpers';
-import { checkIfDeleteIsEnabled, handleScroll } from 'components/common/helpers/datasetHelpers';
 import { Label } from '../common/StyledComponents';
 
 const RightWrapper = styled.div`

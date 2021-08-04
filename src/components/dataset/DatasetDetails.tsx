@@ -7,8 +7,7 @@ import {
     getDatasetSasToken,
     getStudySpecificDatasetFiles,
     getStudySpecificDatasetResources,
-    removeStudyDataset,
-    getDatasetSasTokenDelete
+    removeStudyDataset
 } from '../../services/Api';
 import { arrow_back, delete_forever, folder, file, folder_open } from '@equinor/eds-icons';
 import { isIterable } from '../common/helpers/helpers';
@@ -22,15 +21,10 @@ import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { UpdateCache } from '../../App';
-import {
-    getDatasetsFilesUrl,
-    getStandardDatasetUrl,
-    getStudySpecificDatasetUrl,
-    getStudyByIdUrl
-} from '../../services/ApiCallStrings';
+import { getStandardDatasetUrl, getStudySpecificDatasetUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
-import { uploadFile, deleteFile } from '../../services/BlobStorage';
+import { uploadFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from 'utils/CommonUtil';
 import {
@@ -40,7 +34,7 @@ import {
 } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 import FileBrowser from 'react-keyed-file-browser';
-import DatasetFileUpload from './DatasetFileUpload';
+import DatasetFileList from './DatasetFileList';
 import DatasetInformation from './DatasetInformation';
 import './DatasetDetailsStyle.css';
 
@@ -72,12 +66,10 @@ const Wrapper = styled.div`
     }
 `;
 
-let controller = new AbortController();
 let controllerFiles = new AbortController();
 let controllerSas = new AbortController();
 const interval = 7000;
-const intervalUpdateSas = 1740000;
-const intervalUpdateSasDelete = 285000;
+const intervalUpdateSas = 10000;
 
 let abortArray: any = [];
 let progressArray: any = [];
@@ -101,6 +93,7 @@ const DatasetDetails = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+    const [controller, setController] = useState<AbortController>(new AbortController());
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
         storageAccountLink: undefined,
@@ -131,8 +124,6 @@ const DatasetDetails = () => {
     const [storageAccountStatus, setStorageAccountStatus] = useState<string>('');
     const [sasKey, setSasKey] = useState<string>('');
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
-    const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
-    const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
     const [totalProgress, setTotalProgress] = useState<number>(0);
     const [folderViewMode, setFolderViewMode] = useState<boolean>(false);
     const [numberOfFilesInProgress, setNumberOfFilesInProgress] = useState<number>(0);
@@ -177,7 +168,6 @@ const DatasetDetails = () => {
             cancelAllDownloads();
             abortArray = [];
             progressArray = [];
-            // setSearchValue('');
         };
     }, []);
 
@@ -185,14 +175,6 @@ const DatasetDetails = () => {
         const timer = setInterval(async () => {
             setSasKeyExpired(true);
         }, intervalUpdateSas);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    useEffect(() => {
-        const timer = setInterval(async () => {
-            setSasKeyDeleteExpired(true);
-        }, intervalUpdateSasDelete);
 
         return () => clearInterval(timer);
     }, []);
@@ -235,33 +217,6 @@ const DatasetDetails = () => {
 
                     setSasKeyExpired(false);
                     setSasKey(result);
-                    return resolve(result);
-                })
-                .catch((ex: any) => {
-                    console.log(ex);
-                    if (retries > 0) {
-                        setTimeout(() => {
-                            return getSasKey(retries - 1);
-                        }, backoff);
-                    }
-                });
-        });
-    };
-
-    const getSasKeyDelete = (retries = 3, backoff = 300) => {
-        return new Promise((resolve) => {
-            if (!sasKeyDeleteExpired) {
-                return resolve(sasKeyDelete);
-            }
-            getDatasetSasTokenDelete(datasetId, controllerSas.signal)
-                .then((result: any) => {
-                    if (retries > 0 && result.message) {
-                        setTimeout(() => {
-                            return getSasKeyDelete(retries - 1);
-                        }, backoff);
-                    }
-                    setSasKeyDeleteExpired(false);
-                    setSasKeyDelete(result);
                     return resolve(result);
                 })
                 .catch((ex: any) => {
@@ -326,11 +281,6 @@ const DatasetDetails = () => {
             }
         });
         setDatasetStorageAccountIsReady(res);
-    };
-
-    const updateOnNextVisit = () => {
-        const dataCache = isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId);
-        setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
     const returnEnumberableFiles = () => {
@@ -431,64 +381,6 @@ const DatasetDetails = () => {
                 }
             });
         }
-    };
-
-    const removeFile = (_file: any, _fileindex): void => {
-        try {
-            controller.abort();
-            controller = new AbortController();
-        } catch (e) {
-            if (e.name === 'AbortError') {
-                // abort was called on our abortSignal
-                console.log('Operation was aborted by the user');
-            } else {
-                // some other error occurred 🤷‍♂️
-                console.log('Uploading file failed');
-            }
-        }
-
-        updateOnNextVisit();
-        const _files = [...files];
-        _files.splice(_fileindex, 1);
-        setFiles(_files);
-        setViewableFiles(_files.slice(0, viewableFiles.length));
-        const index = abortArray.findIndex((x) => x.blobName === _file.name);
-        const progIndex = progressArray.findIndex((x) => x.name === _file.name);
-        if (progIndex !== -1) {
-            progressArray.splice(progIndex, 1);
-        }
-
-        if (index !== -1) {
-            const progressItem = abortArray[index];
-            if (progressItem && progressItem.percent === 1) {
-                try {
-                    controllerSas.abort();
-                    controllerSas = new AbortController();
-                    abortArray.splice(index, 1);
-                    return;
-                } catch (error) {
-                    console.log(error);
-                }
-            } else if (progressItem.percent < 100) {
-                try {
-                    progressItem.controller.abort();
-                } catch (error) {
-                    console.log(error);
-                }
-
-                abortArray.splice(index, 1);
-                return;
-            }
-        }
-        const fileName = _file.path ?? _file.name;
-
-        getSasKeyDelete()
-            .then((result: any) => {
-                deleteFile(result, fileName ?? _file[0]);
-            })
-            .catch((ex: any) => {
-                console.log(ex);
-            });
     };
 
     const cancelAllDownloads = () => {
@@ -624,14 +516,22 @@ const DatasetDetails = () => {
                                     }}
                                 />
                             ) : (
-                                <DatasetFileUpload
+                                <DatasetFileList
                                     loadingFiles={loadingFiles}
                                     viewableFiles={viewableFiles}
+                                    setViewableFiles={setViewableFiles}
                                     numberOfFilesInProgress={numberOfFilesInProgress}
                                     dataset={dataset}
-                                    removeFile={removeFile}
                                     progressArray={progressArray}
                                     files={files}
+                                    setFiles={setFiles}
+                                    setUpdateCache={setUpdateCache}
+                                    controllerSas={controllerSas}
+                                    controller={controller}
+                                    setController={setController}
+                                    abortArray={abortArray}
+                                    updateCache={updateCache}
+                                    getSasKey={getSasKey}
                                 />
                             )}
                         </div>

@@ -1,18 +1,14 @@
+/*eslint-disable consistent-return */
 import React, { useState, useEffect } from 'react';
 import { Icon, Button, LinearProgress, DotProgress, Search } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { bytesToSize, truncate } from '../common/helpers/helpers';
 import { checkIfDeleteIsEnabled, handleScroll } from 'components/common/helpers/datasetHelpers';
-
-type DatasetFileUploadProps = {
-    loadingFiles: any;
-    viewableFiles: any;
-    numberOfFilesInProgress: any;
-    dataset: any;
-    removeFile: any;
-    progressArray: any;
-    files: any;
-};
+import { getDatasetSasTokenDelete } from 'services/Api';
+import { getDatasetId, getStudyId } from 'utils/CommonUtil';
+import { getDatasetsFilesUrl } from 'services/ApiCallStrings';
+import { deleteFile } from 'services/BlobStorage';
+import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 
 const AttachmentWrapper = styled.div`
     display: grid;
@@ -20,22 +16,153 @@ const AttachmentWrapper = styled.div`
     grid-gap: 0 8px;
 `;
 
-const DatasetFileUpload: React.FC<DatasetFileUploadProps> = ({
+type DatasetFileListProps = {
+    loadingFiles: any;
+    viewableFiles: any;
+    setViewableFiles: any;
+    numberOfFilesInProgress: any;
+    dataset: any;
+    progressArray: any;
+    files: any;
+    setFiles: any;
+    setUpdateCache: any;
+    controllerSas: any;
+    controller: any;
+    setController: any;
+    abortArray: any;
+    updateCache: any;
+    getSasKey: any;
+};
+
+const intervalUpdateSasDelete = 285000;
+
+const DatasetFileList: React.FC<DatasetFileListProps> = ({
     loadingFiles,
     numberOfFilesInProgress,
-    removeFile,
     dataset,
     progressArray,
-    files
+    files,
+    setFiles,
+    setUpdateCache,
+    controllerSas,
+    setController,
+    abortArray,
+    updateCache,
+    viewableFiles,
+    setViewableFiles,
+    getSasKey
 }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [viewableFiles, setViewableFiles] = useState<any>([]);
+    const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
+    const [sasKeyDelete, setSasKeyDelete] = useState<string>('');
+    const datasetId = getDatasetId();
+    const studyId = getStudyId();
+    const isStandard = checkUrlIfGeneralDataset();
 
     useEffect(() => {
         return () => {
             setSearchValue('');
         };
     }, []);
+
+    useEffect(() => {
+        const timer = setInterval(async () => {
+            setSasKeyDeleteExpired(true);
+        }, intervalUpdateSasDelete);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const getSasKeyDelete = (retries = 3, backoff = 300) => {
+        return new Promise((resolve) => {
+            if (!sasKeyDeleteExpired) {
+                return resolve(sasKeyDelete);
+            }
+            getDatasetSasTokenDelete(datasetId, controllerSas.signal)
+                .then((result: any) => {
+                    if (retries > 0 && result.message) {
+                        setTimeout(() => {
+                            return getSasKeyDelete(retries - 1);
+                        }, backoff);
+                    }
+                    setSasKeyDeleteExpired(false);
+                    setSasKeyDelete(result);
+                    return resolve(result);
+                })
+                .catch((ex: any) => {
+                    console.log(ex);
+                    if (retries > 0) {
+                        setTimeout(() => {
+                            return getSasKey(retries - 1);
+                        }, backoff);
+                    }
+                });
+        });
+    };
+
+    const updateOnNextVisit = () => {
+        const dataCache = isStandard ? getDatasetsFilesUrl(studyId) : getDatasetsFilesUrl(datasetId);
+        setUpdateCache({ ...updateCache, [dataCache]: true });
+    };
+
+    const removeFile = (_file: any, _fileindex): void => {
+        try {
+            // controller.abort();
+            // controller = new AbortController();
+            setController(new AbortController());
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // abort was called on our abortSignal
+                console.log('Operation was aborted by the user');
+            } else {
+                // some other error occurred 🤷‍♂️
+                console.log('Uploading file failed');
+            }
+        }
+
+        updateOnNextVisit();
+        const _files = [...files];
+        _files.splice(_fileindex, 1);
+        setFiles(_files);
+        setViewableFiles(_files.slice(0, viewableFiles.length));
+        const index = abortArray.findIndex((x) => x.blobName === _file.name);
+        const progIndex = progressArray.findIndex((x) => x.name === _file.name);
+        if (progIndex !== -1) {
+            progressArray.splice(progIndex, 1);
+        }
+
+        if (index !== -1) {
+            const progressItem = abortArray[index];
+            if (progressItem && progressItem.percent === 1) {
+                try {
+                    controllerSas.abort();
+                    controllerSas = new AbortController();
+                    abortArray.splice(index, 1);
+                    return;
+                } catch (error) {
+                    console.log(error);
+                }
+            } else if (progressItem.percent < 100) {
+                try {
+                    progressItem.controller.abort();
+                } catch (error) {
+                    console.log(error);
+                }
+
+                abortArray.splice(index, 1);
+                return;
+            }
+        }
+        const fileName = _file.path ?? _file.name;
+
+        getSasKeyDelete()
+            .then((result: any) => {
+                deleteFile(result, fileName ?? _file[0]);
+            })
+            .catch((ex: any) => {
+                console.log(ex);
+            });
+    };
 
     const handleOnSearchValueChange = (event, _viewableFiles) => {
         if (event.target.value === '') {
@@ -139,4 +266,4 @@ const DatasetFileUpload: React.FC<DatasetFileUploadProps> = ({
     );
 };
 
-export default DatasetFileUpload;
+export default DatasetFileList;
