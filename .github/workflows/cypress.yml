@@ -101,6 +101,28 @@ jobs:
           name: Coverage-report
           path: coverage/lcov-report/
 
+
+      - name: Download coverage report artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Coverage-report    
+          path: artifact
+
+      - name: Extract basic summary
+        run: sed -n 1,17p artifact/Summary.md > artifact/Summary_basic.md
+
+      # https://github.com/fuzzbuzz/pr-comment
+      - name: Comment the PR with code coverage summary
+        uses: fuzzbuzz/pr-comment@1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: artifact/Summary_basic.md
+          prefix: Code coverage results
+
+
+
+
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
         if: ${{ github.event_name == 'pull_request' }}
 
