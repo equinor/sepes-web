@@ -62,7 +62,7 @@ const DescriptionWrapper = styled.div`
 `;
 
 const DescriptioTextfieldnWrapper = styled.div`
-    margin: auto 0 auto 32px;
+    margin: 76px 0 auto 32px;
     @media (max-width: 768px) {
         margin-left: 0px;
         width: 50%;
@@ -94,7 +94,8 @@ const Wrapper = styled.div`
 `;
 
 const RightWrapper = styled.div<{ editMode: any }>`
-    margin-top: ${(props: any) => (props.editMode ? '48px' : '0px')};
+    margin-top: ${(props: any) => (props.editMode ? '72px' : '0px')};
+    margin-bottom: ${(props: any) => (props.editMode ? '16px' : '0px')};
     @media (max-width: 768px) {
         margin-top: 0px;
         margin-left: auto;
