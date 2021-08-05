@@ -12,8 +12,8 @@
     "sandboxes": [],
     "permissions": {
         "addRemoveDataset": false,
-        "addRemoveParticipant": true,
-        "addRemoveSandbox": true,
+        "addRemoveParticipant": false,
+        "addRemoveSandbox": false,
         "closeStudy": false,
         "deleteStudy": false,
         "readResulsAndLearnings": true,

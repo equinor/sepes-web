@@ -175,7 +175,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                     {vms.length > 0 ? (
                         vms.map((vm: any) => {
                             return (
-                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }}>
+                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }} data-cy="vm_tab">
                                     {vm.name}
                                 </Tabs.Tab>
                             );
