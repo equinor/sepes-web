@@ -57,7 +57,7 @@ const DatasetInformation: React.FC<DatasetInformationProps> = ({
                         </StorageAccountWrapper>
                     </a>
                 ) : (
-                    <Tooltip title={storageAccountStatus} placement="top" style={{ marginTop: '4px' }}>
+                    <Tooltip title={storageAccountStatus} placement="top">
                         <DotProgress color="primary" style={{ marginRight: '8px' }} />
                     </Tooltip>
                 )}
