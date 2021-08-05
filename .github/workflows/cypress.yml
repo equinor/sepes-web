@@ -58,12 +58,10 @@ jobs:
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - uses: nick-invision/retry@v2
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         with:
           timeout_minutes: 4
           max_attempts: 3
-          command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+          command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
       # - name: Run quick running cypress tests
       #   env:
