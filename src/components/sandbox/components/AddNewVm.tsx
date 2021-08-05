@@ -19,19 +19,12 @@ import {
     returnPasswordVariant,
     returnUsernameVariant,
     arrayObjectsToArrayString,
-    returnKeyOfDisplayValue
+    returnKeyOfDisplayValue,
+    validateUsername
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
-import {
-    SandboxObj,
-    DropdownObj,
-    SizeObj,
-    OperatingSystemObj,
-    VmObj,
-    VmUsernameObj,
-    CalculateNameObj
-} from '../../common/interfaces';
+import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
+import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import '../../../styles/addNewVm.scss';
@@ -162,7 +155,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            validateUsername(vm.username);
+            validateUsername(vm, os, setUsernameIsValid, setValidatingUsername, setUsernameHelpText);
         }, 500);
         return () => {
             clearTimeout(timeoutId);
@@ -235,36 +228,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         getVmName(calculateName).then((result: any) => {
             if (result && !result.errors) {
                 setActualVmName(result);
-            }
-        });
-    };
-
-    const validateUsername = (value: string) => {
-        if (value === '') {
-            setUsernameIsValid(false);
-            return;
-        }
-
-        let operatingSystemType = '';
-        os.forEach((operatingSystem: OperatingSystemObj) => {
-            if (operatingSystem.key === vm.operatingSystem) {
-                operatingSystemType = operatingSystem.category;
-            }
-        });
-        const username: VmUsernameObj = { username: value, operativeSystemType: operatingSystemType };
-        setValidatingUsername(true);
-        validateVmUsername(username).then((result: any) => {
-            setValidatingUsername(false);
-            if (result) {
-                setUsernameIsValid(result.isValid);
-                if (!result.isValid) {
-                    setUsernameHelpText(result.errorMessage);
-                    //notify.show('danger', '500', result.errorMessage);
-                } else {
-                    setUsernameHelpText('');
-                }
-            } else {
-                setUsernameIsValid(false);
             }
         });
     };
