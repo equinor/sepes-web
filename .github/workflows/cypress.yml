@@ -58,6 +58,8 @@ jobs:
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - uses: nick-invision/retry@v2
+        env:
+          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
         with:
           timeout_minutes: 4
           max_attempts: 3
