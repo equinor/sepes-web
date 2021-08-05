@@ -59,9 +59,9 @@ jobs:
 
       - uses: nick-invision/retry@v2
         with:
-        timeout_minutes: 4
-        max_attempts: 3
-        command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+          timeout_minutes: 4
+          max_attempts: 3
+          command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       # - name: Run quick running cypress tests
       #   env:
