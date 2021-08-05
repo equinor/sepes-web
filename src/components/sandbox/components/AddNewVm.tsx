@@ -23,16 +23,8 @@ import {
     validateUsername
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
-import {
-    SandboxObj,
-    DropdownObj,
-    SizeObj,
-    OperatingSystemObj,
-    VmObj,
-    VmUsernameObj,
-    CalculateNameObj
-} from '../../common/interfaces';
+import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
+import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import '../../../styles/addNewVm.scss';
