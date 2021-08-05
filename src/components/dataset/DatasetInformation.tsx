@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon, Button, DotProgress, Tooltip, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { Label } from '../common/StyledComponents';
+import { DatasetObj, GeneralPermissions } from 'components/common/interfaces';
 
 const RightWrapper = styled.div`
     margin-top: 64px;
@@ -17,12 +18,12 @@ const StorageAccountWrapper = styled.div`
 `;
 
 type DatasetInformationProps = {
-    storageAccountStatus: any;
-    dataset: any;
+    storageAccountStatus: string;
+    dataset: DatasetObj;
     isStandard: boolean;
-    setShowEditDataset: any;
-    permissions: any;
-    setUserClickedDelete: any;
+    setShowEditDataset: React.Dispatch<React.SetStateAction<boolean>>;
+    permissions: GeneralPermissions;
+    setUserClickedDelete: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const returnField = (fieldName) => {

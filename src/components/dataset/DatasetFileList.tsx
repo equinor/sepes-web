@@ -9,6 +9,7 @@ import { getDatasetId, getStudyId } from 'utils/CommonUtil';
 import { getDatasetsFilesUrl } from 'services/ApiCallStrings';
 import { deleteFile } from 'services/BlobStorage';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
+import { DatasetObj } from 'components/common/interfaces';
 
 const AttachmentWrapper = styled.div`
     display: grid;
@@ -17,18 +18,18 @@ const AttachmentWrapper = styled.div`
 `;
 
 type DatasetFileListProps = {
-    loadingFiles: any;
+    loadingFiles: boolean;
     viewableFiles: any;
-    setViewableFiles: any;
-    numberOfFilesInProgress: any;
-    dataset: any;
+    setViewableFiles: React.Dispatch<any>;
+    numberOfFilesInProgress: number;
+    dataset: DatasetObj;
     progressArray: any;
     files: any;
-    setFiles: any;
+    setFiles: React.Dispatch<any>;
     setUpdateCache: any;
-    controllerSas: any;
-    controller: any;
-    setController: any;
+    controllerSas: AbortController;
+    controller: AbortController;
+    setController: React.Dispatch<React.SetStateAction<AbortController>>;
     abortArray: any;
     updateCache: any;
     getSasKey: any;
