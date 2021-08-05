@@ -46,7 +46,7 @@ export const unlinkStudyDataset = async (studyId: string, datasetId: string) => 
 };
 
 export const removeStudyDataset = async (datasetId: string) => {
-    return apiRequestWithToken('api/datasets/' + datasetId, 'DELETE');
+    return apiRequestWithToken('api/studies/datasets/studyspecific/' + datasetId, 'DELETE');
 };
 
 export const getDatasetsForStudy = async (studyId: string) => {
