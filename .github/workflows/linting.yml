@@ -26,3 +26,4 @@ jobs:
         with:
           eslint: true
           eslint_dir: src
+          neutral_check_on_warning: true
