@@ -19,6 +19,9 @@ interface IContextProps {
 
 export const UpdateCache = React.createContext({} as IContextProps);
 
+if (1 === 1) {
+}
+
 const App = () => {
     const [updateCache, setUpdateCache] = useState();
     const appInsights = new ApplicationInsights({
