@@ -3,7 +3,7 @@ import { store } from 'react-notifications-component';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { Typography, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Typography, Tooltip, Icon, Button } from '@equinor/eds-core-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { copy } from '@equinor/eds-icons';
 
