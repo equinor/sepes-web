@@ -57,6 +57,9 @@ jobs:
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
+      - run: sudo sh -c "echo fs.inotify.max_user_watches=524288 >> /etc/sysctl.conf"
+
+      - run: sudo sysctl -p
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
       #   uses: nick-invision/retry@v2
