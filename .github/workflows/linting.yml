@@ -23,7 +23,6 @@ jobs:
 
       - name: Run linters
         uses: wearerequired/lint-action@v1
-        eslint_dir: src
         with:
           eslint: true
           eslint_dir: src
