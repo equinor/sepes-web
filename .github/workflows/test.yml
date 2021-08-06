@@ -12,7 +12,7 @@ jobs:
               uses: ArtiomTr/jest-coverage-report-action@v1.3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  test_script: npx react-scripts test tests  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+                  test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
             - name: Create coverage report
               run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage

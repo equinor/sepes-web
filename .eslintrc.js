@@ -9,6 +9,7 @@ module.exports = {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly'
     },
+    ignorePatterns: ['**/*.test.tsx'],
     parserOptions: {
         ecmaFeatures: {
             jsx: true
