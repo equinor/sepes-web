@@ -25,7 +25,7 @@ const NoApi: React.FC<GeneralErrorProps> = ({ errorMessage }) => {
             <FontAwesomeIcon icon={faExclamationTriangle} size="5x" style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
-                    Seems to be an error: {errorMessage}
+                    Seems to be an error: {errorMessage} Cy token : {localStorage.getItem('cyToken')}
                 </Typography>
             </div>
         </div>
