@@ -74,8 +74,7 @@ jobs:
         with:
           start: npm start
           wait-on: 'http://localhost:3000'
-          with:
-            config-file: cypress_chromium.dev.json
+          config-file: cypress_chromium.dev.json
           spec: |
             cypress/integration/quickRunningTests/**/*
           env: cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }},API_URL=https://backend-sepes-api-dev.radix.equinor.com/
