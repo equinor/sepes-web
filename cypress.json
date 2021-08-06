@@ -14,6 +14,9 @@
         "SCOPE": "",
         "RETRIES": 3
     },
+    "retries": {
+        "runMode": 2
+    },
     "viewportWidth": 1920,
     "viewportHeight": 1080
 }

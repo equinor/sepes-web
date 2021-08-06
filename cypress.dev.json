@@ -25,6 +25,9 @@
         "SCOPE": "User.Read User.Read.All User.Impersonation",
         "RETRIES": 3
     },
+    "retries": {
+        "runMode": 2
+    },
     "viewportWidth": 1920,
     "viewportHeight": 1080
 }

@@ -56,7 +56,7 @@ describe('Create study', () => {
     });
 
     it('Delete study specific dataset', () => {
-        cy.get('[data-cy=dataset_delete]').click({ force: true });
+        cy.get('[data-cy=dataset_delete1]').click({ force: true });
         cy.get('[data-cy="delete_resource"]').type('cy dataset namecy name edit');
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
