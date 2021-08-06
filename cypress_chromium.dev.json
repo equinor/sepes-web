@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://frontend-sepes-web-dev.radix.equinor.com/",
+    "baseUrl": "http://localhost:3000/",
     "defaultCommandTimeout": 20000,
     "pageLoadTimeout": 200000,
     "requestTimeout": 200000,
