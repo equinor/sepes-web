@@ -29,7 +29,7 @@ const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
         if (result && result.message) {
-            return ReactDOM.render(<GeneralError />, document.getElementById('root'));
+            return ReactDOM.render(<GeneralError errorMessage={result.message} />, document.getElementById('root'));
         }
         if (result && result.admin !== undefined) {
             return ReactDOM.render(

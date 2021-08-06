@@ -3,7 +3,11 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Typography } from '@equinor/eds-core-react';
 
-const NoApi = () => {
+type GeneralErrorProps = {
+    errorMessage: any;
+};
+
+const NoApi: React.FC<GeneralErrorProps> = ({ errorMessage }) => {
     return (
         <div
             style={{
@@ -21,7 +25,7 @@ const NoApi = () => {
             <FontAwesomeIcon icon={faExclamationTriangle} size="5x" style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
-                    Seems to be an error..
+                    Seems to be an error: {errorMessage}
                 </Typography>
             </div>
         </div>
