@@ -65,10 +65,20 @@ jobs:
       #     max_attempts: 2
       #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
-      - name: Run quick running cypress tests
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+      # https://github.com/cypress-io/github-action
+      - name: Run cypress
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          spec: |
+            cypress/integration/quickRunningTests/**/*
+          env: cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }},API_URL=https://backend-sepes-api-dev.radix.equinor.com/
+
+      # - name: Run quick running cypress tests
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
