@@ -25,7 +25,7 @@ const Wrapper = styled.div<{ isOpen: any }>`
 const SearchWithDropdown = (props: any) => {
     const [searchValue, setSearchValue] = useState('');
     const handleOnSearchValueChange = (event) => {
-        const value = event.target.value;
+        const { value } = event.target;
         setSearchValue(value);
     };
     return (
@@ -45,17 +45,19 @@ const SearchWithDropdown = (props: any) => {
                 <Wrapper isOpen={props.isOpen}>
                     {(props.isOpen || searchValue) &&
                         props.arrayList &&
-                        props.arrayList.map((row: any) =>
-                            row.name.toLowerCase().includes(searchValue.toLowerCase()) && !props.filter(row.id) ? (
-                                <DatasetItem
-                                    key={row.id}
-                                    onClick={() => {
-                                        props.handleOnClick(row);
-                                    }}
-                                >
-                                    {row.name}
-                                </DatasetItem>
-                            ) : null
+                        props.arrayList.map(
+                            (row: any) =>
+                                row.name.toLowerCase().includes(searchValue.toLowerCase()) &&
+                                !props.filter(row.id) && (
+                                    <DatasetItem
+                                        key={row.id}
+                                        onClick={() => {
+                                            props.handleOnClick(row);
+                                        }}
+                                    >
+                                        {row.name}
+                                    </DatasetItem>
+                                )
                         )}
                 </Wrapper>
             )}
