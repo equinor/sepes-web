@@ -27,4 +27,4 @@ jobs:
           eslint: true
           eslint_dir: src
           neutral_check_on_warning: true
-          eslint_extensions: ts,jsx,tsx
+          eslint_extensions: js,ts,jsx,tsx
