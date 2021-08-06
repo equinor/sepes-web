@@ -71,15 +71,16 @@ jobs:
       # https://github.com/cypress-io/github-action
       - name: Run cypress
         uses: cypress-io/github-action@v2
+        env: 
+            CYPRESS_cyAccessToken: ${{ steps.token.outputs.cypressAccesstokenDev }}
+            CYPRESS_API_URL: 'https://backend-sepes-api-dev.radix.equinor.com/'
         with:
           start: npm start
           wait-on: 'http://localhost:3000'
           config-file: cypress_chromium.dev.json
           spec: |
             cypress/integration/quickRunningTests/**/*
-          env: 
-            CYPRESS_cyAccessToken: ${{ steps.token.outputs.cypressAccesstokenDev }}
-            CYPRESS_API_URL: 'https://backend-sepes-api-dev.radix.equinor.com/'
+          
 
       # - name: Run quick running cypress tests
       #   env:
