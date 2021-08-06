@@ -77,7 +77,9 @@ jobs:
           config-file: cypress_chromium.dev.json
           spec: |
             cypress/integration/quickRunningTests/**/*
-          env: cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }},API_URL=https://backend-sepes-api-dev.radix.equinor.com/
+          env: 
+            CYPRESS_cyAccessToken: ${{ steps.token.outputs.cypressAccesstokenDev }}
+            CYPRESS_API_URL: 'https://backend-sepes-api-dev.radix.equinor.com/'
 
       # - name: Run quick running cypress tests
       #   env:
