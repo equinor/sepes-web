@@ -4,7 +4,7 @@ import Dropzone from './DropzoneFile';
 
 const FileDropzoneContainer = (props: any) => {
     function handleImageUpload(fileEvent: File[]) {
-        var file = fileEvent[0];
+        const file = fileEvent[0];
         props.setFiles(fileEvent);
         props.setImageUrl(URL.createObjectURL(file));
     }
