@@ -5,6 +5,9 @@ import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
+if (1 === 1) {
+}
+
 const study: StudyObj = {
     name: 'StudyName',
     vendor: 'Bouvet',
