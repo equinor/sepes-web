@@ -18,6 +18,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
+      - name: Retrieve token
+        id: id-token
+        run: |
+          TOKEN="$(az account get-access-token --query 'accessToken' -o tsv)"
+          echo "::set-output name=TOKEN::$TOKEN"
+
+
       - uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
@@ -72,8 +79,8 @@ jobs:
       - name: Run cypress
         uses: cypress-io/github-action@v2
         env: 
-            CYPRESS_cyAccessToken: "${{ steps.token.outputs.cypressAccesstokenDev }}"
-            CYPRESS_API_URL: "https://backend-sepes-api-dev.radix.equinor.com/"
+            CYPRESS_cyAccessToken: ${{ steps.id-token.outputs.TOKEN }}
+            CYPRESS_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
         with:
           start: npm start
           wait-on: 'http://localhost:3000'
