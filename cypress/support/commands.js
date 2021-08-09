@@ -194,6 +194,7 @@ Cypress.Commands.add('addMockUserAsParticipant', () => {
     cy.get('[data-cy=participant_role]').click({ force: true });
     cy.contains('Vendor Admin').click({ force: true });
     cy.get('[data-cy=study_add_participant]').click({ force: true });
+    cy.wait(2000);
 });
 
 Cypress.Commands.add('switchToParticipantsTab', () => {
