@@ -1,4 +1,4 @@
-/* eslint-disable react/no-render-return-value */
+/* eslint-disable react/no-render-return-value, consistent-return */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -27,24 +27,28 @@ export const Permissions = React.createContext<GeneralPermissions>({
 
 const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));
-    await getPermissions().then((result: any) => {
-        if (result && result.message) {
-            return ReactDOM.render(<GeneralError errorMessage={result.message} />, document.getElementById('root'));
-        }
-        if (result && result.admin !== undefined) {
-            return ReactDOM.render(
-                <React.StrictMode>
-                    <UserConfig.Provider value={user}>
-                        <Permissions.Provider value={result}>
-                            <App />
-                        </Permissions.Provider>
-                    </UserConfig.Provider>
-                </React.StrictMode>,
-                document.getElementById('root')
-            );
-        }
-        return ReactDOM.render(<NoApi />, document.getElementById('root'));
-    });
+    await getPermissions()
+        .then((result: any) => {
+            if (result && result.message) {
+                return ReactDOM.render(<GeneralError errorMessage={result.message} />, document.getElementById('root'));
+            }
+            if (result && result.admin !== undefined) {
+                return ReactDOM.render(
+                    <React.StrictMode>
+                        <UserConfig.Provider value={user}>
+                            <Permissions.Provider value={result}>
+                                <App />
+                            </Permissions.Provider>
+                        </UserConfig.Provider>
+                    </React.StrictMode>,
+                    document.getElementById('root')
+                );
+            }
+            // return ReactDOM.render(<NoApi />, document.getElementById('root'));
+        })
+        .catch(() => {
+            return ReactDOM.render(<NoApi />, document.getElementById('root'));
+        });
 };
 
 const cyToken = localStorage.getItem('cyToken');
