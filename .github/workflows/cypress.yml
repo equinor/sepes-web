@@ -75,24 +75,25 @@ jobs:
       #     max_attempts: 2
       #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
-      # https://github.com/cypress-io/github-action
-      - name: Run cypress
-        uses: cypress-io/github-action@v2
-        env: 
-            CYPRESS_cyAccessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5PbzNaRHJPRFhFSzFqS1doWHNsSFJfS1hFZyJ9.eyJhdWQiOiJlOTBjYmI2MS04OTZlLTRlYzctYWEzNy0yMzUxMTcwMGUxZWQiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vM2FhNGEyMzUtYjZlMi00OGQ1LTkxOTUtN2ZjZjA1YjQ1OWIwL3YyLjAiLCJpYXQiOjE2Mjg0OTgzOTYsIm5iZiI6MTYyODQ5ODM5NiwiZXhwIjoxNjI4NTAyMjk2LCJhaW8iOiJBVFFBeS84VEFBQUFHR1ZTRVR5TDN0c2pCUzZzblozTEV5WlZhd21UN3hBaFh0dmFLckp6b3dlbExnNHEyNTAxWEpoN3RJUHRBb0hYIiwiYXpwIjoiZTkwY2JiNjEtODk2ZS00ZWM3LWFhMzctMjM1MTE3MDBlMWVkIiwiYXpwYWNyIjoiMCIsImVtYWlsIjoiSEFOT0xAZXF1aW5vci5jb20iLCJmYW1pbHlfbmFtZSI6Ik9sc2VuIiwiZ2l2ZW5fbmFtZSI6IkhhbnMgS3Jpc3RpYW4gVmlrIiwibmFtZSI6IkhhbnMgS3Jpc3RpYW4gVmlrIE9sc2VuIiwib2lkIjoiNzYyMTA2ZWUtOGJkYS00MmI0LThkOGEtNTM3YjA3YmNhYjAxIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiSEFOT0xAZXF1aW5vci5jb20iLCJyaCI6IjAuQVFJQU5hS2tPdUsyMVVpUmxYX1BCYlJac0dHN0RPbHVpY2RPcWpjalVSY0E0ZTBDQUk4LiIsInJvbGVzIjpbIlNlcGVzLVNwb25zb3IiLCJTZXBlcy1BZG1pbiIsIlNlcGVzLUVtcGxveWVlIl0sInNjcCI6Ikdyb3VwLlJlYWQuQWxsIEdyb3VwTWVtYmVyLlJlYWQuQWxsIFVzZXIuUmVhZCBVc2VyLlJlYWQuQWxsIFVzZXIuSW1wZXJzb25hdGlvbiIsInN1YiI6IjlnRlVWSkZSN1pZMFpscUNkeVpNYWdKVmN5dVljXzFSVGtoeEFVQjVLMUkiLCJ0aWQiOiIzYWE0YTIzNS1iNmUyLTQ4ZDUtOTE5NS03ZmNmMDViNDU5YjAiLCJ1cG4iOiJIQU5PTEBlcXVpbm9yLmNvbSIsInV0aSI6IkFIVkh1N1hoTEVpRWNjVHVXN3BTQVEiLCJ2ZXIiOiIyLjAifQ.hcEhOZ5yOGK3lKNB5vU5VxHrfXEC_fs5AobHy1iN8bdV1ISNODuP4mjZe9xNxPGSAWh-c1GzygxcKaYZMFdher-cwVwYNEVwvnxApXhWgg57v2T1YoxDZG4_TONKrCfs-ljlEZY5Gy4Z1LuBKnDV7SVeJI50jdQJ5XPtfKRg8TXEUhfhEyN-CZt_Wtct7Z7p1nNm7XYR1pGimiejtrzAw8K4vkNW_TNsnGvMWT1zTXsbD3KnIyyQ4irxtSj9n9OLFpNqxO4ongzNhOh-iLUd4s-YRQ8FofoyloO-EtSG6SL2J7hiKJSiDE4DrzfYuQ1Po9oAP9FqefO8q4w6Y5_epg"
-            CYPRESS_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          config-file: cypress_chromium.dev.json
-          spec: |
-            cypress/integration/quickRunningTests/**/*
-          
+      # # https://github.com/cypress-io/github-action
+      # - name: Run cypress
+      #   uses: cypress-io/github-action@v2
+      #   env: 
+      #       CYPRESS_cyAccessToken: ${{ steps.id-token.outputs.TOKEN }}
+      #       CYPRESS_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
+      #   with:
+      #     start: npm start
+      #     wait-on: 'http://localhost:3000'
+      #     config-file: cypress_chromium.dev.json
+      #     spec: |
+      #       cypress/integration/quickRunningTests/**/*
 
-      # - name: Run quick running cypress tests
-      #   env:
-      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+      - run: npm start
+
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
