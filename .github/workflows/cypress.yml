@@ -62,7 +62,7 @@ jobs:
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
 
-      - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
+      # - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
       - run: sudo sh -c "echo fs.inotify.max_user_watches=524288 >> /etc/sysctl.conf"
 
@@ -93,7 +93,7 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+        run: npx cypress run --config-file "cypress.local.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
