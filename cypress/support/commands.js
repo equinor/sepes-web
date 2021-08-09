@@ -187,6 +187,7 @@ Cypress.Commands.add('editResultsAndLearnings', () => {
 Cypress.Commands.add('addMockUserAsParticipant', () => {
     cy.get('[data-cy=participants_tab]').click({ force: true });
     cy.intercept('api/participants/*').as('getMockUser');
+    cy.intercept('api/studies/*/participants/*').as('addParticipantRequest');
     cy.contains('Type minimum three chara').type('Mock User');
 
     cy.wait('@getMockUser');
@@ -194,7 +195,7 @@ Cypress.Commands.add('addMockUserAsParticipant', () => {
     cy.get('[data-cy=participant_role]').click({ force: true });
     cy.contains('Vendor Admin').click({ force: true });
     cy.get('[data-cy=study_add_participant]').click({ force: true });
-    cy.wait(2000);
+    cy.wait('@addParticipantRequest');
 });
 
 Cypress.Commands.add('switchToParticipantsTab', () => {
