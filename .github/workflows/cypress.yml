@@ -72,8 +72,8 @@ jobs:
       - name: Run cypress
         uses: cypress-io/github-action@v2
         env: 
-            CYPRESS_cyAccessToken: ${{ steps.token.outputs.cypressAccesstokenDev }}
-            CYPRESS_API_URL: 'https://backend-sepes-api-dev.radix.equinor.com/'
+            CYPRESS_cyAccessToken: "${{ steps.token.outputs.cypressAccesstokenDev }}"
+            CYPRESS_API_URL: "https://backend-sepes-api-dev.radix.equinor.com/"
         with:
           start: npm start
           wait-on: 'http://localhost:3000'
