@@ -96,6 +96,7 @@ const DatasetDetails = () => {
     const [controller, setController] = useState<AbortController>(new AbortController());
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
+        studyName: '',
         storageAccountLink: undefined,
         permissions: {
             deleteDataset: false,
@@ -434,7 +435,7 @@ const DatasetDetails = () => {
                                             }}
                                             data-cy="dataset_back_to_study"
                                         >
-                                            {getStudyName(dataset)}
+                                            {dataset?.studyName}
                                         </Breadcrumbs.Breadcrumb>
                                         <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
                                             {dataset?.name}
