@@ -76,6 +76,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     const [toggle, setToggle] = useState(false);
     const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({
         name: '',
+        studyName: '',
         permissions: { editDataset: false, deleteDataset: false }
     });
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>(

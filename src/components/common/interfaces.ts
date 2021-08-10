@@ -38,6 +38,7 @@ export interface ParticipantObj {
 
 export interface DatasetObj {
     name: string;
+    studyName: string;
     storageAccountName?: string;
     location?: string;
     classification?: string;

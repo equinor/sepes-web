@@ -27,11 +27,7 @@ import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from 'utils/CommonUtil';
-import {
-    checkIfFileAlreadyIsUploaded,
-    getStudyName,
-    setFilesProgressToOnePercent
-} from 'components/common/helpers/datasetHelpers';
+import { checkIfFileAlreadyIsUploaded, setFilesProgressToOnePercent } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 import FileBrowser from 'react-keyed-file-browser';
 import DatasetFileList from './DatasetFileList';
@@ -96,6 +92,7 @@ const DatasetDetails = () => {
     const [controller, setController] = useState<AbortController>(new AbortController());
     const [dataset, setDataset] = useState<DatasetObj>({
         name: '',
+        studyName: '',
         storageAccountLink: undefined,
         permissions: {
             deleteDataset: false,
@@ -434,7 +431,7 @@ const DatasetDetails = () => {
                                             }}
                                             data-cy="dataset_back_to_study"
                                         >
-                                            {getStudyName(dataset)}
+                                            {dataset?.studyName}
                                         </Breadcrumbs.Breadcrumb>
                                         <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
                                             {dataset?.name}
