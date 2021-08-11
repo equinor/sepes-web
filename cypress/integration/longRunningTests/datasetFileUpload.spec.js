@@ -24,7 +24,7 @@ describe('Dataset file upload', () => {
     });
 
     it('Upload file to dataset', () => {
-        cy.wait(100000);
+        cy.wait(120000);
         cy.get('[data-cy="file_upload"]').attachFile('cypress.jpg');
         cy.wait(20000);
     });

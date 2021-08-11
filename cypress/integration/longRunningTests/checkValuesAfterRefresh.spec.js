@@ -47,7 +47,7 @@ describe('Check values after refresh', () => {
         cy.reload();
         cy.contains('cy dataset name').should('be.visible');
         //--------
-        cy.wait(100000);
+        cy.wait(120000);
         cy.get('[data-cy="file_upload"]').attachFile('example.json');
         cy.wait(20000);
 
