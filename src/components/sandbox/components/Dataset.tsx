@@ -14,6 +14,7 @@ import {
 import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
 import { truncate } from 'components/common/helpers/helpers';
+import { returnTooltipTextDataset } from '../../common/helpers/sandboxHelpers';
 
 const SatusWrapper = styled.div`
     display: flex;
@@ -94,16 +95,6 @@ const Dataset: React.FC<datasetProps> = ({
         }
     };
 
-    const returnTooltipTextDataset = (_dataset: AvailableDatasetObj) => {
-        if (permissions && !permissions.update) {
-            return 'You do not have access to update data sets in sandbox';
-        }
-        if (_dataset.name.length > 50) {
-            return _dataset.name;
-        }
-        return '';
-    };
-
     return (
         <div style={{ height: '331px', overflow: 'auto' }}>
             <Table style={{ width: '100%', marginBottom: '24px' }}>
@@ -121,7 +112,7 @@ const Dataset: React.FC<datasetProps> = ({
                                     <Cell>
                                         <SatusWrapper style={{ paddingBottom: '0px' }}>
                                             <Tooltip
-                                                title={returnTooltipTextDataset(dataset)}
+                                                title={returnTooltipTextDataset(dataset, permissions)}
                                                 placement="right"
                                                 enterDelay={500}
                                             >

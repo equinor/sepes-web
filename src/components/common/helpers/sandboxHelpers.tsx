@@ -1,6 +1,14 @@
 /*eslint-disable consistent-return */
 import { getSandboxCostAnalysis, validateVmUsername } from 'services/Api';
-import { OperatingSystemObj, SandboxCreateObj, SandboxObj, VmObj, VmUsernameObj } from '../interfaces';
+import {
+    AvailableDatasetObj,
+    OperatingSystemObj,
+    SandboxCreateObj,
+    SandboxObj,
+    SandboxPermissions,
+    VmObj,
+    VmUsernameObj
+} from '../interfaces';
 import { resourceStatus, resourceType } from '../staticValues/types';
 import { passwordValidate, validateResourceName } from './helpers';
 
@@ -198,4 +206,14 @@ export const validateUsername = (
             setUsernameIsValid(false);
         }
     });
+};
+
+export const returnTooltipTextDataset = (_dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
+    if (permissions && !permissions.update) {
+        return 'You do not have access to update data sets in sandbox';
+    }
+    if (_dataset.name.length > 50) {
+        return _dataset.name;
+    }
+    return '';
 };
