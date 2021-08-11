@@ -28,7 +28,7 @@ export const Permissions = React.createContext<GeneralPermissions>({
 const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
-        if (result && result.message) {
+        if (result && (result.requestId || result.errors)) {
             return ReactDOM.render(<GeneralError />, document.getElementById('root'));
         }
         if (result && result.admin !== undefined) {
