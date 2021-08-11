@@ -12,6 +12,7 @@ describe('Check values after refresh', () => {
     });
 
     it('Check if study values are saved', () => {
+        cy.waitForStudyToLoad();
         cy.reload();
         cy.contains(studyName).should('be.visible');
         cy.contains('cy vendor').should('be.visible');
