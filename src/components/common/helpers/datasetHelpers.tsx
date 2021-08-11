@@ -78,13 +78,6 @@ export const findWithAttr = (array, attr, value) => {
     return -1;
 };
 
-export const getStudyName = (dataset: DatasetObj): string => {
-    if (dataset.studies && dataset.studies.length) {
-        return dataset.studies[0].name;
-    }
-    return '';
-};
-
 export const handleScroll = (e, onScrollEvent) => {
     const bottom = e.target.scrollHeight - round(e.target.scrollTop, 2); // === e.target.clientHeight;
     if (bottom <= e.target.clientHeight + 5 && bottom >= e.target.clientHeight - 5) {
