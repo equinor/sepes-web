@@ -51,18 +51,18 @@ describe('Check values after refresh', () => {
         cy.contains('cy dataset name').should('be.visible');
         //--------
         cy.wait(120000);
-        cy.get('[data-cy="file_upload"]').attachFile('example.json');
+        cy.get('[data-cy="file_upload"]').attachFile('cypress.jpg');
         cy.wait(20000);
 
         cy.reload();
-        cy.contains('example.json').should('be.visible');
+        cy.contains('cypress.jpg').should('be.visible');
 
         cy.get('[data-cy="dataset_remove_file"]').click({ force: true });
         cy.wait(10000);
         cy.intercept('/api/datasets/*/files').as('getFiles');
         cy.reload();
         cy.wait('@getFiles');
-        cy.contains('example.json').should('not.exist');
+        cy.contains('cypress.jpg').should('not.exist');
         //--------
         cy.deleteDataset('cy dataset name');
         cy.waitForStudyToLoad();
