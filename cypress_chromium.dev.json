@@ -5,6 +5,7 @@
     "requestTimeout": 200000,
     "responseTimeout": 200000,
     "video": true,
+    "videoUploadOnPasses": false,
     "nodeVersion": "system",
     "chromeWebSecurity": false,
     "reporter": "cypress-multi-reporters",

@@ -115,7 +115,6 @@ const StudyDetails = () => {
             case 2:
                 return (
                     <SandBoxComponent
-                        sandboxes={study.sandboxes}
                         setStudy={setStudy}
                         setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}

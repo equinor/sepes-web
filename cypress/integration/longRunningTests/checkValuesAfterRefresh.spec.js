@@ -12,7 +12,10 @@ describe('Check values after refresh', () => {
     });
 
     it('Check if study values are saved', () => {
+        // cy.waitForStudyToLoad();
+        cy.intercept('/api/studies/*').as('getStudy');
         cy.reload();
+        cy.wait(4000);
         cy.contains(studyName).should('be.visible');
         cy.contains('cy vendor').should('be.visible');
         cy.contains('Automatic_test_cost').should('be.visible');
@@ -30,13 +33,14 @@ describe('Check values after refresh', () => {
         cy.contains('Mock User').should('be.visible');
         cy.contains('Vendor Admin').should('be.visible');
 
-        // cy.get('[data-cy=study_remove_participant]').click({ force: true });
-        // cy.wait(3000);
-        // cy.reload();
-        // cy.contains('Vendor Admin').should('not.exist');
+        cy.get('[data-cy=study_remove_participant]').click({ force: true });
+        cy.wait(3000);
+        // cy.waitForStudyToLoad();
+        cy.reload();
+        cy.contains('Vendor Admin').should('not.exist');
 
-        cy.get('[data-cy=datasets_tab]').click({ force: true });
-
+        cy.switchToDatasetsTab();
+        cy.wait(1000);
         cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
 
         cy.createDataset();
@@ -45,22 +49,25 @@ describe('Check values after refresh', () => {
 
         cy.reload();
         cy.contains('cy dataset name').should('be.visible');
-
-        // cy.wait(100000);
-        // cy.get('[data-cy="file_upload"]').attachFile('example.json');
+        //--------
+        // cy.wait(120000);
+        // cy.get('[data-cy="file_upload"]').attachFile('cypress.jpg');
         // cy.wait(20000);
 
         // cy.reload();
-        // cy.contains('example.json').should('be.visible');
+        // cy.contains('cypress.jpg').should('be.visible');
 
         // cy.get('[data-cy="dataset_remove_file"]').click({ force: true });
         // cy.wait(10000);
-
+        // cy.intercept('/api/datasets/*/files').as('getFiles');
         // cy.reload();
-        // cy.contains('example.json').should('not.exist');
-
+        // cy.wait('@getFiles');
+        // cy.contains('cypress.jpg').should('not.exist');
+        //--------
+        // cy.intercept('/api/studies/*').as('getStudy');
         cy.deleteDataset('cy dataset name');
-        cy.waitForStudyToLoad();
+        cy.wait('@getStudy');
+        // cy.waitForStudyToLoad();
 
         cy.contains('cy dataset name').should('not.exist');
 

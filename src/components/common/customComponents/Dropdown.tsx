@@ -47,32 +47,6 @@ const DropdownOption = styled.div`
     padding: 16px;
 `;
 
-// const Label = styled.p`
-//     height: 16px;
-//     font-size: 12px;
-//     line-height: 16px;
-//     display: flex;
-//     align-items: center;
-//     color: #6f6f6f;
-//     margin: 0px;
-//     font-weight: 400;
-//     line-height: 1.333em;
-// `;
-/*
-const Meta = styled.div`
-    margin-left: auto;
-    height: 16px;
-    font-size: 12px;
-    line-height: 16px;
-    display: flex;
-    align-items: center;
-    color: #6f6f6f;
-    margin: 0px;
-    font-weight: 400;
-    line-height: 1.333em;
-`;
-*/
-
 const CoreDevDropdown = (props: any) => {
     const { options, label, meta, helperText } = props;
     const [isOpen, setIsOpen] = useState(props.defaultOpen || false);
@@ -134,15 +108,8 @@ const CoreDevDropdown = (props: any) => {
         }
     };
 
-    //if (selectedOption.name === 'Loading...' && options !== undefined && options.length) {
-    //  setSelectedOption(options[0]);
-    //} else {
-    //}
-
     const arrowUp = <Icon name="arrow_drop_up" size={24} style={{ marginRight: '8px' }} color="#6F6F6F" />;
     const arrowDown = <Icon name="arrow_drop_down" size={24} style={{ marginRight: '8px' }} color="#6F6F6F" />;
-
-    //setSelectedOption(options[0].name);
 
     return (
         <div
