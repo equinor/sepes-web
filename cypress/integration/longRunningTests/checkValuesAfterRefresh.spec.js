@@ -12,7 +12,7 @@ describe('Check values after refresh', () => {
     });
 
     it('Check if study values are saved', () => {
-        cy.waitForStudyToLoad();
+        // cy.waitForStudyToLoad();
         cy.intercept('/api/studies/*').as('getStudy');
         cy.reload();
         cy.wait('@getStudy');
