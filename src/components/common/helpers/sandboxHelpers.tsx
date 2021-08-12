@@ -33,14 +33,14 @@ export const validateUserInput = (
     return false;
 };
 
-export const filterSizes = (_sizes: any, filter) => {
-    if (!_sizes) {
+export const filterList = (_list: any, filter) => {
+    if (!_list) {
         return [];
     }
     if (filter.length === 0) {
-        return _sizes;
+        return _list;
     }
-    return _sizes.filter((size) => filter.includes(size.category));
+    return _list.filter((size) => filter.includes(size.category));
 };
 
 export const returnPasswordVariant = (vmPassword: string) => {
