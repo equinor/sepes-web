@@ -13,7 +13,7 @@ describe('Check values after refresh', () => {
 
     it('Check if study values are saved', () => {
         // cy.waitForStudyToLoad();
-        // cy.intercept('/api/studies/*').as('getStudy');
+        cy.intercept('/api/studies/*').as('getStudy');
         cy.reload();
         cy.wait(4000);
         cy.contains(studyName).should('be.visible');
@@ -35,7 +35,7 @@ describe('Check values after refresh', () => {
 
         cy.get('[data-cy=study_remove_participant]').click({ force: true });
         cy.wait(3000);
-        cy.waitForStudyToLoad();
+        // cy.waitForStudyToLoad();
         cy.reload();
         cy.contains('Vendor Admin').should('not.exist');
 
@@ -64,8 +64,10 @@ describe('Check values after refresh', () => {
         // cy.wait('@getFiles');
         // cy.contains('cypress.jpg').should('not.exist');
         //--------
+        // cy.intercept('/api/studies/*').as('getStudy');
         cy.deleteDataset('cy dataset name');
-        cy.waitForStudyToLoad();
+        cy.wait('@getStudy');
+        // cy.waitForStudyToLoad();
 
         cy.contains('cy dataset name').should('not.exist');
 
