@@ -59,6 +59,7 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
+      - run: echo $TOKEN
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
