@@ -287,6 +287,39 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     tabIndex={0}
                 />*/}
                 <div>
+                    <SizeFilterWrapper>
+                        <UnstyledList>
+                            <HardWareReqWrapper>OS Type</HardWareReqWrapper>
+                            <li>
+                                <Checkbox
+                                    label="Windows"
+                                    onChange={(e: any) =>
+                                        handleCheck(osType.windows, e.target.checked, osFilter, setOsFilter)
+                                    }
+                                />
+                            </li>
+                            <li>
+                                <Checkbox
+                                    label="Linux"
+                                    onChange={(e: any) =>
+                                        handleCheck(osType.linux, e.target.checked, osFilter, setOsFilter)
+                                    }
+                                />
+                            </li>
+                            <li>
+                                <Checkbox
+                                    label="Recommended"
+                                    onChange={(e: any) =>
+                                        handleCheck(sizeType.compute, e.target.checked, sizeFilter, setSizeFilter)
+                                    }
+                                />
+                            </li>
+                        </UnstyledList>
+                        <HelperTextWrapper>
+                            Specify which operating systems you want to be in the dropdown below. Recommended OS is...
+                        </HelperTextWrapper>
+                    </SizeFilterWrapper>
+                    <div style={{ marginTop: '24px' }} />
                     <SingleSelect
                         handleSelectedItemChange={({ selectedItem }) =>
                             handleDropdownChange(returnKeyOfDisplayValue(selectedItem, os), 'operatingSystem')
@@ -298,26 +331,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         className="singleSelect"
                         data-cy="vm_operatingSystem"
                     />
-                    <span style={{ marginLeft: '8px' }}>
-                        <EdsProvider density="compact">
-                            <Checkbox
-                                label="Windows"
-                                onChange={(e: any) =>
-                                    handleCheck(osType.windows, e.target.checked, osFilter, setOsFilter)
-                                }
-                            />
-                        </EdsProvider>
-                    </span>
-                    <span style={{ marginLeft: '32px' }}>
-                        <EdsProvider density="compact">
-                            <Checkbox
-                                label="Linux"
-                                onChange={(e: any) =>
-                                    handleCheck(osType.linux, e.target.checked, osFilter, setOsFilter)
-                                }
-                            />
-                        </EdsProvider>
-                    </span>
                 </div>
                 <div style={{ marginTop: '24px' }} />
                 <TextField
