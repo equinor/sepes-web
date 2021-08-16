@@ -44,17 +44,21 @@ export const filterList = (_list: any, filter) => {
 };
 
 export const filterOs = (_list: any, filter, recommended: boolean) => {
-    console.log(filter);
     if (!_list) {
         return [];
     }
     if (filter.length === 0) {
         return _list;
     }
+    // TO DO: See if this logic can be made easier
+    if (filter.length === 1 && recommended) {
+        return _list.filter((size) => recommended && size.recommended);
+    }
+    if (recommended) {
+        return _list.filter((size) => filter.includes(size.category) && recommended && size.recommended);
+    }
 
-    return _list.filter(
-        (size) => filter.includes(size.category) || (recommended === true && size.recommended === true)
-    );
+    return _list.filter((size) => filter.includes(size.category));
 };
 
 export const returnPasswordVariant = (vmPassword: string) => {

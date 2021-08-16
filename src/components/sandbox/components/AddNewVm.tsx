@@ -172,6 +172,12 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         };
     }, [vm.username, vm.operatingSystem]);
 
+    useEffect(() => {
+        return () => {
+            setOsFilter([]);
+        };
+    }, []);
+
     const handleDropdownChange = (value, name: string): void => {
         if (name === 'operatingSystem') {
             setUsernameHelpText('');
@@ -320,7 +326,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             </li>
                         </UnstyledList>
                         <HelperTextWrapper>
-                            Specify which operating systems you want to be in the dropdown below. Recommended OS is...
+                            Specify which operating systems you want to be in the dropdown below. Recommended OSs can be
+                            both linux and windows
                         </HelperTextWrapper>
                     </SizeFilterWrapper>
                     <div style={{ marginTop: '24px' }} />
