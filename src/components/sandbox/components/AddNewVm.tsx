@@ -9,8 +9,7 @@ import {
     Tooltip,
     DotProgress,
     Label,
-    SingleSelect,
-    EdsProvider
+    SingleSelect
 } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
