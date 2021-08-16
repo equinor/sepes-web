@@ -41,14 +41,32 @@ export const validateUserInput = (
     return false;
 };
 
-export const filterSizes = (_sizes: any, filter) => {
-    if (!_sizes) {
+export const filterList = (_list: any, filter) => {
+    if (!_list) {
         return [];
     }
     if (filter.length === 0) {
-        return _sizes;
+        return _list;
     }
-    return _sizes.filter((size) => filter.includes(size.category));
+    return _list.filter((size) => filter.includes(size.category));
+};
+
+export const filterOs = (_list: any, filter, recommended: boolean) => {
+    if (!_list) {
+        return [];
+    }
+    if (filter.length === 0) {
+        return _list;
+    }
+    // TO DO: See if this logic can be made easier
+    if (filter.length === 1 && recommended) {
+        return _list.filter((size) => recommended && size.recommended);
+    }
+    if (recommended) {
+        return _list.filter((size) => filter.includes(size.category) && recommended && size.recommended);
+    }
+
+    return _list.filter((size) => filter.includes(size.category));
 };
 
 export const returnPasswordVariant = (vmPassword: string) => {

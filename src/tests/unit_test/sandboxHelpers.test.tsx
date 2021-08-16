@@ -155,14 +155,14 @@ test('test filterSizes', () => {
     const sizes = [{ category: 'category1' }, { category: 'category2' }];
     const filter = ['category1'];
     const expectedResult = [{ category: 'category1' }];
-    expect(helpers.filterSizes(sizes, filter)).toEqual(expectedResult);
+    expect(helpers.filterList(sizes, filter)).toEqual(expectedResult);
 });
 
 test('test filterSizes, no hits', () => {
     const sizes = [{ category: 'category1' }, { category: 'category2' }];
     const filter = ['category3'];
     const expectedResult = [];
-    expect(helpers.filterSizes(sizes, filter)).toEqual(expectedResult);
+    expect(helpers.filterList(sizes, filter)).toEqual(expectedResult);
 });
 
 test('test returnPasswordVariant', () => {
