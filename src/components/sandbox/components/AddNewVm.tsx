@@ -326,8 +326,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             </li>
                         </UnstyledList>
                         <HelperTextWrapper>
-                            Specify which operating systems you want to be in the dropdown below. Recommended OSs can be
-                            both linux and windows
+                            Specify which operating systems you want to be in the dropdown below. Recommended OSs are
+                            the latest available version.
                         </HelperTextWrapper>
                     </SizeFilterWrapper>
                     <div style={{ marginTop: '24px' }} />
