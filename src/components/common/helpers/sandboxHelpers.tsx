@@ -43,6 +43,20 @@ export const filterList = (_list: any, filter) => {
     return _list.filter((size) => filter.includes(size.category));
 };
 
+export const filterOs = (_list: any, filter, recommended: boolean) => {
+    console.log(filter);
+    if (!_list) {
+        return [];
+    }
+    if (filter.length === 0) {
+        return _list;
+    }
+
+    return _list.filter(
+        (size) => filter.includes(size.category) || (recommended === true && size.recommended === true)
+    );
+};
+
 export const returnPasswordVariant = (vmPassword: string) => {
     if (vmPassword === '') {
         return 'default';

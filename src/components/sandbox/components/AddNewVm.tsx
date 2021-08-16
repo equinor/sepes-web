@@ -21,7 +21,8 @@ import {
     returnUsernameVariant,
     arrayObjectsToArrayString,
     returnKeyOfDisplayValue,
-    validateUsername
+    validateUsername,
+    filterOs
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
@@ -106,7 +107,8 @@ const sizeType = {
 
 const osType = {
     linux: 'linux',
-    windows: 'windows'
+    windows: 'windows',
+    recommended: 'recommended'
 };
 
 const AddNewVm: React.FC<AddNewVmProps> = ({
@@ -141,6 +143,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         'You need to pick operating system before username'
     );
     const [validatingUsername, setValidatingUsername] = useState<boolean>(false);
+    const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [sizeFilter, setSizeFilter] = useState<any>([]);
     const [osFilter, setOsFilter] = useState<any>([]);
@@ -309,9 +312,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             <li>
                                 <Checkbox
                                     label="Recommended"
-                                    onChange={(e: any) =>
-                                        handleCheck(sizeType.compute, e.target.checked, sizeFilter, setSizeFilter)
-                                    }
+                                    onChange={(e: any) => {
+                                        handleCheck(osType.recommended, e.target.checked, osFilter, setOsFilter);
+                                        setDisplayRecommendedOs(e.target.checked);
+                                    }}
                                 />
                             </li>
                         </UnstyledList>
@@ -325,7 +329,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             handleDropdownChange(returnKeyOfDisplayValue(selectedItem, os), 'operatingSystem')
                         }
                         label="Operating system"
-                        items={arrayObjectsToArrayString(filterList(os, osFilter))}
+                        items={arrayObjectsToArrayString(filterOs(os, osFilter, displayRecommendedOs))}
                         meta="(required)"
                         placeholder="Please search/select..."
                         className="singleSelect"
