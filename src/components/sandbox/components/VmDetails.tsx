@@ -15,7 +15,6 @@ import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
-import Prompt from '../../common/Promt';
 import { getStudyId } from 'utils/CommonUtil';
 
 const { Body, Row, Cell, Head } = Table;
@@ -97,7 +96,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
-    const studyId = getStudyId();
     let keyCount: number = 0;
 
     useEffect(() => {
