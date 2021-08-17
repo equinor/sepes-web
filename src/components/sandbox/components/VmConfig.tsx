@@ -48,6 +48,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
+    const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
@@ -156,6 +157,8 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}
+                        hasChangedVmRules={hasChangedVmRules}
+                        setHasChangedVmRules={setHasChangedVmRules}
                     />
                 );
         }
