@@ -44,6 +44,7 @@ type VmDetailsProps = {
     setUpdateCache: any;
     updateCache: any;
     setVmSaved: any;
+    setHasChangedGlobal?: any;
 };
 
 const ipMethod = [
@@ -88,7 +89,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     setUpdateCache,
     updateCache,
     getResources,
-    setVmSaved
+    setVmSaved,
+    setHasChangedGlobal
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -109,6 +111,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     useEffect(() => {
         checkIfAnyVmRulesHasChanged();
     }, [hasChangedVmRules]);
+
+    useEffect(() => {
+        setHasChangedGlobal(hasChanged);
+    }, [hasChanged]);
 
     const getKey = () => {
         const res = keyCount++;
@@ -400,7 +406,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     return (
         <>
-            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
+            {/*<Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />*/}
             <Wrapper>
                 <VmProperties
                     vmProperties={vm}
