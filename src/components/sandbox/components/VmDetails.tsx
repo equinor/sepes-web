@@ -97,7 +97,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
-    // const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
     const studyId = getStudyId();
     let keyCount: number = 0;
