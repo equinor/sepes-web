@@ -15,23 +15,17 @@ import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
     validateUserInput,
-    filterSizes,
+    filterList,
     returnPasswordVariant,
     returnUsernameVariant,
     arrayObjectsToArrayString,
-    returnKeyOfDisplayValue
+    returnKeyOfDisplayValue,
+    validateUsername,
+    filterOs
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
-import { createVirtualMachine, getVmName, getVirtualMachineCost, validateVmUsername } from '../../../services/Api';
-import {
-    SandboxObj,
-    DropdownObj,
-    SizeObj,
-    OperatingSystemObj,
-    VmObj,
-    VmUsernameObj,
-    CalculateNameObj
-} from '../../common/interfaces';
+import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
+import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import '../../../styles/addNewVm.scss';
@@ -110,6 +104,12 @@ const sizeType = {
     compute: 'compute'
 };
 
+const osType = {
+    linux: 'linux',
+    windows: 'windows',
+    recommended: 'recommended'
+};
+
 const AddNewVm: React.FC<AddNewVmProps> = ({
     sandbox,
     setVms,
@@ -142,8 +142,10 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         'You need to pick operating system before username'
     );
     const [validatingUsername, setValidatingUsername] = useState<boolean>(false);
+    const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [filter, setFilter] = useState<any>([]);
+    const [sizeFilter, setSizeFilter] = useState<any>([]);
+    const [osFilter, setOsFilter] = useState<any>([]);
     const width = '400px';
 
     useEffect(() => {
@@ -162,12 +164,18 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            validateUsername(vm.username);
+            validateUsername(vm, os, setUsernameIsValid, setValidatingUsername, setUsernameHelpText);
         }, 500);
         return () => {
             clearTimeout(timeoutId);
         };
     }, [vm.username, vm.operatingSystem]);
+
+    useEffect(() => {
+        return () => {
+            setOsFilter([]);
+        };
+    }, []);
 
     const handleDropdownChange = (value, name: string): void => {
         if (name === 'operatingSystem') {
@@ -239,44 +247,14 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         });
     };
 
-    const validateUsername = (value: string) => {
-        if (value === '') {
-            setUsernameIsValid(false);
-            return;
-        }
-
-        let operatingSystemType = '';
-        os.forEach((operatingSystem: OperatingSystemObj) => {
-            if (operatingSystem.key === vm.operatingSystem) {
-                operatingSystemType = operatingSystem.category;
-            }
-        });
-        const username: VmUsernameObj = { username: value, operativeSystemType: operatingSystemType };
-        setValidatingUsername(true);
-        validateVmUsername(username).then((result: any) => {
-            setValidatingUsername(false);
-            if (result) {
-                setUsernameIsValid(result.isValid);
-                if (!result.isValid) {
-                    setUsernameHelpText(result.errorMessage);
-                    //notify.show('danger', '500', result.errorMessage);
-                } else {
-                    setUsernameHelpText('');
-                }
-            } else {
-                setUsernameIsValid(false);
-            }
-        });
-    };
-
-    const handleCheck = (column: string, checked: any) => {
-        const currentFilter: any = [...filter];
+    const handleCheck = (column: string, checked: any, _filter: any, _setFiler) => {
+        const currentFilter: any = [..._filter];
         if (checked) {
             currentFilter.push(column);
         } else {
-            currentFilter.splice(filter.indexOf(column), 1);
+            currentFilter.splice(_filter.indexOf(column), 1);
         }
-        setFilter(currentFilter);
+        _setFiler(currentFilter);
     };
 
     return (
@@ -316,17 +294,54 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     useOverflow
                     tabIndex={0}
                 />*/}
-                <SingleSelect
-                    handleSelectedItemChange={({ selectedItem }) =>
-                        handleDropdownChange(returnKeyOfDisplayValue(selectedItem, os), 'operatingSystem')
-                    }
-                    label="Operating system"
-                    items={arrayObjectsToArrayString(os)}
-                    meta="(required)"
-                    placeholder="Please search/select..."
-                    className="singleSelect"
-                    data-cy="vm_operatingSystem"
-                />
+                <div>
+                    <SizeFilterWrapper>
+                        <UnstyledList>
+                            <HardWareReqWrapper>OS Type</HardWareReqWrapper>
+                            <li>
+                                <Checkbox
+                                    label="Windows"
+                                    onChange={(e: any) =>
+                                        handleCheck(osType.windows, e.target.checked, osFilter, setOsFilter)
+                                    }
+                                />
+                            </li>
+                            <li>
+                                <Checkbox
+                                    label="Linux"
+                                    onChange={(e: any) =>
+                                        handleCheck(osType.linux, e.target.checked, osFilter, setOsFilter)
+                                    }
+                                />
+                            </li>
+                            <li>
+                                <Checkbox
+                                    label="Recommended"
+                                    onChange={(e: any) => {
+                                        handleCheck(osType.recommended, e.target.checked, osFilter, setOsFilter);
+                                        setDisplayRecommendedOs(e.target.checked);
+                                    }}
+                                />
+                            </li>
+                        </UnstyledList>
+                        <HelperTextWrapper>
+                            Specify which operating systems you want to be in the dropdown below. Recommended OSs are
+                            the latest available version.
+                        </HelperTextWrapper>
+                    </SizeFilterWrapper>
+                    <div style={{ marginTop: '24px' }} />
+                    <SingleSelect
+                        handleSelectedItemChange={({ selectedItem }) =>
+                            handleDropdownChange(returnKeyOfDisplayValue(selectedItem, os), 'operatingSystem')
+                        }
+                        label="Operating system"
+                        items={arrayObjectsToArrayString(filterOs(os, osFilter, displayRecommendedOs))}
+                        meta="(required)"
+                        placeholder="Please search/select..."
+                        className="singleSelect"
+                        data-cy="vm_operatingSystem"
+                    />
+                </div>
                 <div style={{ marginTop: '24px' }} />
                 <TextField
                     id="textfield2"
@@ -375,16 +390,25 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     <li>
                         <Checkbox
                             label="High memory"
-                            onChange={(e: any) => handleCheck(sizeType.memory, e.target.checked)}
+                            onChange={(e: any) =>
+                                handleCheck(sizeType.memory, e.target.checked, sizeFilter, setSizeFilter)
+                            }
                         />
                     </li>
                     <li>
-                        <Checkbox label="High GPU" onChange={(e: any) => handleCheck(sizeType.gpu, e.target.checked)} />
+                        <Checkbox
+                            label="High GPU"
+                            onChange={(e: any) =>
+                                handleCheck(sizeType.gpu, e.target.checked, sizeFilter, setSizeFilter)
+                            }
+                        />
                     </li>
                     <li>
                         <Checkbox
                             label="High CPU"
-                            onChange={(e: any) => handleCheck(sizeType.compute, e.target.checked)}
+                            onChange={(e: any) =>
+                                handleCheck(sizeType.compute, e.target.checked, sizeFilter, setSizeFilter)
+                            }
                         />
                     </li>
                 </UnstyledList>
@@ -395,7 +419,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             </SizeFilterWrapper>
             {/*<CoreDevDropdown
                 label="VM size"
-                options={filterSizes(sizes, filter)}
+                options={filterList(sizes, filter)}
                 width={width}
                 onChange={handleDropdownChange}
                 name="size"
@@ -409,7 +433,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     handleDropdownChange(returnKeyOfDisplayValue(selectedItem, sizes), 'size')
                 }
                 label="VM size"
-                items={arrayObjectsToArrayString(filterSizes(sizes, filter))}
+                items={arrayObjectsToArrayString(filterList(sizes, sizeFilter))}
                 meta="(required)"
                 className="singleSelect"
                 placeholder="Please search/select..."

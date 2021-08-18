@@ -1,9 +1,9 @@
-describe('Vendor admin', () => {
+describe('Vendor contributor', () => {
     const studyName = 'Cypress Test';
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
         cy.login();
-        cy.intercept('/api/permissions', { fixture: 'rbac/vendorAdmin/permissions.json' });
+        cy.intercept('/api/permissions', { fixture: 'rbac/vendorContributor/permissions.json' });
         cy.visit('/');
     });
 
@@ -22,7 +22,7 @@ describe('Vendor admin', () => {
         cy.refreshPage();
 
         cy.createStudyWithoutInterceptingStudy(studyName);
-        cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
+        cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorContributor/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });
         cy.get('[data-cy=edit_study]').should('be.disabled');
 
@@ -31,12 +31,13 @@ describe('Vendor admin', () => {
         cy.switchToDatasetsTab();
         cy.get('[data-cy=add_study_specific_dataset]').should('be.disabled');
 
-        cy.switchToParticipantsTab();
-        cy.contains('Type minimum three chara').should('not.have.attr', 'disabled');
-        // cy.get('[data-cy=participant_search]').should('be.enabled');
+        // cy.switchToParticipantsTab();
+        // cy.contains('Type minimum three chara').type('This should be disalbed').should('have.value', '');
+        // cy.get('[data-cy=participant_search]').should('have.attr', 'isDisabled', 'disabled');
+        // cy.get('[data-cy=participant_search]').invoke('attr', 'isDisabled').should('eq', true);
 
         cy.switchToSandboxesTab();
-        cy.get('[data-cy=create_sandbox]').should('be.enabled');
+        cy.get('[data-cy=create_sandbox]').should('have.attr', 'disabled');
 
         cy.switchToDatasetsTab();
         cy.reload();
@@ -118,11 +119,11 @@ describe('Vendor admin', () => {
                         linkToCostAnalysis: '',
                         name: sandboxName,
                         permissions: {
-                            update: true,
-                            delete: true,
+                            update: false,
+                            delete: false,
                             editInboundRules: false,
-                            openInternet: true,
-                            increasePhase: true
+                            openInternet: false,
+                            increasePhase: false
                         },
                         region: 'norwayeast',
                         restrictionDisplayText:
@@ -135,20 +136,22 @@ describe('Vendor admin', () => {
             // cy.get('[data-cy=create_vm]').should('not.exist');
         });
 
+        cy.get('[data-cy=create_vm]').should('not.exist');
+
         cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
 
-        cy.get('[data-cy=add_dataset_to_sandbox_check]').should('be.enabled');
+        cy.get('[data-cy=add_dataset_to_sandbox_check]').should('be.disabled');
 
         cy.get('[data-cy=vm_tab]').click({ force: true });
 
         cy.get('[data-cy=vm_more_actions]').click({ force: true });
-        cy.get('[data-cy="vm_delete"]').should('not.have.attr', 'disabled');
+        cy.get('[data-cy="vm_delete"]').should('have.attr', 'disabled');
         // cy.get('[data-cy="vm_delete"]').should('be.enabled');
 
         cy.get('[data-cy=vm_add_rule]').should('be.disabled');
 
         cy.get('[data-cy=sandbox_more_options]').click({ force: true });
-        cy.get('[data-cy=sandbox_delete]').should('not.have.attr', 'disabled');
+        cy.get('[data-cy=sandbox_delete]').should('have.attr', 'disabled');
 
         cy.login();
         cy.reload();

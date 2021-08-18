@@ -62,7 +62,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
     const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
@@ -207,7 +207,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             loadOptions={
                                 study.permissions && study.permissions.addRemoveParticipant ? loadOptions : null
                             }
-                            data-cy="participant_search"
+                            datacy="participant_search"
                         />
                     </div>
                 </Tooltip>

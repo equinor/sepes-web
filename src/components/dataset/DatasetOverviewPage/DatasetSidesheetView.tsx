@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import { DatasetObj } from '../common/interfaces';
+import { DatasetObj } from '../../common/interfaces';
 import { Typography, Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import useClickOutside from '../common/customComponents/useClickOutside';
+import useClickOutside from '../../common/customComponents/useClickOutside';
 
 type DatasetSidesheetViewProps = {
     dataset: DatasetObj;

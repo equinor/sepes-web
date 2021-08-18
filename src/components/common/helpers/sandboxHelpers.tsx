@@ -1,4 +1,15 @@
-import { SandboxCreateObj, VmObj } from '../interfaces';
+/*eslint-disable consistent-return */
+import { getSandboxCostAnalysis, validateVmUsername } from 'services/Api';
+import {
+    AvailableDatasetObj,
+    OperatingSystemObj,
+    SandboxCreateObj,
+    SandboxObj,
+    SandboxPermissions,
+    VmObj,
+    VmUsernameObj
+} from '../interfaces';
+import { resourceStatus, resourceType } from '../staticValues/types';
 import { passwordValidate, validateResourceName } from './helpers';
 
 export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
@@ -30,14 +41,32 @@ export const validateUserInput = (
     return false;
 };
 
-export const filterSizes = (_sizes: any, filter) => {
-    if (!_sizes) {
+export const filterList = (_list: any, filter) => {
+    if (!_list) {
         return [];
     }
     if (filter.length === 0) {
-        return _sizes;
+        return _list;
     }
-    return _sizes.filter((size) => filter.includes(size.category));
+    return _list.filter((size) => filter.includes(size.category));
+};
+
+export const filterOs = (_list: any, filter, recommended: boolean) => {
+    if (!_list) {
+        return [];
+    }
+    if (filter.length === 0) {
+        return _list;
+    }
+    // TO DO: See if this logic can be made easier
+    if (filter.length === 1 && recommended) {
+        return _list.filter((size) => recommended && size.recommended);
+    }
+    if (recommended) {
+        return _list.filter((size) => filter.includes(size.category) && recommended && size.recommended);
+    }
+
+    return _list.filter((size) => filter.includes(size.category));
 };
 
 export const returnPasswordVariant = (vmPassword: string) => {
@@ -92,4 +121,117 @@ export const returnKeyOfDisplayValue = (displayValue: string | null | undefined,
         }
     });
     return key;
+};
+
+export const returnToolTipForMakeAvailable = (
+    sandbox: SandboxObj,
+    sandboxHasVm: boolean,
+    anyVmWithOpenInternet: boolean,
+    allResourcesOk: boolean
+): string => {
+    if (sandbox.permissions && !sandbox.permissions.increasePhase) {
+        return 'You do not have permission to make this sandbox Available';
+    }
+    if (!sandboxHasVm) {
+        return 'You need atleast one VM in the sandbox';
+    }
+    if (anyVmWithOpenInternet) {
+        return 'One or more vms have open internet. Close before making sandbox available';
+    }
+    if (sandbox.datasets.length === 0) {
+        return 'No datasets in the sandbox';
+    }
+    if (!allResourcesOk) {
+        return 'All resources must have status OK';
+    }
+    return '';
+};
+
+export const allResourcesStatusOkAndAtleastOneVm = (
+    resourcesIn,
+    setAnyVmWithOpenInternet,
+    setSandboxHasVm,
+    setAllResourcesOk,
+    sandbox,
+    setNewCostanalysisLink,
+    setSandbox
+) => {
+    let res = true;
+    if (!resourcesIn || !Array.isArray(resourcesIn)) {
+        return res;
+    }
+    let hasVm = false;
+    let noOpenInternet = true;
+    resourcesIn.map((resource: any) => {
+        if (resource.status !== resourceStatus.ok) {
+            res = false;
+        }
+        if (resource.type === resourceType.virtualMachine) {
+            hasVm = true;
+            if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
+                noOpenInternet = false;
+            }
+        }
+        if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
+            getCostAnalysisLinkToSandbox(sandbox, setNewCostanalysisLink, setSandbox);
+        }
+    });
+    setAnyVmWithOpenInternet(!noOpenInternet);
+    setSandboxHasVm(hasVm);
+    setAllResourcesOk(res && hasVm && noOpenInternet);
+};
+
+const getCostAnalysisLinkToSandbox = (sandbox: SandboxObj, setNewCostanalysisLink: any, setSandbox: any) => {
+    getSandboxCostAnalysis(sandbox.id).then((result: any) => {
+        if (result && !result.message) {
+            setNewCostanalysisLink(result);
+            setSandbox({ ...sandbox, linkToCostAnalysis: result });
+        }
+    });
+};
+
+export const validateUsername = (
+    vm: VmObj,
+    os: any,
+    setUsernameIsValid: any,
+    setValidatingUsername: any,
+    setUsernameHelpText
+) => {
+    if (vm.username === '') {
+        setUsernameIsValid(false);
+        return;
+    }
+
+    let operatingSystemType = '';
+    os.forEach((operatingSystem: OperatingSystemObj) => {
+        if (operatingSystem.key === vm.operatingSystem) {
+            operatingSystemType = operatingSystem.category;
+        }
+    });
+    const username: VmUsernameObj = { username: vm.username, operativeSystemType: operatingSystemType };
+    setValidatingUsername(true);
+    validateVmUsername(username).then((result: any) => {
+        setValidatingUsername(false);
+        if (result) {
+            setUsernameIsValid(result.isValid);
+            if (!result.isValid) {
+                setUsernameHelpText(result.errorMessage);
+                //notify.show('danger', '500', result.errorMessage);
+            } else {
+                setUsernameHelpText('');
+            }
+        } else {
+            setUsernameIsValid(false);
+        }
+    });
+};
+
+export const returnTooltipTextDataset = (_dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
+    if (permissions && !permissions.update) {
+        return 'You do not have access to update data sets in sandbox';
+    }
+    if (_dataset.name.length > 50) {
+        return _dataset.name;
+    }
+    return '';
 };

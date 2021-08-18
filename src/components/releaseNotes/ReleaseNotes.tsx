@@ -4,8 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import { Typography, Tabs } from '@equinor/eds-core-react';
 import { webAppChangelog, apiChangelog } from '../common/staticValues/commonLinks';
 
-//const { TabList, Tab } = Tabs;
-
 const OuterWrapper = styled.div`
     position: absolute;
     top: 64px;
@@ -69,17 +67,22 @@ const ReleaseNotes = () => {
 
     return (
         <OuterWrapper>
+            <Tabs
+                activeTab={activeTab}
+                variant="fullWidth"
+                onChange={(e: any) => setActiveTab(e)}
+                style={{ position: 'fixed', backgroundColor: '#FFFFFF' }}
+            >
+                <Tabs.List style={divStyle}>
+                    <Tabs.Tab style={{ marginLeft: '32px' }}>Web App</Tabs.Tab>
+                    <Tabs.Tab style={{ marginRight: '32px' }}>Api</Tabs.Tab>
+                </Tabs.List>
+            </Tabs>
             <Wrapper>
-                <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>
-                    <Tabs.List style={divStyle}>
-                        <Tabs.Tab style={{ marginLeft: '32px' }}>Web App</Tabs.Tab>
-                        <Tabs.Tab style={{ marginRight: '32px' }}>Api</Tabs.Tab>
-                    </Tabs.List>
-                </Tabs>
-                <div style={{ margin: '32px 32px 32px 32px' }}>{changeComponent()}</div>
+                <div style={{ margin: '80px 32px 32px 32px' }}>{changeComponent()}</div>
             </Wrapper>
         </OuterWrapper>
     );
 };
-//
+
 export default ReleaseNotes;

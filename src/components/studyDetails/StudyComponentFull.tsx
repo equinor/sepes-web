@@ -25,7 +25,12 @@ import {
     returnTextfieldTypeBasedOninput,
     truncate
 } from '../common/helpers/helpers';
-import { validateUserInputStudy } from '../common/helpers/studyHelpers';
+import {
+    returnTooltipTextDeleteStudy,
+    returnTooltipTextSaveStudy,
+    returnWbsVariant,
+    validateUserInputStudy
+} from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
@@ -62,7 +67,7 @@ const DescriptionWrapper = styled.div`
 `;
 
 const DescriptioTextfieldnWrapper = styled.div`
-    margin: auto 0 auto 32px;
+    margin: 76px 0 auto 32px;
     @media (max-width: 768px) {
         margin-left: 0px;
         width: 50%;
@@ -94,7 +99,8 @@ const Wrapper = styled.div`
 `;
 
 const RightWrapper = styled.div<{ editMode: any }>`
-    margin-top: ${(props: any) => (props.editMode ? '48px' : '0px')};
+    margin-top: ${(props: any) => (props.editMode ? '72px' : '0px')};
+    margin-bottom: ${(props: any) => (props.editMode ? '16px' : '0px')};
     @media (max-width: 768px) {
         margin-top: 0px;
         margin-left: auto;
@@ -283,27 +289,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setNewStudy(false);
     };
 
-    const returnTooltipTextDeleteStudy = () => {
-        if (study.sandboxes && study.sandboxes.length > 0) {
-            return 'Delete sandboxes before deleting study';
-        }
-        return 'You do not have permission to delete this study';
-    };
-
-    const returnTooltipTextSaveStudy = () => {
-        if (
-            wbsOnChangeIsValid === false &&
-            !newStudy &&
-            ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
-        ) {
-            return 'Can not change from valid to invalid WBS with active resources';
-        }
-        if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
-            return 'Please fill out all required fields';
-        }
-        return '';
-    };
-
     const validateWbsOnChange = (wbs: string) => {
         if (wbs !== '') {
             setValidateWbsInProgress(true);
@@ -320,7 +305,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         study.sandboxes && study.sandboxes.length === 0 && study.permissions && study.permissions.closeStudy;
     const optionsTemplate = (
         <>
-            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipTextDeleteStudy()} placement="left">
+            <Tooltip title={studyDeleteEnabled ? '' : returnTooltipTextDeleteStudy(study)} placement="left">
                 <Menu.Item
                     onClick={() => setUserClickedDelete(true)}
                     data-cy="study_delete"
@@ -383,16 +368,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setImageUrl('');
         setStudyOnChange(study);
         setShowImagePicker(false);
-    };
-
-    const returnWbsVariant = () => {
-        if (wbsOnChangeIsValid === undefined) {
-            return 'default';
-        }
-        if (wbsOnChangeIsValid) {
-            return 'success';
-        }
-        return 'error';
     };
 
     const handleChange = (columnName: string, value: string): void => {
@@ -506,7 +481,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             <Icon name="dollar" />
                                         )
                                     }
-                                    variant={returnWbsVariant()}
+                                    variant={returnWbsVariant(wbsOnChangeIsValid)}
                                     helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
                                 />
                             </>
@@ -656,7 +631,16 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                 Change logo
                                             </Button>
                                             <SaveCancelWrapper>
-                                                <Tooltip title={returnTooltipTextSaveStudy()} placement="left">
+                                                <Tooltip
+                                                    title={returnTooltipTextSaveStudy(
+                                                        wbsOnChangeIsValid,
+                                                        newStudy,
+                                                        study,
+                                                        studyOnChange,
+                                                        validateWbsInProgress
+                                                    )}
+                                                    placement="left"
+                                                >
                                                     <Button
                                                         data-cy="create_study"
                                                         onClick={() => handleSave()}
@@ -691,11 +675,5 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         </div>
     );
 };
-
-// readOnly={
-//     wbsOnChangeIsValid &&
-//     ((study.sandboxes && study.sandboxes.length) ||
-//         (study.datasets && study.datasets.length))
-// }
 
 export default StudyComponentFull;

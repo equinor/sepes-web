@@ -5,6 +5,7 @@
     "requestTimeout": 200000,
     "responseTimeout": 200000,
     "video": true,
+    "videoUploadOnPasses": false,
     "nodeVersion": "system",
     "chromeWebSecurity": false,
     "reporter": "cypress-multi-reporters",
@@ -25,6 +26,9 @@
         "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
         "SCOPE": "User.Read User.Read.All User.Impersonation",
         "RETRIES": 3
+    },
+    "retries": {
+        "runMode": 2
     },
     "viewportWidth": 1920,
     "viewportHeight": 1080

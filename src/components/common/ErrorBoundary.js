@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Button } from '@equinor/eds-core-react';
+import { withRouter } from 'react-router-dom';
 
 class ErrorBoundary extends Component {
     static getDerivedStateFromError() {
@@ -44,21 +45,22 @@ class ErrorBoundary extends Component {
     };
 
     render() {
-        const linkStyle = {
-            marginTop: '16px',
-            color: '#007079',
-            textDecoration: 'underline',
-            fontSize: '22px'
-        };
+        const { history } = this.props;
 
         if (this.state.hasError) {
             return (
                 <div style={{ paddingTop: '128px', textAlign: 'center' }}>
                     {this.makeErrorMessage(this.state.errorMessage)}
                     {this.props.appInsights.trackTrace(this.state.errorMessage)}
-                    <Link to="/" style={linkStyle}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            history.push('/');
+                            history.go(0);
+                        }}
+                    >
                         Go back
-                    </Link>
+                    </Button>
                 </div>
             );
         }
@@ -66,4 +68,4 @@ class ErrorBoundary extends Component {
     }
 }
 
-export default ErrorBoundary;
+export default withRouter(ErrorBoundary);

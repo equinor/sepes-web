@@ -8,15 +8,16 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourceStatus, makeAvailable, getSandboxCostAnalysis } from '../../services/Api';
+import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
-import { resourceStatus, resourceType } from '../common/staticValues/types';
+import {
+    allResourcesStatusOkAndAtleastOneVm,
+    returnToolTipForMakeAvailable
+} from 'components/common/helpers/sandboxHelpers';
 
 const set = require('lodash/set');
-
-//const { MenuItem } = Menu;
 
 const Wrapper = styled.div`
     display: grid;
@@ -152,42 +153,15 @@ const StepBar: React.FC<StepBarProps> = ({
                 console.log('Err');
             } else {
                 setResources(result);
-                allResourcesStatusOkAndAtleastOneVm(result);
-            }
-        });
-    };
-
-    const allResourcesStatusOkAndAtleastOneVm = (resourcesIn) => {
-        let res = true;
-        if (!resourcesIn || !Array.isArray(resourcesIn)) {
-            return res;
-        }
-        let hasVm = false;
-        let noOpenInternet = true;
-        resourcesIn.map((resource: any) => {
-            if (resource.status !== resourceStatus.ok) {
-                res = false;
-            }
-            if (resource.type === resourceType.virtualMachine) {
-                hasVm = true;
-                if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
-                    noOpenInternet = false;
-                }
-            }
-            if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
-                getCostAnalysisLinkToSandbox();
-            }
-        });
-        setAnyVmWithOpenInternet(!noOpenInternet);
-        setSandboxHasVm(hasVm);
-        setAllResourcesOk(res && hasVm && noOpenInternet);
-    };
-
-    const getCostAnalysisLinkToSandbox = () => {
-        getSandboxCostAnalysis(sandboxId).then((result: any) => {
-            if (result && !result.message) {
-                setNewCostanalysisLink(result);
-                setSandbox({ ...sandbox, linkToCostAnalysis: result });
+                allResourcesStatusOkAndAtleastOneVm(
+                    result,
+                    setAnyVmWithOpenInternet,
+                    setSandboxHasVm,
+                    setAllResourcesOk,
+                    sandbox,
+                    setNewCostanalysisLink,
+                    setSandbox
+                );
             }
         });
     };
@@ -244,25 +218,6 @@ const StepBar: React.FC<StepBarProps> = ({
                 setNewPhase(1);
             }
         });
-    };
-
-    const returnToolTipForMakeAvailable = (): string => {
-        if (sandbox.permissions && !sandbox.permissions.increasePhase) {
-            return 'You do not have permission to make this sandbox Available';
-        }
-        if (!sandboxHasVm) {
-            return 'You need atleast one VM in the sandbox';
-        }
-        if (anyVmWithOpenInternet) {
-            return 'One or more vms have open internet. Close before making sandbox available';
-        }
-        if (sandbox.datasets.length === 0) {
-            return 'No datasets in the sandbox';
-        }
-        if (!allResourcesOk) {
-            return 'All resources must have status OK';
-        }
-        return '';
     };
 
     const optionsTemplate = (
@@ -325,7 +280,15 @@ const StepBar: React.FC<StepBarProps> = ({
                     <BtnTwoWrapper>
                         {returnOptionsButton()}
                         <div>
-                            <Tooltip title={returnToolTipForMakeAvailable()} placement="left">
+                            <Tooltip
+                                title={returnToolTipForMakeAvailable(
+                                    sandbox,
+                                    sandboxHasVm,
+                                    anyVmWithOpenInternet,
+                                    allResourcesOk
+                                )}
+                                placement="left"
+                            >
                                 <Button
                                     onClick={() => {
                                         setUserClickedMakeAvailable(true);
@@ -447,7 +410,11 @@ const StepBar: React.FC<StepBarProps> = ({
                         {sandbox.linkToCostAnalysis && (
                             <CostAnalysisWrapper>
                                 <Typography
-                                    style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                    style={{
+                                        display: 'inline-block',
+                                        marginTop: '4px',
+                                        fontSize: '16px'
+                                    }}
                                     variant="h2"
                                     color="#007079"
                                 >

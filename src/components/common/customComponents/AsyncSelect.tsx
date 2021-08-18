@@ -14,6 +14,7 @@ type AsynchSelectProps = {
     isRequired?: boolean;
     disabled?: boolean;
     loadOptions?: any;
+    datacy: string;
 };
 
 export const equinorTheme = (theme: any) => ({
@@ -40,7 +41,8 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
     style,
     isRequired,
     disabled,
-    loadOptions
+    loadOptions,
+    datacy
 }) => {
     return (
         <span style={style}>
@@ -53,6 +55,7 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
                 theme={(theme) => equinorTheme(theme)}
                 onInputChange={onInputChange}
                 isDisabled={disabled}
+                data-cy={datacy}
             />
         </span>
     );

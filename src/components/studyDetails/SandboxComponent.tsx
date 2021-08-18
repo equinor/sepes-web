@@ -20,7 +20,6 @@ const Wrapper = styled.div`
 `;
 
 type SandboxComponentProps = {
-    sandboxes: any;
     setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
@@ -32,7 +31,6 @@ type SandboxComponentProps = {
 };
 
 const SandboxComponent: React.FC<SandboxComponentProps> = ({
-    sandboxes,
     setStudy,
     setHasChanged,
     setUpdateCache,
@@ -92,7 +90,7 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                 )}
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
-                <SandboxTable sandboxes={sandboxes} />
+                <SandboxTable sandboxes={study.sandboxes} />
             </div>
         </Wrapper>
     );

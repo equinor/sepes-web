@@ -3,13 +3,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import { checkbox } from '@equinor/eds-icons';
 import styled from 'styled-components';
-import { DatasetObj, GeneralPermissions } from '../common/interfaces';
+import { DatasetObj, GeneralPermissions } from '../../common/interfaces';
 import { useHistory } from 'react-router-dom';
 import DatasetSearchFilter from './DatasetSearchFilter';
 import DatasetSidesheetView from './DatasetSidesheetView';
-import DropdownFilter from '../common/customComponents/DropdownFilter';
-import useClickOutside from '../common/customComponents/useClickOutside';
-import '../../styles/Table.scss';
+import DropdownFilter from '../../common/customComponents/DropdownFilter';
+import useClickOutside from '../../common/customComponents/useClickOutside';
+import '../../../styles/Table.scss';
 import Cookies from 'js-cookie';
 
 const { Body, Row, Cell, Head } = Table;
@@ -76,6 +76,7 @@ const DatasetsOverviewTable: React.FC<DatasetsOverviewTableProps> = ({ datasets,
     const [toggle, setToggle] = useState(false);
     const [selectedDataset, setSelectedDataset] = useState<DatasetObj>({
         name: '',
+        studyName: '',
         permissions: { editDataset: false, deleteDataset: false }
     });
     const [checkedColums, setCheckedColumns] = useState<checkedColumns>(

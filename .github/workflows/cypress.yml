@@ -57,6 +57,14 @@ jobs:
 
       - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
 
+      # This will retry entire test run. Will only retry specific steps for now
+      # - name: Run quick running cypress tests
+      #   uses: nick-invision/retry@v2
+      #   with:
+      #     timeout_minutes: 4
+      #     max_attempts: 2
+      #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
+
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.token.outputs.cypressAccesstokenDev }}
@@ -74,11 +82,11 @@ jobs:
       #   run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
       #   if: ${{ github.event_name != 'pull_request' }}
         
-      - name: Run all tests in Firefox browser  
-        env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
-        run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' }}
+      # - name: Run all tests in Firefox browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
 
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1

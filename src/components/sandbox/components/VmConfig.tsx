@@ -48,6 +48,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
+    const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
@@ -156,6 +157,8 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}
+                        hasChangedVmRules={hasChangedVmRules}
+                        setHasChangedVmRules={setHasChangedVmRules}
                     />
                 );
         }
@@ -175,7 +178,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                     {vms.length > 0 ? (
                         vms.map((vm: any) => {
                             return (
-                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }}>
+                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }} data-cy="vm_tab">
                                     {vm.name}
                                 </Tabs.Tab>
                             );
