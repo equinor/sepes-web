@@ -44,6 +44,8 @@ type VmDetailsProps = {
     updateCache: any;
     setVmSaved: any;
     setHasChangedGlobal?: any;
+    hasChangedVmRules: any;
+    setHasChangedVmRules: any;
 };
 
 const ipMethod = [
@@ -89,12 +91,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     updateCache,
     getResources,
     setVmSaved,
-    setHasChangedGlobal
+    setHasChangedGlobal,
+    hasChangedVmRules,
+    setHasChangedVmRules
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
-    const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
     let keyCount: number = 0;
 

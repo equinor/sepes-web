@@ -410,7 +410,11 @@ const StepBar: React.FC<StepBarProps> = ({
                         {sandbox.linkToCostAnalysis && (
                             <CostAnalysisWrapper>
                                 <Typography
-                                    style={{ display: 'inline-block', marginRight: '0px', fontSize: '16px' }}
+                                    style={{
+                                        display: 'inline-block',
+                                        marginTop: '4px',
+                                        fontSize: '16px'
+                                    }}
                                     variant="h2"
                                     color="#007079"
                                 >
