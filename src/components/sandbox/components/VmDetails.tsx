@@ -455,7 +455,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         }
                                                         name="useClientIp"
                                                         tabIndex={0}
-                                                        preSlectedValue={'Custom'}
+                                                        preSelectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
                                                         disabled={!permissions.editInboundRules}
                                                     />
@@ -498,7 +498,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             handleDropdownChange('protocol', ruleNumber, e);
                                                         }}
                                                         name="protocol"
-                                                        preSlectedValue={rule.protocol || 'Custom'}
+                                                        preSelectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
                                                         disabled={!permissions.editInboundRules}
                                                         width="240px"

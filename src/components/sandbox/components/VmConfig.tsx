@@ -49,9 +49,23 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
     const [hasChangedVmRules, setHasChangedVmRules] = useState<any>([]);
+    const [vm, setVm] = useState<VmObj>({
+        id: '',
+        name: '',
+        region: 'norwayeast',
+        size: '',
+        operatingSystem: '',
+        distro: 'win2019datacenter',
+        username: '',
+        password: '',
+        linkToExternalSystem: '',
+        dataDisks: []
+    });
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
+    const [sizeFilter, setSizeFilter] = useState<any>([]);
+    const [osFilter, setOsFilter] = useState<any>([]);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
@@ -78,9 +92,9 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     const checkIfAnyVmsHasOpenInternet = () => {
         let result = false;
-        vms.forEach((vm: VmObj) => {
-            if (vm.rules) {
-                vm.rules.forEach((rule: any) => {
+        vms.forEach((_vm: VmObj) => {
+            if (_vm.rules) {
+                _vm.rules.forEach((rule: any) => {
                     if (rule.action === 0 && rule.direction === 1) {
                         result = true;
                     }
@@ -139,6 +153,12 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         getResources={getResources}
+                        setVm={setVm}
+                        vm={vm}
+                        setSizeFilter={setSizeFilter}
+                        sizeFilter={sizeFilter}
+                        setOsFilter={setOsFilter}
+                        osFilter={osFilter}
                     />
                 ) : (
                     <div />
@@ -176,10 +196,10 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         <Tabs.Tab style={{ display: 'none' }} />
                     )}
                     {vms.length > 0 ? (
-                        vms.map((vm: any) => {
+                        vms.map((_vm: any) => {
                             return (
-                                <Tabs.Tab key={vm.id} style={{ borderRadius: '4px' }} data-cy="vm_tab">
-                                    {vm.name}
+                                <Tabs.Tab key={_vm.id} style={{ borderRadius: '4px' }} data-cy="vm_tab">
+                                    {_vm.name}
                                 </Tabs.Tab>
                             );
                         })

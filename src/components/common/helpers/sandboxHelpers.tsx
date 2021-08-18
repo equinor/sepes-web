@@ -235,3 +235,14 @@ export const returnTooltipTextDataset = (_dataset: AvailableDatasetObj, permissi
     }
     return '';
 };
+
+export const returnDisplayName = (list: any, key: string): string => {
+    if (!list || !key) {
+        return '';
+    }
+    const displayName = list.find((item) => item.key === key);
+    if (displayName) {
+        return displayName.displayValue;
+    }
+    return '';
+};
