@@ -129,7 +129,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const returnStepComponent = () => {
         switch (activeTab) {
             case 0:
-                return showAddNewVm && !loadingSandbox ? (
+                return showAddNewVm ? (
                     <AddNewVm
                         sandbox={sandbox}
                         setVms={setVms}
@@ -172,7 +172,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
         <div style={{ backgroundColor: '#ffffff', borderRadius: '4px' }}>
             <Tabs style={{ borderRadius: '4px' }} activeTab={activeTab} onChange={(e: any) => onChange(e)}>
                 <Tabs.List>
-                    {showAddNewVm && !loadingSandbox ? (
+                    {showAddNewVm ? (
                         <Tabs.Tab key={1} style={{ borderRadius: '4px' }}>
                             Add new vm
                         </Tabs.Tab>
