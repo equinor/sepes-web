@@ -15,7 +15,6 @@ import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
-import Prompt from '../../common/Promt';
 import { getStudyId } from 'utils/CommonUtil';
 
 const { Body, Row, Cell, Head } = Table;
@@ -44,6 +43,7 @@ type VmDetailsProps = {
     setUpdateCache: any;
     updateCache: any;
     setVmSaved: any;
+    setHasChangedGlobal?: any;
     hasChangedVmRules: any;
     setHasChangedVmRules: any;
 };
@@ -91,6 +91,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     updateCache,
     getResources,
     setVmSaved,
+    setHasChangedGlobal,
     hasChangedVmRules,
     setHasChangedVmRules
 }) => {
@@ -98,7 +99,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
-    const studyId = getStudyId();
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -112,6 +112,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     useEffect(() => {
         checkIfAnyVmRulesHasChanged();
     }, [hasChangedVmRules]);
+
+    useEffect(() => {
+        setHasChangedGlobal(hasChanged);
+    }, [hasChanged]);
 
     const getKey = () => {
         const res = keyCount++;
@@ -403,7 +407,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     return (
         <>
-            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
+            {/*<Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />*/}
             <Wrapper>
                 <VmProperties
                     vmProperties={vm}

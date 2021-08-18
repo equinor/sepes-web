@@ -90,6 +90,7 @@ type AddNewVmProps = {
     setUpdateCache: any;
     updateCache: any;
     getResources: any;
+    setHasChanged: any;
 };
 
 const limits = {
@@ -120,7 +121,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     os,
     setUpdateCache,
     updateCache,
-    getResources
+    getResources,
+    setHasChanged
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const [vm, setVm] = useState<VmObj>({
@@ -178,6 +180,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     }, []);
 
     const handleDropdownChange = (value, name: string): void => {
+        setHasChanged(true);
         if (name === 'operatingSystem') {
             setUsernameHelpText('');
         }
@@ -191,6 +194,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const handleChange = (field: string, value: string) => {
+        setHasChanged(true);
         if (!checkColumDoesNotExceedInputLength(limits, value, field)) {
             return;
         }
@@ -201,6 +205,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const createVm = () => {
+        setHasChanged(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
