@@ -17,12 +17,19 @@ type PromptProps = {
     hasChanged: boolean;
     fallBackAddress?: string;
     customText?: string;
+    url?: string;
 };
 
-const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText }) => {
+const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText, url }) => {
     const history = useHistory();
     const [visibleScrim, setVisibleScrim] = useState<boolean>(false);
     const [confirmedNavigation, setConfirmedNavigation] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (url && hasChanged) {
+            history.push(url);
+        }
+    }, []);
 
     useEffect(() => {
         if (confirmedNavigation) {
