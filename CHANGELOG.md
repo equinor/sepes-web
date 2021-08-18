@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.31](https://github.com/equinor/sepes-web/compare/0.1.30...0.1.31) (2021-08-18)
+
+
+### Features
+
+* add extra filter for os ([#1199](https://github.com/equinor/sepes-web/issues/1199)) ([2069f0d](https://github.com/equinor/sepes-web/commit/2069f0d5734a5191ef13260a3dd1619948044b3b)), closes [#1198](https://github.com/equinor/sepes-web/issues/1198)
+
+
+### Bug Fixes
+
+* center costanalysis link ([#1218](https://github.com/equinor/sepes-web/issues/1218)) ([940698b](https://github.com/equinor/sepes-web/commit/940698bf142979326e6bcc362db607abf32b2825)), closes [#1215](https://github.com/equinor/sepes-web/issues/1215)
+* **dataset:** tooltip for storage account status did not display ([#1180](https://github.com/equinor/sepes-web/issues/1180)) ([02304a2](https://github.com/equinor/sepes-web/commit/02304a26cf6b002e2e9a8e5d593ec464f7ab7109)), closes [#1155](https://github.com/equinor/sepes-web/issues/1155)
+* disable resize of results and learnings textfield ([#1174](https://github.com/equinor/sepes-web/issues/1174)) ([822ec24](https://github.com/equinor/sepes-web/commit/822ec241290460a5466026637e73f73968d89584)), closes [#1154](https://github.com/equinor/sepes-web/issues/1154)
+* go back button on general error page did not reload page ([#1206](https://github.com/equinor/sepes-web/issues/1206)) ([9d4231d](https://github.com/equinor/sepes-web/commit/9d4231d775ed5e0516305d8a44f938fd5363f110)), closes [#1197](https://github.com/equinor/sepes-web/issues/1197)
+* issue with adding a dataID to a dataset ([#1192](https://github.com/equinor/sepes-web/issues/1192)) ([f2bf65a](https://github.com/equinor/sepes-web/commit/f2bf65a0e580d540b02786c51b370cadd49303e1))
+* issue with disabled save button on vm rules ([#1217](https://github.com/equinor/sepes-web/issues/1217)) ([6425de8](https://github.com/equinor/sepes-web/commit/6425de83860722a2be0e74edd3c60e45ecdd35d5)), closes [#1212](https://github.com/equinor/sepes-web/issues/1212)
+* issue with displaying correct info when api is not reacheable ([#1193](https://github.com/equinor/sepes-web/issues/1193)) ([3ffe65d](https://github.com/equinor/sepes-web/commit/3ffe65d53c662ca537ce9cba86d3c9ea890eee20)), closes [#1191](https://github.com/equinor/sepes-web/issues/1191)
+* release notes tabs have now fixed position ([45a022f](https://github.com/equinor/sepes-web/commit/45a022f6d1d4026637e90ab58bb36fc5ba71e077)), closes [#957](https://github.com/equinor/sepes-web/issues/957)
+* run docker container as non-root ([#1170](https://github.com/equinor/sepes-web/issues/1170)) ([e3175f3](https://github.com/equinor/sepes-web/commit/e3175f3e9a7785521c3aa06fb07854b3a0ee2773))
+* **study:** align some margins on edit mode ([#1173](https://github.com/equinor/sepes-web/issues/1173)) ([4286da0](https://github.com/equinor/sepes-web/commit/4286da0eef7c184b557d154ad184e4e2a9622405)), closes [#1147](https://github.com/equinor/sepes-web/issues/1147)
+* update node and node-sass ([#1169](https://github.com/equinor/sepes-web/issues/1169)) ([c0eeebe](https://github.com/equinor/sepes-web/commit/c0eeebeb7ecc00ffd085786846098c1e4fbaf5ab))
+* upgrade @azure/msal-browser from 2.15.0 to 2.16.0 ([#1203](https://github.com/equinor/sepes-web/issues/1203)) ([aef7092](https://github.com/equinor/sepes-web/commit/aef7092dbf78448db415082af18198bd0c6ea78f))
+* upgrade @material-ui/core from 4.12.1 to 4.12.2 ([#1190](https://github.com/equinor/sepes-web/issues/1190)) ([57bd542](https://github.com/equinor/sepes-web/commit/57bd542c412819909d14c2c7d1117bd4c99b091d))
+* upgrade @types/react from 17.0.14 to 17.0.15 ([#1205](https://github.com/equinor/sepes-web/issues/1205)) ([4f1bdf1](https://github.com/equinor/sepes-web/commit/4f1bdf1b13c6dbceb231350dd6b8a6ffaa3ab6ac))
+* upgrade @typescript-eslint/eslint-plugin from 4.28.2 to 4.28.3 ([cd33ffa](https://github.com/equinor/sepes-web/commit/cd33ffaa9537a1742cf94b87d3e30fcb33eb3c4d))
+* upgrade @typescript-eslint/eslint-plugin from 4.28.3 to 4.28.4 ([#1188](https://github.com/equinor/sepes-web/issues/1188)) ([cee8cdc](https://github.com/equinor/sepes-web/commit/cee8cdcb3d29ee1c924019da66be77e2f08617b7))
+* upgrade @typescript-eslint/eslint-plugin from 4.28.4 to 4.28.5 ([#1208](https://github.com/equinor/sepes-web/issues/1208)) ([d5f74ab](https://github.com/equinor/sepes-web/commit/d5f74ab68fc02b8b656eff12b0f690df9bebf688))
+* upgrade @typescript-eslint/parser from 4.28.2 to 4.28.3 ([#1161](https://github.com/equinor/sepes-web/issues/1161)) ([4a43757](https://github.com/equinor/sepes-web/commit/4a43757759f50d8e3c2ca5b621f1acb136db4f0c))
+* upgrade @typescript-eslint/parser from 4.28.3 to 4.28.4 ([#1189](https://github.com/equinor/sepes-web/issues/1189)) ([32a4387](https://github.com/equinor/sepes-web/commit/32a4387c74370db545e51f716623bb7ddb6c1935))
+* upgrade @typescript-eslint/parser from 4.28.4 to 4.28.5 ([#1207](https://github.com/equinor/sepes-web/issues/1207)) ([024bd7d](https://github.com/equinor/sepes-web/commit/024bd7d38b03673aad1d90a25c839a5681036e6e))
+* upgrade react-keyed-file-browser from 1.12.1 to 1.13.1 ([#1202](https://github.com/equinor/sepes-web/issues/1202)) ([1ea0c90](https://github.com/equinor/sepes-web/commit/1ea0c90818dfb7a54ca2dd1fd14ea473bfcb75dd))
+
 ### [0.1.30](https://github.com/equinor/sepes-web/compare/0.1.29...0.1.30) (2021-08-02)
 
 
