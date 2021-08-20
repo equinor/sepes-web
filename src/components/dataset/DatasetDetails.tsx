@@ -1,7 +1,7 @@
 /*eslint-disable consistent-return, no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Icon, LinearProgress, Chip, Switch, Breadcrumbs } from '@equinor/eds-core-react';
+import { Typography, Icon, LinearProgress, Chip, Switch, Breadcrumbs, Tooltip } from '@equinor/eds-core-react';
 import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
 import {
     getDatasetSasToken,
@@ -10,7 +10,7 @@ import {
     removeStudyDataset
 } from '../../services/Api';
 import { arrow_back, delete_forever, folder, file, folder_open } from '@equinor/eds-icons';
-import { isIterable } from '../common/helpers/helpers';
+import { isIterable, truncate } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
@@ -32,6 +32,8 @@ import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 import FileBrowser from 'react-keyed-file-browser';
 import DatasetFileList from './DatasetFileList';
 import DatasetInformation from './DatasetInformation';
+import { truncateLength } from '../common/staticValues/lenghts';
+import BreadcrumbTruncate from '../common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import './DatasetDetailsStyle.css';
 
 const icons = {
@@ -421,21 +423,22 @@ const DatasetDetails = () => {
                         <div style={{}}>
                             <div style={{ marginBottom: '16px' }}>
                                 {isStandard ? (
-                                    <Typography variant="h2">{dataset?.name}</Typography>
+                                    <Tooltip
+                                        title={
+                                            dataset?.name && dataset?.name.length > truncateLength ? dataset?.name : ''
+                                        }
+                                        placement="top"
+                                        enterDelay={200}
+                                    >
+                                        <Typography variant="h2">{truncate(dataset?.name, truncateLength)}</Typography>
+                                    </Tooltip>
                                 ) : (
                                     <Breadcrumbs>
-                                        <Breadcrumbs.Breadcrumb
-                                            style={{ marginBottom: '16px' }}
-                                            onClick={() => {
-                                                history.push('/studies/' + studyId);
-                                            }}
-                                            data-cy="dataset_back_to_study"
-                                        >
-                                            {dataset?.studyName}
-                                        </Breadcrumbs.Breadcrumb>
-                                        <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
-                                            {dataset?.name}
-                                        </Breadcrumbs.Breadcrumb>
+                                        <BreadcrumbTruncate
+                                            breadcrumbText={dataset?.studyName}
+                                            link={'/studies/' + studyId}
+                                        />
+                                        <BreadcrumbTruncate breadcrumbText={dataset?.name} />
                                     </Breadcrumbs>
                                 )}
                                 {!isStandard && (
