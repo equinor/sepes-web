@@ -8,12 +8,14 @@ type BreadcrumbTruncateProps = {
     breadcrumbText: string;
     truncateLength?: number;
     link?: string;
+    datacy?: string;
 };
 
 const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
     breadcrumbText,
     truncateLength = defaultLength,
-    link = ''
+    link = '',
+    datacy
 }) => {
     const history = useHistory();
     return (
@@ -22,6 +24,7 @@ const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
                 onClick={() => {
                     history.push(link);
                 }}
+                data-cy={datacy}
             >
                 {truncate(breadcrumbText, truncateLength)}
             </Breadcrumbs.Breadcrumb>

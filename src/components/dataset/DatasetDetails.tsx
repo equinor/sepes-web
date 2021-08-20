@@ -437,6 +437,7 @@ const DatasetDetails = () => {
                                         <BreadcrumbTruncate
                                             breadcrumbText={dataset?.studyName}
                                             link={'/studies/' + studyId}
+                                            datacy="dataset_back_to_study"
                                         />
                                         <BreadcrumbTruncate breadcrumbText={dataset?.name} />
                                     </Breadcrumbs>
