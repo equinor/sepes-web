@@ -36,6 +36,7 @@ import { Label } from '../common/StyledComponents';
 import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import truncateLength from 'components/common/staticValues/lenghts';
 
 const icons = {
     dollar,
@@ -146,7 +147,6 @@ const limits = {
     wbsCode: 64
 };
 
-const truncateLength = 48;
 let wbsController = new AbortController();
 
 type StudyComponentFullProps = {

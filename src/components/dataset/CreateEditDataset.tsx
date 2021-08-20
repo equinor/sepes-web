@@ -87,7 +87,7 @@ const dataClassificationsList = [
 ];
 
 const limits = {
-    name: 64
+    name: 128
 };
 
 const width = '512px';

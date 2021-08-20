@@ -16,6 +16,7 @@ import {
     allResourcesStatusOkAndAtleastOneVm,
     returnToolTipForMakeAvailable
 } from 'components/common/helpers/sandboxHelpers';
+import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 
 const set = require('lodash/set');
 
@@ -362,16 +363,8 @@ const StepBar: React.FC<StepBarProps> = ({
         <Wrapper>
             <div style={{ display: 'flex' }}>
                 <Breadcrumbs>
-                    <Breadcrumbs.Breadcrumb
-                        onClick={() => {
-                            history.push('/studies/' + studyId);
-                        }}
-                    >
-                        {sandbox.studyName}
-                    </Breadcrumbs.Breadcrumb>
-                    <Breadcrumbs.Breadcrumb href="" onClick={() => {}}>
-                        {sandbox.name}
-                    </Breadcrumbs.Breadcrumb>
+                    <BreadcrumbTruncate breadcrumbText={sandbox.studyName} link={'/studies/' + studyId} />
+                    <BreadcrumbTruncate breadcrumbText={sandbox.name} />
                 </Breadcrumbs>
                 <div style={{ marginLeft: 'auto' }}>{returnControlButtons()}</div>
             </div>

@@ -134,8 +134,8 @@ Cypress.Commands.add('createVm', () => {
     // cy.waitForSandboxToLoad();
     cy.get('[data-cy=vm_name]').type('cy name');
     // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
-    cy.get('[data-cy=vm_operatingSystem]').type('Windows Server 2019 Datacenter');
-    cy.contains('Windows Server 2019 Datacenter').click({ force: true });
+    cy.get('[data-cy=vm_operatingSystem]').type('Windows Server Datacenter Core 2019 (17763.2114.2108051826)');
+    cy.contains('Windows Server Datacenter Core 2019 (17763.2114.2108051826)').click({ force: true });
     cy.get('[data-cy=vm_username]').type('cy username');
     cy.get('[data-cy=vm_password]').type('Cypassword123!!');
     // cy.get('[data-cy=vm_size]').click({ force: true });
