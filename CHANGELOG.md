@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.32](https://github.com/equinor/sepes-web/compare/0.1.31...0.1.32) (2021-08-20)
+
 ### [0.1.31](https://github.com/equinor/sepes-web/compare/0.1.30...0.1.31) (2021-08-18)
 
 
