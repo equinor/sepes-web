@@ -36,6 +36,7 @@ spec:
               memory: "1024Mi"
               cpu: "400m"
         - environment: dev
+          runAsNonRoot: true
           variables: 
             REACT_APP_SEPES_REDIRECT_URI: "https://frontend-sepes-web-dev.radix.equinor.com/"
             REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-dev.radix.equinor.com/"
