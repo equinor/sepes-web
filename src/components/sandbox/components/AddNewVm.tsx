@@ -22,7 +22,8 @@ import {
     returnKeyOfDisplayValue,
     validateUsername,
     filterOs,
-    returnDisplayName
+    returnDisplayName,
+    returnVMnameVariant
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
@@ -288,6 +289,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     autoComplete="off"
                     label="Name"
                     meta={returnLimitMeta(20, vm.name)}
+                    variant={returnVMnameVariant(vm.name)}
                     data-cy="vm_name"
                     inputIcon={
                         <Tooltip title="The value must be between 3 and 20 characters long" placement="right">

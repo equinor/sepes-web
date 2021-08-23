@@ -33,7 +33,8 @@ export const validateUserInput = (
         vm.name !== '' &&
         vm.operatingSystem !== '' &&
         vm.size !== '' &&
-        usernameIsValid
+        usernameIsValid &&
+        validateVmName(vm.name)
     ) {
         return true;
     }
@@ -83,6 +84,16 @@ export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boole
         return 'default';
     }
     if (usernameIsValid) {
+        return 'success';
+    }
+    return 'error';
+};
+
+export const returnVMnameVariant = (vmName: string) => {
+    if (vmName === '' || vmName === undefined) {
+        return 'default';
+    }
+    if (validateVmName(vmName)) {
         return 'success';
     }
     return 'error';
