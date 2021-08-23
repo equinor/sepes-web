@@ -22,7 +22,8 @@ import {
     returnKeyOfDisplayValue,
     validateUsername,
     filterOs,
-    returnDisplayName
+    returnDisplayName,
+    checkIfAddNewVmHasUnsavedChanges
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
@@ -173,9 +174,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     }, [vm.username, vm.operatingSystem]);
 
     useEffect(() => {
-        return () => {
-            // setOsFilter([]);
-        };
+        setHasChanged(checkIfAddNewVmHasUnsavedChanges(vm));
     }, []);
 
     const handleDropdownChange = (value, name: string): void => {
