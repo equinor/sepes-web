@@ -33,8 +33,7 @@ export const validateUserInput = (
         vm.name !== '' &&
         vm.operatingSystem !== '' &&
         vm.size !== '' &&
-        usernameIsValid &&
-        validateVmName(vm.name)
+        usernameIsValid
     ) {
         return true;
     }
