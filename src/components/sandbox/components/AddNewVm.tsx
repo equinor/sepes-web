@@ -23,6 +23,7 @@ import {
     validateUsername,
     filterOs,
     returnDisplayName,
+    returnVMnameVariant,
     checkIfAddNewVmHasUnsavedChanges
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
@@ -287,6 +288,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     autoComplete="off"
                     label="Name"
                     meta={returnLimitMeta(20, vm.name)}
+                    variant={returnVMnameVariant(vm.name)}
                     data-cy="vm_name"
                     inputIcon={
                         <Tooltip title="The value must be between 3 and 20 characters long" placement="right">

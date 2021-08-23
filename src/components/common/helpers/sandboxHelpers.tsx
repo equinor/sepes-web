@@ -94,6 +94,16 @@ export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boole
     return 'error';
 };
 
+export const returnVMnameVariant = (vmName: string) => {
+    if (vmName === '' || vmName === undefined) {
+        return 'default';
+    }
+    if (validateVmName(vmName)) {
+        return 'success';
+    }
+    return 'error';
+};
+
 export const validateVmName = (vmName: string) => {
     if (vmName === '' || vmName === undefined) {
         return false;
