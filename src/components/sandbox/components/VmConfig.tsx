@@ -23,7 +23,6 @@ type VmConfigProps = {
     sandbox: SandboxObj;
     resources: any;
     getResources: any;
-    loadingSandbox: boolean;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -37,7 +36,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
     sandbox,
     resources,
     getResources,
-    loadingSandbox,
     permissions,
     setUpdateCache,
     updateCache,
