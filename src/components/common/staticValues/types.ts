@@ -11,3 +11,10 @@ export const resourceStatus = {
     ok: 'Ok',
     queued: 'queued'
 };
+
+export const inputErrorsVmRules = {
+    equalRules: 'Two or more rules are equal',
+    notAllFieldsFilled: 'Enabled when all fields of rules are filled out',
+    notValidIp: 'You entered an invalid IP',
+    ok: ''
+};

@@ -130,11 +130,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     return (
         <>
-            <Prompt
-                hasChanged={hasChanged}
-                fallBackAddress={'/studies/' + studyId}
-                url={'/studies/' + studyId + '/sandboxes/' + sandboxId}
-            />
+            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
             {!SandboxResponse.notFound ? (
                 step !== undefined ? (
                     <>
@@ -170,7 +166,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                     showAddNewVm={sandbox.permissions && sandbox.permissions.update}
                                     resources={resources}
                                     getResources={getResources}
-                                    loadingSandbox={SandboxResponse.loading}
                                     permissions={sandbox.permissions}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}

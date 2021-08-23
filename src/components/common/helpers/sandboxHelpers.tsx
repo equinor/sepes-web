@@ -9,8 +9,13 @@ import {
     VmObj,
     VmUsernameObj
 } from '../interfaces';
-import { resourceStatus, resourceType } from '../staticValues/types';
-import { passwordValidate, validateResourceName } from './helpers';
+import { inputErrorsVmRules, resourceStatus, resourceType } from '../staticValues/types';
+import {
+    checkIfInputIsNumberWihoutCharacters,
+    checkIfValidIp,
+    passwordValidate,
+    validateResourceName
+} from './helpers';
 
 export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
     if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !wbsCode) {
@@ -255,4 +260,74 @@ export const returnDisplayName = (list: any, key: string): string => {
         return displayName.displayValue;
     }
     return '';
+};
+
+export const checkIfAnyVmRulesHasChanged = (hasChangedVmRules): boolean => {
+    const indexHasChanged = hasChangedVmRules.filter((x: any) => x.hasChanged === true);
+    if (indexHasChanged.length > 0) {
+        return true;
+    }
+    return false;
+};
+
+export const checkIfEqualRules = (vm: VmObj): boolean => {
+    if (vm.rules.length < 2) {
+        return false;
+    }
+    for (let i = 1; i < vm.rules.length; i++) {
+        for (let j = i + 1; j < vm.rules.length; j++) {
+            if (vm.rules[i].ip === vm.rules[j].ip && vm.rules[i].port.toString() === vm.rules[j].port.toString()) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+export const checkIfSaveIsEnabled = (hasChangedVmRules, vm, inputError, setInputError): boolean => {
+    const hasChangedIndex = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+    if (hasChangedIndex === -1) {
+        return false;
+    }
+    if (!vm.rules || !hasChangedVmRules[hasChangedIndex].hasChanged) {
+        return false;
+    }
+
+    if (checkIfEqualRules(vm)) {
+        if (inputError !== inputErrorsVmRules.equalRules) {
+            setInputError(inputErrorsVmRules.equalRules);
+        }
+        return false;
+    }
+
+    let enabled = true;
+    vm.rules.forEach((rule) => {
+        if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
+            enabled = false;
+        }
+        if (rule.direction === 0 && !checkIfInputIsNumberWihoutCharacters(rule.port)) {
+            enabled = false;
+        }
+        if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
+            enabled = false;
+            if (inputError !== inputErrorsVmRules.notAllFieldsFilled) {
+                setInputError(inputErrorsVmRules.notAllFieldsFilled);
+            }
+        }
+    });
+    return enabled;
+};
+
+export const checkIfAddNewVmHasUnsavedChanges = (vm: VmObj) => {
+    if (
+        vm.name !== '' ||
+        vm.operatingSystem !== '' ||
+        vm.operatingSystem !== '' ||
+        vm.password !== '' ||
+        vm.size !== '' ||
+        vm.dataDisks.length > 0
+    ) {
+        return true;
+    }
+    return false;
 };
