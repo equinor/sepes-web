@@ -70,13 +70,6 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
-const inputErrors = {
-    equalRules: 'Two or more rules are equal',
-    notAllFieldsFilled: 'Enabled when all fields of rules are filled out',
-    notValidIp: 'You entered an invalid IP',
-    ok: ''
-};
-
 const numberOfPorts = 65535;
 
 const VmDetails: React.FC<VmDetailsProps> = ({
