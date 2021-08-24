@@ -53,7 +53,7 @@ const CoreDevDropdown = (props: any) => {
     const useOverflow = props.useOverflow || false;
     const [selectedOption, setSelectedOption] = useState({
         key: '',
-        displayValue: props.preSlectedValue || 'Please select...'
+        displayValue: props.preSelectedValue || 'Please select...'
     });
 
     useEffect(() => {

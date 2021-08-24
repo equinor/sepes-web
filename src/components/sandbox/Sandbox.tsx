@@ -12,6 +12,7 @@ import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { getResourceStatus } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
+import Prompt from 'components/common/Promt';
 
 const Wrapper = styled.div`
     display: grid;
@@ -63,6 +64,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
             SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
             undefined
     );
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
 
     useEffect(() => {
         return () => {
@@ -93,8 +95,10 @@ const Sandbox: React.FC<SandboxProps> = () => {
     };
 
     const setNewPhase = (phase: any) => {
-        setStep(phase);
-        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
+        if (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)]) {
+            setStep(phase);
+            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
+        }
     };
 
     const setNewCostanalysisLink = (link: any) => {
@@ -124,56 +128,61 @@ const Sandbox: React.FC<SandboxProps> = () => {
         }
     };
 
-    return !SandboxResponse.notFound ? (
-        step !== undefined ? (
-            <>
-                {SandboxResponse.loading && (
-                    <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
-                )}
-                <Wrapper>
-                    <StepBar
-                        sandbox={sandbox}
-                        setSandbox={setSandbox}
-                        step={step}
-                        setStep={setStep}
-                        studyId={studyId}
-                        sandboxId={sandboxId}
-                        setUpdateCache={setUpdateCache}
-                        updateCache={updateCache}
-                        setUserClickedDelete={setUserClickedDelete}
-                        userClickedDelete={userClickedDelete}
-                        setResources={setResources}
-                        setLoading={SandboxResponse.setLoading}
-                        setNewPhase={setNewPhase}
-                        setDeleteSandboxInProgress={setDeleteSandboxInProgress}
-                        setNewCostanalysisLink={setNewCostanalysisLink}
-                        controller={controller}
-                        vmsWithOpenInternet={vmsWithOpenInternet}
-                        makeAvailableInProgress={makeAvailableInProgress}
-                        setMakeAvailableInProgress={setMakeAvailableInProgress}
-                    />
-                    {returnStepComponent()}
-                    {(step === 0 || step === 1) && (
-                        <VmConfig
-                            sandbox={sandbox}
-                            showAddNewVm={sandbox.permissions && sandbox.permissions.update}
-                            resources={resources}
-                            getResources={getResources}
-                            loadingSandbox={SandboxResponse.loading}
-                            permissions={sandbox.permissions}
-                            setUpdateCache={setUpdateCache}
-                            updateCache={updateCache}
-                            controller={controller}
-                            setVmsWithOpenInternet={setVmsWithOpenInternet}
-                        />
-                    )}
-                </Wrapper>
-            </>
-        ) : (
-            <LoadingFull noTimeout={deleteSandboxInProgress} />
-        )
-    ) : (
-        <NotFound />
+    return (
+        <>
+            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
+            {!SandboxResponse.notFound ? (
+                step !== undefined ? (
+                    <>
+                        {SandboxResponse.loading && (
+                            <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
+                        )}
+                        <Wrapper>
+                            <StepBar
+                                sandbox={sandbox}
+                                setSandbox={setSandbox}
+                                step={step}
+                                setStep={setStep}
+                                studyId={studyId}
+                                sandboxId={sandboxId}
+                                setUpdateCache={setUpdateCache}
+                                updateCache={updateCache}
+                                setUserClickedDelete={setUserClickedDelete}
+                                userClickedDelete={userClickedDelete}
+                                setResources={setResources}
+                                setLoading={SandboxResponse.setLoading}
+                                setNewPhase={setNewPhase}
+                                setDeleteSandboxInProgress={setDeleteSandboxInProgress}
+                                setNewCostanalysisLink={setNewCostanalysisLink}
+                                controller={controller}
+                                vmsWithOpenInternet={vmsWithOpenInternet}
+                                makeAvailableInProgress={makeAvailableInProgress}
+                                setMakeAvailableInProgress={setMakeAvailableInProgress}
+                            />
+                            {returnStepComponent()}
+                            {(step === 0 || step === 1) && (
+                                <VmConfig
+                                    sandbox={sandbox}
+                                    showAddNewVm={sandbox.permissions && sandbox.permissions.update}
+                                    resources={resources}
+                                    getResources={getResources}
+                                    permissions={sandbox.permissions}
+                                    setUpdateCache={setUpdateCache}
+                                    updateCache={updateCache}
+                                    controller={controller}
+                                    setVmsWithOpenInternet={setVmsWithOpenInternet}
+                                    setHasChanged={setHasChanged}
+                                />
+                            )}
+                        </Wrapper>
+                    </>
+                ) : (
+                    <LoadingFull noTimeout={deleteSandboxInProgress} />
+                )
+            ) : (
+                <NotFound />
+            )}
+        </>
     );
 };
 

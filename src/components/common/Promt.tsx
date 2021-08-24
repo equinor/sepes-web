@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, Prompt as ReactPrompt } from 'react-router-dom';
 import { Dialog, Button, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
@@ -30,18 +30,34 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
         }
     }, [confirmedNavigation]);
 
+    const currentPath = useRef<any>(window.location.pathname);
+    useEffect(() => {
+        if (currentPath) {
+            currentPath.current = window.location.pathname;
+        }
+    }, []);
+
+    const handleBlockedNavigation = (nextLocation, action) => {
+        if (!confirmedNavigation) {
+            if (history.location.key === nextLocation.key) {
+                return false;
+            }
+            if (hasChanged) {
+                //A boolean state to check if the page has any unsaved changes
+                setVisibleScrim(true);
+                //A workaround for Prompt replacing the URL after page reload, even if navigation is cancelled
+                if (currentPath?.current !== nextLocation.pathname && action === 'POP') {
+                    window.history.forward();
+                }
+                return false;
+            }
+        }
+        return true;
+    };
+
     return (
         <div>
-            <ReactPrompt
-                when={hasChanged}
-                message={() => {
-                    if (!confirmedNavigation) {
-                        setVisibleScrim(true);
-                        return false;
-                    }
-                    return true;
-                }}
-            />
+            <ReactPrompt when={hasChanged} message={handleBlockedNavigation} />
             {visibleScrim && (
                 <Scrim onClose={() => setVisibleScrim(!visibleScrim)}>
                     <Dialog style={{ width: '400px', height: '220px' }}>
@@ -53,7 +69,12 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
                         <span style={{ marginLeft: 'auto' }}>
                             <Actions>
                                 <TempButtonWrapper>
-                                    <Button variant="outlined" onClick={() => setVisibleScrim(false)}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => {
+                                            setVisibleScrim(false);
+                                        }}
+                                    >
                                         Stay on page
                                     </Button>
                                     <Button

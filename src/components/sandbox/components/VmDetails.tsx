@@ -11,12 +11,11 @@ import {
     getVirtualMachineExtended,
     getVirtualMachineRule
 } from '../../../services/Api';
-import { resourceStatus, resourceType } from '../../common/staticValues/types';
+import { inputErrorsVmRules, resourceStatus, resourceType } from '../../common/staticValues/types';
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
-import Prompt from '../../common/Promt';
-import { getStudyId } from 'utils/CommonUtil';
+import { checkIfAnyVmRulesHasChanged, checkIfSaveIsEnabled } from 'components/common/helpers/sandboxHelpers';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -44,6 +43,7 @@ type VmDetailsProps = {
     setUpdateCache: any;
     updateCache: any;
     setVmSaved: any;
+    setHasChangedGlobal?: any;
     hasChangedVmRules: any;
     setHasChangedVmRules: any;
 };
@@ -70,13 +70,6 @@ const portsOptions = [
     { displayValue: 'Custom', key: 'Custom' }
 ];
 
-const inputErrors = {
-    equalRules: 'Two or more rules are equal',
-    notAllFieldsFilled: 'Enabled when all fields of rules are filled out',
-    notValidIp: 'You entered an invalid IP',
-    ok: ''
-};
-
 const numberOfPorts = 65535;
 
 const VmDetails: React.FC<VmDetailsProps> = ({
@@ -91,14 +84,15 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     updateCache,
     getResources,
     setVmSaved,
+    setHasChangedGlobal,
     hasChangedVmRules,
     setHasChangedVmRules
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
-    const [inputError, setInputError] = useState<string>(inputErrors.notAllFieldsFilled);
-    const studyId = getStudyId();
+    const [inputError, setInputError] = useState<string>(inputErrorsVmRules.notAllFieldsFilled);
+    const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError, setInputError);
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -110,8 +104,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     }, [index]);
 
     useEffect(() => {
-        checkIfAnyVmRulesHasChanged();
+        setHasChanged(checkIfAnyVmRulesHasChanged(hasChangedVmRules));
     }, [hasChangedVmRules]);
+
+    useEffect(() => {
+        setHasChangedGlobal(hasChanged);
+    }, [hasChanged]);
 
     const getKey = () => {
         const res = keyCount++;
@@ -191,15 +189,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             }
         });
         return res;
-    };
-
-    const checkIfAnyVmRulesHasChanged = () => {
-        const indexHasChanged = hasChangedVmRules.filter((x: any) => x.hasChanged === true);
-        if (indexHasChanged.length > 0) {
-            setHasChanged(true);
-        } else {
-            setHasChanged(false);
-        }
     };
 
     const updateHasChanged = (_hasChanged: boolean) => {
@@ -319,54 +308,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         setVms(tempsVms);
     };
 
-    const checkIfEqualRules = (): boolean => {
-        if (vm.rules.length < 2) {
-            return false;
-        }
-        for (let i = 1; i < vm.rules.length; i++) {
-            for (let j = i + 1; j < vm.rules.length; j++) {
-                if (vm.rules[i].ip === vm.rules[j].ip && vm.rules[i].port.toString() === vm.rules[j].port.toString()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    const checkIfSaveIsEnabled = (): boolean => {
-        const hasChangedIndex = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
-        if (hasChangedIndex === -1) {
-            return false;
-        }
-        if (!vm.rules || !hasChangedVmRules[hasChangedIndex].hasChanged) {
-            return false;
-        }
-
-        if (checkIfEqualRules()) {
-            if (inputError !== inputErrors.equalRules) {
-                setInputError(inputErrors.equalRules);
-            }
-            return false;
-        }
-
-        let enabled = true;
-        vm.rules.forEach((rule) => {
-            if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
-                enabled = false;
-            }
-            if (rule.direction === 0 && !checkIfInputIsNumberWihoutCharacters(rule.port)) {
-                enabled = false;
-            }
-            if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
-                enabled = false;
-                if (inputError !== inputErrors.notAllFieldsFilled) {
-                    setInputError(inputErrors.notAllFieldsFilled);
-                }
-            }
-        });
-        return enabled;
-    };
-
     const getMyIp = async () => {
         return fetch('https://api.ipify.org?format=json')
             .then((response) => {
@@ -403,7 +344,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     return (
         <>
-            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
             <Wrapper>
                 <VmProperties
                     vmProperties={vm}
@@ -455,7 +395,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         }
                                                         name="useClientIp"
                                                         tabIndex={0}
-                                                        preSlectedValue={'Custom'}
+                                                        preSelectedValue={'Custom'}
                                                         data-cy="vm_rule_useClientIp"
                                                         disabled={!permissions.editInboundRules}
                                                     />
@@ -498,7 +438,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                             handleDropdownChange('protocol', ruleNumber, e);
                                                         }}
                                                         name="protocol"
-                                                        preSlectedValue={rule.protocol || 'Custom'}
+                                                        preSelectedValue={rule.protocol || 'Custom'}
                                                         data-cy="vm_rule_protocol"
                                                         disabled={!permissions.editInboundRules}
                                                         width="240px"
@@ -617,12 +557,12 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                         </Body>
                     </Table>
                     <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                        <Tooltip title={checkIfSaveIsEnabled() || !hasChanged ? '' : inputError} placement="left">
+                        <Tooltip title={saveIsEnabled || !hasChanged ? '' : inputError} placement="left">
                             <Button
                                 onClick={() => {
                                     saveRule(vm.rules);
                                 }}
-                                disabled={!checkIfSaveIsEnabled()}
+                                disabled={!saveIsEnabled}
                                 data-cy="vm_rule_save"
                             >
                                 Save

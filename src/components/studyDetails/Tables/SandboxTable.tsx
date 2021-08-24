@@ -5,6 +5,7 @@ import { chevron_right } from '@equinor/eds-icons';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
+import TextTruncate from 'components/common/customComponents/infoDisplayComponents/TextTruncate';
 
 const { Body, Row, Cell, Head } = Table;
 const icons = {
@@ -21,7 +22,11 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
     const history = useHistory();
     const returnCell = (value: string, sandboxId: string, type: 'icon' | 'text') => {
         //This means it is a study specific dataset
-        return <Cell>{type === 'icon' ? <Icon name="chevron_right" size={24} /> : value}</Cell>;
+        return (
+            <Cell>
+                {type === 'icon' ? <Icon name="chevron_right" size={24} /> : <TextTruncate inputText={value} />}
+            </Cell>
+        );
     };
 
     const redirectOnCellClick = (row: any) => {

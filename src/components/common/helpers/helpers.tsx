@@ -1,5 +1,6 @@
 /*eslint-disable no-restricted-properties, react/no-array-index-key */
 import React from 'react';
+import truncateLength from '../staticValues/lenghts';
 
 export const lineBreak = (text) => {
     return text
@@ -57,7 +58,7 @@ export const returnLimitMeta = (limit: number, value: string) => {
     return '0/' + limit;
 };
 
-export const truncate = (input: string, allowedLength: number) => {
+export const truncate = (input: string, allowedLength = truncateLength) => {
     if (input && input.length > allowedLength) {
         return input.substring(0, allowedLength) + '...';
     }

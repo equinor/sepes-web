@@ -21,7 +21,10 @@ import {
     arrayObjectsToArrayString,
     returnKeyOfDisplayValue,
     validateUsername,
-    filterOs
+    filterOs,
+    returnDisplayName,
+    returnVMnameVariant,
+    checkIfAddNewVmHasUnsavedChanges
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
@@ -90,6 +93,13 @@ type AddNewVmProps = {
     setUpdateCache: any;
     updateCache: any;
     getResources: any;
+    setVm: any;
+    vm: VmObj;
+    setSizeFilter: any;
+    sizeFilter: any;
+    setOsFilter: any;
+    osFilter: any;
+    setHasChanged: any;
 };
 
 const limits = {
@@ -120,21 +130,16 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     os,
     setUpdateCache,
     updateCache,
-    getResources
+    getResources,
+    setVm,
+    vm,
+    setSizeFilter,
+    sizeFilter,
+    setOsFilter,
+    osFilter,
+    setHasChanged
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
-    const [vm, setVm] = useState<VmObj>({
-        id: '',
-        name: '',
-        region: 'norwayeast',
-        size: '',
-        operatingSystem: '',
-        distro: 'win2019datacenter',
-        username: '',
-        password: '',
-        linkToExternalSystem: '',
-        dataDisks: []
-    });
     const [actualVmName, setActualVmName] = useState<string>('');
     const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
     const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
@@ -144,8 +149,6 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     const [validatingUsername, setValidatingUsername] = useState<boolean>(false);
     const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [sizeFilter, setSizeFilter] = useState<any>([]);
-    const [osFilter, setOsFilter] = useState<any>([]);
     const width = '400px';
 
     useEffect(() => {
@@ -172,12 +175,11 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     }, [vm.username, vm.operatingSystem]);
 
     useEffect(() => {
-        return () => {
-            setOsFilter([]);
-        };
+        setHasChanged(checkIfAddNewVmHasUnsavedChanges(vm));
     }, []);
 
     const handleDropdownChange = (value, name: string): void => {
+        setHasChanged(true);
         if (name === 'operatingSystem') {
             setUsernameHelpText('');
         }
@@ -191,6 +193,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const handleChange = (field: string, value: string) => {
+        setHasChanged(true);
         if (!checkColumDoesNotExceedInputLength(limits, value, field)) {
             return;
         }
@@ -201,10 +204,25 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const createVm = () => {
+        setHasChanged(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
         createVirtualMachine(sandboxId, vm).then((result: any) => {
             if (result && !result.message) {
+                setSizeFilter([]);
+                setOsFilter([]);
+                setVm({
+                    id: '',
+                    name: '',
+                    region: 'norwayeast',
+                    size: '',
+                    operatingSystem: '',
+                    distro: 'win2019datacenter',
+                    username: '',
+                    password: '',
+                    linkToExternalSystem: '',
+                    dataDisks: []
+                });
                 getResources();
                 const vmsList: any = [...vms];
                 vmsList.push(result);
@@ -270,6 +288,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                     autoComplete="off"
                     label="Name"
                     meta={returnLimitMeta(20, vm.name)}
+                    variant={returnVMnameVariant(vm.name)}
                     data-cy="vm_name"
                     inputIcon={
                         <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
@@ -304,6 +323,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                                     onChange={(e: any) =>
                                         handleCheck(osType.windows, e.target.checked, osFilter, setOsFilter)
                                     }
+                                    defaultChecked={osFilter.includes(osType.windows)}
                                 />
                             </li>
                             <li>
@@ -312,6 +332,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                                     onChange={(e: any) =>
                                         handleCheck(osType.linux, e.target.checked, osFilter, setOsFilter)
                                     }
+                                    defaultChecked={osFilter.includes(osType.linux)}
                                 />
                             </li>
                             <li>
@@ -321,6 +342,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                                         handleCheck(osType.recommended, e.target.checked, osFilter, setOsFilter);
                                         setDisplayRecommendedOs(e.target.checked);
                                     }}
+                                    defaultChecked={osFilter.includes(osType.recommended)}
                                 />
                             </li>
                         </UnstyledList>
@@ -340,6 +362,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         placeholder="Please search/select..."
                         className="singleSelect"
                         data-cy="vm_operatingSystem"
+                        initialSelectedItem={returnDisplayName(os, vm.operatingSystem)}
                     />
                 </div>
                 <div style={{ marginTop: '24px' }} />
@@ -393,6 +416,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             onChange={(e: any) =>
                                 handleCheck(sizeType.memory, e.target.checked, sizeFilter, setSizeFilter)
                             }
+                            defaultChecked={sizeFilter.includes(sizeType.memory)}
                         />
                     </li>
                     <li>
@@ -401,6 +425,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             onChange={(e: any) =>
                                 handleCheck(sizeType.gpu, e.target.checked, sizeFilter, setSizeFilter)
                             }
+                            defaultChecked={sizeFilter.includes(sizeType.gpu)}
                         />
                     </li>
                     <li>
@@ -409,6 +434,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                             onChange={(e: any) =>
                                 handleCheck(sizeType.compute, e.target.checked, sizeFilter, setSizeFilter)
                             }
+                            defaultChecked={sizeFilter.includes(sizeType.compute)}
                         />
                     </li>
                 </UnstyledList>
@@ -438,6 +464,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 className="singleSelect"
                 placeholder="Please search/select..."
                 data-cy="vm_size"
+                initialSelectedItem={returnDisplayName(sizes, vm.size)}
             />
             <CoreDevDropdown
                 label="Data disk"
@@ -448,6 +475,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                 data-cy="vm_dataDisks"
                 useOverflow
                 tabIndex={0}
+                preSelectedValue={returnDisplayName(disks, vm.dataDisks[0])}
                 helperText={
                     vm.dataDisks.length > 0
                         ? 'Data disk is not accessible until you initalize and partition the hardrive within the operating system'

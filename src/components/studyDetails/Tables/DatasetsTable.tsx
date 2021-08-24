@@ -5,6 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { EquinorIcon } from '../../common/StyledComponents';
 import '../../../styles/Table.scss';
 import { truncate } from 'components/common/helpers/helpers';
+import TextTruncate from '../../common/customComponents/infoDisplayComponents/TextTruncate';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -15,13 +16,23 @@ const DatasetsTable = (props: any) => {
     const returnCell = (row: any, value: string, type: 'text' | 'icon') => {
         //This means it is a study specific dataset
         if (row.studyId) {
-            return <Cell>{type === 'icon' ? EquinorIcon('chevron_right', '', 24, () => {}, true) : value}</Cell>;
+            return (
+                <Cell>
+                    {type === 'icon' ? (
+                        EquinorIcon('chevron_right', '', 24, () => {}, true)
+                    ) : (
+                        <TextTruncate inputText={value} />
+                    )}
+                </Cell>
+            );
         }
         return (
             <Cell>
-                {editMode && type === 'icon' && props.disabled
-                    ? EquinorIcon('close', '', 24, () => props.removeDataset(row), true)
-                    : value}
+                {editMode && type === 'icon' && props.disabled ? (
+                    EquinorIcon('close', '', 24, () => props.removeDataset(row), true)
+                ) : (
+                    <TextTruncate inputText={value} />
+                )}
             </Cell>
         );
     };
@@ -66,8 +77,9 @@ const DatasetsTable = (props: any) => {
                                                         onMouseLeave={() => setMouseHoverSandbox(false)}
                                                     >
                                                         {index === row.sandboxes.length - 1
-                                                            ? sandbox && truncate(sandbox.name, 48)
-                                                            : sandbox.name && truncate(sandbox.name, 48) + ', '}
+                                                            ? sandbox && truncate(sandbox.name)
+                                                            : sandbox.name &&
+                                                              <TextTruncate inputText={sandbox.name} /> + ', '}
                                                     </Link>
                                                 );
                                             })}

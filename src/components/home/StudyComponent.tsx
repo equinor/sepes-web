@@ -6,6 +6,7 @@ import CustomLogoComponent from '../common/customComponents/CustomLogoComponent'
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
 import { truncate } from 'components/common/helpers/helpers';
+import truncateLength from 'components/common/staticValues/lenghts';
 
 const icons = {
     visibility,
@@ -66,8 +67,6 @@ const LogoTitleWrapper = styled.div`
 type StudyComponentProps = {
     study: StudyObj;
 };
-
-const truncateLength = 48;
 
 const StudyComponent: React.FC<StudyComponentProps> = ({ study }) => {
     const { name, description, restricted, id, vendor, logoUrl } = study;

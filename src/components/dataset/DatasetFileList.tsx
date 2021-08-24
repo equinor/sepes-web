@@ -1,6 +1,6 @@
 /*eslint-disable consistent-return */
 import React, { useState, useEffect } from 'react';
-import { Icon, Button, LinearProgress, DotProgress, Search } from '@equinor/eds-core-react';
+import { Icon, Button, LinearProgress, DotProgress, Search, EdsProvider } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { bytesToSize, truncate } from '../common/helpers/helpers';
 import { checkIfDeleteIsEnabled, handleScroll } from 'components/common/helpers/datasetHelpers';
@@ -217,25 +217,27 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
                                 return (
                                     <div
                                         key={_file.path ?? _file.name}
-                                        style={{ marginTop: '4px', marginRight: '8px' }}
+                                        style={{ marginTop: '16px', marginRight: '8px' }}
                                     >
                                         <AttachmentWrapper>
                                             <div>{truncate(_file.path, 100) ?? truncate(_file.name, 100)}</div>
                                             <div>{bytesToSize(_file.size)}</div>
-                                            <Button
-                                                variant="ghost_icon"
-                                                onClick={() => removeFile(_file, i)}
-                                                style={{ marginTop: '-14px' }}
-                                                data-cy="dataset_remove_file"
-                                                disabled={checkIfDeleteIsEnabled(_file, dataset, progressArray)}
-                                            >
-                                                <Icon
-                                                    color="#007079"
-                                                    name="delete_forever"
-                                                    size={24}
-                                                    style={{ cursor: 'pointer' }}
-                                                />
-                                            </Button>
+                                            <EdsProvider density="compact">
+                                                <Button
+                                                    variant="ghost_icon"
+                                                    onClick={() => removeFile(_file, i)}
+                                                    style={{ marginTop: '-10px' }}
+                                                    data-cy="dataset_remove_file"
+                                                    disabled={checkIfDeleteIsEnabled(_file, dataset, progressArray)}
+                                                >
+                                                    <Icon
+                                                        color="#007079"
+                                                        name="delete_forever"
+                                                        size={24}
+                                                        style={{ cursor: 'pointer' }}
+                                                    />
+                                                </Button>
+                                            </EdsProvider>
                                         </AttachmentWrapper>
                                         {_file.percent && numberOfFilesInProgress <= 100 && (
                                             <LinearProgress

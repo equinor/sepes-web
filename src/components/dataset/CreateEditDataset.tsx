@@ -87,7 +87,7 @@ const dataClassificationsList = [
 ];
 
 const limits = {
-    name: 64
+    name: 128
 };
 
 const width = '512px';
@@ -355,7 +355,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         options={dataClassificationsList}
                         onChange={handleDropdownChange}
                         name="classification"
-                        preSlectedValue={dataset?.classification}
+                        preSelectedValue={dataset?.classification}
                         data-cy="dataset_classification"
                         color="#FFFFFF"
                         tabIndex={0}
