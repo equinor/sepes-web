@@ -62,7 +62,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
         dataDisks: []
     });
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms);
+    const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms, undefined, undefined, false);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
     const [sizeFilter, setSizeFilter] = useState<any>([]);
     const [osFilter, setOsFilter] = useState<any>([]);
