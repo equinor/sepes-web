@@ -1,5 +1,6 @@
 [![Cypress Test](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress.yml)
 [![CodeQL](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml)
+![](https://byob.yarr.is/equinor/sepes-api/breaking_change_status)
 
 # sepes-web
 
