@@ -130,7 +130,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     return (
         <>
-            <Prompt hasChanged={hasChanged} fallBackAddress={'/studies/' + studyId} />
+            <Prompt hasChanged={hasChanged || SandboxResponse.loading} fallBackAddress={'/studies/' + studyId} />
             {!SandboxResponse.notFound ? (
                 step !== undefined ? (
                     <>
