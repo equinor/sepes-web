@@ -19,7 +19,11 @@ const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
 }) => {
     const history = useHistory();
     return (
-        <Tooltip title={breadcrumbText.length > truncateLength ? breadcrumbText : ''} placement="top" enterDelay={200}>
+        <Tooltip
+            title={breadcrumbText && breadcrumbText.length > truncateLength ? breadcrumbText : ''}
+            placement="top"
+            enterDelay={200}
+        >
             <Breadcrumbs.Breadcrumb
                 onClick={() => {
                     history.push(link);
