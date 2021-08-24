@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.33](https://github.com/equinor/sepes-web/compare/0.1.32...0.1.33) (2021-08-24)
+
+
+### Bug Fixes
+
+* **dataset:** remove file button circle went outside of component ([#1229](https://github.com/equinor/sepes-web/issues/1229)) ([cabd0b7](https://github.com/equinor/sepes-web/commit/cabd0b7ac3bf59bae4ad5dbcb0cb63e9dbbb89ca)), closes [#1223](https://github.com/equinor/sepes-web/issues/1223)
+* issue with prompt ([#1234](https://github.com/equinor/sepes-web/issues/1234)) ([6bcb2bb](https://github.com/equinor/sepes-web/commit/6bcb2bba1f5047d5b4d9f50ea2aefedca3d966f9)), closes [#1216](https://github.com/equinor/sepes-web/issues/1216) [#1233](https://github.com/equinor/sepes-web/issues/1233)
+* issues caused by missing nullcheck in a component ([#1239](https://github.com/equinor/sepes-web/issues/1239)) ([8b28b0e](https://github.com/equinor/sepes-web/commit/8b28b0e1d1dad58afd722e6f33b3331a94e3eb58))
+* keep vm input when changing tabs ([#1221](https://github.com/equinor/sepes-web/issues/1221)) ([ddc29c7](https://github.com/equinor/sepes-web/commit/ddc29c79d4db8af0552f951115385bbf754015fc)), closes [#1211](https://github.com/equinor/sepes-web/issues/1211)
+* **sandbox:** add prompt for unsaved changes ([#1213](https://github.com/equinor/sepes-web/issues/1213)) ([49f5566](https://github.com/equinor/sepes-web/commit/49f556684f179d5e58562909dff2512e93267ec1)), closes [#1209](https://github.com/equinor/sepes-web/issues/1209)
+* **sandbox:** make available ui bug ([#1224](https://github.com/equinor/sepes-web/issues/1224)) ([ce9fd5b](https://github.com/equinor/sepes-web/commit/ce9fd5b58936a77c864ce243dd7d1aac2845a794)), closes [#1220](https://github.com/equinor/sepes-web/issues/1220)
+* stop disabeling create button with invalid vm name ([#1235](https://github.com/equinor/sepes-web/issues/1235)) ([5151c71](https://github.com/equinor/sepes-web/commit/5151c71ce2f090125236cf8fc4bdb6f7fb843504)), closes [#1230](https://github.com/equinor/sepes-web/issues/1230)
+* truncate values when they exceed a specific limit ([#1226](https://github.com/equinor/sepes-web/issues/1226)) ([e93f4db](https://github.com/equinor/sepes-web/commit/e93f4db2ffe1d74072ae67d066c55e810252c029))
+* upgrade @material-ui/core from 4.12.2 to 4.12.3 ([#1232](https://github.com/equinor/sepes-web/issues/1232)) ([d81e063](https://github.com/equinor/sepes-web/commit/d81e06379567ae3a55b61ca0661e9bf6d786b49c))
+* upgrade @typescript-eslint/eslint-plugin from 4.28.5 to 4.29.0 ([#1237](https://github.com/equinor/sepes-web/issues/1237)) ([5f5a5f9](https://github.com/equinor/sepes-web/commit/5f5a5f920a0dbce10edc877d216a2b6756c946e9))
+* upgrade @typescript-eslint/parser from 4.28.5 to 4.29.0 ([#1236](https://github.com/equinor/sepes-web/issues/1236)) ([d34218f](https://github.com/equinor/sepes-web/commit/d34218fad8e043ddae012893f6a10766f4c0c517))
+
 ### [0.1.32](https://github.com/equinor/sepes-web/compare/0.1.31...0.1.32) (2021-08-20)
 
 ### [0.1.31](https://github.com/equinor/sepes-web/compare/0.1.30...0.1.31) (2021-08-18)
