@@ -287,7 +287,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     return isStandardDatasetAndCantEdit || canEditDataset || canCreateStudySpecificDataset ? (
         <>
-            <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
+            <Promt hasChanged={hasChanged || loading} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
                 <Wrapper>
                     <div>
