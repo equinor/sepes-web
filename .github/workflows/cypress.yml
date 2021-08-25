@@ -121,7 +121,7 @@ jobs:
       - uses: Amadevus/pwsh-script@v2
         id: my-script
         with:
-          script: Get-Content cypress_test_summary3.txt
+          script: Get-Content cypress_test_summary3.txt -First 4
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
