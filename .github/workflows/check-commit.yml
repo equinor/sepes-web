@@ -24,7 +24,6 @@ jobs:
     steps:
       - name: Check Commit Type
         uses: gsactions/commit-message-checker@v1
-        continue-on-error: true
         with:
           pattern: '\b(?:l\w*ion|feat|fix|wip|build|ci|docs|style|refactor|perf|test|chore|BREAKING CHANGE)\b'
           flags: 'gm'
