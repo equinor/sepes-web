@@ -28,7 +28,7 @@ jobs:
           pattern: '\b(?:l\w*ion|feat|fix|wip|build|ci|docs|style|refactor|perf|test|chore|BREAKING CHANGE)\b'
           flags: 'gm'
           error: 'Your first line has to contain a commit type like "feat/fix/test: <WhatYouDid>".'
-          checkAllCommitMessages: 'true'
+          checkAllCommitMessages: 'false'
           accessToken: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: comment PR
