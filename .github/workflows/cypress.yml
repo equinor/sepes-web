@@ -120,7 +120,6 @@ jobs:
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
-        if: ${{ failure() }}
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
