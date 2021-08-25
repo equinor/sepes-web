@@ -85,6 +85,7 @@ const StudyDetails = () => {
     const permissions = useContext(Permissions);
     const displayStudyInfo = !studyResponse.loading && study;
     const noTimeout: any = deleteStudyInProgress || loading;
+    const displayPrompt = hasChanged || studySaveInProgress;
 
     useEffect(() => {
         return () => {
@@ -154,7 +155,7 @@ const StudyDetails = () => {
             {studyResponse.notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
-                <Promt hasChanged={hasChanged} />
+                <Promt hasChanged={displayPrompt} />
                 {displayStudyInfo ? (
                     <StudyComponentFull
                         study={study}
