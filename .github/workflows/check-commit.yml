@@ -31,11 +31,11 @@ jobs:
           checkAllCommitMessages: 'true'
           accessToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: comment PR
-        uses: unsplash/comment-on-pr@master
-        if: ${{ failure() }}
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: "Invalid commit syntax, make sure you use conventional commits - https://www.conventionalcommits.org/"
-          check_for_duplicate_msg: true 
+      # - name: comment PR
+      #   uses: unsplash/comment-on-pr@master
+      #   if: ${{ failure() }}
+      #   env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     msg: "Invalid commit syntax, make sure you use conventional commits - https://www.conventionalcommits.org/"
+      #     check_for_duplicate_msg: true 
