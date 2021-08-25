@@ -118,12 +118,17 @@ jobs:
       - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
         if: ${{ github.event_name == 'pull_request' }}
 
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script
+        with:
+          script: Get-Content cypress_test_summary3.txt
+
       - name: comment PR
         uses: unsplash/comment-on-pr@master
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: cypress_test_summary3.txt
+          msg: ${{ steps.my-script.outputs.result }}
           check_for_duplicate_msg: true   
 
       # - name: comment PR
