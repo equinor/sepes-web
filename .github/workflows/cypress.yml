@@ -119,12 +119,21 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
 
       - name: comment PR
-        uses: machine-learning-apps/pr-comment@master
-        if: ${{ github.event_name == 'pull_request' }}
+        uses: unsplash/comment-on-pr@master
+        if: ${{ failure() }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: cypress_test_summary3.txt
+          msg: cypress_test_summary3.txt
+          check_for_duplicate_msg: true   
+
+      # - name: comment PR
+      #   uses: machine-learning-apps/pr-comment@master
+      #   if: ${{ github.event_name == 'pull_request' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     path: cypress_test_summary3.txt
 
 
       - run: npx nyc report --reporter json  --report-dir coverage
