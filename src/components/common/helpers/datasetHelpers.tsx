@@ -84,3 +84,14 @@ export const handleScroll = (e, onScrollEvent) => {
         onScrollEvent();
     }
 };
+
+export const returnFileListText = (dataset: DatasetObj, searchValue: string): string => {
+    if (dataset && dataset.storageAccountLink) {
+        if (searchValue !== '') {
+            return 'No files matching "' + searchValue + '"';
+        }
+        return ' No files uploaded yet';
+    }
+
+    return '';
+};
