@@ -126,7 +126,6 @@ jobs:
         with:
           path: cypress_test_summary3.txt
 
-
       - run: npx nyc report --reporter json  --report-dir coverage
       - name: Create coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
