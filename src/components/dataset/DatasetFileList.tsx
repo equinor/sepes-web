@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Icon, Button, LinearProgress, DotProgress, Search, EdsProvider } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { bytesToSize, truncate } from '../common/helpers/helpers';
-import { checkIfDeleteIsEnabled, handleScroll } from 'components/common/helpers/datasetHelpers';
+import { checkIfDeleteIsEnabled, handleScroll, returnFileListText } from 'components/common/helpers/datasetHelpers';
 import { getDatasetSasTokenDelete } from 'services/Api';
 import { getDatasetId, getStudyId } from 'utils/CommonUtil';
 import { getDatasetsFilesUrl } from 'services/ApiCallStrings';
@@ -193,6 +193,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
             }
         }, 200);
     };
+
     return (
         <>
             <div>
@@ -255,7 +256,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
                         </div>
                     ) : (
                         <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                            {dataset.storageAccountLink ? 'No files uploaded yet.' : ''}
+                            {returnFileListText(dataset, searchValue)}
                         </div>
                     )
                 ) : (
