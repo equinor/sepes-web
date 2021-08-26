@@ -6,7 +6,7 @@
         "@azure/msal-browser": "^2.16.1",
         "@azure/storage-blob": "^12.7.0",
         "@equinor/eds-core-react": "^0.13.1",
-        "@fortawesome/fontawesome-free": "^5.15.3",
+        "@fortawesome/fontawesome-free": "^5.15.4",
         "@fortawesome/fontawesome-svg-core": "^1.2.35",
         "@fortawesome/free-solid-svg-icons": "^5.15.3",
         "@fortawesome/react-fontawesome": "^0.1.15",
