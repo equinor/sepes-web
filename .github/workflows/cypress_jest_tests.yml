@@ -106,7 +106,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: Coverage-report
+          name: Cypress-Coverage-report
           path: coverage/lcov-report/
 
       - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
@@ -127,11 +127,6 @@ jobs:
           path: cypress_test_summary3.txt
 
       - run: npx nyc report --reporter json  --report-dir coverage
-
-
-      # - name: Create coverage report
-      #   run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-      #   continue-on-error: true
 
       - name: Test coverage
         uses: ArtiomTr/jest-coverage-report-action@v1.3
