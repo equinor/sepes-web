@@ -55,7 +55,7 @@ jobs:
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
 
-      - run: npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
+      - run: npm install
 
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
@@ -143,11 +143,18 @@ jobs:
           path: jest-coverage/lcov-report/
 
 
-      - run: npx istanbul-merge --out coverage2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+      - run: npx istanbul-merge --out ./coverage/coverage-summary2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
-      - run: npx istanbul report --include coverage2.json --dir totalCoverage html
+      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir totalCoverage html
 
       - uses: actions/upload-artifact@v2
         with:
           name: Total coverage report
           path: totalCoverage
+
+      - run: npx nyc report --reporter json-summary --report-dir coverage
+
+      - name: Set code coverage commit status 📫
+        run: npx -p check-code-coverage set-gh-status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

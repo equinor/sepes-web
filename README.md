@@ -1,4 +1,4 @@
-[![Cypress and jest Test](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml)
+[![Cypress and jest Test](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml) ![check-code-coverage](https://img.shields.io/badge/code--coverage-59.17%25-red)
 [![CodeQL](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml)
 ![](https://byob.yarr.is/equinor/sepes-api/breaking_change_status)
 ![check-code-coverage](https://img.shields.io/badge/code--coverage-80%-brightgreen)

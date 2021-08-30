@@ -8,17 +8,6 @@
     "videoUploadOnPasses": false,
     "nodeVersion": "system",
     "chromeWebSecurity": false,
-    "reporter": "cypress-multi-reporters",
-    "reporterOptions": {
-        "reporterEnabled": "mochawesome",
-        "mochawesomeReporterOptions": {
-            "reportDir": "test/cypress/reports/mocha",
-            "quiet": true,
-            "overwrite": false,
-            "html": false,
-            "json": true
-        }
-    },
     "env": {
         "TENANT_ID": "",
         "CLIENT_ID": "",
