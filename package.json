@@ -1,158 +1,162 @@
 {
-    "name": "sepes-web",
-    "version": "0.1.19",
-    "private": true,
-    "dependencies": {
-        "@azure/msal-browser": "^2.16.1",
-        "@azure/storage-blob": "^12.7.0",
-        "@equinor/eds-core-react": "^0.13.1",
-        "@fortawesome/fontawesome-free": "^5.15.4",
-        "@fortawesome/fontawesome-svg-core": "^1.2.36",
-        "@fortawesome/free-solid-svg-icons": "^5.15.4",
-        "@fortawesome/react-fontawesome": "^0.1.15",
-        "@material-ui/core": "^4.12.3",
-        "@microsoft/applicationinsights-web": "^2.6.5",
-        "@peculiar/webcrypto": "^1.1.7",
-        "@testing-library/jest-dom": "^4.2.4",
-        "@testing-library/react": "^9.5.0",
-        "@testing-library/user-event": "^7.2.1",
-        "@types/jest": "^24.9.1",
-        "@types/node": "^16.4.13",
-        "@types/react": "^17.0.16",
-        "@types/react-dom": "^17.0.9",
-        "@types/react-router": "^5.1.16",
-        "@types/react-router-dom": "^5.1.8",
-        "@types/reactstrap": "^8.7.1",
-        "@types/styled-components": "^5.1.12",
-        "@typescript-eslint/eslint-plugin": "^4.29.0",
-        "@typescript-eslint/parser": "^4.29.0",
-        "animate.css": "^4.1.1",
-        "axios": "^0.21.1",
-        "browser-image-compression": "^1.0.14",
-        "check-code-coverage": "^1.10.0",
-        "commitizen": "^4.2.4",
-        "copy-to-clipboard": "^3.3.1",
-        "css-what": ">=5.0.1",
-        "cypress-multi-reporters": "^1.5.0",
-        "enzyme": "^3.11.0",
-        "enzyme-adapter-react-16": "^1.15.6",
-        "identity-obj-proxy": "^3.0.0",
-        "istanbul-merge": "^1.1.1",
-        "jest-transform-stub": "^2.0.0",
-        "js-cookie": "^2.2.1",
-        "lodash": ">=4.17.19",
-        "lodash.debounce": "^4.0.8",
-        "node-forge": ">=0.10.0",
-        "node-sass": "^6.0.1",
-        "object-path": ">=0.11.6",
-        "postcss": ">=7.0.36",
-        "postcss-svgo": ">=5.0.2",
-        "react": "^17.0.2",
-        "react-copy-to-clipboard": "^5.0.3",
-        "react-dnd-html5-backend": "^14.0.0",
-        "react-dnd-html5-backend-cjs": "^9.5.1",
-        "react-dom": "^16.13.1",
-        "react-dropzone": "^11.3.4",
-        "react-keyed-file-browser": "^1.13.1",
-        "react-markdown": "^5.0.3",
-        "react-notifications-component": "^2.4.1",
-        "react-router": "^5.2.0",
-        "react-router-dom": "^5.2.0",
-        "react-scripts": "^4.0.3",
-        "react-select": "^4.3.1",
-        "reactstrap": "^8.9.0",
-        "sass-loader": "12.1.0",
-        "serialize-javascript": ">=3.1.0",
-        "styled-components": "^5.3.0",
-        "ts-jest": "^26.5.6",
-        "typescript": "^4.3.5"
-    },
-    "scripts": {
-        "start": "react-scripts -r @cypress/instrument-cra start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "commit": "git-cz",
-        "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
-        "analyze": "node scripts/analyze.js"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@babel/plugin-proposal-class-properties": "^7.13.0",
-        "@babel/plugin-syntax-typescript": "^7.12.13",
-        "@cypress/code-coverage": "^3.9.6",
-        "@cypress/instrument-cra": "^1.1.1",
-        "@typescript-eslint/eslint-plugin": "^4.29.0",
-        "@typescript-eslint/parser": "^4.29.0",
-        "babel-plugin-istanbul": "^6.0.0",
-        "cypress": "^7.6.0",
-        "cypress-dark": "^1.7.14",
-        "cypress-file-upload": "^5.0.7",
-        "cypress-plugin-retries": "^1.5.2",
-        "cz-conventional-changelog": "^3.2.0",
-        "eslint-config-airbnb": "^18.1.0",
-        "eslint-plugin-import": "^2.20.1",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-react": "^7.19.0",
-        "eslint-plugin-react-hooks": "^2.5.0",
-        "eslint-plugin-typescript": "^0.14.0",
-        "progress-bar-webpack-plugin": "^2.1.0",
-        "webpack-bundle-analyzer": "^3.8.0"
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
-        }
-    },
-    "nyc": {
-        "report-dir": "cypress-coverage",
-        "reporter": [
-            "html"
-        ]
-    },
-    "jest": {
-        "moduleNameMapper": {
-            "^dnd-core$": "dnd-core/dist/cjs",
-            "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
-            "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
-            "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
-            "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs",
-            "^react-keyed-file-browser$": "dnd-core/dist/cjs"
-        },
-        "coverageReporters": [
-            "text-summary",
-            "lcov",
-            "json"
-        ]
-    },
-    "resolutions": {
-        "**/@typescript-eslint/eslint-plugin": "^4.1.1",
-        "**/@typescript-eslint/parser": "^4.1.1"
-    },
-    "babel": {
-        "presets": [
-            "@babel/preset-env",
-            "@babel/preset-typescript",
-            "@babel/preset-react"
-        ],
-        "plugins": [
-            "@babel/plugin-proposal-class-properties",
-            "@babel/plugin-syntax-jsx",
-            "@babel/plugin-syntax-typescript"
-        ]
+  "name": "sepes-web",
+  "version": "0.1.19",
+  "private": true,
+  "dependencies": {
+    "@azure/msal-browser": "^2.16.1",
+    "@azure/storage-blob": "^12.7.0",
+    "@equinor/eds-core-react": "^0.13.1",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
+    "@material-ui/core": "^4.12.3",
+    "@microsoft/applicationinsights-web": "^2.6.5",
+    "@peculiar/webcrypto": "^1.1.7",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^16.4.13",
+    "@types/react": "^17.0.16",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router": "^5.1.16",
+    "@types/react-router-dom": "^5.1.8",
+    "@types/reactstrap": "^8.7.1",
+    "@types/styled-components": "^5.1.12",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "animate.css": "^4.1.1",
+    "axios": "^0.21.1",
+    "browser-image-compression": "^1.0.14",
+    "check-code-coverage": "^1.10.0",
+    "commitizen": "^4.2.4",
+    "copy-to-clipboard": "^3.3.1",
+    "css-what": ">=5.0.1",
+    "cypress-multi-reporters": "^1.5.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "identity-obj-proxy": "^3.0.0",
+    "istanbul-merge": "^1.1.1",
+    "jest-transform-stub": "^2.0.0",
+    "js-cookie": "^2.2.1",
+    "lodash": ">=4.17.19",
+    "lodash.debounce": "^4.0.8",
+    "node-forge": ">=0.10.0",
+    "node-sass": "^6.0.1",
+    "object-path": ">=0.11.6",
+    "postcss": ">=7.0.36",
+    "postcss-svgo": ">=5.0.2",
+    "react": "^17.0.2",
+    "react-copy-to-clipboard": "^5.0.3",
+    "react-dnd-html5-backend": "^14.0.0",
+    "react-dnd-html5-backend-cjs": "^9.5.1",
+    "react-dom": "^16.13.1",
+    "react-dropzone": "^11.3.4",
+    "react-keyed-file-browser": "^1.13.1",
+    "react-markdown": "^5.0.3",
+    "react-notifications-component": "^2.4.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "react-select": "^4.3.1",
+    "reactstrap": "^8.9.0",
+    "sass-loader": "12.1.0",
+    "serialize-javascript": ">=3.1.0",
+    "styled-components": "^5.3.0",
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.3.5",
+    "@snyk/protect": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts -r @cypress/instrument-cra start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "commit": "git-cz",
+    "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
+    "analyze": "node scripts/analyze.js",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-syntax-typescript": "^7.12.13",
+    "@cypress/code-coverage": "^3.9.6",
+    "@cypress/instrument-cra": "^1.1.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "babel-plugin-istanbul": "^6.0.0",
+    "cypress": "^7.6.0",
+    "cypress-dark": "^1.7.14",
+    "cypress-file-upload": "^5.0.7",
+    "cypress-plugin-retries": "^1.5.2",
+    "cz-conventional-changelog": "^3.2.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
+    "eslint-plugin-typescript": "^0.14.0",
+    "progress-bar-webpack-plugin": "^2.1.0",
+    "webpack-bundle-analyzer": "^3.8.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage",
+    "reporter": [
+      "html"
+    ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^dnd-core$": "dnd-core/dist/cjs",
+      "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
+      "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
+      "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
+      "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs",
+      "^react-keyed-file-browser$": "dnd-core/dist/cjs"
+    },
+    "coverageReporters": [
+      "text-summary",
+      "lcov",
+      "json"
+    ]
+  },
+  "resolutions": {
+    "**/@typescript-eslint/eslint-plugin": "^4.1.1",
+    "**/@typescript-eslint/parser": "^4.1.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-syntax-jsx",
+      "@babel/plugin-syntax-typescript"
+    ]
+  },
+  "snyk": true
 }
