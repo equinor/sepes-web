@@ -102,7 +102,7 @@ jobs:
           name: cypress-videos
           path: cypress/videos
 
-      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+      - run: npx nyc report --reporter lcov --reporter json-summary --report-dir coverage
 
       - uses: actions/upload-artifact@v2
         with:
@@ -132,7 +132,7 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+          test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="json-summary"
 
       - name: Create jest coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
@@ -152,10 +152,12 @@ jobs:
           name: Total coverage report
           path: totalCoverage
 
+
+      - run: npx nyc report --reporter json --reporter text --report-dir coverage2
       - uses: actions/upload-artifact@v2
         with:
           name: coverage_to_check
-          path: coverage
+          path: coverage2
 
       - run: dir
 
