@@ -153,7 +153,7 @@ jobs:
           path: totalCoverage
 
 
-      - run: npx nyc report --reporter json-summary --report-dir ./coverage/coverage-summary.json
+      - run: npx nyc report --reporter json-summary --report-dir coverage
       - uses: actions/upload-artifact@v2
         with:
           name: coverage_to_check
