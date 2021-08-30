@@ -14,6 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Ensure coverage has not dropped 📈
+        run: npx -p check-code-coverage set-gh-status --check-against-readme --from coverage2.json
+        with:
+          --from: coverage2.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_SHA: ${{ github.event.after }}
+
       - uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
@@ -155,6 +163,8 @@ jobs:
 
       - name: Ensure coverage has not dropped 📈
         run: npx -p check-code-coverage set-gh-status --check-against-readme --from coverage2.json
+        with:
+          --from: coverage2.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_SHA: ${{ github.event.after }}
