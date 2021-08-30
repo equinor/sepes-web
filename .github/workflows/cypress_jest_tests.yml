@@ -55,7 +55,7 @@ jobs:
 
       # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
 
-      - run: npm install #--save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
+      - run: npm install
 
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
@@ -152,19 +152,8 @@ jobs:
           name: Total coverage report
           path: totalCoverage
 
-
       - run: npx nyc report --reporter json-summary --report-dir coverage
-      - uses: actions/upload-artifact@v2
-        with:
-          name: coverage_to_check
-          path: coverage
 
-      - run: dir
-
-      - run: dir coverage 
-
-      # - name: Update code coverage badge
-      #   run: npx update-badge
       - name: Set code coverage commit status 📫
         run: npx -p check-code-coverage set-gh-status
         env:
