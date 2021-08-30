@@ -152,6 +152,11 @@ jobs:
           name: Total coverage report
           path: totalCoverage
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage_to_check
+          path: coverage
+
       - run: dir
 
       - run: dir coverage 
