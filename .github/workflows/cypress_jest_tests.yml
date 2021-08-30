@@ -143,9 +143,9 @@ jobs:
           path: jest-coverage/lcov-report/
 
 
-      - run: npx istanbul-merge --out ./coverage/coverage-summmary.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+      - run: npx istanbul-merge --out ./coverage/coverage-summary.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
-      - run: npx istanbul report --include ./coverage/coverage-summmary.json --dir totalCoverage html
+      - run: npx istanbul report --include ./coverage/coverage-summary.json --dir totalCoverage html
 
       - uses: actions/upload-artifact@v2
         with:
