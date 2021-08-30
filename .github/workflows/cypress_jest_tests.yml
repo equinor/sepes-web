@@ -161,8 +161,9 @@ jobs:
 
       - run: dir coverage 
 
-
-      - name: Set code coverage commit status 📫
-        run: npx -p check-code-coverage set-gh-status
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update code coverage badge
+        run: npx update-badge
+      # - name: Set code coverage commit status 📫
+      #   run: npx -p check-code-coverage set-gh-status
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
