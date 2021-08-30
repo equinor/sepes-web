@@ -152,6 +152,10 @@ jobs:
           name: Total coverage report
           path: totalCoverage
 
+      - run: dir
+
+      - run: dir coverage 
+
 
       - name: Set code coverage commit status 📫
         run: npx -p check-code-coverage set-gh-status
