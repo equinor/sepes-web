@@ -156,7 +156,15 @@ jobs:
 
       - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
 
+      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir test2 text-summary
+
       - name: Set code coverage commit status 📫
         run: npx -p check-code-coverage set-gh-status
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensure coverage has not dropped 📈
+        run: npx -p check-code-coverage set-gh-status --check-against-readme
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_SHA: ${{ github.event.after }}
