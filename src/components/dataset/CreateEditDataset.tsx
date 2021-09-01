@@ -23,6 +23,7 @@ import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { useLocation, useHistory } from 'react-router-dom';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import useKeyEvents from '../common/hooks/useKeyEvents';
 import { dataInventoryLink, classificationGuidlinesLink } from '../common/staticValues/commonLinks';
 import {
     getDatasetsInStudyUrl,
@@ -130,17 +131,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     useEffect(() => {
         checkIfEditMode();
-        document.addEventListener('keydown', listener, false);
-        return () => {
-            document.removeEventListener('keydown', listener, false);
-        };
     }, [editDataset]);
-
-    const listener = (e: any) => {
-        if (e.key === 'Escape') {
-            handleCancel();
-        }
-    };
 
     const checkIfEditMode = () => {
         if (!isStandardDataset && datasetId) {
@@ -152,10 +143,10 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const addDataset = () => {
-        setUserPressedCreate(true);
         if (checkForInputErrors(dataset)) {
             return;
         }
+        setUserPressedCreate(true);
         setLoading(true);
         const isDatasetspecificDataset = !isStandardDataset;
         if (!editDataset && isDatasetspecificDataset) {
@@ -279,6 +270,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             </div>
         );
     };
+
+    useKeyEvents(handleCancel, addDataset, true);
 
     const isStandardDatasetAndCantEdit = isStandardDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets;
     const canEditDataset =

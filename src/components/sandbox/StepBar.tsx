@@ -190,6 +190,7 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
+        console.log('aaasda');
         setDeleteSandboxInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);

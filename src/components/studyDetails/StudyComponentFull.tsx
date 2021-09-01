@@ -37,6 +37,7 @@ import Loading from '../common/LoadingComponent';
 import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
+import useKeyEvents from '../common/hooks/useKeyEvents';
 
 const icons = {
     dollar,
@@ -220,10 +221,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (!newStudy && !studyOnChange.id) {
             setStudyOnChange(study);
         }
-        document.addEventListener('keydown', listener, false);
-        return () => {
-            document.removeEventListener('keydown', listener, false);
-        };
     }, [studyOnChange, study]);
 
     useEffect(() => {
@@ -243,16 +240,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             clearTimeout(timeoutId);
         };
     }, [studyOnChange.wbsCode]);
-
-    const listener = (e: any) => {
-        if (e.key === 'Escape') {
-            handleCancel();
-        }
-        if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
-            e.preventDefault();
-            handleSave();
-        }
-    };
 
     const deleteThisStudy = (): void => {
         setDeleteStudyInProgress(true);
@@ -281,9 +268,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
             return;
         }
+        setEditMode(false);
         if (imageUrl) {
             setStudyOnChange({ ...studyOnChange, logoUrl: imageUrl });
         }
+        console.log('set etditmode false');
         setEditMode(false);
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
@@ -378,6 +367,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             [columnName]: setterValue
         });
     };
+
+    useKeyEvents(handleCancel, handleSave, editMode);
 
     return (
         <div

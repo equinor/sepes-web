@@ -143,3 +143,14 @@ export const returnHelperText = (inputLength: number, limit: number, type: strin
     }
     return `ProTip! Good ${type} names contain fewer than ${limit} characters.`;
 };
+
+// export const listener = (e: any, handleCancel: any, handleSave: any): any => {
+//     if (e.key === 'Escape') {
+//         handleCancel();
+//     }
+//     if ((e.ctrlKey && (e.key === 's' || e.key === 'S')) || e.key === 'Enter') {
+//         e.preventDefault();
+//         handleSave();
+//     }
+//     return;
+// };
