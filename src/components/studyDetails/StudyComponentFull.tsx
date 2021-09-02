@@ -272,7 +272,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (imageUrl) {
             setStudyOnChange({ ...studyOnChange, logoUrl: imageUrl });
         }
-        console.log('set etditmode false');
         setEditMode(false);
         sendStudyToApi(studyOnChange);
         setNewStudy(false);

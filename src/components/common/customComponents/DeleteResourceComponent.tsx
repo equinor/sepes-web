@@ -51,7 +51,6 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
     const handleChange = (evt) => {
         setText(evt.target.value);
     };
-    console.log(checkSandboxNameToText());
     useKeyEvents(undefined, onClick, checkSandboxNameToText());
 
     return (
