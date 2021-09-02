@@ -53,8 +53,6 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
-      # Install Node dependencies --spec "cypress/integration/test/test.spec.js"
-
       - run: npm install
 
       # This will retry entire test run. Will only retry specific steps for now
@@ -143,17 +141,20 @@ jobs:
           name: Jest-Coverage-report
           path: jest-coverage/lcov-report/
 
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "./jest-coverage/coverage-final.json"
+          target: "./coverage/coverage-final-jest.json"
 
-      - run: npx istanbul-merge --out ./coverage/coverage-summary2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
-
-      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir totalCoverage html
+      - run: npx nyc report --reporter lcov --reporter text -t coverage --report-dir totalCoverage
 
       - uses: actions/upload-artifact@v2
         with:
           name: Total coverage report
           path: totalCoverage
 
-      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
+      - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
       - run: npx update-badge
       - name: Set code coverage commit status 📫
