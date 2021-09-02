@@ -10,6 +10,7 @@ import { Label } from '../common/StyledComponents';
 import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 import useFetchUrl from 'components/common/hooks/useFetchUrl';
+import useKeyEvents from 'components/common/hooks/useKeyEvents';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -81,6 +82,7 @@ const Overview: React.FC<OverviewProps> = ({
     };
 
     const handleCancel = () => {
+        setEditMode(!editMode);
         if (editMode) {
             setHasChanged(false);
             setResultsAndLearnings(
@@ -88,6 +90,8 @@ const Overview: React.FC<OverviewProps> = ({
             );
         }
     };
+
+    useKeyEvents(handleCancel, handleSave, editMode);
 
     return (
         <Wrapper>
@@ -143,7 +147,6 @@ const Overview: React.FC<OverviewProps> = ({
                                     data-cy="edit_results_and_learnings"
                                     disabled={study.permissions && !study.permissions.updateResulsAndLearnings}
                                     onClick={() => {
-                                        setEditMode(!editMode);
                                         handleCancel();
                                     }}
                                 >

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import useClickOutside from './useClickOutside';
 import { truncate } from '../helpers/helpers';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import useKeyEvents from '../hooks/useKeyEvents';
 
 const Wrapper = styled.div`
     display: grid;
@@ -50,6 +51,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
     const handleChange = (evt) => {
         setText(evt.target.value);
     };
+    useKeyEvents(undefined, onClick, checkSandboxNameToText());
 
     return (
         <Scrim>

@@ -16,6 +16,7 @@ import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
 import { checkIfAnyVmRulesHasChanged, checkIfSaveIsEnabled } from 'components/common/helpers/sandboxHelpers';
+import useKeyEvents from '../../common/hooks/useKeyEvents';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -245,10 +246,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         setVms(tempsVms);
     };
 
-    const saveRule = (rules: any) => {
+    const saveRule = () => {
         updateHasChanged(false);
         setOutboundRuleChanged(false);
-        createVirtualMachineRule(rules, vm.id).then((result: any) => {
+        createVirtualMachineRule(vm.rules, vm.id).then((result: any) => {
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
@@ -341,6 +342,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             return type === 'text' ? ' closed' : 'Open internet';
         }
     };
+
+    useKeyEvents(resetRules, saveRule, true);
 
     return (
         <>
@@ -560,7 +563,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                         <Tooltip title={saveIsEnabled || !hasChanged ? '' : inputError} placement="left">
                             <Button
                                 onClick={() => {
-                                    saveRule(vm.rules);
+                                    saveRule();
                                 }}
                                 disabled={!saveIsEnabled}
                                 data-cy="vm_rule_save"
