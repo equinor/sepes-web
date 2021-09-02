@@ -129,15 +129,15 @@ jobs:
       - run: npx nyc report --reporter json  --report-dir coverage
 
       - name: Test coverage
-        uses: ArtiomTr/jest-coverage-report-action@v1.3
+        uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.1
         if: ${{ github.event_name == 'pull_request' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+          test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary" --coverageDirectory=jest-coverage
 
-      - name: Create jest coverage report
-        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-        continue-on-error: true
+      # - name: Create jest coverage report
+      #   run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+      #   continue-on-error: true
       - uses: actions/upload-artifact@v2
         with:
           name: Jest-Coverage-report
