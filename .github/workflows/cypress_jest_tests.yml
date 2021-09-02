@@ -155,6 +155,7 @@ jobs:
 
       - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
 
+      - run: npx update-badge
       - name: Set code coverage commit status 📫
         run: npx -p check-code-coverage set-gh-status
         env:
