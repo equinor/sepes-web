@@ -129,11 +129,11 @@ jobs:
       - run: npx nyc report --reporter json  --report-dir coverage
 
       - name: Test coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.1
+        uses: ArtiomTr/jest-coverage-report-action@v1.3
         if: ${{ github.event_name == 'pull_request' }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
       - name: Create jest coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
@@ -144,18 +144,22 @@ jobs:
           path: jest-coverage/lcov-report/
 
 
-      - run: npx istanbul-merge --out ./coverage/coverage-summary2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
+      - run: Copy-Item "./jest-coverage/coverage-final.json" -Destination "./coverage/coverage-final-jest.json"
 
-      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir totalCoverage lcov
+      # - run: npx istanbul-merge --out ./coverage/coverage-summary2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
-      # - run: npx nyc report --reporter html --reporter text -t coverage --report-dir coverage/summary
+      # - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir totalCoverage lcov
+
+      - run: npx nyc report --reporter lcov --reporter text -t coverage --report-dir coverage/summary
 
       - uses: actions/upload-artifact@v2
         with:
           name: Total coverage report
           path: totalCoverage
 
-      - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
+      # - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
+
+      - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage/summary
 
       - run: npx update-badge
       - name: Set code coverage commit status 📫
