@@ -367,7 +367,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         });
     };
 
-    useKeyEvents(handleCancel, handleSave, editMode);
+    useKeyEvents(handleCancel, handleSave, editMode && !userClickedDelete);
 
     return (
         <div
@@ -471,8 +471,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                             <Icon name="dollar" />
                                         )
                                     }
-                                    variant={returnWbsVariant(wbsOnChangeIsValid)}
-                                    helperText={wbsOnChangeIsValid === false ? 'Invalid WBS code' : ''}
+                                    variant={returnWbsVariant(wbsOnChangeIsValid, studyOnChange.wbsCode)}
+                                    helperText={
+                                        wbsOnChangeIsValid === false && studyOnChange.wbsCode !== ''
+                                            ? 'Invalid WBS code'
+                                            : ''
+                                    }
                                 />
                             </>
                         )}
