@@ -144,7 +144,13 @@ jobs:
           path: jest-coverage/lcov-report/
 
 
-      - run: Copy-Item "./jest-coverage/coverage-final.json" -Destination "./coverage/coverage-final-jest.json"
+      # - run: Copy-Item "./jest-coverage/coverage-final.json" -Destination "./coverage/coverage-final-jest.json"
+
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "./jest-coverage/coverage-final.json"
+          target: "./coverage/coverage-final-jest.json"
 
       # - run: npx istanbul-merge --out ./coverage/coverage-summary2.json ./jest-coverage/coverage-final.json ./coverage/coverage-final.json
 
