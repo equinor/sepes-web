@@ -13,6 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { createSandbox } from '../../services/Api';
 import useClickOutside from '../common/customComponents/useClickOutside';
 import useFetchUrl from '../common/hooks/useFetchUrl';
+import useKeyEvents from 'components/common/hooks/useKeyEvents';
 import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
 
@@ -89,10 +90,10 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 
     const CreateSandbox = () => {
         setHasChanged(false);
-        setToggle(false);
         if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
             return;
         }
+        setToggle(false);
         const studyId = getStudyId();
 
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
@@ -108,6 +109,9 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             }
         });
     };
+
+    useKeyEvents(undefined, CreateSandbox, true);
+
     return (
         <Wrapper ref={wrapperRef}>
             <TextField

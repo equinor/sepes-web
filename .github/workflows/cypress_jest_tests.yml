@@ -130,6 +130,7 @@ jobs:
 
       - name: Test coverage
         uses: ArtiomTr/jest-coverage-report-action@v1.3
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
