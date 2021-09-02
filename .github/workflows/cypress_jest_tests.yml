@@ -165,7 +165,7 @@ jobs:
 
       # - run: npx istanbul report --include ./coverage/coverage-summary2.json --dir coverage json-summary
 
-      - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage/summary
+      - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
       - run: npx update-badge
       - name: Set code coverage commit status 📫
