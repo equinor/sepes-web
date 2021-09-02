@@ -147,7 +147,7 @@ jobs:
           source: "./jest-coverage/coverage-final.json"
           target: "./coverage/coverage-final-jest.json"
 
-      - run: npx nyc report --reporter lcov --reporter text -t coverage --report-dir totalCoverage
+      - run: npx nyc report --reporter html --reporter text -t coverage --report-dir totalCoverage
 
       - uses: actions/upload-artifact@v2
         with:
