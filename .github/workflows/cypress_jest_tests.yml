@@ -171,11 +171,13 @@ jobs:
 
       - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
 
-      - uses: actions/github-script@v4
-        id: coverage
-        with:
-          script: awk '{print $3}' totalCoverage2.txt
-          result-encoding: string
+      - run: awk '{print $3}' totalCoverage2.txt
+
+      # - uses: actions/github-script@v4
+      #   id: coverage
+      #   with:
+      #     script: awk '{print $3}' totalCoverage2.txt
+      #     result-encoding: string
 
       # - uses: actions/github-script@v4
       #   id: coveragePercentage
@@ -188,8 +190,8 @@ jobs:
       #     echo "::set-output name=COVERAGE::$(Get-Content totalCoverage.txt | Select -Index 5)"
       #   id: coverageLine
 
-      # - run : echo "::set-output name=COVERAGE_PERCENT::$(${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1')"
-      #   id: coveragePercentage
+      - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
+        id: coveragePercentage
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
@@ -198,5 +200,5 @@ jobs:
           gistID: 66a47f0b2d120954c140e9d2b61c3d7b
           filename: test.json
           label: Coverage
-          message: ${{steps.coverage.outputs.result}}
+          message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           color: orangee
