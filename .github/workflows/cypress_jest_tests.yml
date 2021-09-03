@@ -169,17 +169,19 @@ jobs:
 
       - run: npx nyc report --reporter text-summary > totalCoverage.txt
 
-      - uses: actions/github-script@v4
-        id: coverageLine
-        with:
-          script: return Get-Content totalCoverage.txt | Select -Index 5
-          result-encoding: string
+      - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
 
       - uses: actions/github-script@v4
-        id: coveragePercentage
+        id: coverage
         with:
-          script: return ${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1'
+          script: awk '{print $3}' totalCoverage2.txt
           result-encoding: string
+
+      # - uses: actions/github-script@v4
+      #   id: coveragePercentage
+      #   with:
+      #     script: return ${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1'
+      #     result-encoding: string
 
       # - name: Get relevant coverage line from txt file
       #   run: |
@@ -196,5 +198,5 @@ jobs:
           gistID: 66a47f0b2d120954c140e9d2b61c3d7b
           filename: test.json
           label: Coverage
-          message: ${{ steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+          message: ${{steps.coverage.outputs.result}}
           color: orangee
