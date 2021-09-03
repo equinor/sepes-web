@@ -156,14 +156,32 @@ jobs:
 
       - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
-      - run: npx update-badge
-      - name: Set code coverage commit status 📫
-        run: npx -p check-code-coverage set-gh-status
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Set code coverage commit status 📫
+      #   run: npx -p check-code-coverage set-gh-status
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Ensure coverage has not dropped 📈
-        run: npx -p check-code-coverage set-gh-status --check-against-readme
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_SHA: ${{ github.event.after }}
+      # - name: Ensure coverage has not dropped 📈
+      #   run: npx -p check-code-coverage set-gh-status --check-against-readme
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GH_SHA: ${{ github.event.after }}
+
+      - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
+
+      - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
+
+      - run: awk '{print $3}' totalCoverage2.txt
+
+      - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
+        id: coveragePercentage
+
+      - name: Create Awesome Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 66a47f0b2d120954c140e9d2b61c3d7b
+          filename: test.json
+          label: Coverage
+          message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          color: orangee
