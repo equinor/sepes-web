@@ -156,7 +156,6 @@ jobs:
 
       - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
-      - run: npx update-badge
       - name: Set code coverage commit status 📫
         run: npx -p check-code-coverage set-gh-status
         env:
@@ -167,3 +166,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_SHA: ${{ github.event.after }}
+
+      - name: Create Awesome Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: <gist-ID>
+          filename: test.json
+          label: Hello
+          message: World
+          color: orange
+          
