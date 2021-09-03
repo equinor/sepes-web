@@ -28,7 +28,7 @@
         "@typescript-eslint/eslint-plugin": "^4.29.1",
         "animate.css": "^4.1.1",
         "axios": "^0.21.1",
-        "browser-image-compression": "^1.0.14",
+        "browser-image-compression": "^1.0.15",
         "check-code-coverage": "^1.10.0",
         "commitizen": "^4.2.4",
         "copy-to-clipboard": "^3.3.1",
