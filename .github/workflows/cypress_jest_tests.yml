@@ -171,9 +171,8 @@ jobs:
         uses: schneegans/dynamic-badges-action@v1.1.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
-          gistID: <gist-ID>
+          gistID: 66a47f0b2d120954c140e9d2b61c3d7b
           filename: test.json
           label: Hello
           message: World
           color: orange
-          
