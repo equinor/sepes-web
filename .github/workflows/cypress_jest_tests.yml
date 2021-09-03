@@ -167,28 +167,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_SHA: ${{ github.event.after }}
 
-      - run: npx nyc report --reporter text-summary > totalCoverage.txt
+      - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
 
       - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
 
       - run: awk '{print $3}' totalCoverage2.txt
-
-      # - uses: actions/github-script@v4
-      #   id: coverage
-      #   with:
-      #     script: awk '{print $3}' totalCoverage2.txt
-      #     result-encoding: string
-
-      # - uses: actions/github-script@v4
-      #   id: coveragePercentage
-      #   with:
-      #     script: return ${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1'
-      #     result-encoding: string
-
-      # - name: Get relevant coverage line from txt file
-      #   run: |
-      #     echo "::set-output name=COVERAGE::$(Get-Content totalCoverage.txt | Select -Index 5)"
-      #   id: coverageLine
 
       - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
         id: coveragePercentage
