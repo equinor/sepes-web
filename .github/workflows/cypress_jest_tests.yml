@@ -169,13 +169,25 @@ jobs:
 
       - run: npx nyc report --reporter text-summary > totalCoverage.txt
 
-      - name: Get relevant coverage line from txt file
-        run: |
-          echo "::set-output name=COVERAGE::$(Get-Content totalCoverage.txt | Select -Index 5)"
+      - uses: actions/github-script@v4
         id: coverageLine
+        with:
+          script: return Get-Content totalCoverage.txt | Select -Index 5
+          result-encoding: string
 
-      - run : echo "::set-output name=COVERAGE_PERCENT::$(${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1')"
+      - uses: actions/github-script@v4
         id: coveragePercentage
+        with:
+          script: return ${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1'
+          result-encoding: string
+
+      # - name: Get relevant coverage line from txt file
+      #   run: |
+      #     echo "::set-output name=COVERAGE::$(Get-Content totalCoverage.txt | Select -Index 5)"
+      #   id: coverageLine
+
+      # - run : echo "::set-output name=COVERAGE_PERCENT::$(${{ steps.coverageLine.outputs.COVERAGE }} -replace '\D+(\d+)','$1')"
+      #   id: coveragePercentage
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
