@@ -193,12 +193,16 @@ jobs:
         with:
           script: ./.github/scripts/coverageChange.ps1 4 5
 
+      - run: dir
+
       - name: Test coverage
         uses: ArtiomTr/jest-coverage-report-action@v1.3
         if: ${{ github.event_name == 'pull_request' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
+
+      - run: dir
 
       - name: Create jest coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
@@ -207,6 +211,8 @@ jobs:
         with:
           name: Jest-Coverage-report
           path: jest-coverage/lcov-report/
+
+      - run: dir
 
       - uses: Amadevus/pwsh-script@v2
         id: my-script6
