@@ -55,6 +55,8 @@ jobs:
 
 
       - uses: sergeysova/gist-read-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: example-gist
         with:
           gist_id: 7bcddb642d16d291959642fc60feec9b
