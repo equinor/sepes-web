@@ -208,15 +208,15 @@ jobs:
       - run: dir
         env:
           COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-        if: ${{ env.COVERAGE_PERCENT >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ env.COVERAGE_PERCENT > steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
       - run: dir
         env:
           COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-        if: ${{ env.COVERAGE_PERCENT >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ env.COVERAGE_PERCENT == steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
       - run: dir
         env:
           COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-        if: ${{ env.COVERAGE_PERCENT >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ env.COVERAGE_PERCENT < steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
 
 
       # - name: comment coverage PR
