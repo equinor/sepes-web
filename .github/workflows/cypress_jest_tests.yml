@@ -69,14 +69,22 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
-
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script2
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
       
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: coverage_percentage
-          value: 65.54
-          pa_token: ${{ secrets.PA_TOKEN }}
+      # - uses: gliech/create-github-secret-action@v1
+      #   with:
+      #     name: coverage_percentage
+      #     value: 65.54
+      #     pa_token: ${{ secrets.PA_TOKEN }}
+
+
       # - uses: sergeysova/gist-read-action@v1
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,8 +93,6 @@ jobs:
       #     gist_id: 66a47f0b2d120954c140e9d2b61c3d7b
       #     file_name: test.json
 
-      - name: show content
-        run: echo "Hello ${{ steps.example-gist.outputs.content }}"
 
       - run: npm install
 
@@ -123,6 +129,14 @@ jobs:
       #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
       #   if: ${{ github.event_name != 'pull_request' }}
 
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script3
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
+
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
         if: failure()
@@ -138,6 +152,14 @@ jobs:
           path: cypress/videos
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script4
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - uses: actions/upload-artifact@v2
         with:
@@ -163,6 +185,14 @@ jobs:
 
       - run: npx nyc report --reporter json  --report-dir coverage
 
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script5
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
+
       - name: Test coverage
         uses: ArtiomTr/jest-coverage-report-action@v1.3
         if: ${{ github.event_name == 'pull_request' }}
@@ -177,6 +207,14 @@ jobs:
         with:
           name: Jest-Coverage-report
           path: jest-coverage/lcov-report/
+
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script6
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - name: copy file
         uses: canastro/copy-file-action@master
@@ -203,6 +241,14 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     GH_SHA: ${{ github.event.after }}
+
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script7
+        env:
+          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
 
