@@ -57,7 +57,7 @@ jobs:
       - uses: gliech/create-github-secret-action@v1
         with:
           name: coverage_percentage
-          value: 65.54%
+          value: 65.54
           pa_token: ${{ secrets.PA_TOKEN }}
       # - uses: sergeysova/gist-read-action@v1
       #   env:
@@ -204,3 +204,13 @@ jobs:
           label: Coverage
           message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           color: orangee
+
+
+      - name: comment coverage PR
+        uses: unsplash/comment-on-pr@master
+        if: ${{ failure() }}
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Coverage went from " ${{secrets.coverage_percentage}}% to ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          check_for_duplicate_msg: true 
