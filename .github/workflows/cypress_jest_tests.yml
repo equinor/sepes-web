@@ -59,7 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: example-gist
         with:
-          gist_id: 7bcddb642d16d291959642fc60feec9b
+          gist_id: 66a47f0b2d120954c140e9d2b61c3d7b
           file_name: test.json
 
       - name: show content
