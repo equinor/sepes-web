@@ -1,7 +1,7 @@
 $currentCoverage=$args[0]
 $previousCoverage=$args[1]
 
-if ($currentCoverage == $previousCoverage) {
+if ($currentCoverage -eq $previousCoverage) {
     return "Coverage has not changed (" + $currentCoverage + "%)";
 }
 if ($currentCoverage -gt $previousCoverage) {
