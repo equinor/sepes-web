@@ -70,7 +70,7 @@ jobs:
         id: token
 
       - uses: Amadevus/pwsh-script@v2
-        id: my-script2
+        id: my-script25
         env:
           COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
