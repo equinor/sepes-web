@@ -216,7 +216,7 @@ jobs:
       - run: dir
         env:
           COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-        if: ${{ $COVERAGE_PERCENT >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ COVERAGE_PERCENT >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
 
 
       # - name: comment coverage PR
