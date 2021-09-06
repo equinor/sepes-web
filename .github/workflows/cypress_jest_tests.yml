@@ -55,7 +55,7 @@ jobs:
 
 
       - uses: Amadevus/pwsh-script@v2
-        id: my-script
+        id: my-script2
         env:
           COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
