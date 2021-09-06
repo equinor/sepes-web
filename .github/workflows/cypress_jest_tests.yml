@@ -205,12 +205,19 @@ jobs:
           message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           color: orangee
 
+      - run: dir
+        if: ${{ secrets.coverage_percentage >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+      - run: dir
+        if: ${{ secrets.coverage_percentage == steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+      - run: dir
+        if: ${{ secrets.coverage_percentage <= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+
 
       - name: comment coverage PR
         uses: unsplash/comment-on-pr@master
         if: ${{ failure() }}
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: "Coverage went from " ${{secrets.coverage_percentage}}% to ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           check_for_duplicate_msg: true 
