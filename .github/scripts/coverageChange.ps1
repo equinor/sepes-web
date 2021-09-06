@@ -5,7 +5,7 @@ $currentCoverage2 = $currentCoverage -replace "%",'';
 $previousCoverage2 = $previousCoverage -replace "%",'';
 
 if ($currentCoverage2 -eq $previousCoverage2) {
-    return "Coverage has not changed (" + $currentCoverage + "%)";
+    return "Coverage has not changed " + $currentCoverage + "%";
 }
 if ($currentCoverage2 -gt $previousCoverage2) {
     return 'Coverage has increased by (' + ($currentCoverage2 - $previousCoverage2) + "%)";
