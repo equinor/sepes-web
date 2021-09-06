@@ -156,16 +156,16 @@ jobs:
 
       - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
-      # - name: Set code coverage commit status 📫
-      #   run: npx -p check-code-coverage set-gh-status
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set code coverage commit status 📫
+        run: npx -p check-code-coverage set-gh-status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Ensure coverage has not dropped 📈
-      #   run: npx -p check-code-coverage set-gh-status --check-against-readme
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     GH_SHA: ${{ github.event.after }}
+      - name: Ensure coverage has not dropped 📈
+        run: npx -p check-code-coverage set-gh-status --check-against-readme
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_SHA: ${{ github.event.after }}
 
       - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
 
