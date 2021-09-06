@@ -53,7 +53,19 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
+
+      - uses: sergeysova/gist-read-action@v1
+        id: example-gist
+        with:
+          gist_id: 7bcddb642d16d291959642fc60feec9b
+          file_name: test.json
+
+      - name: show content
+        run: echo "Hello ${{ steps.example-gist.outputs.content }}"
+
       - run: npm install
+
+      
 
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
