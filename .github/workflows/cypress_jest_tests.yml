@@ -54,6 +54,14 @@ jobs:
         id: token
 
 
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script
+        env:
+          COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 10 5
+
       - uses: gliech/create-github-secret-action@v1
         with:
           name: coverage_percentage
