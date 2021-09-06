@@ -211,15 +211,16 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                         />
                     </div>
                 </Tooltip>
-                <div style={{ marginTop: '-16px' }}>
-                    <Tooltip
-                        title={
-                            participantNotSelected && study.permissions && study.permissions.addRemoveParticipant
-                                ? 'Select participant before role'
-                                : ''
-                        }
-                        placement="top"
-                    >
+                <Tooltip
+                    title={
+                        participantNotSelected && study.permissions && study.permissions.addRemoveParticipant
+                            ? 'Select participant before role'
+                            : ''
+                    }
+                    enterDelay={500}
+                    placement="top"
+                >
+                    <div style={{ marginTop: '-16px' }}>
                         <CoreDevDropdown
                             label="Role"
                             options={filterRoleList(roles, selectedParticipant, study)}
@@ -231,8 +232,8 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                             tabIndex={0}
                             data-cy="participant_role"
                         />
-                    </Tooltip>
-                </div>
+                    </div>
+                </Tooltip>
                 <Button
                     variant="outlined"
                     disabled={checkIfButtonDisabled()}
