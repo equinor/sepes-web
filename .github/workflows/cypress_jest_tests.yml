@@ -206,11 +206,11 @@ jobs:
           color: orangee
 
       - run: dir
-        if: ${{ secrets.coverage_percentage >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ secrets.COVERAGE_PERCENTAGE >= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
       - run: dir
-        if: ${{ secrets.coverage_percentage == steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ secrets.COVERAGE_PERCENTAGE == steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
       - run: dir
-        if: ${{ secrets.coverage_percentage <= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
+        if: ${{ secrets.COVERAGE_PERCENTAGE <= steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
 
 
       # - name: comment coverage PR
