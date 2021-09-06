@@ -218,11 +218,15 @@ jobs:
           COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
         if: ${{ env.COVERAGE_PERCENT < steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
 
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script
+        with:
+          script: ./.github/scripts/coverageChange.ps1
 
-      # - name: comment coverage PR
-      #   uses: unsplash/comment-on-pr@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     msg: "Coverage went from " ${{secrets.coverage_percentage}}% to ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-      #     check_for_duplicate_msg: true 
+      - name: comment coverage PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.my-script.outputs.result }}
+          check_for_duplicate_msg: true 
