@@ -18,14 +18,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
-      - name: comment coverage PR
-        uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: ${{ steps.my-script2.outputs.result }}
-          check_for_duplicate_msg: true 
-
       - uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
