@@ -191,7 +191,7 @@ jobs:
       - run: npx nyc report --reporter json  --report-dir coverage
 
       - uses: Amadevus/pwsh-script@v2
-        id: my-script5
+        id: my-script522
         env:
           COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
@@ -208,7 +208,7 @@ jobs:
           test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
       - uses: Amadevus/pwsh-script@v2
-        id: my-script5
+        id: my-script533
         env:
           COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
@@ -222,13 +222,13 @@ jobs:
         continue-on-error: true
 
       - uses: Amadevus/pwsh-script@v2
-        id: my-script5
+        id: my-script544
         env:
           COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
         with:
           script: ./.github/scripts/coverageChange.ps1 4 5
-          
+
       - uses: actions/upload-artifact@v2
         with:
           name: Jest-Coverage-report
