@@ -17,6 +17,7 @@ import {
 import VmDetails from './VmDetails';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxHelpers';
 
 type VmConfigProps = {
     showAddNewVm: boolean;
@@ -75,7 +76,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     useEffect(() => {
         if (vmSaved) {
-            checkIfAnyVmsHasOpenInternet();
+            setVmsWithOpenInternet(checkIfAnyVmsHasOpenInternet(vms));
             setVmSaved(false);
         }
     }, [vmSaved, vms]);
@@ -89,21 +90,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
         }
         return () => setIsSubscribed(false);
     }, [permissions]);
-
-    const checkIfAnyVmsHasOpenInternet = () => {
-        let result = false;
-        vms.forEach((_vm: VmObj) => {
-            if (_vm.rules) {
-                _vm.rules.forEach((rule: any) => {
-                    if (rule.action === 0 && rule.direction === 1) {
-                        result = true;
-                    }
-                });
-            }
-        });
-        setVmsWithOpenInternet(result);
-        return result;
-    };
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {

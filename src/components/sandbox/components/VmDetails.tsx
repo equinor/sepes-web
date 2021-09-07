@@ -15,7 +15,11 @@ import { inputErrorsVmRules, resourceStatus, resourceType } from '../../common/s
 import { SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
-import { checkIfAnyVmRulesHasChanged, checkIfSaveIsEnabled } from 'components/common/helpers/sandboxHelpers';
+import {
+    checkIfAnyVmRulesHasChanged,
+    checkIfSaveIsEnabled,
+    returnOpenClosedOutboundRule
+} from 'components/common/helpers/sandboxHelpers';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 
 const { Body, Row, Cell, Head } = Table;
@@ -330,19 +334,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
     };
 
-    const returnOpenClosed = (type: 'text' | 'button') => {
-        if (!vm.rules) {
-            return;
-        }
-        const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
-        if (actionRule) {
-            if (actionRule.action === 0) {
-                return type === 'text' ? ' open' : 'Close internet';
-            }
-            return type === 'text' ? ' closed' : 'Open internet';
-        }
-    };
-
     useKeyEvents(resetRules, saveRule, true);
 
     return (
@@ -541,7 +532,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                     {outboundRuleChanged
                                         ? 'Changed outbound internet status to:'
                                         : 'Outbound internet traffic is currently'}{' '}
-                                    {returnOpenClosed('text')}
+                                    {returnOpenClosedOutboundRule('text', vm)}
                                 </Cell>
                                 <Cell>
                                     <Button
@@ -553,7 +544,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                             addOutBoundRule();
                                         }}
                                     >
-                                        {returnOpenClosed('button')}
+                                        {returnOpenClosedOutboundRule('button', vm)}
                                     </Button>
                                 </Cell>
                             </Row>

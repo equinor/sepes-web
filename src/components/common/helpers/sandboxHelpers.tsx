@@ -331,3 +331,30 @@ export const checkIfAddNewVmHasUnsavedChanges = (vm: VmObj) => {
     }
     return false;
 };
+
+export const checkIfAnyVmsHasOpenInternet = (vms): boolean => {
+    let result = false;
+    vms.forEach((_vm: VmObj) => {
+        if (_vm.rules) {
+            _vm.rules.forEach((rule: any) => {
+                if (rule.action === 0 && rule.direction === 1) {
+                    result = true;
+                }
+            });
+        }
+    });
+    return result;
+};
+
+export const returnOpenClosedOutboundRule = (type: 'text' | 'button', vm: VmObj) => {
+    if (!vm.rules) {
+        return;
+    }
+    const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
+    if (actionRule) {
+        if (actionRule.action === 0) {
+            return type === 'text' ? ' open' : 'Close internet';
+        }
+        return type === 'text' ? ' closed' : 'Open internet';
+    }
+};
