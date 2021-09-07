@@ -209,13 +209,13 @@ jobs:
 
       - run: dir
 
-      - name: Create jest coverage report
-        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-        continue-on-error: true
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Jest-Coverage-report
-          path: jest-coverage/lcov-report/
+      # - name: Create jest coverage report
+      #   run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+      #   continue-on-error: true
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Jest-Coverage-report
+      #     path: jest-coverage/lcov-report/
 
       - run: dir
 
@@ -233,20 +233,20 @@ jobs:
           COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
         with:
           script: ./.github/scripts/coverageChange.ps1 4 5
-# ----
-      # - name: copy file
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "./jest-coverage/coverage-final.json"
-      #     target: "./coverage/coverage-final-jest.json"
 
-      # - run: npx nyc report --reporter html --reporter text -t coverage --report-dir totalCoverage
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "./jest-coverage/coverage-final.json"
+          target: "./coverage/coverage-final-jest.json"
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Total coverage report
-      #     path: totalCoverage
-# ----
+      - run: npx nyc report --reporter html --reporter text -t coverage --report-dir totalCoverage
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Total coverage report
+          path: totalCoverage
+
       # - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
       # - name: Set code coverage commit status 📫
