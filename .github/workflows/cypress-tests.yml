@@ -18,40 +18,46 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
-      - uses: Azure/get-keyvault-secrets@v1
-        with:
-          keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          secrets: 'MockUserNonProdWeb, AzureAdClientIdScope'  # comma separated list of secret keys that need to be fetched from the Key Vault 
-        id: keyVaultSecrets
-
-      - name: build
-        working-directory: GetAccessToken
-        run: dotnet build --configuration Release
-
-      - name: Put access token in key vault
-        env:
-          buildConfiguration: 'Release'
-          mockuserAppId: ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }}
-          mockappuserClientSecret: ${{ steps.keyVaultSecrets.outputs.MockUserNonProdWeb }}
-          mockUserAppScopes: ${{ steps.keyVaultSecrets.outputs.AzureAdClientIdScope}}
-          keyVaultUserClientId: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          keyVaultName: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          cypressAccesstokenSecretname: 'cypressAccesstokenDev'
-          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget
-          NPM_PACKAGES: $(Pipeline.Workspace)/.npm
-          CYPRESS_BINARY: $(Pipeline.Workspace)/.cypressbinary
-          clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-          clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
-          tenantId: ${{ secrets.AZURE_TENANT_ID }}
-          azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+      - name: Retrieve token
+        id: id-token
         run: |
-          dotnet GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret --key-vault-user-client-id $clientId
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.AZURE_KEYVAULT_DEV_NAME }} --clientSecret ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }} --scope ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
+          echo "::set-output name=TOKEN::$TOKEN"
 
-      - uses: Azure/get-keyvault-secrets@v1
-        with:
-          keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-          secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
-        id: token
+      # - uses: Azure/get-keyvault-secrets@v1
+      #   with:
+      #     keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+      #     secrets: 'MockUserNonProdWeb, AzureAdClientIdScope'  # comma separated list of secret keys that need to be fetched from the Key Vault 
+      #   id: keyVaultSecrets
+
+      # - name: build
+      #   working-directory: GetAccessToken
+      #   run: dotnet build --configuration Release
+
+      # - name: Put access token in key vault
+      #   env:
+      #     buildConfiguration: 'Release'
+      #     mockuserAppId: ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }}
+      #     mockappuserClientSecret: ${{ steps.keyVaultSecrets.outputs.MockUserNonProdWeb }}
+      #     mockUserAppScopes: ${{ steps.keyVaultSecrets.outputs.AzureAdClientIdScope}}
+      #     keyVaultUserClientId: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+      #     keyVaultName: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+      #     cypressAccesstokenSecretname: 'cypressAccesstokenDev'
+      #     NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget
+      #     NPM_PACKAGES: $(Pipeline.Workspace)/.npm
+      #     CYPRESS_BINARY: $(Pipeline.Workspace)/.cypressbinary
+      #     clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+      #     clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
+      #     tenantId: ${{ secrets.AZURE_TENANT_ID }}
+      #     azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+      #   run: |
+      #     dotnet GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret --key-vault-user-client-id $clientId
+
+      # - uses: Azure/get-keyvault-secrets@v1
+      #   with:
+      #     keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
+      #     secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
+      #   id: token
 
       
       # - uses: gliech/create-github-secret-action@v1
@@ -191,6 +197,12 @@ jobs:
 
       - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
         id: coveragePercentage
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: coverage_percentage
+          value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          pa_token: ${{ secrets.PA_TOKEN }}
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
