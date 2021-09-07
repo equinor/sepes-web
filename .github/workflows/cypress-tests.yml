@@ -18,19 +18,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script2
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
-
-      - name: Check if coverage changed
-        shell: pwsh
-        run: |
-          ./.github/scripts/coverageChange.ps1 4 5
-
       - name: comment coverage PR
         uses: unsplash/comment-on-pr@master
         env:
@@ -74,15 +61,7 @@ jobs:
           secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
         id: token
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script25
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
       
-
       # - uses: gliech/create-github-secret-action@v1
       #   with:
       #     name: coverage_percentage
@@ -101,7 +80,6 @@ jobs:
 
       - run: npm install
 
-      
 
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
@@ -134,14 +112,6 @@ jobs:
       #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
       #   if: ${{ github.event_name != 'pull_request' }}
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script3
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
-
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
         if: failure()
@@ -157,14 +127,6 @@ jobs:
           path: cypress/videos
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
-
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script4
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - uses: actions/upload-artifact@v2
         with:
@@ -190,15 +152,6 @@ jobs:
 
       - run: npx nyc report --reporter json  --report-dir coverage
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script522
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
-
-      - run: dir
 
       # - name: Test coverage
       #   uses: ArtiomTr/jest-coverage-report-action@v1.3
@@ -207,27 +160,12 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script533
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
-
       - run: dir
 
       - name: Create jest coverage report
         run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
         continue-on-error: true
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script544
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - uses: actions/upload-artifact@v2
         with:
@@ -236,20 +174,6 @@ jobs:
 
       - run: dir
 
-      - name: Check if coverage changed2
-        shell: pwsh
-        continue-on-error: true
-        run: |
-          ./.github/scripts/coverageChange.ps1 4 5
-
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script6
-        continue-on-error: true
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - name: copy file
         uses: canastro/copy-file-action@master
@@ -266,24 +190,6 @@ jobs:
 
       # - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
 
-      # - name: Set code coverage commit status 📫
-      #   run: npx -p check-code-coverage set-gh-status
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Ensure coverage has not dropped 📈
-      #   run: npx -p check-code-coverage set-gh-status --check-against-readme
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     GH_SHA: ${{ github.event.after }}
-
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script7
-        env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
 
       - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
 
@@ -304,26 +210,13 @@ jobs:
           message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           color: orangee
 
-      # - run: dir
-      #   env:
-      #     COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-      #   if: ${{ env.COVERAGE_PERCENT > steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
-      # - run: dir
-      #   env:
-      #     COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-      #   if: ${{ env.COVERAGE_PERCENT == steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
-      # - run: dir
-      #   env:
-      #     COVERAGE_PERCENT: ${{ secrets.COVERAGE_PERCENTAGE }}
-      #   if: ${{ env.COVERAGE_PERCENT < steps.coveragePercentage.outputs.COVERAGE_PERCENT }}
-
       - uses: Amadevus/pwsh-script@v2
         id: my-script
         env:
-          COVERAGE_PERCENT_NOW2: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE2: ${{ secrets.COVERAGE_PERCENTAGE }}
+          COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
         with:
-          script: ./.github/scripts/coverageChange.ps1 4 5
+          script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
 
       - name: comment coverage PR
         uses: unsplash/comment-on-pr@master
