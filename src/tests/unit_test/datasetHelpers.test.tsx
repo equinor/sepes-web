@@ -1,4 +1,5 @@
 import * as helpers from '../../components/common/helpers/datasetHelpers';
+import expect from 'expect';
 
 test('test validateUserInputSandbox', () => {
     expect(
@@ -7,7 +8,8 @@ test('test validateUserInputSandbox', () => {
             classification: 'classification',
             location: 'location',
             id: '1',
-            permissions: { deleteDataset: true, editDataset: true }
+            permissions: { deleteDataset: true, editDataset: true },
+            studyName: 'testStudy'
         })
     ).toBeFalsy();
     expect(
@@ -16,7 +18,8 @@ test('test validateUserInputSandbox', () => {
             classification: 'classification',
             location: 'location',
             id: '1',
-            permissions: { deleteDataset: true, editDataset: true }
+            permissions: { deleteDataset: true, editDataset: true },
+            studyName: 'testStudy'
         })
     ).toBeTruthy();
     expect(
@@ -25,7 +28,8 @@ test('test validateUserInputSandbox', () => {
             classification: '',
             location: 'location',
             id: '1',
-            permissions: { deleteDataset: true, editDataset: true }
+            permissions: { deleteDataset: true, editDataset: true },
+            studyName: 'testStudy'
         })
     ).toBeTruthy();
     expect(
@@ -34,7 +38,8 @@ test('test validateUserInputSandbox', () => {
             classification: 'classification',
             location: '',
             id: '1',
-            permissions: { deleteDataset: true, editDataset: true }
+            permissions: { deleteDataset: true, editDataset: true },
+            studyName: 'testStudy'
         })
     ).toBeTruthy();
 });

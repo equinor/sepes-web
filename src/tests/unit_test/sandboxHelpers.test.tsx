@@ -1,4 +1,18 @@
+import {
+    availableDataset,
+    availableDatasetLongName,
+    sandbox,
+    sandboxPermissions,
+    sandboxPermissionsNoPermissions,
+    sandboxWithNoDatasets,
+    sandboxWithNoPermissions,
+    vm,
+    vmWithEqualRules,
+    vmWithOpenInternet
+} from 'tests/mocks/sandbox/sandbox-mocks';
 import * as helpers from '../../components/common/helpers/sandboxHelpers';
+import expect from 'expect';
+import { VmObj } from 'components/common/interfaces';
 
 test('test validateUserInputSandbox', () => {
     expect(
@@ -203,4 +217,51 @@ test('test arrayObjectsToArrayString, check output', () => {
             { displayValue: 'orange', id: 2 }
         ])
     ).toEqual(expectedResult);
+});
+
+test('test returnToolTipForMakeAvailable, check output', () => {
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, false, true)).toEqual('');
+    // Without vm
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, false, false, true)).toEqual(
+        'You need atleast one VM in the sandbox'
+    );
+    //With open internet
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, true, true)).toEqual(
+        'One or more vms have open internet. Close before making sandbox available'
+    );
+    //Without permission to make data available
+    expect(helpers.returnToolTipForMakeAvailable(sandboxWithNoPermissions, true, false, true)).toEqual(
+        'You do not have permission to make this sandbox Available'
+    );
+    //Resources in progress
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, false, false)).toEqual(
+        'All resources must have status OK'
+    );
+    //No datasets in sandbox
+    expect(helpers.returnToolTipForMakeAvailable(sandboxWithNoDatasets, true, false, true)).toEqual(
+        'No datasets in the sandbox'
+    );
+});
+
+test('test returnTooltipTextDataset, check output', () => {
+    expect(helpers.returnTooltipTextDataset(availableDataset, sandboxPermissions)).toEqual('');
+    expect(helpers.returnTooltipTextDataset(availableDatasetLongName, sandboxPermissions)).toEqual(
+        availableDatasetLongName.name
+    );
+    expect(helpers.returnTooltipTextDataset(availableDataset, sandboxPermissionsNoPermissions)).toEqual(
+        'You do not have access to update data sets in sandbox'
+    );
+});
+
+test('test checkIfEqualRules, check output', () => {
+    expect(helpers.checkIfEqualRules(vm)).toEqual(false);
+    expect(helpers.checkIfEqualRules(vmWithEqualRules)).toEqual(true);
+});
+
+test('test checkIfAnyVmsHasOpenInternet, check output', () => {
+    const vms: any = [];
+    vms.push(vm);
+    expect(helpers.checkIfAnyVmsHasOpenInternet(vms)).toEqual(false);
+    vms.push(vmWithOpenInternet);
+    expect(helpers.checkIfAnyVmsHasOpenInternet(vms)).toEqual(true);
 });

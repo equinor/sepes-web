@@ -1,33 +1,33 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import StepBar from '../../../components/sandbox/StepBar';
 import { SandboxObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { sandboxWithNoPermissions } from '../../mocks/sandbox/sandbox-mocks';
 
-const sandboxWithNoPermissions: SandboxObj = {
-    deleted: false,
-    region: '',
-    resources: [],
-    datasets: [],
-    studyId: '',
-    technicalContactEmail: '',
-    technicalContactName: '',
-    name: '',
-    template: '',
-    id: '1',
-    currentPhase: undefined,
-    linkToCostAnalysis: '',
-    studyName: '',
-    restrictionDisplayText: '',
-    permissions: {
-        delete: false,
-        editInboundRules: false,
-        openInternet: false,
-        update: false,
-        increasePhase: false
-    }
-};
+// const sandboxWithNoPermissions: SandboxObj = {
+//     deleted: false,
+//     region: '',
+//     resources: [],
+//     datasets: [],
+//     studyId: '',
+//     technicalContactEmail: '',
+//     technicalContactName: '',
+//     name: '',
+//     template: '',
+//     id: '1',
+//     currentPhase: undefined,
+//     linkToCostAnalysis: '',
+//     studyName: '',
+//     restrictionDisplayText: '',
+//     permissions: {
+//         delete: false,
+//         editInboundRules: false,
+//         openInternet: false,
+//         update: false,
+//         increasePhase: false
+//     }
+// };
 
 const sandboxWithAllPermissions: SandboxObj = {
     deleted: false,
@@ -55,7 +55,7 @@ const sandboxWithAllPermissions: SandboxObj = {
 
 const mockFunc = (id: string) => {};
 
-test('renders stepbar component without permissions', () => {
+test('renders stepbar component without permissions', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
@@ -81,15 +81,17 @@ test('renders stepbar component without permissions', () => {
         </Router>
     );
 
-    expect(getByTestId('make_available').hasAttribute('disabled')).toEqual(true);
-    let linkElement = getByText('More options');
-    expect(linkElement).toBeInTheDocument();
-    linkElement.click();
+    await act(async () => {
+        expect(getByTestId('make_available').hasAttribute('disabled')).toEqual(true);
+        let linkElement = getByText('More options');
+        expect(linkElement).toBeInTheDocument();
+        linkElement.click();
 
-    expect(getByTestId('delete_sandbox').hasAttribute('disabled')).toEqual(true);
+        expect(getByTestId('delete_sandbox').hasAttribute('disabled')).toEqual(true);
+    });
 });
 
-test('renders stepbar component with permissions', () => {
+test('renders stepbar component with permissions', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
@@ -114,11 +116,12 @@ test('renders stepbar component with permissions', () => {
             />
         </Router>
     );
+    await act(async () => {
+        expect(getByTestId('make_available').hasAttribute('disabled')).toEqual(true);
+        let linkElement = getByText('More options');
+        expect(linkElement).toBeInTheDocument();
+        linkElement.click();
 
-    expect(getByTestId('make_available').hasAttribute('disabled')).toEqual(true);
-    let linkElement = getByText('More options');
-    expect(linkElement).toBeInTheDocument();
-    linkElement.click();
-
-    expect(getByTestId('delete_sandbox').hasAttribute('disabled')).toEqual(false);
+        expect(getByTestId('delete_sandbox').hasAttribute('disabled')).toEqual(false);
+    });
 });

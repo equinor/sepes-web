@@ -241,12 +241,12 @@ export const validateUsername = (
     });
 };
 
-export const returnTooltipTextDataset = (_dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
+export const returnTooltipTextDataset = (dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
     if (permissions && !permissions.update) {
         return 'You do not have access to update data sets in sandbox';
     }
-    if (_dataset.name.length > 50) {
-        return _dataset.name;
+    if (dataset.name.length > 50) {
+        return dataset.name;
     }
     return '';
 };
@@ -271,7 +271,7 @@ export const checkIfAnyVmRulesHasChanged = (hasChangedVmRules): boolean => {
 };
 
 export const checkIfEqualRules = (vm: VmObj): boolean => {
-    if (vm.rules.length < 2) {
+    if (!vm.rules || vm.rules.length < 2) {
         return false;
     }
     for (let i = 1; i < vm.rules.length; i++) {
