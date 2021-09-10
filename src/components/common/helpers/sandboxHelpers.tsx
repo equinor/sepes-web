@@ -2,6 +2,7 @@
 import { getSandboxCostAnalysis, validateVmUsername } from 'services/Api';
 import {
     AvailableDatasetObj,
+    ButtonEnabledObj,
     OperatingSystemObj,
     SandboxCreateObj,
     SandboxObj,
@@ -284,38 +285,43 @@ export const checkIfEqualRules = (vm: VmObj): boolean => {
     return false;
 };
 
-export const checkIfSaveIsEnabled = (hasChangedVmRules, vm, inputError, setInputError): boolean => {
+export const checkIfSaveIsEnabled = (hasChangedVmRules, vm: VmObj, inputError: string): ButtonEnabledObj => {
     const hasChangedIndex = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+    const returnObject: ButtonEnabledObj = { enabled: true, error: '' };
     if (hasChangedIndex === -1) {
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
     if (!vm.rules || !hasChangedVmRules[hasChangedIndex].hasChanged) {
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
 
     if (checkIfEqualRules(vm)) {
         if (inputError !== inputErrorsVmRules.equalRules) {
-            setInputError(inputErrorsVmRules.equalRules);
+            returnObject.error = inputErrorsVmRules.equalRules;
         }
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
 
-    let enabled = true;
     vm.rules.forEach((rule) => {
         if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
-            enabled = false;
+            returnObject.enabled = false;
+            return returnObject;
         }
         if (rule.direction === 0 && !checkIfInputIsNumberWihoutCharacters(rule.port)) {
-            enabled = false;
+            returnObject.enabled = false;
+            return returnObject;
         }
         if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
-            enabled = false;
+            returnObject.enabled = false;
             if (inputError !== inputErrorsVmRules.notAllFieldsFilled) {
-                setInputError(inputErrorsVmRules.notAllFieldsFilled);
+                returnObject.error = inputErrorsVmRules.notAllFieldsFilled;
             }
         }
     });
-    return enabled;
+    return returnObject;
 };
 
 export const checkIfAddNewVmHasUnsavedChanges = (vm: VmObj) => {

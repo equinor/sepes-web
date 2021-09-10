@@ -1,0 +1,1 @@
+npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage

@@ -1,5 +1,6 @@
 import { AvailableDatasetObj, SandboxObj, SandboxPermissions, VmObj } from '../../../components/common/interfaces';
 
+// Sandbox
 export const sandbox: SandboxObj = {
     deleted: false,
     region: '',
@@ -72,6 +73,32 @@ export const sandboxWithNoPermissions: SandboxObj = {
     }
 };
 
+export const sandboxWithAllPermissions: SandboxObj = {
+    deleted: false,
+    region: '',
+    resources: [],
+    datasets: [],
+    studyId: '',
+    technicalContactEmail: '',
+    technicalContactName: '',
+    name: '',
+    template: '',
+    id: '1',
+    currentPhase: undefined,
+    linkToCostAnalysis: '',
+    studyName: '',
+    restrictionDisplayText: '',
+    permissions: {
+        delete: true,
+        editInboundRules: true,
+        openInternet: true,
+        update: true,
+        increasePhase: true
+    }
+};
+
+//Sandbox dataset
+
 export const availableDataset: AvailableDatasetObj = {
     datasetId: '1',
     name: 'test',
@@ -102,8 +129,9 @@ export const sandboxPermissionsNoPermissions: SandboxPermissions = {
     increasePhase: false
 };
 
+// VM
 export const vm: VmObj = {
-    id: '',
+    id: '1',
     name: '',
     region: 'norwayeast',
     size: '',
@@ -114,14 +142,14 @@ export const vm: VmObj = {
     linkToExternalSystem: '',
     dataDisks: [],
     rules: [
-        { ip: '1.1.1.1', port: '80' },
-        { ip: '1.1.1.2', port: '80' },
-        { ip: '1.1.1.3', port: '80' }
+        { ip: '1.1.1.1', port: '80', description: 'rule1' },
+        { ip: '1.1.1.2', port: '80', description: 'rule2' },
+        { ip: '1.1.1.3', port: '80', description: 'rule3' }
     ]
 };
 
 export const vmWithEqualRules: VmObj = {
-    id: '',
+    id: '1',
     name: '',
     region: 'norwayeast',
     size: '',
@@ -132,9 +160,27 @@ export const vmWithEqualRules: VmObj = {
     linkToExternalSystem: '',
     dataDisks: [],
     rules: [
-        { ip: '1.1.1.1', port: '80' },
-        { ip: '1.1.1.1', port: '80' },
-        { ip: '1.1.1.1', port: '80' }
+        { ip: '1.1.1.1', port: '80', description: '' },
+        { ip: '1.1.1.1', port: '80', description: '' },
+        { ip: '1.1.1.1', port: '80', description: '' }
+    ]
+};
+
+export const vmWithUnfinishedRule: VmObj = {
+    id: '1',
+    name: '',
+    region: 'norwayeast',
+    size: '',
+    operatingSystem: '',
+    distro: 'win2019datacenter',
+    username: '',
+    password: '',
+    linkToExternalSystem: '',
+    dataDisks: [],
+    rules: [
+        { ip: '1.1.1.1', port: '80', description: '' },
+        { ip: '1.1.1.2', port: '80', description: 'rule2' },
+        { ip: '1.1.1.3', port: '80', description: 'rule3' }
     ]
 };
 
@@ -151,6 +197,42 @@ export const vmWithOpenInternet: VmObj = {
     dataDisks: [],
     rules: [
         { ip: '1.1.1.1', port: '80', action: 0, direction: 1 },
+        { ip: '1.1.1.2', port: '80' },
+        { ip: '1.1.1.3', port: '80' }
+    ]
+};
+
+export const vmWithIncorrectIpRule: VmObj = {
+    id: '',
+    name: '',
+    region: 'norwayeast',
+    size: '',
+    operatingSystem: '',
+    distro: 'win2019datacenter',
+    username: '',
+    password: '',
+    linkToExternalSystem: '',
+    dataDisks: [],
+    rules: [
+        { ip: '1.1.1.1fa', port: '80', action: 0, direction: 1 },
+        { ip: '1.1.1.2', port: '80' },
+        { ip: '1.1.1.3', port: '80' }
+    ]
+};
+
+export const vmWithIncorrectPortRule: VmObj = {
+    id: '',
+    name: '',
+    region: 'norwayeast',
+    size: '',
+    operatingSystem: '',
+    distro: 'win2019datacenter',
+    username: '',
+    password: '',
+    linkToExternalSystem: '',
+    dataDisks: [],
+    rules: [
+        { ip: '1.1.1.1', port: '80aa', action: 0, direction: 1 },
         { ip: '1.1.1.2', port: '80' },
         { ip: '1.1.1.3', port: '80' }
     ]

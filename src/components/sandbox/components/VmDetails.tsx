@@ -98,6 +98,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrorsVmRules.notAllFieldsFilled);
     const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError, setInputError);
+    setInputError(saveIsEnabled.error);
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -556,7 +557,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                 onClick={() => {
                                     saveRule();
                                 }}
-                                disabled={!saveIsEnabled}
+                                disabled={!saveIsEnabled.enabled}
                                 data-cy="vm_rule_save"
                             >
                                 Save

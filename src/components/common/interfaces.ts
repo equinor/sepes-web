@@ -176,3 +176,8 @@ export interface DatasetClassificationObj {
     classification: string;
     restrictionDisplayText: string;
 }
+
+export interface ButtonEnabledObj {
+    enabled: boolean;
+    error: string;
+}

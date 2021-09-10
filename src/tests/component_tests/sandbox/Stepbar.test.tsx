@@ -1,57 +1,8 @@
 import { render, act } from '@testing-library/react';
 import StepBar from '../../../components/sandbox/StepBar';
-import { SandboxObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { sandboxWithNoPermissions } from '../../mocks/sandbox/sandbox-mocks';
-
-// const sandboxWithNoPermissions: SandboxObj = {
-//     deleted: false,
-//     region: '',
-//     resources: [],
-//     datasets: [],
-//     studyId: '',
-//     technicalContactEmail: '',
-//     technicalContactName: '',
-//     name: '',
-//     template: '',
-//     id: '1',
-//     currentPhase: undefined,
-//     linkToCostAnalysis: '',
-//     studyName: '',
-//     restrictionDisplayText: '',
-//     permissions: {
-//         delete: false,
-//         editInboundRules: false,
-//         openInternet: false,
-//         update: false,
-//         increasePhase: false
-//     }
-// };
-
-const sandboxWithAllPermissions: SandboxObj = {
-    deleted: false,
-    region: '',
-    resources: [],
-    datasets: [],
-    studyId: '',
-    technicalContactEmail: '',
-    technicalContactName: '',
-    name: '',
-    template: '',
-    id: '1',
-    currentPhase: undefined,
-    linkToCostAnalysis: '',
-    studyName: '',
-    restrictionDisplayText: '',
-    permissions: {
-        delete: true,
-        editInboundRules: true,
-        openInternet: true,
-        update: true,
-        increasePhase: true
-    }
-};
+import { sandboxWithAllPermissions, sandboxWithNoPermissions } from '../../mocks/sandbox/sandbox-mocks';
 
 const mockFunc = (id: string) => {};
 

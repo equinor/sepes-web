@@ -1,5 +1,6 @@
 import * as helpers from '../../components/common/helpers/datasetHelpers';
 import expect from 'expect';
+import { dataset, datasetWithoutPermissions } from '../mocks/dataset/dataset-mocs';
 
 test('test validateUserInputSandbox', () => {
     expect(
@@ -67,4 +68,16 @@ test('test removeFirstOccurenceCharacter ', () => {
 test('test findWithAttr ', () => {
     const array = [{ path: 'file1.png' }];
     expect(helpers.findWithAttr(array, 'path', 'file1.png')).toEqual(0);
+});
+
+test('test checkIfDeleteIsEnabled ', () => {
+    const progressArray = [{ name: 'file1.png', percent: 1 }];
+    const file = { name: 'file1.png' };
+    expect(helpers.checkIfDeleteIsEnabled(file, dataset, progressArray)).toBeTruthy();
+});
+
+test('test checkIfDeleteIsEnabled, no permission ', () => {
+    const progressArray = [{ name: 'file1.png', percent: 1 }];
+    const file = { name: 'file1.png' };
+    expect(helpers.checkIfDeleteIsEnabled(file, datasetWithoutPermissions, progressArray)).toBeTruthy();
 });
