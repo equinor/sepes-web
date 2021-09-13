@@ -12,7 +12,7 @@ import {
     getVirtualMachineRule
 } from '../../../services/Api';
 import { inputErrorsVmRules, resourceStatus, resourceType } from '../../common/staticValues/types';
-import { SandboxPermissions } from '../../common/interfaces';
+import { ButtonEnabledObj, SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
 import {
@@ -96,14 +96,15 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
-    const [inputError, setInputError] = useState<string>(inputErrorsVmRules.notAllFieldsFilled);
-    const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError);
-    setInputError(saveIsEnabled.error);
+    const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
     let keyCount: number = 0;
 
     useEffect(() => {
         getVmExtendedInfo();
     }, [index, vm, resources]);
+    useEffect(() => {
+        setSaveIsEnabled(checkIfSaveIsEnabled(hasChangedVmRules, vm, saveIsEnabled.error));
+    }, [vms]);
     useEffect(() => {
         callGetMyIp();
         getVmRules();
@@ -552,7 +553,10 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                         </Body>
                     </Table>
                     <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                        <Tooltip title={saveIsEnabled || !hasChanged ? '' : inputError} placement="left">
+                        <Tooltip
+                            title={saveIsEnabled.enabled || !hasChanged ? '' : saveIsEnabled.error}
+                            placement="left"
+                        >
                             <Button
                                 onClick={() => {
                                     saveRule();
