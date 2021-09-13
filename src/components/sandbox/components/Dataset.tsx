@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, SandboxObj } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {

@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import {
-    SandboxObj,
-    SizeObj,
-    DropdownObj,
-    OperatingSystemObj,
-    SandboxPermissions,
-    VmObj
-} from '../../common/interfaces';
+import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, VmObj } from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,

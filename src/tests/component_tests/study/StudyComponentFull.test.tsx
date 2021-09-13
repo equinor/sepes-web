@@ -340,38 +340,38 @@ test('renders StudyComponent full component with no permission to delete', async
     linkElement.click();
 });
 
-// test('renders StudyComponent full component with sandbox in study', async () => {
-//     const history = createMemoryHistory();
-//     const { getByText, getByTestId } = render(
-//         <Router history={history}>
-//             <StudyComponentFull
-//                 study={studyWithSandboxes}
-//                 newStudy={false}
-//                 setNewStudy={mockFunc}
-//                 setLoading={mockFunc}
-//                 loading={loading}
-//                 setStudy={mockFunc}
-//                 setHasChanged={mockFunc}
-//                 cache={mockFunc}
-//                 setUpdateCache={mockFunc}
-//                 updateCache={mockFunc}
-//                 setDeleteStudyInProgress={mockFunc}
-//                 hasChanged={false}
-//             />
-//         </Router>
-//     );
-//     let linkElement = await getByText('Edit');
-//     expect(linkElement).toBeInTheDocument();
-//     linkElement.click();
+test('renders StudyComponent full component with sandbox in study', async () => {
+    const history = createMemoryHistory();
+    const { getByText, getByTestId } = render(
+        <Router history={history}>
+            <StudyComponentFull
+                study={studyWithSandboxes}
+                newStudy={false}
+                setNewStudy={mockFunc}
+                setLoading={mockFunc}
+                loading={loading}
+                setStudy={mockFunc}
+                setHasChanged={mockFunc}
+                cache={mockFunc}
+                setUpdateCache={mockFunc}
+                updateCache={mockFunc}
+                setDeleteStudyInProgress={mockFunc}
+                hasChanged={false}
+            />
+        </Router>
+    );
+    let linkElement = await getByText('Edit');
+    expect(linkElement).toBeInTheDocument();
+    linkElement.click();
 
-//     linkElement = getByTestId('study_delete_settings');
-//     expect(linkElement).toBeInTheDocument();
-//     linkElement.click();
+    linkElement = getByTestId('study_delete_settings');
+    expect(linkElement).toBeInTheDocument();
+    linkElement.click();
 
-//     expect(getByText('Delete study')).toBeInTheDocument();
+    expect(getByText('Delete study')).toBeInTheDocument();
 
-//     expect(getByTestId('study_delete').hasAttribute('disabled')).toEqual(true);
+    expect(getByTestId('study_delete').hasAttribute('disabled')).toEqual(true);
 
-//     linkElement = getByTestId('study_delete');
-//     linkElement.click();
-// });
+    linkElement = getByTestId('study_delete');
+    linkElement.click();
+});
