@@ -69,7 +69,7 @@ test('test validateUserInputSandbox', () => {
 
 test('test validateUserInput', () => {
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'test name',
@@ -89,7 +89,7 @@ test('test validateUserInput', () => {
     ).toBeTruthy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: '',
@@ -109,7 +109,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',
@@ -129,7 +129,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',
@@ -140,7 +140,7 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
@@ -149,7 +149,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',

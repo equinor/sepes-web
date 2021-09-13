@@ -25,7 +25,7 @@ export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: str
     return true;
 };
 
-export const validateUserInput = (
+export const validateUserInputVm = (
     vm: VmObj,
     loading: boolean,
     vmEstimatedCost: string,

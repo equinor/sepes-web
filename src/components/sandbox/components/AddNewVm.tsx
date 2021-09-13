@@ -14,7 +14,7 @@ import {
 import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
-    validateUserInput,
+    validateUserInputVm,
     filterList,
     returnPasswordVariant,
     returnUsernameVariant,
@@ -205,7 +205,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const createVm = () => {
-        if (!validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid)) {
+        if (!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)) {
             return;
         }
         setHasChanged(false);
@@ -498,7 +498,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
                     title={
-                        !validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
+                        !validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
                             ? 'Please fill out all required fields'
                             : ''
                     }
@@ -508,7 +508,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"
                         onClick={createVm}
-                        disabled={!validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid)}
+                        disabled={!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)}
                     >
                         {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>

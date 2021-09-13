@@ -97,7 +97,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [inputError, setInputError] = useState<string>(inputErrorsVmRules.notAllFieldsFilled);
-    const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError, setInputError);
+    const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError);
     setInputError(saveIsEnabled.error);
     let keyCount: number = 0;
 
