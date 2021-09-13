@@ -20,11 +20,9 @@ import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxHelpers';
 
 type VmConfigProps = {
-    showAddNewVm: boolean;
     sandbox: SandboxObj;
     resources: any;
     getResources: any;
-    permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
     controller: AbortController;
@@ -33,11 +31,9 @@ type VmConfigProps = {
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
-    showAddNewVm,
     sandbox,
     resources,
     getResources,
-    permissions,
     setUpdateCache,
     updateCache,
     controller,
@@ -67,6 +63,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
     const [sizeFilter, setSizeFilter] = useState<any>([]);
     const [osFilter, setOsFilter] = useState<any>([]);
+    const showAddNewVm = sandbox.permissions && sandbox.permissions.update;
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
@@ -83,13 +80,13 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     useEffect(() => {
         setIsSubscribed(true);
-        if (permissions && permissions.update && isSubscribed) {
+        if (sandbox.permissions && sandbox.permissions.update && isSubscribed) {
             if (!sizes) getVmSizes();
             if (!disks) getVmDisks();
             if (!os) getVms();
         }
         return () => setIsSubscribed(false);
-    }, [permissions]);
+    }, [sandbox.permissions]);
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
@@ -160,7 +157,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         index={activeTab - 1}
                         resources={resources}
                         getResources={getResources}
-                        permissions={permissions}
+                        permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}

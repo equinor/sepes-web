@@ -118,7 +118,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         sandboxId={sandboxId}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        permissions={sandbox.permissions}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
                         getResources={getResources}
@@ -163,10 +162,8 @@ const Sandbox: React.FC<SandboxProps> = () => {
                             {(step === 0 || step === 1) && (
                                 <VmConfig
                                     sandbox={sandbox}
-                                    showAddNewVm={sandbox.permissions && sandbox.permissions.update}
                                     resources={resources}
                                     getResources={getResources}
-                                    permissions={sandbox.permissions}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}
                                     controller={controller}

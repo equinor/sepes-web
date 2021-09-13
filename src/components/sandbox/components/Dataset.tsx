@@ -27,7 +27,6 @@ type datasetProps = {
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
-    permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
     controller: AbortController;
@@ -37,7 +36,6 @@ const Dataset: React.FC<datasetProps> = ({
     sandboxId,
     updateCache,
     setUpdateCache,
-    permissions,
     setSandbox,
     sandbox,
     controller
@@ -52,6 +50,7 @@ const Dataset: React.FC<datasetProps> = ({
         false
     );
     const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});
+    const { permissions } = sandbox;
 
     const handleCheck = (evt: any, dataset: AvailableDatasetObj) => {
         setAddDatasetInprogress({ ...addDatasetInProgress, [dataset.datasetId]: true });
