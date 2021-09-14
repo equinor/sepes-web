@@ -83,7 +83,7 @@ export interface SandboxObj {
     deleted: boolean;
     region: string;
     resources: [];
-    datasets: [];
+    datasets: DatasetObj[];
     studyId: string;
     technicalContactEmail: string;
     technicalContactName: string;
@@ -175,4 +175,9 @@ export interface DatasetResourcesObj {
 export interface DatasetClassificationObj {
     classification: string;
     restrictionDisplayText: string;
+}
+
+export interface ButtonEnabledObj {
+    enabled: boolean;
+    error: string;
 }

@@ -35,6 +35,7 @@
         "cypress-multi-reporters": "^1.5.0",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
+        "expect": "^27.1.1",
         "identity-obj-proxy": "^3.0.0",
         "istanbul-merge": "^1.1.1",
         "jest-transform-stub": "^2.0.0",
@@ -69,7 +70,7 @@
     "scripts": {
         "start": "react-scripts -r @cypress/instrument-cra start",
         "build": "react-scripts build",
-        "test": "react-scripts test",
+        "test": "react-scripts test --detectOpenHandles",
         "eject": "react-scripts eject",
         "commit": "git-cz",
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
