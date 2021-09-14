@@ -22,8 +22,8 @@ $oAuthReq = Invoke-RestMethod -Method Post -Uri https://login.microsoftonline.co
 $accessToken = $oAuthReq.access_token
 # $verbose = $true;
 
-return "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received"
-# return $accessToken
+# return "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received"
+return $accessToken
 
 # if ($accessToken.Length -gt 20) {
 #     if ($verbose -eq $true) {
