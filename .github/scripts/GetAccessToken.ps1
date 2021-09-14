@@ -5,6 +5,12 @@
 #     [string]$scope = $null
 # )
 
+function CurrentLineStart() {
+    $esc = [char]27
+    $CurrentLine  = $Host.UI.RawUI.CursorPosition.Y + 1
+    Return "$esc[${CurrentLine};0H"
+}
+
 $clientId = $args[0];
 $tenantId = $args[1];
 $clientSecret = $args[2];
@@ -15,16 +21,11 @@ $body = @{client_id=$clientId;client_secret="$clientSecret";grant_type="client_c
 $oAuthReq = Invoke-RestMethod -Method Post -Uri https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token -Body $body
 $accessToken = $oAuthReq.access_token
 $verbose = $true;
-Write-Host "aaa"
-Write-Host $clientId
-Write-Host $tenantId
-Write-Host $clientSecret
-Write-Host $scope
+
 
 if ($accessToken.Length -gt 20) {
-    Write-Host $accessToken
     if ($verbose -eq $true) {
-        Write-Host "Access token was received" -ForegroundColor Green
+        Write-Host "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received" -ForegroundColor Green
     }
 } else {
     Write-Host "Access token could not be retrieved" -ForegroundColor Red
@@ -32,3 +33,5 @@ if ($accessToken.Length -gt 20) {
 }
 
 return $accessToken
+
+
