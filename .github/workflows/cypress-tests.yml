@@ -91,10 +91,22 @@ jobs:
       #     max_attempts: 2
       #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
-      - name: Run quick running cypress tests
-        env:
-          token: "${{ steps.id-token.outputs.TOKEN }}"
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+
+      - name: Run cypress
+        uses: cypress-io/github-action@v2
+        # env:
+          # DEBUG: 'cypress:*'
+        with:
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          config-file: cypress_chromium.dev.json
+          spec: cypress/integration/quickRunningTests/**/
+          browser: chrome
+          env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
+      # - name: Run quick running cypress tests
+      #   env:
+      #     token: ${{ steps.id-token.outputs.TOKEN }}
+      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
