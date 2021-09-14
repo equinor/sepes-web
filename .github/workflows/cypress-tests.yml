@@ -21,7 +21,7 @@ jobs:
       - name: Retrieve token
         id: id-token
         run: |
-          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.MOCK_USER_CLIENT_ID }} --clientSecret ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }} --scope ${{ secrets.MOCK_USER_SCOPE }}`
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.MOCK_USER_CLIENT_ID }} --clientSecret ${{ secrets.MOCK_USER_SECRET }} --scope ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
       # - uses: Azure/get-keyvault-secrets@v1
