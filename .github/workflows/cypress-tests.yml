@@ -24,89 +24,11 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
-      - name: Create Awesome Badge
-        uses: schneegans/dynamic-badges-action@v1.1.0
-        with:
-          auth: ${{ secrets.GIST_SECRET }}
-          gistID: 66a47f0b2d120954c140e9d2b61c3d7b
-          filename: test.json
-          label: Coverage
-          message: "66%"
-          color: orangee
-
-
-      # - name: Retrieve token
-      #   id: id-token
-      #   run: |
-      #     TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.MOCK_USER_CLIENT_ID }} --clientSecret ${{ secrets.MOCK_USER_SECRET }} --scope ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
-      #     echo "::set-output name=TOKEN::$TOKEN"
-
-      # - uses: Azure/get-keyvault-secrets@v1
-      #   with:
-      #     keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-      #     secrets: 'MockUserNonProdWeb, AzureAdClientIdScope'  # comma separated list of secret keys that need to be fetched from the Key Vault 
-      #   id: keyVaultSecrets
-
-      # - name: build
-      #   working-directory: GetAccessToken
-      #   run: dotnet build --configuration Release
-
-      # - name: Put access token in key vault
-      #   env:
-      #     buildConfiguration: 'Release'
-      #     mockuserAppId: ${{ secrets.MOCK_USER_DEV_CLIENT_SECRET }}
-      #     mockappuserClientSecret: ${{ steps.keyVaultSecrets.outputs.MockUserNonProdWeb }}
-      #     mockUserAppScopes: ${{ steps.keyVaultSecrets.outputs.AzureAdClientIdScope}}
-      #     keyVaultUserClientId: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-      #     keyVaultName: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-      #     cypressAccesstokenSecretname: 'cypressAccesstokenDev'
-      #     NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget
-      #     NPM_PACKAGES: $(Pipeline.Workspace)/.npm
-      #     CYPRESS_BINARY: $(Pipeline.Workspace)/.cypressbinary
-      #     clientId: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-      #     clientSecret:  ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
-      #     tenantId: ${{ secrets.AZURE_TENANT_ID }}
-      #     azureSubscriptionId: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
-      #   run: |
-      #     dotnet GetAccessToken/bin/Release/netcoreapp3.1/GetAccessToken.dll --tenant-id $tenantId --app-id $mockuserAppId --mock-user-client-secret $mockappuserClientSecret --authority $mockUserAppScopes --key-vault-name $keyVaultName --key-vault-secret-name $cypressAccesstokenSecretname --key-vault-user-client-secret $clientSecret --key-vault-user-client-id $clientId
-
-      # - uses: Azure/get-keyvault-secrets@v1
-      #   with:
-      #     keyvault: ${{ secrets.AZURE_KEYVAULT_DEV_NAME }}
-      #     secrets: 'cypressAccesstokenDev'  # comma separated list of secret keys that need to be fetched from the Key Vault
-      #   id: token
-
-      
-      # - uses: gliech/create-github-secret-action@v1
-      #   with:
-      #     name: coverage_percentage
-      #     value: 65.54
-      #     pa_token: ${{ secrets.PA_TOKEN }}
-
-
-      # - uses: sergeysova/gist-read-action@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   id: example-gist
-      #   with:
-      #     gist_id: 66a47f0b2d120954c140e9d2b61c3d7b
-      #     file_name: test.json
-
-
       - run: npm install
 
       - name: run step if multiline not null
         if: ${{ steps.id-token.outputs.TOKEN }}
         run: echo multiline not null
-
-
-      # This will retry entire test run. Will only retry specific steps for now
-      # - name: Run quick running cypress tests
-      #   uses: nick-invision/retry@v2
-      #   with:
-      #     timeout_minutes: 4
-      #     max_attempts: 2
-      #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
 
       # - name: Run cypress
@@ -184,14 +106,6 @@ jobs:
           path: cypress_test_summary3.txt
 
       - run: npx nyc report --reporter json  --report-dir coverage
-
-
-      # - name: Test coverage
-      #   uses: ArtiomTr/jest-coverage-report-action@v1.3
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     test_script: npx react-scripts test src  --silent --ci --coverage --coverageReporters="text" --coverageReporters="text-summary"
 
       - run: dir
 
