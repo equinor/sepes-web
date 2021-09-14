@@ -29,7 +29,7 @@ jobs:
         with:
           name: coverage_percentage
           value: ${{ steps.id-token.outputs.TOKEN }}
-          pa_token: ${{ secrets.PA_TOKEN }
+          pa_token: ${{ secrets.PA_TOKEN }}
 
       # - name: Retrieve token
       #   id: id-token
