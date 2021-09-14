@@ -1,4 +1,22 @@
+import {
+    availableDataset,
+    availableDatasetLongName,
+    sandbox,
+    sandboxPermissions,
+    sandboxPermissionsNoPermissions,
+    sandboxWithNoDatasets,
+    sandboxWithNoPermissions,
+    vm,
+    vmWithEqualRules,
+    vmWithIncorrectIpRule,
+    vmWithIncorrectPortRule,
+    vmWithOpenInternet,
+    vmWithUnfinishedRule
+} from 'tests/mocks/sandbox/sandbox-mocks';
 import * as helpers from '../../components/common/helpers/sandboxHelpers';
+import expect from 'expect';
+import { VmObj } from 'components/common/interfaces';
+import { inputErrorsVmRules } from 'components/common/staticValues/types';
 
 test('test validateUserInputSandbox', () => {
     expect(
@@ -51,7 +69,7 @@ test('test validateUserInputSandbox', () => {
 
 test('test validateUserInput', () => {
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'test name',
@@ -71,7 +89,7 @@ test('test validateUserInput', () => {
     ).toBeTruthy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: '',
@@ -91,7 +109,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',
@@ -111,7 +129,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',
@@ -122,7 +140,7 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
@@ -131,7 +149,7 @@ test('test validateUserInput', () => {
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInput(
+        helpers.validateUserInputVm(
             {
                 id: '1',
                 name: 'asdas',
@@ -203,4 +221,152 @@ test('test arrayObjectsToArrayString, check output', () => {
             { displayValue: 'orange', id: 2 }
         ])
     ).toEqual(expectedResult);
+});
+
+test('test returnToolTipForMakeAvailable, check output', () => {
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, false, true)).toEqual('');
+    // Without vm
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, false, false, true)).toEqual(
+        'You need atleast one VM in the sandbox'
+    );
+    //With open internet
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, true, true)).toEqual(
+        'One or more vms have open internet. Close before making sandbox available'
+    );
+    //Without permission to make data available
+    expect(helpers.returnToolTipForMakeAvailable(sandboxWithNoPermissions, true, false, true)).toEqual(
+        'You do not have permission to make this sandbox Available'
+    );
+    //Resources in progress
+    expect(helpers.returnToolTipForMakeAvailable(sandbox, true, false, false)).toEqual(
+        'All resources must have status OK'
+    );
+    //No datasets in sandbox
+    expect(helpers.returnToolTipForMakeAvailable(sandboxWithNoDatasets, true, false, true)).toEqual(
+        'No datasets in the sandbox'
+    );
+});
+
+test('test returnTooltipTextDataset, check output', () => {
+    expect(helpers.returnTooltipTextDataset(availableDataset, sandboxPermissions)).toEqual('');
+    expect(helpers.returnTooltipTextDataset(availableDatasetLongName, sandboxPermissions)).toEqual(
+        availableDatasetLongName.name
+    );
+    expect(helpers.returnTooltipTextDataset(availableDataset, sandboxPermissionsNoPermissions)).toEqual(
+        'You do not have access to update data sets in sandbox'
+    );
+});
+
+test('test checkIfEqualRules, check output', () => {
+    expect(helpers.checkIfEqualRules(vm)).toEqual(false);
+    expect(helpers.checkIfEqualRules(vmWithEqualRules)).toEqual(true);
+});
+
+test('test checkIfAnyVmsHasOpenInternet, check output', () => {
+    const vms: any = [];
+    vms.push(vm);
+    expect(helpers.checkIfAnyVmsHasOpenInternet(vms)).toEqual(false);
+    vms.push(vmWithOpenInternet);
+    expect(helpers.checkIfAnyVmsHasOpenInternet(vms)).toEqual(true);
+});
+
+test('test filterOs, check output', () => {
+    const osList = [
+        { category: 'category1', recommended: true },
+        { category: 'category2', recommended: false }
+    ];
+    let filter = ['category1'];
+    const expectedResult = [{ category: 'category1', recommended: true }];
+    expect(helpers.filterOs(osList, filter, true)).toEqual(expectedResult);
+});
+
+test('test filterOs, check output', () => {
+    const osList = [
+        { category: 'category1', recommended: true },
+        { category: 'category2', recommended: false }
+    ];
+    let filter = [''];
+    const expectedResult = [{ category: 'category1', recommended: true }];
+    expect(helpers.filterOs(osList, filter, true)).toEqual(expectedResult);
+});
+
+test('test filterOs, check output', () => {
+    const osList = [
+        { category: 'category1', recommended: true },
+        { category: 'category2', recommended: false }
+    ];
+    let filter = [''];
+    expect(helpers.filterOs(osList, filter, false)).toEqual([]);
+});
+
+test('test filterOs, check output', () => {
+    const osList = [
+        { category: 'category1', recommended: true },
+        { category: 'category2', recommended: false }
+    ];
+    let filter = ['recommended', 'category2'];
+    expect(helpers.filterOs(osList, filter, true)).toEqual([]);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: true },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: true, error: '' };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vm, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: false },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: '' };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vm, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: true },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: inputErrorsVmRules.equalRules };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vmWithEqualRules, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: true },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: inputErrorsVmRules.notAllFieldsFilled };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vmWithUnfinishedRule, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: true },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: '' };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vmWithIncorrectIpRule, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '1', hasChanged: true },
+        { vmId: '2', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: '' };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vmWithIncorrectPortRule, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSaveIsEnabled, check output', () => {
+    const hasChangedVms = [
+        { vmId: '3', hasChanged: true },
+        { vmId: '4', hasChanged: false }
+    ];
+    let expectedResult = { enabled: false, error: '' };
+    expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vm, '')).toEqual(expectedResult);
 });

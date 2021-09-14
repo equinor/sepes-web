@@ -38,7 +38,6 @@ type SandboxConfigProps = {
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
-    permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
     getResources: any;
@@ -50,7 +49,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     sandboxId,
     updateCache,
     setUpdateCache,
-    permissions,
     setSandbox,
     sandbox,
     getResources,
@@ -63,7 +61,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     sandboxId={sandboxId}
                     updateCache={updateCache}
                     setUpdateCache={setUpdateCache}
-                    permissions={permissions}
                     setSandbox={setSandbox}
                     sandbox={sandbox}
                     controller={controller}
@@ -71,7 +68,11 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                 <PolictyComponentWrapper>
                     <PolicyComponent displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
-                <ResourcesComponent resources={resources} getResources={getResources} permissions={permissions} />
+                <ResourcesComponent
+                    resources={resources}
+                    getResources={getResources}
+                    permissions={sandbox.permissions}
+                />
             </InfoWrapper>
         </Wrapper>
     );
