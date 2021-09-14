@@ -89,12 +89,12 @@ jobs:
 
       - name: Run quick running cypress tests
         env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+          token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
-          token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+          token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
         
