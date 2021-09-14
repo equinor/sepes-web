@@ -156,6 +156,7 @@ jobs:
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
+        if: github.ref == 'refs/heads/develop'
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 66a47f0b2d120954c140e9d2b61c3d7b
