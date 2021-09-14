@@ -77,7 +77,11 @@ jobs:
 
 
       - run: npm install
-      - run: ${{ steps.id-token.outputs.TOKEN }}
+
+      - name: run step if multiline not null
+        if: ${{ steps.id-token.outputs.TOKEN }}
+        run: echo multiline not null
+
 
       # This will retry entire test run. Will only retry specific steps for now
       # - name: Run quick running cypress tests
