@@ -21,7 +21,7 @@ jobs:
       - name: Retrieve token
         id: id-token
         run: |
-          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
       - name: Create Awesome Badge
