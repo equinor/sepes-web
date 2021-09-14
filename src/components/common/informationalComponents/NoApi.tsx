@@ -21,7 +21,7 @@ const NoApi = () => {
             <FontAwesomeIcon icon={faBlind} size="5x" style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
-                    Unable to reach API.. {localStorage.getItem('cyToken')}
+                    Unable to reach API..
                 </Typography>
             </div>
         </div>
