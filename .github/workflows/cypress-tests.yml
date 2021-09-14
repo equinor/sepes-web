@@ -31,7 +31,7 @@ jobs:
           gistID: 66a47f0b2d120954c140e9d2b61c3d7b
           filename: test.json
           label: Coverage
-          message: ${{ steps.id-token.outputs.TOKEN }}
+          message: "66%"
           color: orangee
 
 
