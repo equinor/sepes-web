@@ -90,7 +90,7 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
       - name: Run long running cypress tests  
         env:
