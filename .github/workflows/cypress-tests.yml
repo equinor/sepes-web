@@ -21,8 +21,14 @@ jobs:
       - name: Retrieve token
         id: id-token
         run: |
-          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.MOCK_USER_CLIENT_ID }} --clientSecret ${{ secrets.MOCK_USER_SECRET }} --scope ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
           echo "::set-output name=TOKEN::$TOKEN"
+
+      # - name: Retrieve token
+      #   id: id-token
+      #   run: |
+      #     TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 --tenantId ${{ secrets.AZURE_TENANT_ID }} --clientId ${{ secrets.MOCK_USER_CLIENT_ID }} --clientSecret ${{ secrets.MOCK_USER_SECRET }} --scope ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}`
+      #     echo "::set-output name=TOKEN::$TOKEN"
 
       # - uses: Azure/get-keyvault-secrets@v1
       #   with:
@@ -92,21 +98,22 @@ jobs:
       #     command: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{ steps.token.outputs.cypressAccesstokenDev }}
 
 
-      - name: Run cypress
-        uses: cypress-io/github-action@v2
-        # env:
-          # DEBUG: 'cypress:*'
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          config-file: cypress_chromium.dev.json
-          spec: cypress/integration/quickRunningTests/**/
-          browser: chrome
-          env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
-      # - name: Run quick running cypress tests
-      #   env:
-      #     token: ${{ steps.id-token.outputs.TOKEN }}
-      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
+      # - name: Run cypress
+      #   uses: cypress-io/github-action@v2
+      #   # env:
+      #     # DEBUG: 'cypress:*'
+      #   with:
+      #     start: npm start
+      #     wait-on: 'http://localhost:3000'
+      #     config-file: cypress_chromium.dev.json
+      #     spec: cypress/integration/quickRunningTests/**/
+      #     browser: chrome
+      #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
+
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$token
 
       - name: Run long running cypress tests  
         env:
