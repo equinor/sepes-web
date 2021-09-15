@@ -1,4 +1,4 @@
-[![Cypress and jest Test](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml) ![check-code-coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HansKristianVikOlsen/66a47f0b2d120954c140e9d2b61c3d7b/raw/test.json)
+[![Cypress tests](https://github.com/equinor/sepes-web/actions/workflows/cypress-tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml) ![check-code-coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/HansKristianVikOlsen/66a47f0b2d120954c140e9d2b61c3d7b/raw/test.json)
 [![CodeQL](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml)
 ![](https://byob.yarr.is/equinor/sepes-api/breaking_change_status)
 
