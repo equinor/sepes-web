@@ -1,3 +1,4 @@
+name: Jest tests
 on: [pull_request]
 
 jobs:
