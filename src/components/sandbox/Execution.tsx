@@ -41,7 +41,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources 
     return (
         <Wrapper>
             <SatusWrapper>
-                {EquinorIcon('mood_very_happy', '#007079', 24)}{' '}
+                {EquinorIcon('mood_very_happy', '#007079', 24)}
                 <div style={{ marginLeft: '8px' }}>Data is now available in storage account</div>
             </SatusWrapper>
             <ResourceWrapper>

@@ -1,0 +1,184 @@
+name: Cypress and jest Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+  - cron:  '0 4 * * 1,2,3,4,5'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'Do not run tests') == false 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+
+      - name: Retrieve token
+        id: id-token
+        run: |
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
+          echo "::set-output name=TOKEN::$TOKEN"
+
+      - run: echo ${{github.ref}}
+
+      - run: npm install
+
+      - name: run step if multiline not null
+        if: ${{ steps.id-token.outputs.TOKEN }}
+        run: echo multiline not null
+
+
+      # - name: Run cypress
+      #   uses: cypress-io/github-action@v2
+      #   # env:
+      #     # DEBUG: 'cypress:*'
+      #   with:
+      #     start: npm start
+      #     wait-on: 'http://localhost:3000'
+      #     config-file: cypress_chromium.dev.json
+      #     spec: cypress/integration/quickRunningTests/**/
+      #     browser: chrome
+      #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
+
+ 
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+
+      - name: Run long running cypress tests  
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
+        
+      # - name: Run all tests in Chromium browser
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser chromium --config-file "cypress_chromium.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
+        
+      # - name: Run all tests in Firefox browser  
+      #   env:
+      #     token: ${{ steps.token.outputs.cypressAccesstokenDev }}
+      #   run: npx cypress run --browser firefox --config-file "cypress.dev.json" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' }}
+
+      - name: Save screenshots if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Save videos if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+
+      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Cypress-Coverage-report
+          path: coverage/lcov-report/
+
+      - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - name: comment PR
+        uses: machine-learning-apps/pr-comment@master
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: cypress_test_summary3.txt
+
+      - run: npx nyc report --reporter json  --report-dir coverage
+
+      - run: dir
+
+      - name: Create jest coverage report
+        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+        continue-on-error: true
+
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Jest-Coverage-report
+          path: jest-coverage/lcov-report/
+
+      - run: dir
+
+
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "./jest-coverage/coverage-final.json"
+          target: "./coverage/coverage-final-jest.json"
+
+      - run: npx nyc report --reporter html --reporter text -t coverage --report-dir totalCoverage
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Total coverage report
+          path: totalCoverage
+
+      # - run: npx nyc report --reporter json-summary --reporter text -t coverage --report-dir coverage
+
+
+      - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
+
+      - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
+
+      - run: awk '{print $3}' totalCoverage2.txt
+
+      - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
+        id: coveragePercentage
+
+      - uses: gliech/create-github-secret-action@v1
+        if: github.ref == 'refs/heads/develop'
+        with:
+          name: coverage_percentage
+          value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - name: Create Awesome Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        if: github.ref == 'refs/heads/develop'
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 66a47f0b2d120954c140e9d2b61c3d7b
+          filename: test.json
+          label: Coverage
+          message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          color: orangee
+
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script
+        env:
+          COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+          COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
+        with:
+          script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
+
+      - name: comment coverage PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: ${{ steps.my-script.outputs.result }}
+          check_for_duplicate_msg: true 

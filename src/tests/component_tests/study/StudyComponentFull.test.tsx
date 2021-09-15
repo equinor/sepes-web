@@ -135,7 +135,7 @@ const studyWithSandboxes: StudyObj = {
 
 const loading = false;
 const mockFunc = (id: string) => {};
-test('renders StudyComponent full component with edit study', () => {
+test('renders StudyComponent full component with edit study', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
@@ -154,7 +154,7 @@ test('renders StudyComponent full component with edit study', () => {
             />
         </Router>
     );
-    let linkElement = getByText('StudyName');
+    let linkElement = await getByText('StudyName');
     //Check that the study is displayed with the correct info
     expect(linkElement).toBeInTheDocument();
     linkElement = getByText('Bouvet');
@@ -178,7 +178,7 @@ test('renders StudyComponent full component with edit study', () => {
     expect(getByText('Save').closest('button').disabled).toBeFalsy();
 });
 
-test('renders StudyComponent full component with invalid study name', () => {
+test('renders StudyComponent full component with invalid study name', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
@@ -198,14 +198,14 @@ test('renders StudyComponent full component with invalid study name', () => {
         </Router>
     );
 
-    let linkElement = getByText('Edit');
+    let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
     // Clicks the Edit button
     linkElement.click();
     expect(getByText('Save').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with invalid vendor name', () => {
+test('renders StudyComponent full component with invalid vendor name', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
@@ -225,26 +225,26 @@ test('renders StudyComponent full component with invalid vendor name', () => {
         </Router>
     );
 
-    let linkElement = getByText('Edit');
+    let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
     // Clicks the Edit button
     linkElement.click();
     expect(getByText('Save').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with new study', () => {
+test('renders StudyComponent full component with new study', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
             <StudyComponentFull study={{}} newStudy setHasChanged={mockFunc} />
         </Router>
     );
-    let linkElement = getByText('Create');
+    let linkElement = await getByText('Create');
     expect(linkElement).toBeInTheDocument();
     expect(1).toBe(1);
 });
 
-test('renders StudyComponent full component with no permission to edit', () => {
+test('renders StudyComponent full component with no permission to edit', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
@@ -264,10 +264,10 @@ test('renders StudyComponent full component with no permission to edit', () => {
         </Router>
     );
 
-    expect(getByText('Edit').closest('button').disabled).toBeTruthy();
+    expect(await getByText('Edit').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with  permission to delete', () => {
+test('renders StudyComponent full component with  permission to delete', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
@@ -286,7 +286,7 @@ test('renders StudyComponent full component with  permission to delete', () => {
             />
         </Router>
     );
-    let linkElement = getByText('Edit');
+    let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
     // Clicks the Edit button
     linkElement.click();
@@ -304,9 +304,9 @@ test('renders StudyComponent full component with  permission to delete', () => {
     expect(getByText('Delete').closest('button').disabled).toBeTruthy();
 });
 
-test('renders StudyComponent full component with no permission to delete', () => {
+test('renders StudyComponent full component with no permission to delete', async () => {
     const history = createMemoryHistory();
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId } = await render(
         <Router history={history}>
             <StudyComponentFull
                 study={studyWithNoDelete}
@@ -323,24 +323,24 @@ test('renders StudyComponent full component with no permission to delete', () =>
             />
         </Router>
     );
-    let linkElement = getByText('Edit');
+    let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
     // Clicks the Edit button
     linkElement.click();
 
-    linkElement = getByTestId('study_delete_settings');
+    linkElement = await getByTestId('study_delete_settings');
     expect(linkElement).toBeInTheDocument();
     linkElement.click();
 
-    expect(getByText('Delete study')).toBeInTheDocument();
+    expect(await getByText('Delete study')).toBeInTheDocument();
 
-    expect(getByTestId('study_delete').hasAttribute('disabled')).toEqual(true);
+    expect(await getByTestId('study_delete').hasAttribute('disabled')).toEqual(true);
 
-    linkElement = getByTestId('study_delete');
+    linkElement = await getByTestId('study_delete');
     linkElement.click();
 });
 
-test('renders StudyComponent full component with sandbox in study', () => {
+test('renders StudyComponent full component with sandbox in study', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
@@ -360,7 +360,7 @@ test('renders StudyComponent full component with sandbox in study', () => {
             />
         </Router>
     );
-    let linkElement = getByText('Edit');
+    let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
     linkElement.click();
 

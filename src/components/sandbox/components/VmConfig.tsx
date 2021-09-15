@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import {
-    SandboxObj,
-    SizeObj,
-    DropdownObj,
-    OperatingSystemObj,
-    SandboxPermissions,
-    VmObj
-} from '../../common/interfaces';
+import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, VmObj } from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
@@ -17,13 +10,12 @@ import {
 import VmDetails from './VmDetails';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxHelpers';
 
 type VmConfigProps = {
-    showAddNewVm: boolean;
     sandbox: SandboxObj;
     resources: any;
     getResources: any;
-    permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
     controller: AbortController;
@@ -32,11 +24,9 @@ type VmConfigProps = {
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
-    showAddNewVm,
     sandbox,
     resources,
     getResources,
-    permissions,
     setUpdateCache,
     updateCache,
     controller,
@@ -66,6 +56,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
     const [sizeFilter, setSizeFilter] = useState<any>([]);
     const [osFilter, setOsFilter] = useState<any>([]);
+    const showAddNewVm = sandbox.permissions && sandbox.permissions.update;
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
@@ -75,35 +66,20 @@ const VmConfig: React.FC<VmConfigProps> = ({
 
     useEffect(() => {
         if (vmSaved) {
-            checkIfAnyVmsHasOpenInternet();
+            setVmsWithOpenInternet(checkIfAnyVmsHasOpenInternet(vms));
             setVmSaved(false);
         }
     }, [vmSaved, vms]);
 
     useEffect(() => {
         setIsSubscribed(true);
-        if (permissions && permissions.update && isSubscribed) {
+        if (sandbox.permissions && sandbox.permissions.update && isSubscribed) {
             if (!sizes) getVmSizes();
             if (!disks) getVmDisks();
             if (!os) getVms();
         }
         return () => setIsSubscribed(false);
-    }, [permissions]);
-
-    const checkIfAnyVmsHasOpenInternet = () => {
-        let result = false;
-        vms.forEach((_vm: VmObj) => {
-            if (_vm.rules) {
-                _vm.rules.forEach((rule: any) => {
-                    if (rule.action === 0 && rule.direction === 1) {
-                        result = true;
-                    }
-                });
-            }
-        });
-        setVmsWithOpenInternet(result);
-        return result;
-    };
+    }, [sandbox.permissions]);
 
     const getVmSizes = () => {
         getVirtualMachineSizes(sandbox.id, controller.signal).then((result: any) => {
@@ -174,7 +150,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         index={activeTab - 1}
                         resources={resources}
                         getResources={getResources}
-                        permissions={permissions}
+                        permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}

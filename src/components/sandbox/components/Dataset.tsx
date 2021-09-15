@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, SandboxObj, SandboxPermissions } from '../../common/interfaces';
+import { AvailableDatasetObj, SandboxObj } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
@@ -27,7 +27,6 @@ type datasetProps = {
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
-    permissions: SandboxPermissions;
     setSandbox: any;
     sandbox: SandboxObj;
     controller: AbortController;
@@ -37,7 +36,6 @@ const Dataset: React.FC<datasetProps> = ({
     sandboxId,
     updateCache,
     setUpdateCache,
-    permissions,
     setSandbox,
     sandbox,
     controller
@@ -52,6 +50,7 @@ const Dataset: React.FC<datasetProps> = ({
         false
     );
     const [addDatasetInProgress, setAddDatasetInprogress] = useState<any>({});
+    const { permissions } = sandbox;
 
     const handleCheck = (evt: any, dataset: AvailableDatasetObj) => {
         setAddDatasetInprogress({ ...addDatasetInProgress, [dataset.datasetId]: true });

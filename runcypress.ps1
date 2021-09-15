@@ -1,5 +1,7 @@
 . .\src\functions\helpers
 
+$modulesNotFound = $false;
+
 # How to use:
 # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 # Connect-AzAccount
@@ -82,7 +84,7 @@ function CleanUp() {
     }
 }
 
-function GetAccessToken() {
+function GetAccessToken2() {
     Write-Host "`nRetrieve access token`n" -ForegroundColor Blue
     ./GetAccessToken.exe --tenant-id $tenantId --app-id $appId --mock-user-client-secret $clientSecret --authority $scope --output-destination-file ./tmp/accesstoken.txt
     $accessToken = Get-Content -Path ./tmp/accessToken.txt
@@ -90,6 +92,31 @@ function GetAccessToken() {
 
     Write-Host "-------------------------------------------------------------------------`n$accessToken`n-------------------------------------------------------------------------`n"
     Return $accessToken
+}
+
+function GetAccessToken([string]$clientId, [string]$tenantId, [string]$clientSecret, [string]$scope) {
+    Write-Host "Get access token" -ForegroundColor Blue
+    
+    $body = @{client_id=$clientId;client_secret=$clientSecret;grant_type="client_credentials";scope="${scope}/.default";}
+    $oAuthReq = Invoke-RestMethod -Method Post -Uri https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token -Body $body
+    
+    $accessToken = $oAuthReq.access_token
+
+    if ($accessToken.Length -gt 20) {
+        # Write-Host "$accessToken"
+        Write-Host "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received" -ForegroundColor Green
+    } else {
+        Write-Host "$(CurrentLineStart)Access token could not be retrieved" -ForegroundColor Red
+        exit
+    }
+
+    return $accessToken
+
+    # $job = Start-Job -ScriptBlock {
+    #     az account get-access-token --query 'accessToken' -o tsv
+    # }
+
+    # Return GetJobResult($job);
 }
 
 function RunCypressInConsole() {
@@ -121,7 +148,11 @@ function RunCypressInBrowser() {
     Write-Host "`n"
 
     Prepare
-    $accessToken = GetAccessToken
+
+    $env = $(Environment.GetEnvironmentVariables(".env"))
+    $scope = $env.REACT_APP_SEPES_CLIENTID
+    $clientId = $env.REACT_APP_SEPES_TESTING_CLIENT_ID
+    $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
 
     $task1 = { npx cypress open --env scaAccessToken=$Using:accessToken }
     $task2 = { npm start }
@@ -143,9 +174,26 @@ function RunCypressInBrowser() {
     CleanUp
 }
 
+function GetEnvironmentVariables([String]$Path) {
+    $values = Get-Content $Path | Out-String | ConvertFrom-StringData
+    Return $values
+}
+
+function CurrentLineStart() {
+    $esc = [char]27
+    $CurrentLine  = $Host.UI.RawUI.CursorPosition.Y + 1
+    Return "$esc[${CurrentLine};0H"
+}
+
 function RunCypressInBrowserLightVersionAgainstLocalhost() {
     Write-Host "`n"
-    $accessToken = GetAccessToken
+
+    $env = $(GetEnvironmentVariables(".env"))
+    $scope = $env.REACT_APP_SEPES_CLIENTID
+    $clientId = $env.REACT_APP_SEPES_TESTING_CLIENT_ID
+
+    $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
+
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress open --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
@@ -153,7 +201,11 @@ function RunCypressInBrowserLightVersionAgainstLocalhost() {
 
 function RunCypressInBrowserLightVersionLocalAgainstDev() {
     Write-Host "`n"
-    $accessToken = GetAccessToken
+    $env = $(GetEnvironmentVariables(".env"))
+    $scope = $env.REACT_APP_SEPES_CLIENTID
+    $clientId = $env.REACT_APP_SEPES_TESTING_CLIENT_ID
+
+    $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress open --config-file "cypress.dev.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
@@ -161,7 +213,11 @@ function RunCypressInBrowserLightVersionLocalAgainstDev() {
 
 function RunCypressInConsoleLightVersion() {
     Write-Host "`n"
-    $accessToken = GetAccessToken
+    $env = $(GetEnvironmentVariables(".env"))
+    $scope = $env.REACT_APP_SEPES_CLIENTID
+    $clientId = $env.REACT_APP_SEPES_TESTING_CLIENT_ID
+
+    $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress run --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
@@ -169,7 +225,11 @@ function RunCypressInConsoleLightVersion() {
 
 function RunCypressInConsoleLightVersionOnlyQuickTests() {
     Write-Host "`n"
-    $accessToken = GetAccessToken
+    $env = $(GetEnvironmentVariables(".env"))
+    $scope = $env.REACT_APP_SEPES_CLIENTID
+    $clientId = $env.REACT_APP_SEPES_TESTING_CLIENT_ID
+
+    $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
     $task1 = { npx cypress run --config-file "cypress.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
