@@ -3,6 +3,9 @@ name: Cypress and jest Test
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - develop
   schedule:
   - cron:  '0 4 * * 1,2,3,4,5'
 
