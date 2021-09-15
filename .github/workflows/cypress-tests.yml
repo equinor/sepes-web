@@ -134,13 +134,16 @@ jobs:
           COVERAGE_SUMMARY=`npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage`
           echo "::set-output name=COVERAGE_SUMMARY::$COVERAGE_SUMMARY"
 
-      - name: comment coverage PR 2
-        uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: ${{ steps.my-coverageSummary.outputs.COVERAGE_SUMMARY }}
-          check_for_duplicate_msg: true 
+      - run: echo '${{ steps.coverageSummary.outputs.COVERAGE_SUMMARY }}'  > totalCoverage.txt
+      - run: dir
+
+      # - name: comment coverage PR 2
+      #   uses: unsplash/comment-on-pr@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     msg: ${{ steps.my-coverageSummary.outputs.COVERAGE_SUMMARY }}
+      #     check_for_duplicate_msg: true 
 
       # - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage
 
@@ -156,7 +159,7 @@ jobs:
       #     name: Total coverage report after
       #     path: coverage
 
-      - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
+      # - run: npx nyc report --reporter text-summary --report-dir coverage > totalCoverage.txt
 
       - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
 
