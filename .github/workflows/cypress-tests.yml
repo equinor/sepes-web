@@ -131,7 +131,7 @@ jobs:
       - name: get total coverage
         id: coverageSummary
         run: |
-          COVERAGE_SUMMARY=`pwsh npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage`
+          COVERAGE_SUMMARY=`npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage`
           echo "::set-output name=COVERAGE_SUMMARY::$COVERAGE_SUMMARY"
 
       - name: comment coverage PR 2
