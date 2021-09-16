@@ -16,6 +16,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import useKeyEvents from 'components/common/hooks/useKeyEvents';
 import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
+import { returnTooltipCreateSandbox } from 'components/common/helpers/studyHelpers';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -164,10 +165,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             />
             */}
             <div style={{ marginLeft: 'auto' }}>
-                <Tooltip
-                    title={wbsIsValid ? '' : 'Need a valid WBS code for this study to create sandbox'}
-                    placement="left"
-                >
+                <Tooltip title={returnTooltipCreateSandbox(wbsIsValid, study.wbsCode, sandbox)} placement="left">
                     <Button
                         style={{ width: '76px' }}
                         onClick={() => CreateSandbox()}

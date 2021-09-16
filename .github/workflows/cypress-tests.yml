@@ -175,7 +175,7 @@ jobs:
 
       - name: comment coverage PR
         uses: unsplash/comment-on-pr@master
-        if: ${{ github.event_name == 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
