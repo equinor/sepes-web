@@ -487,12 +487,12 @@ const DatasetDetails = () => {
                                     style={{ float: 'right' }}
                                 />
                             </div>
-                            {totalProgress > 0 && (
+                            {(totalProgress > 0 || hasChanged) && (
                                 <div style={{ marginBottom: '16px' }}>
                                     <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
                                     <LinearProgress
                                         style={{ marginBottom: '0px', marginTop: '16px' }}
-                                        value={totalProgress}
+                                        value={totalProgress === 0 ? 1 : totalProgress}
                                         variant="determinate"
                                     />
                                 </div>

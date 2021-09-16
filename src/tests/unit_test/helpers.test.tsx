@@ -1,4 +1,5 @@
 import * as helpers from '../../components/common/helpers/helpers';
+import expect from 'expect';
 
 test('test requiredFields', () => {
     expect(helpers.checkIfRequiredFieldsAreNull('', false)).toContain('default');
@@ -50,4 +51,17 @@ test('test validateResourceName', () => {
     expect(helpers.validateResourceName('abcdD123124')).toBeTruthy();
     expect(helpers.validateResourceName('')).toBeFalsy();
     expect(helpers.validateResourceName('aaaaaAAA!!11111##!"!!')).toBeFalsy();
+});
+
+test('test checkIfValidIp', () => {
+    expect(helpers.checkIfValidIp('1.1.1.1')).toBeTruthy();
+    expect(helpers.checkIfValidIp('1.1.1.1f')).toBeFalsy();
+});
+
+test('test returnAllowedLengthOfString', () => {
+    const limits = {
+        name: 6
+    };
+    expect(helpers.returnAllowedLengthOfString(limits, 'John', 'name')).toBe('John');
+    expect(helpers.returnAllowedLengthOfString(limits, 'John doe', 'name')).toBe('John d');
 });

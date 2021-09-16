@@ -14,8 +14,6 @@ class ErrorBoundary extends Component {
         super(props);
         this.state = {
             hasError: false,
-            error: null,
-            errorInfo: null,
             errorMessage: ''
         };
     }

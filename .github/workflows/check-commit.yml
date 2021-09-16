@@ -1,0 +1,41 @@
+name: 'Commit Message Check'
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Commit Type
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '\b(?:l\w*ion|feat|fix|wip|build|ci|docs|style|refactor|perf|test|chore|BREAKING CHANGE)\b'
+          flags: 'gm'
+          error: 'Your first line has to contain a commit type like "feat/fix/test: <WhatYouDid>".'
+          checkAllCommitMessages: 'false'
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: comment PR
+      #   uses: unsplash/comment-on-pr@master
+      #   if: ${{ failure() }}
+      #   env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     msg: "Invalid commit syntax, make sure you use conventional commits - https://www.conventionalcommits.org/"
+      #     check_for_duplicate_msg: true 

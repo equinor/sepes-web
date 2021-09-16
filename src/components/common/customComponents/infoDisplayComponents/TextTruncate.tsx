@@ -9,7 +9,6 @@ type TextTruncateProps = {
 };
 
 const TextTruncate: React.FC<TextTruncateProps> = ({ inputText, truncateLength = defaultLength }) => {
-    // const history = useHistory();
     return (
         <Tooltip title={inputText.length > truncateLength ? inputText : ''} placement="top" enterDelay={200}>
             <Typography>{truncate(inputText, defaultLength)}</Typography>

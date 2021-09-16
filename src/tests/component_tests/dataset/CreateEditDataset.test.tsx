@@ -4,6 +4,7 @@ import CreateEditDataset from '../../../components/dataset/CreateEditDataset';
 import { DatasetObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import expect from 'expect';
 jest.mock('react-keyed-file-browser', () => jest.fn(() => {}));
 
 const dataset: DatasetObj = {

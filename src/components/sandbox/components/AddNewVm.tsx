@@ -14,7 +14,7 @@ import {
 import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
-    validateUserInput,
+    validateUserInputVm,
     filterList,
     returnPasswordVariant,
     returnUsernameVariant,
@@ -31,6 +31,7 @@ import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../..
 import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
 
 const icons = {
@@ -204,6 +205,9 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
     };
 
     const createVm = () => {
+        if (!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)) {
+            return;
+        }
         setHasChanged(false);
         setLoading(true);
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
@@ -274,6 +278,8 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
         }
         _setFiler(currentFilter);
     };
+
+    useKeyEvents(undefined, createVm, true);
 
     return (
         <Wrapper>
@@ -492,7 +498,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip
                     title={
-                        !validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
+                        !validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
                             ? 'Please fill out all required fields'
                             : ''
                     }
@@ -502,7 +508,7 @@ const AddNewVm: React.FC<AddNewVmProps> = ({
                         style={{ width: '100px', marginLeft: 'auto' }}
                         data-cy="create_vm"
                         onClick={createVm}
-                        disabled={!validateUserInput(vm, loading, vmEstimatedCost, usernameIsValid)}
+                        disabled={!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)}
                     >
                         {loading ? <DotProgress color="primary" /> : 'Create'}
                     </Button>

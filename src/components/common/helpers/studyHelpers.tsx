@@ -53,8 +53,8 @@ export const filterRoleList = (roles: any, selectedParticipant: ParticipantObj |
     return tempRoles;
 };
 
-export const returnWbsVariant = (wbsOnChangeIsValid: boolean | undefined) => {
-    if (wbsOnChangeIsValid === undefined) {
+export const returnWbsVariant = (wbsOnChangeIsValid: boolean | undefined, wbsCode: string) => {
+    if (wbsOnChangeIsValid === undefined || wbsCode === '') {
         return 'default';
     }
     if (wbsOnChangeIsValid) {
