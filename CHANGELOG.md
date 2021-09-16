@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/equinor/sepes-web/compare/1.0.1...1.0.2) (2021-09-16)
+
+
+### Bug Fixes
+
+* allow users to confirm navigation with enter/escape buttons ([#1280](https://github.com/equinor/sepes-web/issues/1280)) ([7236fa5](https://github.com/equinor/sepes-web/commit/7236fa552584a5635333699f4923559d2ba051f0)), closes [#1271](https://github.com/equinor/sepes-web/issues/1271)
+* display prompt if user leaves page when request is in progress ([#1245](https://github.com/equinor/sepes-web/issues/1245)) ([e776026](https://github.com/equinor/sepes-web/commit/e776026fdd7c16ab3f30c6ce8f440cbba330f1b6)), closes [#1032](https://github.com/equinor/sepes-web/issues/1032)
+* issue with dataset file progress bar ([#1261](https://github.com/equinor/sepes-web/issues/1261)) ([f5780bf](https://github.com/equinor/sepes-web/commit/f5780bfaadb93e20f0ef94aaf060b52bbb58871b)), closes [#1258](https://github.com/equinor/sepes-web/issues/1258)
+* issue with wbs input ([#1282](https://github.com/equinor/sepes-web/issues/1282)) ([ccd4dc5](https://github.com/equinor/sepes-web/commit/ccd4dc52ea2667da8cccddd5f55dc3a7b4ebb2f8))
+* package.json & package-lock.json to reduce vulnerabilities ([#1267](https://github.com/equinor/sepes-web/issues/1267)) ([34e8f72](https://github.com/equinor/sepes-web/commit/34e8f7265d80e30fdf1c600a3ef93cad41ef4799))
+* package.json & package-lock.json to reduce vulnerabilities ([#1294](https://github.com/equinor/sepes-web/issues/1294)) ([829c529](https://github.com/equinor/sepes-web/commit/829c5296aa3a78aa4b6a75ea0f144a127126c935))
+* remove dependency to is-svg with security issue ([#1249](https://github.com/equinor/sepes-web/issues/1249)) ([13c7d5f](https://github.com/equinor/sepes-web/commit/13c7d5f236861d377209a86b8f85ed4024b1f615))
+* tooltip for participant role did not display ([#1291](https://github.com/equinor/sepes-web/issues/1291)) ([518b4c0](https://github.com/equinor/sepes-web/commit/518b4c005037f41072fb225e8e7b9e0aa0869174)), closes [#1265](https://github.com/equinor/sepes-web/issues/1265)
+* unsaved vm rules still showes when exiting and reentering a sandbox ([#1242](https://github.com/equinor/sepes-web/issues/1242)) ([6ad322e](https://github.com/equinor/sepes-web/commit/6ad322ec2846803b3d4473d34497783f1d16db9a)), closes [#1241](https://github.com/equinor/sepes-web/issues/1241)
+* update css-what ([#1250](https://github.com/equinor/sepes-web/issues/1250)) ([e11c27e](https://github.com/equinor/sepes-web/commit/e11c27e2d8621feaca1f93e2318308bc43fdb46c))
+* update postcss package ([#1251](https://github.com/equinor/sepes-web/issues/1251)) ([9a5d11f](https://github.com/equinor/sepes-web/commit/9a5d11f74c41e16dc6b76454ae8426b5bbbd5f1b))
+* upgrade @azure/msal-browser from 2.16.0 to 2.16.1 ([#1246](https://github.com/equinor/sepes-web/issues/1246)) ([814f73a](https://github.com/equinor/sepes-web/commit/814f73acab1e6c597f1f49403ac492d7593b6088))
+* upgrade @azure/storage-blob from 12.6.0 to 12.7.0 ([fb3ee47](https://github.com/equinor/sepes-web/commit/fb3ee4719175b0bdd6874c3354ccdb9501961dc9))
+* upgrade @fortawesome/fontawesome-free from 5.15.3 to 5.15.4 ([#1255](https://github.com/equinor/sepes-web/issues/1255)) ([9968a58](https://github.com/equinor/sepes-web/commit/9968a588f9b80d3c3138996966b3c1644775f268))
+* upgrade @fortawesome/react-fontawesome from 0.1.14 to 0.1.15 ([#1247](https://github.com/equinor/sepes-web/issues/1247)) ([d5149c7](https://github.com/equinor/sepes-web/commit/d5149c7c58ae746d418d72d493004be5f90e57bd))
+* upgrade @microsoft/applicationinsights-web from 2.6.4 to 2.6.5 ([#1248](https://github.com/equinor/sepes-web/issues/1248)) ([100a30d](https://github.com/equinor/sepes-web/commit/100a30d20cfccc8bcc4ed3f48ad5f30a5ec87e33))
+* upgrade @types/node from 16.4.10 to 16.4.12 ([#1253](https://github.com/equinor/sepes-web/issues/1253)) ([43662c7](https://github.com/equinor/sepes-web/commit/43662c743bbd653b32ddfbb35a2a9edc22dfdb77))
+* upgrade @types/node from 16.4.12 to 16.4.13 ([#1262](https://github.com/equinor/sepes-web/issues/1262)) ([4f2fae4](https://github.com/equinor/sepes-web/commit/4f2fae4f86402bbd8022dd062678853f87929ca3))
+* upgrade @types/node from 16.4.13 to 16.6.1 ([#1285](https://github.com/equinor/sepes-web/issues/1285)) ([e604ecc](https://github.com/equinor/sepes-web/commit/e604eccc100e212b337b646869cbe6ce87a4de9b))
+* upgrade @types/react from 17.0.15 to 17.0.16 ([#1268](https://github.com/equinor/sepes-web/issues/1268)) ([52ba1f2](https://github.com/equinor/sepes-web/commit/52ba1f2bc76401fac0fe4fbd6530490fa817d798))
+* upgrade @types/react from 17.0.16 to 17.0.17 ([#1279](https://github.com/equinor/sepes-web/issues/1279)) ([14251ce](https://github.com/equinor/sepes-web/commit/14251ce75df2fcde29ab1c92a36c0d63fdadfc1a))
+* upgrade @types/styled-components from 5.1.11 to 5.1.12 ([#1256](https://github.com/equinor/sepes-web/issues/1256)) ([d6dc5bb](https://github.com/equinor/sepes-web/commit/d6dc5bbee20e8630a786f35992510c8e0aa1ddcb))
+* upgrade @typescript-eslint/eslint-plugin from 4.29.0 to 4.29.1 ([#1275](https://github.com/equinor/sepes-web/issues/1275)) ([481c581](https://github.com/equinor/sepes-web/commit/481c5818401940c961d8b11424d3cf2e7110d2d3))
+* upgrade @typescript-eslint/eslint-plugin from 4.29.1 to 4.29.2 ([#1300](https://github.com/equinor/sepes-web/issues/1300)) ([40270e0](https://github.com/equinor/sepes-web/commit/40270e04ed4fdbca588eb25e882e1e8a9c1d9cdb))
+* upgrade @typescript-eslint/parser from 4.29.0 to 4.29.1 ([#1274](https://github.com/equinor/sepes-web/issues/1274)) ([49be420](https://github.com/equinor/sepes-web/commit/49be4203aee249616825da4e02587e5764fb3955))
+* upgrade @typescript-eslint/parser from 4.29.1 to 4.29.2 ([#1299](https://github.com/equinor/sepes-web/issues/1299)) ([ceaba04](https://github.com/equinor/sepes-web/commit/ceaba04eb28def9dc2339c2a803ea5ec7e2712f4))
+* upgrade @typescript-eslint/parser from 4.29.2 to 4.29.3 ([#1310](https://github.com/equinor/sepes-web/issues/1310)) ([3206fbc](https://github.com/equinor/sepes-web/commit/3206fbcfdb410549ac928f4b3dc7eb89f4539f6d))
+* upgrade lodash version to fix security issue ([#1292](https://github.com/equinor/sepes-web/issues/1292)) ([a29c406](https://github.com/equinor/sepes-web/commit/a29c40645f6f4e9e23c8b5c5de18a1bbca40dfbb)), closes [#1284](https://github.com/equinor/sepes-web/issues/1284)
+* upgrade multiple dependencies with Snyk ([#1254](https://github.com/equinor/sepes-web/issues/1254)) ([7024fad](https://github.com/equinor/sepes-web/commit/7024fad6c17b47e1422cdb08609f737d87860bfc))
+* upgrade react-dnd-html5-backend from 14.0.0 to 14.0.1 ([#1286](https://github.com/equinor/sepes-web/issues/1286)) ([e04682a](https://github.com/equinor/sepes-web/commit/e04682aea12f8b2fd1527675ba66518523cf2011))
+
 ### [1.0.1](https://github.com/equinor/sepes-web/compare/0.1.35...1.0.1) (2021-08-25)
 
 ### [0.1.35](https://github.com/equinor/sepes-web/compare/0.1.34...0.1.35) (2021-08-25)
