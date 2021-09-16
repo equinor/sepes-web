@@ -390,14 +390,19 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         </StyledLink>
                     )}
                     <SaveCancelWrapper>
-                        <Button
-                            disabled={checkForInputErrors(dataset) || loading}
-                            onClick={addDataset}
-                            data-cy="dataset_save"
-                            data-testid="dataset_save"
+                        <Tooltip
+                            title={checkForInputErrors(dataset) ? 'Please fill out all required fields' : ''}
+                            placement="right"
                         >
-                            {loading ? <DotProgress color="primary" /> : 'Save'}
-                        </Button>
+                            <Button
+                                disabled={checkForInputErrors(dataset) || loading}
+                                onClick={addDataset}
+                                data-cy="dataset_save"
+                                data-testid="dataset_save"
+                            >
+                                {loading ? <DotProgress color="primary" /> : 'Save'}
+                            </Button>
+                        </Tooltip>
                         <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">
                             Cancel
                         </Button>
