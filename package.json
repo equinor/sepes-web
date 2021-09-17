@@ -152,7 +152,8 @@
         "plugins": [
             "@babel/plugin-proposal-class-properties",
             "@babel/plugin-syntax-jsx",
-            "@babel/plugin-syntax-typescript"
+            "@babel/plugin-syntax-typescript",
+            "istanbul"
         ]
     }
 }
