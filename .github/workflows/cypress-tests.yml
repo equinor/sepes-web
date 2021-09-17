@@ -46,7 +46,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Download dockerfile from previous build stage to tag and push image to ACR for CI environment
+      # Download dockerfile from previous build stage to tag and push image to ACRg for CI environment
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
@@ -268,10 +268,11 @@ jobs:
           docker tag "${{ env.ciTag }}" ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
           docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
 
-      # Push PR image to ACR
-      - name: Push image
-        run: |
-          docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+      # # Push PR image to ACR
+      # - name: Push image
+      #   run: |
+      #     prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+      #     docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
   
   prod:
     runs-on: ubuntu-latest
