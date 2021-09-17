@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
 import Dataset from './components/Dataset';
 import PolicyComponent from './components/PolicyComponent';
 import ResourcesComponent from './components/ResourcesComponent';
