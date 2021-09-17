@@ -32,6 +32,12 @@ jobs:
         tags: ${{ env.ciTag }}
         outputs: type=docker,dest=/tmp/${{ env.dockerCacheFilename }}.tar
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.dockerCacheFilename }}
+        path: /tmp/${{ env.dockerCacheFilename }}.tar
+
   ci:
     runs-on: ubuntu-latest
     needs: build
@@ -229,7 +235,7 @@ jobs:
           msg: ${{ steps.my-script.outputs.result }}
           check_for_duplicate_msg: true 
   
-  PR:
+  pr:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/master'
