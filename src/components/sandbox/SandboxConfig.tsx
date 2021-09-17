@@ -40,7 +40,7 @@ type SandboxConfigProps = {
     setUpdateCache: any;
     setSandbox: any;
     sandbox: SandboxObj;
-    getResources: any;
+    setCallGetResources: any;
     controller: AbortController;
 };
 
@@ -51,7 +51,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     setUpdateCache,
     setSandbox,
     sandbox,
-    getResources,
+    setCallGetResources,
     controller
 }) => {
     return (
@@ -70,7 +70,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                 </PolictyComponentWrapper>
                 <ResourcesComponent
                     resources={resources}
-                    getResources={getResources}
+                    setCallGetResources={setCallGetResources}
                     permissions={sandbox.permissions}
                 />
             </InfoWrapper>

@@ -65,6 +65,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
             undefined
     );
     const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [callGetResources, setCallGetResources] = useState<boolean>(false);
 
     useEffect(() => {
         return () => {
@@ -72,6 +73,13 @@ const Sandbox: React.FC<SandboxProps> = () => {
             controller = new AbortController();
         };
     }, []);
+
+    useEffect(() => {
+        if (callGetResources) {
+            getResources();
+            setCallGetResources(false);
+        }
+    }, [callGetResources, setCallGetResources]);
 
     useEffect(() => {
         if (
@@ -108,7 +116,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandbox={sandbox} getResources={getResources} />;
+                return <Execution resources={resources} sandbox={sandbox} setCallGetResources={setCallGetResources} />;
             case 2:
                 return <div />;
             default:
@@ -120,7 +128,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         updateCache={updateCache}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
-                        getResources={getResources}
+                        setCallGetResources={setCallGetResources}
                         controller={controller}
                     />
                 );
@@ -163,12 +171,12 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 <VmConfig
                                     sandbox={sandbox}
                                     resources={resources}
-                                    getResources={getResources}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}
                                     controller={controller}
                                     setVmsWithOpenInternet={setVmsWithOpenInternet}
                                     setHasChanged={setHasChanged}
+                                    setCallGetResources={setCallGetResources}
                                 />
                             )}
                         </Wrapper>

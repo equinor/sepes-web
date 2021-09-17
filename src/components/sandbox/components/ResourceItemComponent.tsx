@@ -23,7 +23,7 @@ type ResourceItemComponentProps = {
     type: string;
     status: string;
     retryLink: string;
-    getResources: any;
+    setCallGetResources: any;
     permission: SandboxPermissions;
 };
 
@@ -33,7 +33,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
     name,
     linkToResource,
     retryLink,
-    getResources,
+    setCallGetResources,
     permission
 }) => {
     const retryResource = () => {
@@ -41,7 +41,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
             if (result && result.message) {
                 console.log('Err');
             } else {
-                getResources();
+                setCallGetResources(true);
             }
         });
     };

@@ -43,7 +43,7 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
-    getResources: any;
+    setCallGetResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -87,7 +87,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources,
+    setCallGetResources,
     setVmSaved,
     setHasChangedGlobal,
     hasChangedVmRules,
@@ -260,7 +260,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
-                getResources();
+                setCallGetResources(true);
                 setVmSaved(true);
             } else {
                 console.log('Err');
@@ -349,7 +349,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}
                     updateCache={updateCache}
-                    getResources={getResources}
+                    setCallGetResources={setCallGetResources}
                 />
                 <div>
                     <Table style={{ width: '100%' }}>
