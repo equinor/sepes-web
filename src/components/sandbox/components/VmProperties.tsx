@@ -31,7 +31,7 @@ type VmPropertiesProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    getResources: any;
+    setCallGetResources: any;
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
@@ -42,7 +42,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources
+    setCallGetResources
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
@@ -82,7 +82,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.message) {
-                getResources();
+                setCallGetResources(true);
             }
         });
     };
