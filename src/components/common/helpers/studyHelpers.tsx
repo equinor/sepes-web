@@ -93,13 +93,13 @@ export const returnTooltipTextSaveStudy = (
 
 export const returnTooltipCreateSandbox = (
     wbsIsValid: boolean | undefined,
-    wbsCode: string,
+    study: StudyObj,
     sandbox: SandboxCreateObj
 ) => {
     if (!wbsIsValid) {
         return 'Need a valid WBS code for this study to create sandbox';
     }
-    if (!(validateUserInputSandbox(sandbox, wbsCode) && wbsIsValid)) {
+    if (!(validateUserInputSandbox(sandbox, study) && wbsIsValid)) {
         return 'Please fill out all required fields';
     }
     return '';

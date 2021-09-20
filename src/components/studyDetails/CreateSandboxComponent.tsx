@@ -6,7 +6,7 @@ import {
     returnHelperText,
     returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
-import { validateUserInputSandbox } from '../common/helpers/sandboxHelpers';
+import { validateUserInputSandbox, checkIfSandboxNameAlreadyExists } from '../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -91,7 +91,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
 
     const CreateSandbox = () => {
         setHasChanged(false);
-        if (!validateUserInputSandbox(sandbox, study.wbsCode)) {
+        if (!validateUserInputSandbox(sandbox, study)) {
             return;
         }
         setToggle(false);
@@ -111,6 +111,15 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         });
     };
 
+    const returnHelperTextSandboxName = (): string => {
+        if (checkIfSandboxNameAlreadyExists(study.sandboxes, sandbox.name)) {
+            return 'There already exists a sandbox with that name';
+        }
+        return sandbox.name.length > 50
+            ? returnHelperText(sandbox.name.length, 50, 'sandbox')
+            : 'Name cannot be changed later';
+    };
+
     useKeyEvents(undefined, CreateSandbox, true);
 
     return (
@@ -120,13 +129,14 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 placeholder="Please add Sandbox name..."
                 label="Sandbox name"
                 meta="(required)"
-                variant={returnTextfieldTypeBasedOninput(sandbox.name, false)}
+                variant={returnTextfieldTypeBasedOninput(
+                    sandbox.name,
+                    false,
+                    undefined,
+                    checkIfSandboxNameAlreadyExists(study.sandboxes, sandbox.name)
+                )}
                 onChange={(e: any) => handleChange('name', e.target.value)}
-                helperText={
-                    sandbox.name.length > 50
-                        ? returnHelperText(sandbox.name.length, 50, 'sandbox')
-                        : 'Name cannot be changed later'
-                }
+                helperText={returnHelperTextSandboxName()}
                 helperIcon={<Icon name="warning_outlined" title="Warning" />}
                 value={sandbox.name}
                 data-cy="sandbox_name"
@@ -165,12 +175,12 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
             />
             */}
             <div style={{ marginLeft: 'auto' }}>
-                <Tooltip title={returnTooltipCreateSandbox(wbsIsValid, study.wbsCode, sandbox)} placement="left">
+                <Tooltip title={returnTooltipCreateSandbox(wbsIsValid, study, sandbox)} placement="left">
                     <Button
                         style={{ width: '76px' }}
                         onClick={() => CreateSandbox()}
                         data-cy="create_actual_sandbox"
-                        disabled={!(validateUserInputSandbox(sandbox, study.wbsCode) && wbsIsValid)}
+                        disabled={!(validateUserInputSandbox(sandbox, study) && wbsIsValid)}
                     >
                         Create
                     </Button>

@@ -13,9 +13,9 @@ import {
     vmWithOpenInternet,
     vmWithUnfinishedRule
 } from 'tests/mocks/sandbox/sandbox-mocks';
+import { study, studyWithNoWbsCode } from 'tests/mocks/study/study-mocs';
 import * as helpers from '../../components/common/helpers/sandboxHelpers';
 import expect from 'expect';
-import { VmObj } from 'components/common/interfaces';
 import { inputErrorsVmRules } from 'components/common/staticValues/types';
 
 test('test validateUserInputSandbox', () => {
@@ -27,7 +27,7 @@ test('test validateUserInputSandbox', () => {
                 template: 'location',
                 id: '1'
             },
-            '123'
+            study
         )
     ).toBeTruthy();
 
@@ -39,7 +39,7 @@ test('test validateUserInputSandbox', () => {
                 template: 'location',
                 id: '1'
             },
-            '123'
+            study
         )
     ).toBeFalsy();
 
@@ -51,7 +51,7 @@ test('test validateUserInputSandbox', () => {
                 template: 'location',
                 id: '1'
             },
-            '123'
+            study
         )
     ).toBeFalsy();
     expect(
@@ -62,7 +62,7 @@ test('test validateUserInputSandbox', () => {
                 template: 'location',
                 id: '1'
             },
-            ''
+            studyWithNoWbsCode
         )
     ).toBeFalsy();
 });
@@ -369,4 +369,10 @@ test('test checkIfSaveIsEnabled, check output', () => {
     ];
     let expectedResult = { enabled: false, error: '' };
     expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vm, '')).toEqual(expectedResult);
+});
+
+test('test checkIfSandboxNameAlreadyExists, check output', () => {
+    const sandboxes = [{ name: 'sandbox1' }, { name: 'sandbox2' }];
+    expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox1')).toBeTruthy();
+    expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox43')).toBeFalsy();
 });
