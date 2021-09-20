@@ -22,8 +22,13 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
-export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true, limit = 50) => {
-    if (!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) {
+export const returnTextfieldTypeBasedOninput = (
+    value: any,
+    dashAllowed = true,
+    limit = 50,
+    specialCaseError = false
+) => {
+    if ((!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) || specialCaseError) {
         return 'error';
     }
     if (value && value.length > limit) {

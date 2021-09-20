@@ -7,6 +7,7 @@ import {
     SandboxCreateObj,
     SandboxObj,
     SandboxPermissions,
+    StudyObj,
     VmObj,
     VmUsernameObj
 } from '../interfaces';
@@ -18,11 +19,25 @@ import {
     validateResourceName
 } from './helpers';
 
-export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
-    if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !wbsCode) {
+export const validateUserInputSandbox = (sandbox: SandboxCreateObj, study: StudyObj) => {
+    if (
+        !sandbox.name ||
+        !sandbox.region ||
+        !validateResourceName(sandbox.name) ||
+        !study.wbsCode ||
+        checkIfSandboxNameAlreadyExists(study.sandboxes, sandbox.name)
+    ) {
         return false;
     }
     return true;
+};
+
+export const checkIfSandboxNameAlreadyExists = (sandboxes, sandboxName: string): boolean => {
+    const sandboxesWithSameName = sandboxes.filter((_sandbox: SandboxObj) => sandboxName === _sandbox.name);
+    if (sandboxesWithSameName.length) {
+        return true;
+    }
+    return false;
 };
 
 export const validateUserInputVm = (
