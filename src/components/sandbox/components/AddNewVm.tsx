@@ -154,8 +154,6 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
         const [loading, setLoading] = useState<boolean>(false);
 
-        console.log('add new vm rerender');
-
         useEffect(() => {
             const timeoutId = setTimeout(() => {
                 calculateVmName(vm.name);
