@@ -370,3 +370,9 @@ test('test checkIfSaveIsEnabled, check output', () => {
     let expectedResult = { enabled: false, error: '' };
     expect(helpers.checkIfSaveIsEnabled(hasChangedVms, vm, '')).toEqual(expectedResult);
 });
+
+test('test checkIfSandboxNameAlreadyExists, check output', () => {
+    const sandboxes = [{ name: 'sandbox1' }, { name: 'sandbox2' }];
+    expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox1')).toBeTruthy();
+    expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox43')).toBeFalsy();
+});
