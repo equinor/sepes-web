@@ -24,7 +24,8 @@ import {
     filterOs,
     returnDisplayName,
     returnVMnameVariant,
-    checkIfAddNewVmHasUnsavedChanges
+    checkIfAddNewVmHasUnsavedChanges,
+    checkIfVmNameAlreadyExists
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
@@ -153,6 +154,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         const [validatingUsername, setValidatingUsername] = useState<boolean>(false);
         const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
         const [loading, setLoading] = useState<boolean>(false);
+        const vmIsValid = validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid, vms, sandbox);
 
         useEffect(() => {
             const timeoutId = setTimeout(() => {
@@ -207,7 +209,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         };
 
         const createVm = () => {
-            if (!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)) {
+            if (!vmIsValid) {
                 return;
             }
             setHasChanged(false);
@@ -297,7 +299,12 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         autoComplete="off"
                         label="Name"
                         meta={returnLimitMeta(20, vm.name)}
-                        variant={returnVMnameVariant(vm.name)}
+                        variant={returnVMnameVariant(vm.name, vms, sandbox)}
+                        helperText={
+                            checkIfVmNameAlreadyExists(vms, vm.name, sandbox)
+                                ? 'There already exists a vm with that name'
+                                : ''
+                        }
                         data-cy="vm_name"
                         inputIcon={
                             <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
@@ -500,18 +507,14 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
                     <Tooltip
-                        title={
-                            !validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid) && !loading
-                                ? 'Please fill out all required fields'
-                                : ''
-                        }
+                        title={!vmIsValid && !loading ? 'Please fill out all required fields' : ''}
                         placement="right"
                     >
                         <Button
                             style={{ width: '100px', marginLeft: 'auto' }}
                             data-cy="create_vm"
                             onClick={createVm}
-                            disabled={!validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid)}
+                            disabled={!vmIsValid}
                         >
                             {loading ? <DotProgress color="primary" /> : 'Create'}
                         </Button>

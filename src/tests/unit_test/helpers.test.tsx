@@ -65,3 +65,8 @@ test('test returnAllowedLengthOfString', () => {
     expect(helpers.returnAllowedLengthOfString(limits, 'John', 'name')).toBe('John');
     expect(helpers.returnAllowedLengthOfString(limits, 'John doe', 'name')).toBe('John d');
 });
+
+test('test removeAllSpecialCharachtersExceptDashes', () => {
+    expect(helpers.removeAllSpecialCharachtersExceptDashes('JOHN@')).toBe('john');
+    expect(helpers.removeAllSpecialCharachtersExceptDashes('JOHN-@')).toBe('john-');
+});
