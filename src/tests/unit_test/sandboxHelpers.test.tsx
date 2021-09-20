@@ -1,6 +1,7 @@
 import {
     availableDataset,
     availableDatasetLongName,
+    listWithVms,
     sandbox,
     sandboxPermissions,
     sandboxPermissionsNoPermissions,
@@ -17,6 +18,7 @@ import { study, studyWithNoWbsCode } from 'tests/mocks/study/study-mocs';
 import * as helpers from '../../components/common/helpers/sandboxHelpers';
 import expect from 'expect';
 import { inputErrorsVmRules } from 'components/common/staticValues/types';
+import { SandboxObj } from 'components/common/interfaces';
 
 test('test validateUserInputSandbox', () => {
     expect(
@@ -84,7 +86,8 @@ test('test validateUserInput', () => {
             },
             false,
             '100',
-            true
+            true,
+            listWithVms
         )
     ).toBeTruthy();
 
@@ -104,7 +107,8 @@ test('test validateUserInput', () => {
             },
             false,
             '100',
-            true
+            true,
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -124,7 +128,8 @@ test('test validateUserInput', () => {
             },
             false,
             '100',
-            true
+            true,
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -144,7 +149,8 @@ test('test validateUserInput', () => {
             },
             false,
             '100',
-            true
+            true,
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -164,7 +170,8 @@ test('test validateUserInput', () => {
             },
             false,
             '100',
-            true
+            true,
+            listWithVms
         )
     ).toBeFalsy();
 });
@@ -375,4 +382,16 @@ test('test checkIfSandboxNameAlreadyExists, check output', () => {
     const sandboxes = [{ name: 'sandbox1' }, { name: 'sandbox2' }];
     expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox1')).toBeTruthy();
     expect(helpers.checkIfSandboxNameAlreadyExists(sandboxes, 'sandbox43')).toBeFalsy();
+});
+
+test('test getActualVmName, check output', () => {
+    expect(helpers.getActualVmName(sandbox, 'vmname43')).toBe('vm-mockstudy-mocksandbox-vmname43');
+    expect(helpers.getActualVmName(sandbox, 'vmname 43')).toBe('vm-mockstudy-mocksandbox-vmname43');
+    expect(helpers.getActualVmName(sandbox, 'vmname @43@@')).toBe('vm-mockstudy-mocksandbox-vmname43');
+});
+
+test('test checkIfVmNameAlreadyExists, check output', () => {
+    const vms = [{ name: 'vm-mockstudy-mocksandbox-vmname1' }, { name: 'vm-mockstudy-mocksandbox-vmname2' }];
+    expect(helpers.checkIfVmNameAlreadyExists(vms, 'vmname1', sandbox)).toBeTruthy();
+    expect(helpers.checkIfVmNameAlreadyExists(vms, 'vmname43', sandbox)).toBeFalsy();
 });

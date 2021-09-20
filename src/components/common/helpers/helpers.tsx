@@ -148,3 +148,7 @@ export const returnHelperText = (inputLength: number, limit: number, type: strin
     }
     return `ProTip! Good ${type} names contain fewer than ${limit} characters.`;
 };
+
+export const removeAllSpecialCharachtersExceptDashes = (input: string) => {
+    return input.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+};
