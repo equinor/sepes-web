@@ -81,3 +81,9 @@ test('test checkIfDeleteIsEnabled, no permission ', () => {
     const file = { name: 'file1.png' };
     expect(helpers.checkIfDeleteIsEnabled(file, datasetWithoutPermissions, progressArray)).toBeTruthy();
 });
+
+test('test checkIfDatasetNameAlreadyExists, check output ', () => {
+    const datasets = [{ name: 'dataset1' }];
+    expect(helpers.checkIfDatasetNameAlreadyExists(datasets, 'dataset1')).toBeTruthy();
+    expect(helpers.checkIfDatasetNameAlreadyExists(datasets, 'dataset2')).toBeFalsy();
+});
