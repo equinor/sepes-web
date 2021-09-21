@@ -34,10 +34,10 @@ const SatusWrapper = styled.div`
 type ExecutionProps = {
     resources: any;
     sandbox: SandboxObj;
-    getResources: any;
+    setCallGetResources: any;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, setCallGetResources }) => {
     return (
         <Wrapper>
             <SatusWrapper>
@@ -54,7 +54,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources 
                 <div>
                     <ResourcesComponent
                         resources={resources}
-                        getResources={getResources}
+                        setCallGetResources={setCallGetResources}
                         permissions={sandbox.permissions}
                     />
                 </div>

@@ -31,7 +31,7 @@ type VmPropertiesProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    getResources: any;
+    setCallGetResources: any;
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
@@ -42,7 +42,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources
+    setCallGetResources
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
@@ -77,12 +77,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const deleteVm = (): void => {
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
         setActiveTab(0);
-        const currentVms: any = [...vms];
-        currentVms.splice(vms.indexOf(vmProperties), 1);
-        setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.message) {
-                getResources();
+                setCallGetResources(true);
+                const currentVms: any = [...vms];
+                currentVms.splice(vms.indexOf(vmProperties), 1);
+                setVms(currentVms);
             }
         });
     };

@@ -95,3 +95,11 @@ export const returnFileListText = (dataset: DatasetObj, searchValue: string): st
 
     return '';
 };
+
+export const checkIfDatasetNameAlreadyExists = (datasets, datasetName: string): boolean => {
+    const datasetsWithSameName = datasets && datasets.filter((_dataset: DatasetObj) => datasetName === _dataset.name);
+    if (datasetsWithSameName && datasetsWithSameName.length) {
+        return true;
+    }
+    return false;
+};

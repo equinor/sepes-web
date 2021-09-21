@@ -104,7 +104,8 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
             pathname: '/studies/' + studyId + '/datasets',
             state: {
                 canCreateStudySpecificDataset: study.permissions.addRemoveDataset,
-                canEditStudySpecificDataset: study.permissions.addRemoveDataset
+                canEditStudySpecificDataset: study.permissions.addRemoveDataset,
+                datasets: study.datasets
             }
         });
     };

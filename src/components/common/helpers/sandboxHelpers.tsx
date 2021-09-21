@@ -7,6 +7,7 @@ import {
     SandboxCreateObj,
     SandboxObj,
     SandboxPermissions,
+    StudyObj,
     VmObj,
     VmUsernameObj
 } from '../interfaces';
@@ -15,21 +16,47 @@ import {
     checkIfInputIsNumberWihoutCharacters,
     checkIfValidIp,
     passwordValidate,
+    removeAllSpecialCharachtersExceptDashes,
     validateResourceName
 } from './helpers';
 
-export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
-    if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !wbsCode) {
+export const validateUserInputSandbox = (sandbox: SandboxCreateObj, study: StudyObj) => {
+    if (
+        !sandbox.name ||
+        !sandbox.region ||
+        !validateResourceName(sandbox.name) ||
+        !study.wbsCode ||
+        checkIfSandboxNameAlreadyExists(study.sandboxes, sandbox.name)
+    ) {
         return false;
     }
     return true;
+};
+
+export const checkIfSandboxNameAlreadyExists = (sandboxes, sandboxName: string): boolean => {
+    const sandboxesWithSameName = sandboxes.filter((_sandbox: SandboxObj) => sandboxName === _sandbox.name);
+    if (sandboxesWithSameName.length) {
+        return true;
+    }
+    return false;
+};
+
+export const checkIfVmNameAlreadyExists = (vms, vmName: string, sandbox: any): boolean => {
+    const actualVmName = getActualVmName(sandbox, vmName);
+    const vmsWithSameName = vms.filter((_vm: SandboxObj) => actualVmName === _vm.name);
+    if (vmsWithSameName.length) {
+        return true;
+    }
+    return false;
 };
 
 export const validateUserInputVm = (
     vm: VmObj,
     loading: boolean,
     vmEstimatedCost: string,
-    usernameIsValid: boolean | undefined
+    usernameIsValid: boolean | undefined,
+    vms: VmObj[],
+    sandbox: SandboxObj
 ) => {
     if (loading || !vmEstimatedCost) {
         return false;
@@ -40,11 +67,26 @@ export const validateUserInputVm = (
         vm.operatingSystem !== '' &&
         vm.size !== '' &&
         usernameIsValid &&
-        validateVmName(vm.name)
+        validateVmName(vm.name) &&
+        !checkIfVmNameAlreadyExists(vms, vm.name, sandbox)
     ) {
         return true;
     }
     return false;
+};
+
+export const getActualVmName = (sandbox: SandboxObj, vmName: string): string => {
+    if (!sandbox || !vmName) {
+        return '';
+    }
+    return (
+        'vm-' +
+        removeAllSpecialCharachtersExceptDashes(sandbox.studyName) +
+        '-' +
+        removeAllSpecialCharachtersExceptDashes(sandbox.name) +
+        '-' +
+        removeAllSpecialCharachtersExceptDashes(vmName)
+    );
 };
 
 export const filterList = (_list: any, filter) => {
@@ -95,11 +137,11 @@ export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boole
     return 'error';
 };
 
-export const returnVMnameVariant = (vmName: string) => {
+export const returnVMnameVariant = (vmName: string, vms: VmObj[], sandbox: SandboxObj) => {
     if (vmName === '' || vmName === undefined) {
         return 'default';
     }
-    if (validateVmName(vmName)) {
+    if (validateVmName(vmName) && !checkIfVmNameAlreadyExists(vms, vmName, sandbox)) {
         return 'success';
     }
     return 'error';
