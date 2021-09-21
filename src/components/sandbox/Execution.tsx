@@ -34,14 +34,14 @@ const SatusWrapper = styled.div`
 type ExecutionProps = {
     resources: any;
     sandbox: SandboxObj;
-    getResources: any;
+    setCallGetResources: any;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources }) => {
+const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, setCallGetResources }) => {
     return (
         <Wrapper>
             <SatusWrapper>
-                {EquinorIcon('mood_very_happy', '#007079', 24)}{' '}
+                {EquinorIcon('mood_very_happy', '#007079', 24)}
                 <div style={{ marginLeft: '8px' }}>Data is now available in storage account</div>
             </SatusWrapper>
             <ResourceWrapper>
@@ -54,7 +54,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox, getResources 
                 <div>
                     <ResourcesComponent
                         resources={resources}
-                        getResources={getResources}
+                        setCallGetResources={setCallGetResources}
                         permissions={sandbox.permissions}
                     />
                 </div>

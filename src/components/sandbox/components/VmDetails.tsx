@@ -12,10 +12,14 @@ import {
     getVirtualMachineRule
 } from '../../../services/Api';
 import { inputErrorsVmRules, resourceStatus, resourceType } from '../../common/staticValues/types';
-import { SandboxPermissions } from '../../common/interfaces';
+import { ButtonEnabledObj, SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
-import { checkIfAnyVmRulesHasChanged, checkIfSaveIsEnabled } from 'components/common/helpers/sandboxHelpers';
+import {
+    checkIfAnyVmRulesHasChanged,
+    checkIfSaveIsEnabled,
+    returnOpenClosedOutboundRule
+} from 'components/common/helpers/sandboxHelpers';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 
 const { Body, Row, Cell, Head } = Table;
@@ -39,7 +43,7 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
-    getResources: any;
+    setCallGetResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -83,7 +87,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    getResources,
+    setCallGetResources,
     setVmSaved,
     setHasChangedGlobal,
     hasChangedVmRules,
@@ -92,13 +96,15 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [clientIp, setClientIp] = useState<string>('');
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
-    const [inputError, setInputError] = useState<string>(inputErrorsVmRules.notAllFieldsFilled);
-    const saveIsEnabled = checkIfSaveIsEnabled(hasChangedVmRules, vm, inputError, setInputError);
+    const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
     let keyCount: number = 0;
 
     useEffect(() => {
         getVmExtendedInfo();
     }, [index, vm, resources]);
+    useEffect(() => {
+        setSaveIsEnabled(checkIfSaveIsEnabled(hasChangedVmRules, vm, saveIsEnabled.error));
+    }, [vms]);
     useEffect(() => {
         callGetMyIp();
         getVmRules();
@@ -254,7 +260,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
-                getResources();
+                setCallGetResources(true);
                 setVmSaved(true);
             } else {
                 console.log('Err');
@@ -330,19 +336,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
     };
 
-    const returnOpenClosed = (type: 'text' | 'button') => {
-        if (!vm.rules) {
-            return;
-        }
-        const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
-        if (actionRule) {
-            if (actionRule.action === 0) {
-                return type === 'text' ? ' open' : 'Close internet';
-            }
-            return type === 'text' ? ' closed' : 'Open internet';
-        }
-    };
-
     useKeyEvents(resetRules, saveRule, true);
 
     return (
@@ -356,7 +349,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}
                     updateCache={updateCache}
-                    getResources={getResources}
+                    setCallGetResources={setCallGetResources}
                 />
                 <div>
                     <Table style={{ width: '100%' }}>
@@ -541,7 +534,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                     {outboundRuleChanged
                                         ? 'Changed outbound internet status to:'
                                         : 'Outbound internet traffic is currently'}{' '}
-                                    {returnOpenClosed('text')}
+                                    {returnOpenClosedOutboundRule('text', vm)}
                                 </Cell>
                                 <Cell>
                                     <Button
@@ -553,19 +546,22 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                             addOutBoundRule();
                                         }}
                                     >
-                                        {returnOpenClosed('button')}
+                                        {returnOpenClosedOutboundRule('button', vm)}
                                     </Button>
                                 </Cell>
                             </Row>
                         </Body>
                     </Table>
                     <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
-                        <Tooltip title={saveIsEnabled || !hasChanged ? '' : inputError} placement="left">
+                        <Tooltip
+                            title={saveIsEnabled.enabled || !hasChanged ? '' : saveIsEnabled.error}
+                            placement="left"
+                        >
                             <Button
                                 onClick={() => {
                                     saveRule();
                                 }}
-                                disabled={!saveIsEnabled}
+                                disabled={!saveIsEnabled.enabled}
                                 data-cy="vm_rule_save"
                             >
                                 Save

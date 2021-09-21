@@ -2,10 +2,12 @@
 import { getSandboxCostAnalysis, validateVmUsername } from 'services/Api';
 import {
     AvailableDatasetObj,
+    ButtonEnabledObj,
     OperatingSystemObj,
     SandboxCreateObj,
     SandboxObj,
     SandboxPermissions,
+    StudyObj,
     VmObj,
     VmUsernameObj
 } from '../interfaces';
@@ -14,21 +16,47 @@ import {
     checkIfInputIsNumberWihoutCharacters,
     checkIfValidIp,
     passwordValidate,
+    removeAllSpecialCharachtersExceptDashes,
     validateResourceName
 } from './helpers';
 
-export const validateUserInputSandbox = (sandbox: SandboxCreateObj, wbsCode: string) => {
-    if (!sandbox.name || !sandbox.region || !validateResourceName(sandbox.name) || !wbsCode) {
+export const validateUserInputSandbox = (sandbox: SandboxCreateObj, study: StudyObj) => {
+    if (
+        !sandbox.name ||
+        !sandbox.region ||
+        !validateResourceName(sandbox.name) ||
+        !study.wbsCode ||
+        checkIfSandboxNameAlreadyExists(study.sandboxes, sandbox.name)
+    ) {
         return false;
     }
     return true;
 };
 
-export const validateUserInput = (
+export const checkIfSandboxNameAlreadyExists = (sandboxes, sandboxName: string): boolean => {
+    const sandboxesWithSameName = sandboxes.filter((_sandbox: SandboxObj) => sandboxName === _sandbox.name);
+    if (sandboxesWithSameName.length) {
+        return true;
+    }
+    return false;
+};
+
+export const checkIfVmNameAlreadyExists = (vms, vmName: string, sandbox: any): boolean => {
+    const actualVmName = getActualVmName(sandbox, vmName);
+    const vmsWithSameName = vms.filter((_vm: SandboxObj) => actualVmName === _vm.name);
+    if (vmsWithSameName.length) {
+        return true;
+    }
+    return false;
+};
+
+export const validateUserInputVm = (
     vm: VmObj,
     loading: boolean,
     vmEstimatedCost: string,
-    usernameIsValid: boolean | undefined
+    usernameIsValid: boolean | undefined,
+    vms: VmObj[],
+    sandbox: SandboxObj
 ) => {
     if (loading || !vmEstimatedCost) {
         return false;
@@ -39,11 +67,26 @@ export const validateUserInput = (
         vm.operatingSystem !== '' &&
         vm.size !== '' &&
         usernameIsValid &&
-        validateVmName(vm.name)
+        validateVmName(vm.name) &&
+        !checkIfVmNameAlreadyExists(vms, vm.name, sandbox)
     ) {
         return true;
     }
     return false;
+};
+
+export const getActualVmName = (sandbox: SandboxObj, vmName: string): string => {
+    if (!sandbox || !vmName) {
+        return '';
+    }
+    return (
+        'vm-' +
+        removeAllSpecialCharachtersExceptDashes(sandbox.studyName) +
+        '-' +
+        removeAllSpecialCharachtersExceptDashes(sandbox.name) +
+        '-' +
+        removeAllSpecialCharachtersExceptDashes(vmName)
+    );
 };
 
 export const filterList = (_list: any, filter) => {
@@ -94,11 +137,11 @@ export const returnUsernameVariant = (vmUsername: string, usernameIsValid: boole
     return 'error';
 };
 
-export const returnVMnameVariant = (vmName: string) => {
+export const returnVMnameVariant = (vmName: string, vms: VmObj[], sandbox: SandboxObj) => {
     if (vmName === '' || vmName === undefined) {
         return 'default';
     }
-    if (validateVmName(vmName)) {
+    if (validateVmName(vmName) && !checkIfVmNameAlreadyExists(vms, vmName, sandbox)) {
         return 'success';
     }
     return 'error';
@@ -241,12 +284,12 @@ export const validateUsername = (
     });
 };
 
-export const returnTooltipTextDataset = (_dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
+export const returnTooltipTextDataset = (dataset: AvailableDatasetObj, permissions: SandboxPermissions) => {
     if (permissions && !permissions.update) {
         return 'You do not have access to update data sets in sandbox';
     }
-    if (_dataset.name.length > 50) {
-        return _dataset.name;
+    if (dataset.name.length > 50) {
+        return dataset.name;
     }
     return '';
 };
@@ -271,7 +314,7 @@ export const checkIfAnyVmRulesHasChanged = (hasChangedVmRules): boolean => {
 };
 
 export const checkIfEqualRules = (vm: VmObj): boolean => {
-    if (vm.rules.length < 2) {
+    if (!vm.rules || vm.rules.length < 2) {
         return false;
     }
     for (let i = 1; i < vm.rules.length; i++) {
@@ -284,38 +327,43 @@ export const checkIfEqualRules = (vm: VmObj): boolean => {
     return false;
 };
 
-export const checkIfSaveIsEnabled = (hasChangedVmRules, vm, inputError, setInputError): boolean => {
+export const checkIfSaveIsEnabled = (hasChangedVmRules, vm: VmObj, inputError: string): ButtonEnabledObj => {
     const hasChangedIndex = hasChangedVmRules.findIndex((x: any) => x.vmId === vm.id);
+    const returnObject: ButtonEnabledObj = { enabled: true, error: '' };
     if (hasChangedIndex === -1) {
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
     if (!vm.rules || !hasChangedVmRules[hasChangedIndex].hasChanged) {
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
 
     if (checkIfEqualRules(vm)) {
         if (inputError !== inputErrorsVmRules.equalRules) {
-            setInputError(inputErrorsVmRules.equalRules);
+            returnObject.error = inputErrorsVmRules.equalRules;
         }
-        return false;
+        returnObject.enabled = false;
+        return returnObject;
     }
 
-    let enabled = true;
     vm.rules.forEach((rule) => {
         if (!checkIfValidIp(rule.ip) && rule.direction === 0) {
-            enabled = false;
+            returnObject.enabled = false;
+            return returnObject;
         }
         if (rule.direction === 0 && !checkIfInputIsNumberWihoutCharacters(rule.port)) {
-            enabled = false;
+            returnObject.enabled = false;
+            return returnObject;
         }
         if (rule.description === '' || rule.ip === '' || rule.protocol === '' || rule.port === '') {
-            enabled = false;
+            returnObject.enabled = false;
             if (inputError !== inputErrorsVmRules.notAllFieldsFilled) {
-                setInputError(inputErrorsVmRules.notAllFieldsFilled);
+                returnObject.error = inputErrorsVmRules.notAllFieldsFilled;
             }
         }
     });
-    return enabled;
+    return returnObject;
 };
 
 export const checkIfAddNewVmHasUnsavedChanges = (vm: VmObj) => {
@@ -330,4 +378,31 @@ export const checkIfAddNewVmHasUnsavedChanges = (vm: VmObj) => {
         return true;
     }
     return false;
+};
+
+export const checkIfAnyVmsHasOpenInternet = (vms): boolean => {
+    let result = false;
+    vms.forEach((_vm: VmObj) => {
+        if (_vm.rules) {
+            _vm.rules.forEach((rule: any) => {
+                if (rule.action === 0 && rule.direction === 1) {
+                    result = true;
+                }
+            });
+        }
+    });
+    return result;
+};
+
+export const returnOpenClosedOutboundRule = (type: 'text' | 'button', vm: VmObj) => {
+    if (!vm.rules) {
+        return;
+    }
+    const actionRule = vm.rules.find((rule: any) => rule.direction === 1);
+    if (actionRule) {
+        if (actionRule.action === 0) {
+            return type === 'text' ? ' open' : 'Close internet';
+        }
+        return type === 'text' ? ' closed' : 'Open internet';
+    }
 };
