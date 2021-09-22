@@ -5,13 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Typography, Tooltip, Icon } from '@equinor/eds-core-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { copy } from '@equinor/eds-icons';
-
-const icons = {
-    copy
-};
-
-Icon.add(icons);
 
 const width = 500;
 

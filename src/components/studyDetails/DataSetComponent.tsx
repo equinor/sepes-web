@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { close } from '@equinor/eds-icons';
 import { useHistory } from 'react-router-dom';
 import { unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
@@ -11,11 +10,6 @@ import DatasetsTable from './Tables/DatasetsTable';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
-
-const icons = {
-    close
-};
-Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;

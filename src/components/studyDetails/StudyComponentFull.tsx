@@ -4,15 +4,6 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu, Typography, DotProgress } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {
-    dollar,
-    visibility,
-    visibility_off,
-    business,
-    settings,
-    info_circle,
-    warning_filled
-} from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
@@ -38,17 +29,6 @@ import DeleteResourceComponent from '../common/customComponents/DeleteResourceCo
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';
-
-const icons = {
-    dollar,
-    visibility,
-    visibility_off,
-    business,
-    settings,
-    info_circle,
-    warning_filled
-};
-Icon.add(icons);
 
 const TitleText = styled.span`
     font-size: 28px;

@@ -1,18 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
-import { visibility, visibility_off } from '@equinor/eds-icons';
 import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
 import { truncate } from 'components/common/helpers/helpers';
 import truncateLength from 'components/common/staticValues/lenghts';
-
-const icons = {
-    visibility,
-    visibility_off
-};
-Icon.add(icons);
 
 const SmallText = styled.div`
     font-size: 10px;
