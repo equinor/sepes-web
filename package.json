@@ -23,7 +23,7 @@
         "@typescript-eslint/eslint-plugin": "^4.30.0",
         "@typescript-eslint/parser": "^4.29.3",
         "axios": "^0.21.3",
-        "browser-image-compression": "^1.0.14",
+        "browser-image-compression": "^1.0.15",
         "commitizen": "^4.2.4",
         "cypress-multi-reporters": "^1.5.0",
         "expect": "^27.1.1",
