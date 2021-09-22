@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /.vs
+.vscode/launch.json
 /docker-compose.yml
 # testing
 /coverage
