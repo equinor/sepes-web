@@ -195,15 +195,17 @@ export const uploadFile = async (
             .catch(() => {
                 //Do nothing
             });
-    } catch (e) {
+    } catch (e: any) {
         console.log('abort');
-        if (e.name === 'AbortError') {
-            // abort was called on our abortSignal
-            console.log('Operation was aborted by the user');
-        } else {
-            // some other error occurred 🤷‍♂️
-            console.log('Uploading file failed');
-        }
+        console.log('Uploading file failed');
+        //     if (e.name === 'AbortError') {
+        //         // abort was called on our abortSignal
+        //         console.log('Operation was aborted by the user');
+        //     } else {
+        //         // some other error occurred 🤷‍♂️
+        //         console.log('Uploading file failed');
+        //     }
+        // }
     }
 };
 
@@ -219,7 +221,7 @@ export const deleteFile = async (blobUri: string, blobName: string) => {
         blockBlobClient.delete().catch(() => {
             console.log('Error deleting file(s)');
         });
-    } catch (e) {
+    } catch (e: any) {
         console.log('abort');
         if (e.name === 'AbortError') {
             // abort was called on our abortSignal

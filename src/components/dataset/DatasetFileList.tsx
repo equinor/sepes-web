@@ -111,7 +111,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
             // controller.abort();
             // controller = new AbortController();
             setController(new AbortController());
-        } catch (e) {
+        } catch (e: any) {
             if (e.name === 'AbortError') {
                 // abort was called on our abortSignal
                 console.log('Operation was aborted by the user');
