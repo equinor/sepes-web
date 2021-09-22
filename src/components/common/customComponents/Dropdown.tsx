@@ -3,16 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import useClickOutside from './useClickOutside';
 import styled from 'styled-components';
 import { Icon, Typography, Label } from '@equinor/eds-core-react';
-import { arrow_drop_up, arrow_drop_down } from '@equinor/eds-icons';
 import './styles.scss';
 import { truncate } from '../helpers/helpers';
-
-const icons = {
-    arrow_drop_up,
-    arrow_drop_down
-};
-
-Icon.add(icons);
 
 const Dropdown = styled.div<{ isOpen: any; color: any }>`
     height: 35px;

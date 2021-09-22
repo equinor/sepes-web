@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { close } from '@equinor/eds-icons';
+import { Button, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
 import ParticipantTable from './Tables/ParticipantTable';
@@ -15,11 +14,6 @@ import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
-
-const icons = {
-    close
-};
-Icon.add(icons);
 
 const Wrapper = styled.div`
     display: grid;

@@ -11,7 +11,6 @@ import {
     Label,
     SingleSelect
 } from '@equinor/eds-core-react';
-import { info_circle } from '@equinor/eds-icons';
 import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '../../common/helpers/helpers';
 import {
     validateUserInputVm,
@@ -34,11 +33,6 @@ import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
-
-const icons = {
-    info_circle
-};
-Icon.add(icons);
 
 const Wrapper = styled.div`
     height: auto;

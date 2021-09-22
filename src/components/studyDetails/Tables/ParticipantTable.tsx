@@ -1,17 +1,12 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
 import { Table, Icon, Button } from '@equinor/eds-core-react';
-import { close } from '@equinor/eds-icons';
 import { ParticipantObj, StudyPermissions } from '../../common/interfaces';
 import { studyOwner } from '../../common/staticValues/Roles';
 import useWindowDimensions from '../../common/hooks/useWindowDimensions';
 import '../../../styles/Table.scss';
 
 const { Body, Row, Cell, Head } = Table;
-const icons = {
-    close
-};
-Icon.add(icons);
 
 type DatasetsTableProps = {
     participants: any;
