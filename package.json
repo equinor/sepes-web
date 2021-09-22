@@ -14,7 +14,7 @@
         "@peculiar/webcrypto": "^1.1.7",
         "@testing-library/jest-dom": "^5.1.0",
         "@testing-library/react": "^9.5.0",
-        "@types/node": "^16.6.1",
+        "@types/node": "^16.7.10",
         "@types/react": "^17.0.18",
         "@types/react-dom": "^17.0.9",
         "@types/react-router": "^5.1.16",
