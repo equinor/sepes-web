@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/equinor/sepes-web/compare/1.0.2...1.0.3) (2021-09-23)
+
+
+### Bug Fixes
+
+* **dataset:** add tooltip to create/save button ([acf9a1e](https://github.com/equinor/sepes-web/commit/acf9a1e4e090b8a380910f1fdc3aa3d1bce8c3f8)), closes [#1305](https://github.com/equinor/sepes-web/issues/1305)
+* **dataset:** disable create button if name is taken ([#1332](https://github.com/equinor/sepes-web/issues/1332)) ([5dad77e](https://github.com/equinor/sepes-web/commit/5dad77ee3c2557731486166b4cfbaef4074a2596)), closes [#1326](https://github.com/equinor/sepes-web/issues/1326)
+* disable create sandbox when sanbox name exists ([#1325](https://github.com/equinor/sepes-web/issues/1325)) ([b685964](https://github.com/equinor/sepes-web/commit/b6859646de784d7462d00c83c0a5a2a80e4404d2)), closes [#1316](https://github.com/equinor/sepes-web/issues/1316)
+* disable create vm if name already is in use ([#1327](https://github.com/equinor/sepes-web/issues/1327)) ([9e99c2c](https://github.com/equinor/sepes-web/commit/9e99c2c7a8783dfbe06d2ea75693a429c2035962)), closes [#1317](https://github.com/equinor/sepes-web/issues/1317)
+* issue with deleting vm with enter button ([#1324](https://github.com/equinor/sepes-web/issues/1324)) ([f33c3ff](https://github.com/equinor/sepes-web/commit/f33c3ff92ed440f28cff86012835c91ddcf1827b)), closes [#1322](https://github.com/equinor/sepes-web/issues/1322)
+* package.json & package-lock.json to reduce vulnerabilities ([#1315](https://github.com/equinor/sepes-web/issues/1315)) ([67c0849](https://github.com/equinor/sepes-web/commit/67c08497499f849572191bb935a9f8a277eddc7e))
+* **sandbox:** os search issue ([#1321](https://github.com/equinor/sepes-web/issues/1321)) ([dafe0f3](https://github.com/equinor/sepes-web/commit/dafe0f34560ae717efef94729d9f173e8abe1e54)), closes [#1314](https://github.com/equinor/sepes-web/issues/1314)
+* **study:** add tooltip for not all required fields filled ([2585142](https://github.com/equinor/sepes-web/commit/2585142656837360a23cc43cb161f688d8751ac6)), closes [#1306](https://github.com/equinor/sepes-web/issues/1306)
+* update testing-library jest-dom ([#1336](https://github.com/equinor/sepes-web/issues/1336)) ([3867fb2](https://github.com/equinor/sepes-web/commit/3867fb2f9459124bbb0249f71d03906c5d148e6f))
+* upgrade @types/node from 16.6.1 to 16.7.10 ([#1338](https://github.com/equinor/sepes-web/issues/1338)) ([858222e](https://github.com/equinor/sepes-web/commit/858222ef2a5f496372e5011e0ae7eb124c3e9112))
+* upgrade @types/react from 17.0.17 to 17.0.18 ([#1293](https://github.com/equinor/sepes-web/issues/1293)) ([059dfda](https://github.com/equinor/sepes-web/commit/059dfdabe6c858cc42e6807b3dd9e827fda9ac14))
+* upgrade @types/react from 17.0.18 to 17.0.19 ([#1343](https://github.com/equinor/sepes-web/issues/1343)) ([684e07c](https://github.com/equinor/sepes-web/commit/684e07c3001f569c69d4f96905cbf6cda126dd9e))
+* upgrade @types/styled-components from 5.1.12 to 5.1.13 ([#1344](https://github.com/equinor/sepes-web/issues/1344)) ([458f3e3](https://github.com/equinor/sepes-web/commit/458f3e3e61160bb7892dd25d41927bc935a8480f))
+* upgrade @typescript-eslint/eslint-plugin from 4.29.2 to 4.30.0 ([#1337](https://github.com/equinor/sepes-web/issues/1337)) ([42b46ba](https://github.com/equinor/sepes-web/commit/42b46ba37dc3f95a3255d8a98ec1fc927a3ef3f8))
+* upgrade @typescript-eslint/parser from 4.29.3 to 4.30.0 ([#1341](https://github.com/equinor/sepes-web/issues/1341)) ([adaa062](https://github.com/equinor/sepes-web/commit/adaa062a450851baa9c07f4d646b057c02cdbb45))
+* upgrade browser-image-compression from 1.0.14 to 1.0.15 ([#1287](https://github.com/equinor/sepes-web/issues/1287)) ([4a69b02](https://github.com/equinor/sepes-web/commit/4a69b022c7b8b1d1bb79709f8d4622cb01386d1f))
+* upgrade styled-components from 5.3.0 to 5.3.1 ([#1342](https://github.com/equinor/sepes-web/issues/1342)) ([4d30352](https://github.com/equinor/sepes-web/commit/4d3035272e77534571b32ba8c86c91c6c40ab630))
+
 ### [1.0.2](https://github.com/equinor/sepes-web/compare/1.0.1...1.0.2) (2021-09-16)
 
 
