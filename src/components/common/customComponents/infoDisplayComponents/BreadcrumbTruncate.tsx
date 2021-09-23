@@ -14,7 +14,7 @@ type BreadcrumbTruncateProps = {
 const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
     breadcrumbText,
     truncateLength = defaultLength,
-    link = '',
+    link = window.location.pathname,
     datacy
 }) => {
     const history = useHistory();
