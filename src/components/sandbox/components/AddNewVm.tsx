@@ -278,6 +278,16 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             _setFiler(currentFilter);
         };
 
+        const returnHelperTextCreateVm = (): string => {
+            if (!vmIsValid && !loading) {
+                return 'Please fill out all required fields';
+            }
+            if (loading) {
+                return 'Creating VM..';
+            }
+            return '';
+        };
+
         useKeyEvents(undefined, createVm, true);
 
         return (
@@ -500,10 +510,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     </Typography>
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
-                    <Tooltip
-                        title={!vmIsValid && !loading ? 'Please fill out all required fields' : ''}
-                        placement="right"
-                    >
+                    <Tooltip title={returnHelperTextCreateVm()} placement="right">
                         <Button
                             style={{ width: '100px', marginLeft: 'auto' }}
                             data-cy="create_vm"
