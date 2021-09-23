@@ -1,14 +1,7 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
-import { Icon } from '@equinor/eds-core-react';
-import { cloud_upload } from '@equinor/eds-icons';
 import { EquinorIcon } from '../StyledComponents';
-
-const icons = {
-    cloud_upload
-};
-Icon.add(icons);
 
 const ChooseImgdiv = styled.div<{ dragActive: boolean }>`
     height: 128px;

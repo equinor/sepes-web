@@ -9,7 +9,6 @@ import {
     getStudySpecificDatasetResources,
     removeStudyDataset
 } from '../../services/Api';
-import { arrow_back, delete_forever, folder, file, folder_open } from '@equinor/eds-icons';
 import { isIterable, truncate } from '../common/helpers/helpers';
 import LoadingFull from '../common/LoadingComponentFullscreen';
 import CreateEditDataset from './CreateEditDataset';
@@ -35,15 +34,6 @@ import DatasetInformation from './DatasetInformation';
 import { truncateLength } from '../common/staticValues/lenghts';
 import BreadcrumbTruncate from '../common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import './DatasetDetailsStyle.css';
-
-const icons = {
-    arrow_back,
-    delete_forever,
-    folder,
-    file,
-    folder_open
-};
-Icon.add(icons);
 
 const OuterWrapper = styled.div`
     position: absolute;

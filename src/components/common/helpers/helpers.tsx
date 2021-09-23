@@ -22,8 +22,13 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
-export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true, limit = 50) => {
-    if (!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) {
+export const returnTextfieldTypeBasedOninput = (
+    value: any,
+    dashAllowed = true,
+    limit = 50,
+    specialCaseError = false
+) => {
+    if ((!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) || specialCaseError) {
         return 'error';
     }
     if (value && value.length > limit) {
@@ -142,4 +147,8 @@ export const returnHelperText = (inputLength: number, limit: number, type: strin
         return '';
     }
     return `ProTip! Good ${type} names contain fewer than ${limit} characters.`;
+};
+
+export const removeAllSpecialCharachtersExceptDashes = (input: string) => {
+    return input.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
 };

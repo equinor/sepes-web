@@ -56,7 +56,7 @@ describe('Make available', () => {
     });
 
     it('Wait for resources to be created', () => {
-        cy.wait(600000);
+        cy.wait(950000);
     });
 
     it('Ensure make available is disabled', () => {

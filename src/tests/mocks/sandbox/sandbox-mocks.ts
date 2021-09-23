@@ -9,12 +9,12 @@ export const sandbox: SandboxObj = {
     studyId: '',
     technicalContactEmail: '',
     technicalContactName: '',
-    name: '',
+    name: 'Mock Sandbox',
     template: '',
     id: '1',
     currentPhase: undefined,
     linkToCostAnalysis: '',
-    studyName: '',
+    studyName: 'Mock Study',
     restrictionDisplayText: '',
     permissions: {
         delete: true,
@@ -132,7 +132,7 @@ export const sandboxPermissionsNoPermissions: SandboxPermissions = {
 // VM
 export const vm: VmObj = {
     id: '1',
-    name: '',
+    name: 'vmname',
     region: 'norwayeast',
     size: '',
     operatingSystem: '',
@@ -237,3 +237,5 @@ export const vmWithIncorrectPortRule: VmObj = {
         { ip: '1.1.1.3', port: '80' }
     ]
 };
+
+export const listWithVms: VmObj[] = [vm, vm];

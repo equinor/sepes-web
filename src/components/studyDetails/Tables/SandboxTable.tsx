@@ -1,17 +1,12 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
-import { chevron_right } from '@equinor/eds-icons';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
 import { getStudyId } from 'utils/CommonUtil';
 import TextTruncate from 'components/common/customComponents/infoDisplayComponents/TextTruncate';
 
 const { Body, Row, Cell, Head } = Table;
-const icons = {
-    chevron_right
-};
-Icon.add(icons);
 
 type SandboxTableProps = {
     sandboxes: any;

@@ -1,7 +1,6 @@
 /*eslint-disable consistent-return */
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Icon, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
-import { checkbox } from '@equinor/eds-icons';
+import { Table, Button, Checkbox, SideSheet, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { DatasetObj, GeneralPermissions } from '../../common/interfaces';
 import { useHistory } from 'react-router-dom';
@@ -13,10 +12,6 @@ import '../../../styles/Table.scss';
 import Cookies from 'js-cookie';
 
 const { Body, Row, Cell, Head } = Table;
-const icons = {
-    checkbox
-};
-Icon.add(icons);
 
 const UnstyledList = styled.ul`
     margin-top: 8px;

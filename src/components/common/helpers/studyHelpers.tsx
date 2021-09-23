@@ -1,5 +1,6 @@
-import { DropdownObj, ParticipantObj, StudyObj } from '../interfaces';
+import { DropdownObj, ParticipantObj, StudyObj, SandboxCreateObj } from '../interfaces';
 import { isIterable, validateResourceName } from './helpers';
+import { validateUserInputSandbox } from './sandboxHelpers';
 
 export const validateUserInputStudy = (
     study: StudyObj,
@@ -85,6 +86,20 @@ export const returnTooltipTextSaveStudy = (
         return 'Can not change from valid to invalid WBS with active resources';
     }
     if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
+        return 'Please fill out all required fields';
+    }
+    return '';
+};
+
+export const returnTooltipCreateSandbox = (
+    wbsIsValid: boolean | undefined,
+    study: StudyObj,
+    sandbox: SandboxCreateObj
+) => {
+    if (!wbsIsValid) {
+        return 'Need a valid WBS code for this study to create sandbox';
+    }
+    if (!(validateUserInputSandbox(sandbox, study) && wbsIsValid)) {
         return 'Please fill out all required fields';
     }
     return '';
