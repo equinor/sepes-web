@@ -8,6 +8,8 @@ import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { lineBreak } from '../common/helpers/helpers';
+import { useDispatch, useSelector } from 'react-redux';
+import { INCREMENT } from 'store/actions/actionTypes';
 
 const Wrapper = styled.div`
     display: grid;
@@ -44,6 +46,9 @@ const Home = () => {
     const [studyList, setStudylist] = useState([]);
     const studies = useFetchUrl(getStudiesUrl(), setStudylist);
 
+    const counter = useSelector((state: any) => state.counter);
+    const dispatch = useDispatch();
+
     return (
         <Wrapper>
             {!studies.loading ? (
@@ -70,10 +75,11 @@ const Home = () => {
                                 data-cy="new_study"
                                 style={{ width: '336px' }}
                                 onClick={() => {
-                                    history.push('/studies');
+                                    // history.push('/studies');
+                                    dispatch({ type: INCREMENT });
                                 }}
                             >
-                                New study
+                                New study: {counter}
                             </Button>
                         </Tooltip>
                     </div>
