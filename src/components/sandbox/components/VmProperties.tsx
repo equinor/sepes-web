@@ -7,6 +7,8 @@ import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { useDispatch } from 'react-redux';
+import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -31,7 +33,6 @@ type VmPropertiesProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    setCallGetResources: any;
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
@@ -41,13 +42,13 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     setActiveTab,
     permissions,
     setUpdateCache,
-    updateCache,
-    setCallGetResources
+    updateCache
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { MemoryGB, numberOfCores } = size || {};
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -79,7 +80,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setActiveTab(0);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.message) {
-                setCallGetResources(true);
+                dispatch({ type: SETCALLRESOURCESTRUE });
                 const currentVms: any = [...vms];
                 currentVms.splice(vms.indexOf(vmProperties), 1);
                 setVms(currentVms);

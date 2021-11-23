@@ -9,11 +9,10 @@ const { Body, Row, Cell, Head } = Table;
 
 type ResourcesComponentProps = {
     resources: any;
-    setCallGetResources: any;
     permissions: SandboxPermissions;
 };
 
-const Dataset: React.FC<ResourcesComponentProps> = ({ resources, setCallGetResources, permissions }) => {
+const Dataset: React.FC<ResourcesComponentProps> = ({ resources, permissions }) => {
     //const { resources, getResources } = props;
     // const [expandList, setExpandList] = useState<boolean>(false);
     const [orderedResources, setOrderedResources] = useState<any>(false);
@@ -42,7 +41,6 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, setCallGetResou
                                             status={resource.status}
                                             linkToResource={resource.linkToExternalSystem}
                                             retryLink={resource.retryLink}
-                                            setCallGetResources={setCallGetResources}
                                             permission={permissions}
                                         />
                                     </Cell>
