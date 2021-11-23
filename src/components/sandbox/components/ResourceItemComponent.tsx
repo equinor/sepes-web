@@ -5,6 +5,8 @@ import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 import { SandboxPermissions } from 'components/common/interfaces';
+import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
+import { useDispatch } from 'react-redux';
 
 const Wrapper = styled.div`
     display: grid;
@@ -23,7 +25,6 @@ type ResourceItemComponentProps = {
     type: string;
     status: string;
     retryLink: string;
-    setCallGetResources: any;
     permission: SandboxPermissions;
 };
 
@@ -33,15 +34,16 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
     name,
     linkToResource,
     retryLink,
-    setCallGetResources,
     permission
 }) => {
+    const dispatch = useDispatch();
     const retryResource = () => {
         apiRequestWithToken(retryLink, 'PUT').then((result: any) => {
             if (result && result.message) {
                 console.log('Err');
             } else {
-                setCallGetResources(true);
+                dispatch({ type: SETCALLRESOURCESTRUE });
+                // setCallGetResources(true);
             }
         });
     };

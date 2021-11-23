@@ -13,6 +13,8 @@ import NotFound from '../common/informationalComponents/NotFound';
 import { getResourceStatus } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Promt';
+import { useDispatch, useSelector } from 'react-redux';
+import { SETCALLRESOURCESFALSE } from '../../store/actions/sandbox';
 
 const Wrapper = styled.div`
     display: grid;
@@ -55,7 +57,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox, undefined, undefined, false);
-    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
@@ -65,7 +66,8 @@ const Sandbox: React.FC<SandboxProps> = () => {
             undefined
     );
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-    const [callGetResources, setCallGetResources] = useState<boolean>(false);
+    const callGetResources = useSelector((state: any) => state.callGetResources);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         return () => {
@@ -77,9 +79,9 @@ const Sandbox: React.FC<SandboxProps> = () => {
     useEffect(() => {
         if (callGetResources) {
             getResources();
-            setCallGetResources(false);
+            dispatch({ type: SETCALLRESOURCESFALSE });
         }
-    }, [callGetResources, setCallGetResources]);
+    }, [callGetResources]);
 
     useEffect(() => {
         if (
@@ -116,7 +118,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandbox={sandbox} setCallGetResources={setCallGetResources} />;
+                return <Execution resources={resources} sandbox={sandbox} />;
             case 2:
                 return <div />;
             default:
@@ -128,7 +130,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         updateCache={updateCache}
                         sandbox={sandbox}
                         setSandbox={setSandbox}
-                        setCallGetResources={setCallGetResources}
                         controller={controller}
                     />
                 );
@@ -154,8 +155,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 sandboxId={sandboxId}
                                 setUpdateCache={setUpdateCache}
                                 updateCache={updateCache}
-                                setUserClickedDelete={setUserClickedDelete}
-                                userClickedDelete={userClickedDelete}
                                 setResources={setResources}
                                 setLoading={SandboxResponse.setLoading}
                                 setNewPhase={setNewPhase}
@@ -176,7 +175,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                     controller={controller}
                                     setVmsWithOpenInternet={setVmsWithOpenInternet}
                                     setHasChanged={setHasChanged}
-                                    setCallGetResources={setCallGetResources}
                                 />
                             )}
                         </Wrapper>
