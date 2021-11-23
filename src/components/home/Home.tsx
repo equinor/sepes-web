@@ -45,9 +45,6 @@ const Home = () => {
     const [studyList, setStudylist] = useState([]);
     const studies = useFetchUrl(getStudiesUrl(), setStudylist);
 
-    const counter = useSelector((state: any) => state.counter);
-    const dispatch = useDispatch();
-
     return (
         <Wrapper>
             {!studies.loading ? (
