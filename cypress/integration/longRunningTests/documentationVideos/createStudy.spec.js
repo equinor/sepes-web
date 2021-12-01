@@ -4,6 +4,7 @@ describe('Create study', () => {
     before(() => {
         cy.login();
         cy.createStudyWithLogo(studyName);
+        cy.clearViewport();
     });
 
     beforeEach(() => {
