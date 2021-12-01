@@ -1,0 +1,20 @@
+{
+    "baseUrl": "https://frontend-sepes-web-dev.radix.equinor.com/",
+    "defaultCommandTimeout": 20000,
+    "pageLoadTimeout": 200000,
+    "requestTimeout": 200000,
+    "responseTimeout": 200000,
+    "video": true,
+    "videoUploadOnPasses": true,
+    "nodeVersion": "system",
+    "chromeWebSecurity": false,
+    "env": {
+        "TENANT_ID": "",
+        "CLIENT_ID": "",
+        "CLIENT_SECRET": "",
+        "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
+        "SCOPE": "User.Read User.Read.All User.Impersonation"
+    },
+    "viewportWidth": 1920,
+    "viewportHeight": 1080
+}

@@ -46,17 +46,21 @@ jobs:
       #     browser: chrome
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
- 
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/longRunningTests/documentationVideos/*" --env cyAccessToken=${{env.token}}
+ 
+      # - name: Run quick running cypress tests
+      #   env:
+      #     token: ${{ steps.id-token.outputs.TOKEN }}
+      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
-      - name: Run long running cypress tests  
-        env:
-          token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
-        if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
+      # - name: Run long running cypress tests  
+      #   env:
+      #     token: ${{ steps.id-token.outputs.TOKEN }}
+      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
+      #   if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
         
       # - name: Run all tests in Chromium browser
       #   env:
