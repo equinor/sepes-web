@@ -3,8 +3,8 @@ describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        cy.createStudyWithLogo(studyName);
         cy.clearViewport();
+        cy.createStudyWithLogo(studyName);
     });
 
     beforeEach(() => {
