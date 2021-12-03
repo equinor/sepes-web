@@ -56,6 +56,14 @@ jobs:
         with:
           name: documentation-videos
           path: cypress/videos/longRunningTests/documentationVideos
+
+      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
+        name: Azure Blob Upload with Destination folder defined
+        with:
+          connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
+          container_name: files
+          source_folder: cypress/videos/longRunningTests/documentationVideos
+
       # - name: Run quick running cypress tests
       #   env:
       #     token: ${{ steps.id-token.outputs.TOKEN }}
