@@ -49,7 +49,7 @@ jobs:
       - name: Run documentation cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/longRunningTests/documentationVideos/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress-movie --config-file "cypress.docs.json" --spec "cypress/integration/longRunningTests/documentationVideos/*" --env cyAccessToken=${{env.token}}
       
       - name: Save documentation video
         uses: actions/upload-artifact@v1
