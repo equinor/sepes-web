@@ -46,7 +46,7 @@ jobs:
       #     browser: chrome
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
-      - name: Run quick running cypress tests
+      - name: Run documentation cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/longRunningTests/documentationVideos/*" --env cyAccessToken=${{env.token}}
@@ -145,12 +145,6 @@ jobs:
 
 
       - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage > totalCoverage.txt
-
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Total coverage report5
-          path: totalCoverage.txt
 
       - uses: actions/upload-artifact@v2
         with:
