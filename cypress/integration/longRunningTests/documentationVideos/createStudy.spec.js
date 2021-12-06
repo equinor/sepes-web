@@ -14,9 +14,9 @@ describe('Create study', () => {
     it('Create study', { keystrokeDelay: 100 }, () => {
         cy.visit('/');
         cy.text('Now we will create a study', {
-            duration: 2000, // how long the text should be there
-            blocking: false, // wait for the text to hide
-            textSize: '3vh' // CSS text height
+            duration: 2000,
+            blocking: false,
+            textSize: '3vh'
         });
         cy.get('[data-cy=new_study]').arrow({
             text: 'Click create study to go to the create-study form',
@@ -85,79 +85,13 @@ describe('Create study', () => {
 
         cy.get('[data-cy=create_study]').click({ force: true });
         cy.waitForStudyToLoad();
-
-        // cy.createStudyWithLogo(studyName);
     });
-
-    // it('Create study', { keystrokeDelay: 100 }, () => {
-    //     cy.text('Now we will create a study', {
-    //         duration: 5000, // how long the text should be there
-    //         blocking: false, // wait for the text to hide
-    //         textSize: '20pt' // CSS text height
-    //     });
-    //     cy.createStudyWithLogo(studyName);
-    // });
-
-    // it('clicks edit study', () => {
-    //     cy.get('[data-cy=edit_study]').click({ force: true });
-    // });
-    // const editValue = ' edited';
-    // studyName = studyName.concat(editValue);
-    // it('fills out study information again', () => {
-    //     cy.get('[data-cy=study_name]').clear().type(studyName);
-    //     cy.get('[data-cy=study_vendor]').type('cy vendor edited');
-    //     cy.get('[data-cy=study_description]').type('cy description edited');
-    // });
-
-    // it('clicks create new study', () => {
-    //     cy.get('[data-cy=create_study]').click({ force: true });
-    // });
-
-    // it('Edit results and learnings', () => {
-    //     cy.editResultsAndLearnings();
-    // });
-
-    // it('Add participant to study', () => {
-    //     cy.addMockUserAsParticipant();
-    // });
-
-    // it('clicks on data sets tab', () => {
-    //     cy.switchToDatasetsTab();
-    // });
-
-    // it('clicks add study specific dataset', () => {
-    //     cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
-    // });
-
-    // it('fills out dataset information and create dataset', () => {
-    //     cy.createDataset();
-    // });
-
-    // it('fills out dataset information again (edit)', () => {
-    //     cy.get('[data-cy=dataset_edit]').click({ force: true });
-    //     cy.get('[data-cy=dataset_name]').type('cy name edit');
-    //     cy.get('[data-cy=dataset_classification]').click({ force: true });
-    //     cy.contains('Internal').click({ force: true });
-    //     cy.get('[data-cy=dataset_dataId]').type(2);
-    //     cy.get('[data-cy=dataset_save]').click({ force: true });
-    // });
-
-    // it('Delete study specific dataset', () => {
-    //     cy.get('[data-cy=dataset_delete]').click({ force: true });
-    //     cy.get('[data-cy="delete_resource"]').type('cy dataset namecy name edit');
-    //     cy.get('[data-cy=delete_resource_delete]').click({ force: true });
-    // });
-
-    // it('Remove participant from study', () => {
-    //     cy.switchToParticipantsTab();
-    //     cy.get('[data-cy=study_remove_participant]').click({ force: true });
-    // });
 
     it('Delete study', () => {
         cy.text('Delete the study', {
-            duration: 5000, // how long the text should be there
-            blocking: true, // wait for the text to hide
-            textSize: '20pt' // CSS text height
+            duration: 5000,
+            blocking: true,
+            textSize: '20pt'
         });
         cy.deleteStudy(studyName);
     });
