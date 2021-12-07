@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: documentation-videos
-          path: cypress/videos/longRunningTests/documentationVideos
+          path: cypress/videos/documentationVideos
 
       - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
         if: ${{ github.event_name != 'pull_request' }}
