@@ -50,7 +50,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/longRunningTests/documentationVideos/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
       
       - name: Save documentation video
         if: ${{ github.event_name != 'pull_request' }}
