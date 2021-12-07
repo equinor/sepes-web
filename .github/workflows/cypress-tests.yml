@@ -65,7 +65,7 @@ jobs:
         with:
           connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
           container_name: videos
-          source_folder: cypress/videos/longRunningTests/documentationVideos
+          source_folder: cypress/videos/documentationVideos
 
       - name: Run quick running cypress tests
         env:
