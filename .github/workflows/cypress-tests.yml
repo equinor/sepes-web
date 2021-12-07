@@ -46,7 +46,27 @@ jobs:
       #     browser: chrome
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
- 
+      - name: Run documentation cypress tests
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
+      
+      - name: Save documentation video
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: documentation-videos
+          path: cypress/videos/documentationVideos
+
+      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
+        if: ${{ github.event_name != 'pull_request' }}
+        name: Azure Blob Upload with Destination folder defined
+        with:
+          connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
+          container_name: videos
+          source_folder: cypress/videos/documentationVideos
+
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
@@ -128,12 +148,6 @@ jobs:
 
 
       - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage > totalCoverage.txt
-
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Total coverage report5
-          path: totalCoverage.txt
 
       - uses: actions/upload-artifact@v2
         with:

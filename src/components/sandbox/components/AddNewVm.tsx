@@ -33,6 +33,8 @@ import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
+import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
+import { useDispatch } from 'react-redux';
 
 const Wrapper = styled.div`
     height: auto;
@@ -95,7 +97,6 @@ type AddNewVmProps = {
     setOsFilter: any;
     osFilter: any;
     setHasChanged: any;
-    setCallGetResources: any;
 };
 
 const limits = {
@@ -135,8 +136,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         sizeFilter,
         setOsFilter,
         osFilter,
-        setHasChanged,
-        setCallGetResources
+        setHasChanged
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
         const [actualVmName, setActualVmName] = useState<string>('');
@@ -149,6 +149,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         const [displayRecommendedOs, setDisplayRecommendedOs] = useState<boolean>(false);
         const [loading, setLoading] = useState<boolean>(false);
         const vmIsValid = validateUserInputVm(vm, loading, vmEstimatedCost, usernameIsValid, vms, sandbox);
+        const dispatch = useDispatch();
 
         useEffect(() => {
             const timeoutId = setTimeout(() => {
@@ -226,7 +227,8 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         dataDisks: []
                     });
                     // getResources();
-                    setCallGetResources(true);
+                    dispatch({ type: SETCALLRESOURCESTRUE });
+
                     const vmsList: any = [...vms];
                     vmsList.push(result);
                     setVms(vmsList);
@@ -276,6 +278,16 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                 currentFilter.splice(_filter.indexOf(column), 1);
             }
             _setFiler(currentFilter);
+        };
+
+        const returnHelperTextCreateVm = (): string => {
+            if (!vmIsValid && !loading) {
+                return 'Please fill out all required fields';
+            }
+            if (loading) {
+                return 'Creating VM..';
+            }
+            return '';
         };
 
         useKeyEvents(undefined, createVm, true);
@@ -500,10 +512,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     </Typography>
                 </div>
                 <div style={{ marginLeft: 'auto' }}>
-                    <Tooltip
-                        title={!vmIsValid && !loading ? 'Please fill out all required fields' : ''}
-                        placement="right"
-                    >
+                    <Tooltip title={returnHelperTextCreateVm()} placement="right">
                         <Button
                             style={{ width: '100px', marginLeft: 'auto' }}
                             data-cy="create_vm"

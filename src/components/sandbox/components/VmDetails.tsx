@@ -21,6 +21,8 @@ import {
     returnOpenClosedOutboundRule
 } from 'components/common/helpers/sandboxHelpers';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
+import { useDispatch } from 'react-redux';
+import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -43,7 +45,6 @@ type VmDetailsProps = {
     setActiveTab: any;
     index: number;
     resources: any;
-    setCallGetResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -87,7 +88,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     permissions,
     setUpdateCache,
     updateCache,
-    setCallGetResources,
     setVmSaved,
     setHasChangedGlobal,
     hasChangedVmRules,
@@ -97,6 +97,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
+    const dispatch = useDispatch();
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -260,7 +261,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
-                setCallGetResources(true);
+                dispatch({ type: SETCALLRESOURCESTRUE });
                 setVmSaved(true);
             } else {
                 console.log('Err');
@@ -349,7 +350,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}
                     updateCache={updateCache}
-                    setCallGetResources={setCallGetResources}
                 />
                 <div>
                     <Table style={{ width: '100%' }}>

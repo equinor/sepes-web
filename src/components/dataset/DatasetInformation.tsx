@@ -47,7 +47,7 @@ const DatasetInformation: React.FC<DatasetInformationProps> = ({
     };
     return (
         <RightWrapper>
-            <div>
+            <div data-cy="storage_account_status">
                 <Label>Azure storage account</Label>
                 {dataset?.storageAccountLink ? (
                     <a href={dataset?.storageAccountLink} target="_blank" rel="noopener noreferrer">

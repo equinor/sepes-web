@@ -57,8 +57,6 @@ type StepBarProps = {
     setSandbox: any;
     updateCache: any;
     setUpdateCache: any;
-    userClickedDelete: any;
-    setUserClickedDelete: any;
     setResources: any;
     setLoading: any;
     setNewPhase: any;
@@ -110,8 +108,6 @@ const StepBar: React.FC<StepBarProps> = ({
     updateCache,
     setUpdateCache,
     setResources,
-    userClickedDelete,
-    setUserClickedDelete,
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
@@ -127,9 +123,10 @@ const StepBar: React.FC<StepBarProps> = ({
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
     const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
+    const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     useEffect(() => {
-        getResources();
+        // getResources();
         let timer: any;
         try {
             timer = setInterval(async () => {
@@ -145,6 +142,9 @@ const StepBar: React.FC<StepBarProps> = ({
             resourcesFailed = false;
         };
     }, [userClickedDelete]);
+    useEffect(() => {
+        getResources();
+    }, []);
 
     const getResources = () => {
         getResourceStatus(sandboxId, controller.signal).then((result: any) => {
