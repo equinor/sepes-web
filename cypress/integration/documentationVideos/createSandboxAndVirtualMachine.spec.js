@@ -3,7 +3,7 @@ describe('Create sandbox and virtual machine', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        // cy.clearViewport();
+        cy.clearViewport();
     });
 
     beforeEach(() => {
