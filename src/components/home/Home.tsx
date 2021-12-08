@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { lineBreak } from '../common/helpers/helpers';
-import { useDispatch, useSelector } from 'react-redux';
 
 const Wrapper = styled.div`
     display: grid;
@@ -27,7 +26,6 @@ const RightWrapper = styled.div`
     padding: 16px;
     border-radius: 4px;
     margin-right: 32px;
-    max-height: 451px;
     text-align: center;
     position: fixed;
     @media (max-width: 768px) {
