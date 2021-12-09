@@ -161,12 +161,19 @@ jobs:
       - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
         id: coveragePercentage
 
-      - uses: gliech/create-github-secret-action@v1.4.9
-        # if: github.ref == 'refs/heads/develop'
+      # - uses: gliech/create-github-secret-action@v1.4.9
+      #   # if: github.ref == 'refs/heads/develop'
+      #   with:
+      #     name: coverage_percentage
+      #     value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+      #     pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: hmanzur/actions-set-secret@v2.0.0
         with:
-          name: coverage_percentage
+          name: 'coverage_percentage'
           value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          pa_token: ${{ secrets.PA_TOKEN }}
+          repository: equinor/sepes-web
+          token: ${{ secrets.PA_TOKEN }}
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
