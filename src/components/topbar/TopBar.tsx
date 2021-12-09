@@ -167,10 +167,9 @@ const Bar = () => {
                         variant="ghost"
                         style={{ marginLeft: '25px' }}
                         onClick={() => redirectToExternalLink(documentationLink)}
-                        data-cy="header_open_wiki_page"
+                        data-cy="documentation_link"
                     >
-                        <Icon name="info_circle" size={24} title="Open wiki page" />
-                        Open wiki page
+                        Documentation
                     </Button>
                     <Button
                         id="menuButton"
