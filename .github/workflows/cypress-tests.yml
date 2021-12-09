@@ -168,12 +168,6 @@ jobs:
       #     value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
       #     pa_token: ${{ secrets.PA_TOKEN }}
 
-      - uses: hmanzur/actions-set-secret@v2.0.0
-        with:
-          name: 'coverage_percentage'
-          value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          repository: equinor/sepes-web
-          token: ${{ secrets.PA_TOKEN }}
 
       - name: Create Awesome Badge
         uses: schneegans/dynamic-badges-action@v1.1.0
@@ -186,19 +180,19 @@ jobs:
           message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
           color: orangee
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script
-        env:
-          COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
+      # - uses: Amadevus/pwsh-script@v2
+      #   id: my-script
+      #   env:
+      #     COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+      #     COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
+      #   with:
+      #     script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
 
-      - name: comment coverage PR
-        uses: unsplash/comment-on-pr@master
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: ${{ steps.my-script.outputs.result }}
-          check_for_duplicate_msg: true 
+      # - name: comment coverage PR
+      #   uses: unsplash/comment-on-pr@master
+      #   if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     msg: ${{ steps.my-script.outputs.result }}
+      #     check_for_duplicate_msg: true 
