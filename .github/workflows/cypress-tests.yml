@@ -161,7 +161,7 @@ jobs:
       - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
         id: coveragePercentage
 
-      - uses: gliech/create-github-secret-action@v1
+      - uses: gliech/create-github-secret-action@v1.4.9
         if: github.ref == 'refs/heads/develop'
         with:
           name: coverage_percentage
