@@ -29,10 +29,10 @@ jobs:
 
       # - run: npm install
       - run: npm ci
-      - name: run step if multiline not null
-        if: ${{ steps.id-token.outputs.TOKEN }}
-        run: echo multiline not null
-
+      # - name: run step if multiline not null
+      #   if: ${{ steps.id-token.outputs.TOKEN }}
+      #   run: echo multiline not null
+      - run: npm start
 
       # - name: Run cypress
       #   uses: cypress-io/github-action@v2
@@ -70,7 +70,7 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run --config-file "cypress.ci.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       - name: Run long running cypress tests  
         env:
