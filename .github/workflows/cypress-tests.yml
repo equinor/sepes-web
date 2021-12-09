@@ -162,7 +162,7 @@ jobs:
         id: coveragePercentage
 
       - uses: gliech/create-github-secret-action@v1.4.9
-        if: github.ref == 'refs/heads/develop'
+        # if: github.ref == 'refs/heads/develop'
         with:
           name: coverage_percentage
           value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
