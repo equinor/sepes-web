@@ -10,3 +10,5 @@ export const apiChangelog = 'https://raw.githubusercontent.com/equinor/sepes-api
 
 export const requestChangeLink =
     'https://equinor.service-now.com/selfservice?id=sc_cat_item&sys_id=3373cf4cdb97f200bc7af7461d96195b';
+
+export const documentationLink = 'https://docs.sepes.equinor.com/';
