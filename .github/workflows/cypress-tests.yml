@@ -28,11 +28,17 @@ jobs:
           echo "::set-output name=TOKEN::$TOKEN"
 
       # - run: npm install
-      - run: npm ci
-      # - name: run step if multiline not null
-      #   if: ${{ steps.id-token.outputs.TOKEN }}
-      #   run: echo multiline not null
-      - run: npm start
+      # - run: npm ci
+
+      # - run: npm start
+
+      - name: npm install, build, and test
+        run: |
+          npm ci
+          npm run build --if-present
+          npm start & npx wait-on http://localhost:3000
+        env:
+          CI: true
 
       # - name: Run cypress
       #   uses: cypress-io/github-action@v2
