@@ -22,7 +22,7 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, permissions }) 
     }, [resources]);
 
     return (
-        <div style={{ height: '331px', overflowX: 'hidden' }}>
+        <div style={{ height: '331px', overflowX: 'hidden' }} data-cy="sandbox_resources">
             <Table style={{ width: '100%', marginBottom: '24px', height: '200px' }}>
                 <Head>
                     <Row>
