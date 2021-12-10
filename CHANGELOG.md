@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/equinor/sepes-web/compare/1.0.4...1.1.0) (2021-12-10)
+
+
+### Features
+
+* add link to documentation ([0b59469](https://github.com/equinor/sepes-web/commit/0b59469bf7d05accc01472df54e9084d5bf8174d)), closes [#1379](https://github.com/equinor/sepes-web/issues/1379)
+
+
+### Bug Fixes
+
+* new study bottom margin ([#1375](https://github.com/equinor/sepes-web/issues/1375)) ([89d9c80](https://github.com/equinor/sepes-web/commit/89d9c80432073ef3c070337769bfdfbd2f01362f))
+* remove github secret action causing error ([#1376](https://github.com/equinor/sepes-web/issues/1376)) ([82e597c](https://github.com/equinor/sepes-web/commit/82e597c6ca900e5c267eec70f6db7b8b04cd860c))
+* upgrade EDS to 0.16.1 ([c434b90](https://github.com/equinor/sepes-web/commit/c434b905ebefd0eea9e371e7283ec3f4a7d007d4))
+
 ### [1.0.4](https://github.com/equinor/sepes-web/compare/1.0.3...1.0.4) (2021-12-07)
 
 
