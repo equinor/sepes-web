@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/equinor/sepes-web/compare/1.0.3...1.0.4) (2021-12-07)
+
+
+### Bug Fixes
+
+* add tooltip for create vm when it is in progress ([c3b9c49](https://github.com/equinor/sepes-web/commit/c3b9c493be7bc8a0f5f4cc8a040b997d60d91d97)), closes [#1323](https://github.com/equinor/sepes-web/issues/1323)
+* clicking on breadcrum for dataset/sandbox name would redirect to main page ([94db76e](https://github.com/equinor/sepes-web/commit/94db76ec83ccc2ecbbb34a94f3cfff258314c8cd)), closes [#1348](https://github.com/equinor/sepes-web/issues/1348) [#1347](https://github.com/equinor/sepes-web/issues/1347)
+* upgrade @types/react from 17.0.19 to 17.0.20 ([b3116f9](https://github.com/equinor/sepes-web/commit/b3116f970980c58f27daa43dce648f9bc8734e56))
+* upgrade @types/styled-components from 5.1.13 to 5.1.14 ([#1353](https://github.com/equinor/sepes-web/issues/1353)) ([0c7af2d](https://github.com/equinor/sepes-web/commit/0c7af2de633ce8b366eb81f1a27e1785b379262b))
+* upgrade EDS to 0.14.3 ([54aaf9a](https://github.com/equinor/sepes-web/commit/54aaf9a1061e18a3e200a54e31be58175b793a43))
+* upgrade react-copy-to-clipboard from 5.0.3 to 5.0.4 ([#1351](https://github.com/equinor/sepes-web/issues/1351)) ([ca76484](https://github.com/equinor/sepes-web/commit/ca764845d607a1da74ad5539a55589e198366fd1))
+* upgrade react-router-dom from 5.2.0 to 5.2.1 ([#1352](https://github.com/equinor/sepes-web/issues/1352)) ([dfd57e0](https://github.com/equinor/sepes-web/commit/dfd57e070d5b30a9995c30f73a7c4b068c83fad3))
+
 ### [1.0.3](https://github.com/equinor/sepes-web/compare/1.0.2...1.0.3) (2021-09-23)
 
 

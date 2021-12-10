@@ -5,7 +5,7 @@ import { TopBar, Icon, Button, Menu, Typography } from '@equinor/eds-core-react'
 // import NavTabs from './NavTabs';
 import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
-import { requestChangeLink } from '../common/staticValues/commonLinks';
+import { requestChangeLink, documentationLink } from '../common/staticValues/commonLinks';
 
 const { Header } = TopBar;
 
@@ -162,6 +162,15 @@ const Bar = () => {
                     </EnvironmentMessage>
                 )}
                 <TopBar.Actions>
+                    <Button
+                        id="openWiki"
+                        variant="ghost"
+                        style={{ marginLeft: '25px' }}
+                        onClick={() => redirectToExternalLink(documentationLink)}
+                        data-cy="documentation_link"
+                    >
+                        Documentation
+                    </Button>
                     <Button
                         id="menuButton"
                         variant="ghost_icon"
