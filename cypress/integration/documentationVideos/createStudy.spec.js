@@ -14,8 +14,8 @@ describe('Create study', () => {
     it('Create study', { keystrokeDelay: 100 }, () => {
         cy.visit('/');
         cy.text('Now we will create a study', {
-            duration: 2000,
-            blocking: false,
+            duration: 4000,
+            blocking: true,
             textSize: '3vh'
         });
         cy.get('[data-cy=new_study]').arrow({

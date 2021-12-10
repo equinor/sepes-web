@@ -153,19 +153,19 @@ describe('Create sandbox and virtual machine', () => {
         });
         cy.get('[data-cy=create_vm]').click();
         cy.waitForVirtualMachineToBeCreated();
-        cy.text('You are now created a virtual machine!', {
+        cy.text('You are now on your newly created virtual machine!', {
             duration: 5000,
             blocking: true,
             textSize: '3vh'
         });
         cy.get('[data-cy=sandbox_resources]').arrow({
-            text: 'Here you can see status of resources in this sandbox',
+            text: 'Here you can see status of the resources in this sandbox',
             textSize: '3vh',
             blocking: true,
             duration: 5000
         });
         cy.get('[data-cy=sandbox_resources]').arrow({
-            text: 'You have to wait to VM is ready to connect to it',
+            text: 'You have to wait until the VM is ready to connect to it',
             textSize: '3vh',
             blocking: true,
             duration: 5000
