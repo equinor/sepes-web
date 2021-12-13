@@ -56,7 +56,7 @@ jobs:
         with:
         # Not strictly necessary, but it may prevent rate limit
         # errors especially on GitHub-hosted macos machines.
-        token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         id: setup-ffmpeg
       - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 5 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy2.spec.js.mp4
 
