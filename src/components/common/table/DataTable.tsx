@@ -45,7 +45,7 @@ export const DataTable = (props) => {
     });
 
     const [hidePagination, setHidePagination] = useState(false);
-    console.log(columns);
+
     useEffect(() => {
         if (props.tableToPageOne) {
             props.setTableToPageOne(false);

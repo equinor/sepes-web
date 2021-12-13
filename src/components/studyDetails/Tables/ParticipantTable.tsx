@@ -56,7 +56,6 @@ type DatasetsTableProps = {
 
 const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
     const { width } = useWindowDimensions();
-    console.log(editMode);
 
     const returnListOfItems = (participant: ParticipantObj) => {
         if (participant === undefined) {
