@@ -54,18 +54,18 @@ jobs:
       
       - uses: FedericoCarboni/setup-ffmpeg@v1
         with:
-        # Not strictly necessary, but it may prevent rate limit
-        # errors especially on GitHub-hosted macos machines.
           token: ${{ secrets.GITHUB_TOKEN }}
         id: setup-ffmpeg
-      - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy.spec.js.mp4
+      - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy documentationVideos/createStudy.spec.js.mp4
+      - run: ffmpeg -i cypress/videos/documentationVideos/createDataset.spec.js.mp4 -ss 3 -vcodec copy -acodec copy documentationVideos/createDataset.spec.js.mp4
+      - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.spec.js.mp4 -ss 3 -vcodec copy -acodec copy documentationVideos/createSandboxAndVirtualMachine.spec.spec.js.mp4
 
       - name: Save documentation video
         # if: ${{ github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v1
         with:
           name: documentation-videos
-          path: cypress/videos/documentationVideos
+          path: documentationVideos
 
       # - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
       #   if: ${{ github.event_name != 'pull_request' }}
