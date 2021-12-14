@@ -58,7 +58,7 @@ jobs:
         # errors especially on GitHub-hosted macos machines.
           token: ${{ secrets.GITHUB_TOKEN }}
         id: setup-ffmpeg
-      - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 5 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy2.spec.js.mp4
+      - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy2.spec.js.mp4
 
       - name: Save documentation video
         # if: ${{ github.event_name != 'pull_request' }}
