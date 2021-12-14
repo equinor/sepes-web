@@ -58,7 +58,7 @@ jobs:
         id: setup-ffmpeg
       - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy-cut.spec.js.mp4
       - run: ffmpeg -i cypress/videos/documentationVideos/createDataset.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createDataset-cut.spec.js.mp4
-      - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createSandboxAndVirtualMachine-cut.spec.spec.js.mp4
+      - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createSandboxAndVirtualMachine-cut.spec.spec.js.mp4
 
       - name: Save documentation video
         # if: ${{ github.event_name != 'pull_request' }}
