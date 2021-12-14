@@ -47,7 +47,7 @@ jobs:
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
       - name: Run documentation cypress tests
-        # if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
@@ -61,24 +61,24 @@ jobs:
       - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createSandboxAndVirtualMachine-cut.spec.spec.js.mp4
 
       - name: Save documentation video
-        # if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v1
         with:
           name: documentation-videos
           path: cypress/videos/documentationVideos
 
-      # - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
-      #   if: ${{ github.event_name != 'pull_request' }}
-      #   name: Azure Blob Upload with Destination folder defined
-      #   with:
-      #     connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
-      #     container_name: videos
-      #     source_folder: cypress/videos/documentationVideos
+      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
+        if: ${{ github.event_name != 'pull_request' }}
+        name: Azure Blob Upload with Destination folder defined
+        with:
+          connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
+          container_name: videos
+          source_folder: cypress/videos/documentationVideos
 
-      # - name: Run quick running cypress tests
-      #   env:
-      #     token: ${{ steps.id-token.outputs.TOKEN }}
-      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       - name: Run long running cypress tests  
         env:
