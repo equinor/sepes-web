@@ -52,13 +52,22 @@ jobs:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
       
+      # Sets up ffmpeg that is used for cutting off the first couple of seconds from the documentation video made from cypress
       - uses: FedericoCarboni/setup-ffmpeg@v1
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         id: setup-ffmpeg
+      
+      # Cut the firste couple of seconds of the documentation video
       - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy-cut.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
+
       - run: ffmpeg -i cypress/videos/documentationVideos/createDataset.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createDataset-cut.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
+
       - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createSandboxAndVirtualMachine-cut.spec.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
 
       - name: Save documentation video
         if: ${{ github.event_name != 'pull_request' }}
