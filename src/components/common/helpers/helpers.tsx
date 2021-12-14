@@ -2,6 +2,7 @@
 import React from 'react';
 import truncateLength from '../staticValues/lenghts';
 
+/**Add html linebreaks if the string contains \n */
 export const lineBreak = (text) => {
     return text
         ? text.split('\n').map((item: string, number: number) => {

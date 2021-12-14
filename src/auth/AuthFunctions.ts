@@ -95,7 +95,7 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
             if (!response.ok) {
                 const res = JSON.parse((await response.text()) ?? {});
                 if (!res.errors) {
-                    notify.show('danger', response.status, res.message, res.requestId);
+                    notify.show(res.critical ? 'danger' : 'warning', response.status, res.message, res.requestId);
                 } else {
                     notify.show('danger', response.status, res.title, res.traceId);
                 }
