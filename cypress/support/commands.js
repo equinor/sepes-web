@@ -250,6 +250,8 @@ Cypress.Commands.add('restoreLocalStorageCache', () => {
     });
 });
 
+// Documentation commands
+
 Cypress.Commands.add('clearViewport', () => {
     const runnerContainer = window.parent.document.getElementsByClassName('iframes-container')[0];
     runnerContainer.setAttribute('style', 'left: 0; top: 0; width: 100%; height: 100%;');
@@ -262,4 +264,8 @@ Cypress.Commands.add('clearViewport', () => {
 
     const header = window.parent.document.querySelector('.runner.container header');
     header.setAttribute('style', 'opacity: 0');
+});
+
+Cypress.Commands.add('mockOutStudyList', () => {
+    cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
 });

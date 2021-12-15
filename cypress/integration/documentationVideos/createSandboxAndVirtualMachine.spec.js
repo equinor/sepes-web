@@ -4,6 +4,7 @@ describe('Create sandbox and virtual machine', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
+        cy.mockOutStudyList();
     });
 
     beforeEach(() => {
@@ -182,6 +183,7 @@ describe('Create sandbox and virtual machine', () => {
     });
 
     it('Delete study', { keystrokeDelay: 100 }, () => {
+        cy.mockOutStudyList();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,
