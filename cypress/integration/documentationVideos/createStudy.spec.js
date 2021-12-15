@@ -4,6 +4,7 @@ describe('Create study', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
+        cy.mockOutStudyList();
     });
 
     beforeEach(() => {
@@ -88,6 +89,7 @@ describe('Create study', () => {
     });
 
     it('Delete study', () => {
+        cy.mockOutStudyList();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,

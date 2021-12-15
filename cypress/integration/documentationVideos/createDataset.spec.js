@@ -4,6 +4,7 @@ describe('Create data set', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
+        cy.mockOutStudyList();
     });
 
     beforeEach(() => {
@@ -143,6 +144,7 @@ describe('Create data set', () => {
     });
 
     it('Delete study', { keystrokeDelay: 100 }, () => {
+        cy.mockOutStudyList();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,
