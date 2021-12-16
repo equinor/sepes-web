@@ -41,7 +41,8 @@ const study: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const studyWithoutPermissionToAddDataset: StudyObj = {
@@ -80,7 +81,8 @@ const studyWithoutPermissionToAddDataset: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const mockFunc = (id: string) => {};
@@ -89,7 +91,14 @@ test('renders dataset component without permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText } = render(
         <Router history={history}>
-            <DataSetComponent study={study} setStudy={mockFunc} setUpdateCache={mockFunc} updateCache={mockFunc} />
+            <DataSetComponent
+                study={study}
+                setStudy={mockFunc}
+                setUpdateCache={mockFunc}
+                updateCache={mockFunc}
+                wbsIsValid
+                studySaveInProgress={false}
+            />
         </Router>
     );
 
@@ -108,6 +117,8 @@ test('renders dataset component with permission to add dataset', () => {
                 setStudy={mockFunc}
                 setUpdateCache={mockFunc}
                 updateCache={mockFunc}
+                wbsIsValid
+                studySaveInProgress={false}
             />
         </Router>
     );

@@ -17,7 +17,7 @@
         "noImplicitAny": false,
         "noFallthroughCasesInSwitch": true,
         "baseUrl": "src",
-        "types": ["cypress", "cypress-file-upload"]
+        "types": ["cypress", "cypress-file-upload", "@testing-library/jest-dom"]
     },
     "include": ["src", "jest.setup.js"],
     "types": ["node", "jest", "@testing-library/jest-dom"],

@@ -82,12 +82,13 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
             true,
-            listWithVms
+            listWithVms,
+            sandbox
         )
     ).toBeTruthy();
 
@@ -103,12 +104,13 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
             true,
-            listWithVms
+            listWithVms,
+            sandbox
         )
     ).toBeFalsy();
 
@@ -124,12 +126,13 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: '',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
             true,
-            listWithVms
+            listWithVms,
+            sandbox
         )
     ).toBeFalsy();
 
@@ -150,7 +153,8 @@ test('test validateUserInput', () => {
             false,
             '100',
             true,
-            listWithVms
+            listWithVms,
+            sandbox
         )
     ).toBeFalsy();
 
@@ -166,12 +170,13 @@ test('test validateUserInput', () => {
                 username: '',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: [{ name: 'test' }, { name: 'test2' }]
+                dataDisks: ['test', 'test2']
             },
             false,
             '100',
             true,
-            listWithVms
+            listWithVms,
+            sandbox
         )
     ).toBeFalsy();
 });

@@ -21,6 +21,8 @@ module.exports = {
     globals: {
         crypto: require('crypto')
     },
+
+    watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
     /*
     preset: 'ts-jest',
     transform: {
@@ -80,7 +82,12 @@ module.exports = {
     //   "node"
     // ],
     // A map from regular expressions to module names that allow to stub out resources with a single module
-    //moduleNameMapper: {}
+    moduleNameMapper: {"^dnd-core$": "dnd-core/dist/cjs",
+    "^react-dnd-html5-backend$": "react-dnd-html5-backend/dist/cjs",
+    "^react-dnd-touch-backend$": "react-dnd-touch-backend/dist/cjs",
+    "^react-dnd-test-backend$": "react-dnd-test-backend/dist/cjs",
+    "^react-dnd-test-utils$": "react-dnd-test-utils/dist/cjs",
+    "^react-keyed-file-browser$": "dnd-core/dist/cjs"}
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
     // Activates notifications for test results
