@@ -17,6 +17,7 @@ module.exports = {
         sourceType: 'module'
     },
     plugins: ['react', 'typescript', 'import'],
+    extends: ['eslint:recommended', 'plugin:react/recommended'],
     rules: {
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
