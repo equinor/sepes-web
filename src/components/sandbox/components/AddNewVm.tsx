@@ -119,6 +119,7 @@ const osType = {
 
 const width = '400px';
 
+// eslint-disable-next-line react/display-name
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
         sandbox,
