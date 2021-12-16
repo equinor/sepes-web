@@ -4,7 +4,6 @@ module.exports = {
         browser: true,
         es6: true
     },
-    extends: ['airbnb', 'airbnb/hooks'],
     globals: {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly'
@@ -17,7 +16,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module'
     },
-    plugins: ['typescript'],
+    plugins: ['react', 'typescript'],
     rules: {
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
