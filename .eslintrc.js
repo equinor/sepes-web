@@ -16,7 +16,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module'
     },
-    plugins: ['react', 'typescript', 'import'],
+    plugins: ['typescript', 'import'],
     extends: ['eslint:recommended', 'plugin:react/recommended'],
     rules: {
         'react/jsx-filename-extension': [0],
