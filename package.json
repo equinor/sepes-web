@@ -65,9 +65,6 @@
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
         "analyze": "node scripts/analyze.js"
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
     "browserslist": {
         "production": [
             ">0.2%",
