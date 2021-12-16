@@ -17,7 +17,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module'
     },
-    plugins: ['react', 'typescript'],
+    plugins: ['typescript'],
     rules: {
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
