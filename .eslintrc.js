@@ -17,7 +17,7 @@ module.exports = {
         sourceType: 'module'
     },
     plugins: ['typescript', 'import', 'react'],
-    extends: ['eslint:recommended', 'plugin:react/recommended'],
+    extends: ['airbnb', 'airbnb/hooks', 'eslint:recommended', 'plugin:react/recommended'],
     rules: {
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
@@ -52,6 +52,7 @@ module.exports = {
         'react/no-unescaped-entities': 0,
         'react-hooks/exhaustive-deps': 0,
         'no-console': 0,
+        'class-methods-use-this': 0,
         radix: 0,
         'import/no-extraneous-dependencies': 0,
         camelcase: 0,
