@@ -52,6 +52,7 @@
         "redux-devtools-extension": "^2.13.9",
         "redux-thunk": "^2.3.0",
         "sass-loader": "12.1.0",
+        "source-map-explorer": "^2.5.2",
         "styled-components": "^5.3.1",
         "ts-jest": "^26.5.6",
         "typescript": "^4.4.2"
@@ -63,7 +64,8 @@
         "eject": "react-scripts eject",
         "commit": "git-cz",
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
-        "analyze": "node scripts/analyze.js"
+        "analyze": "node scripts/analyze.js",
+        "analyze2": "source-map-explorer 'build/static/js/*.js'"
     },
     "browserslist": {
         "production": [
@@ -91,13 +93,13 @@
         "cypress-movie": "^3.0.20",
         "cypress-plugin-retries": "^1.5.2",
         "cz-conventional-changelog": "^3.2.0",
+        "eslint": "7.32.0",
         "eslint-config-airbnb": "^18.1.0",
         "eslint-plugin-import": "^2.20.1",
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-react": "^7.27.1",
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-plugin-typescript": "^0.14.0",
-        "eslint": "7.32.0",
         "progress-bar-webpack-plugin": "^2.1.0",
         "webpack-bundle-analyzer": "^3.8.0"
     },
