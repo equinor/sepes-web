@@ -16,6 +16,8 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module'
     },
+    plugins: ['typescript', 'import', 'react'],
+    extends: ['eslint:recommended', 'plugin:react/recommended'],
     rules: {
         'react/jsx-filename-extension': [0],
         'eslint/indent:': 0,
