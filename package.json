@@ -100,8 +100,9 @@
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-typescript": "^0.14.0",
+        "jest-watch-typeahead": "^0.6.5",
         "progress-bar-webpack-plugin": "^2.1.0",
-        "webpack-bundle-analyzer": "^3.8.0"
+        "webpack-bundle-analyzer": "^4.5.0"
     },
     "config": {
         "commitizen": {
