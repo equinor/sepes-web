@@ -58,7 +58,6 @@
     "scripts": {
         "start": "react-scripts -r @cypress/instrument-cra start",
         "build": "react-scripts build",
-        "build:prod": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --detectOpenHandles",
         "eject": "react-scripts eject",
         "commit": "git-cz",

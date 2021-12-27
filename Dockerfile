@@ -12,6 +12,6 @@ COPY package*.json ./
 USER 1001
 RUN npm install
 COPY . .
-RUN npm run build:prod
+RUN npm run build
 EXPOSE 3000
 CMD ["npm", "start"]
