@@ -10,6 +10,7 @@ type AsynchSelectProps = {
     onChange: any;
     onInputChange: any;
     style?: any;
+    dataType?: string;
     isRequired?: boolean;
     disabled?: boolean;
     loadOptions?: any;
@@ -58,13 +59,6 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
             />
         </span>
     );
-};
-
-AsynchSelect.defaultProps = {
-    style: undefined,
-    isRequired: undefined,
-    disabled: undefined,
-    loadOptions: undefined
 };
 
 export default AsynchSelect;

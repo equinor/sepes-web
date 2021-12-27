@@ -16,7 +16,7 @@ import {
 } from 'tests/mocks/sandbox/sandbox-mocks';
 import { study, studyWithNoWbsCode } from 'tests/mocks/study/study-mocs';
 import * as helpers from '../../components/common/helpers/sandboxHelpers';
-import '@testing-library/jest-dom';
+import expect from 'expect';
 import { inputErrorsVmRules } from 'components/common/staticValues/types';
 import { SandboxObj } from 'components/common/interfaces';
 
@@ -82,13 +82,12 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: ['test', 'test2']
+                dataDisks: [{ name: 'test' }, { name: 'test2' }]
             },
             false,
             '100',
             true,
-            listWithVms,
-            sandbox
+            listWithVms
         )
     ).toBeTruthy();
 
@@ -104,13 +103,12 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: ['test', 'test2']
+                dataDisks: [{ name: 'test' }, { name: 'test2' }]
             },
             false,
             '100',
             true,
-            listWithVms,
-            sandbox
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -126,13 +124,12 @@ test('test validateUserInput', () => {
                 username: 'test username',
                 password: '',
                 linkToExternalSystem: '',
-                dataDisks: ['test', 'test2']
+                dataDisks: [{ name: 'test' }, { name: 'test2' }]
             },
             false,
             '100',
             true,
-            listWithVms,
-            sandbox
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -153,8 +150,7 @@ test('test validateUserInput', () => {
             false,
             '100',
             true,
-            listWithVms,
-            sandbox
+            listWithVms
         )
     ).toBeFalsy();
 
@@ -170,13 +166,12 @@ test('test validateUserInput', () => {
                 username: '',
                 password: 'PaSsWord!!!123421',
                 linkToExternalSystem: '',
-                dataDisks: ['test', 'test2']
+                dataDisks: [{ name: 'test' }, { name: 'test2' }]
             },
             false,
             '100',
             true,
-            listWithVms,
-            sandbox
+            listWithVms
         )
     ).toBeFalsy();
 });

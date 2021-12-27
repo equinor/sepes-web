@@ -4,7 +4,7 @@ import CreateEditDataset from '../../../components/dataset/CreateEditDataset';
 import { DatasetObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import '@testing-library/jest-dom';
+import expect from 'expect';
 jest.mock('react-keyed-file-browser', () => jest.fn(() => {}));
 
 const dataset: DatasetObj = {
@@ -13,8 +13,7 @@ const dataset: DatasetObj = {
     permissions: {
         deleteDataset: true,
         editDataset: true
-    },
-    studyName: ''
+    }
 };
 
 const datasetWithInfo: DatasetObj = {
@@ -26,8 +25,7 @@ const datasetWithInfo: DatasetObj = {
     permissions: {
         deleteDataset: true,
         editDataset: true
-    },
-    studyName: ''
+    }
 };
 
 const mockFunc = (id: string) => {};
@@ -41,7 +39,6 @@ test('renders stepbar component without info', () => {
                 setDatasetFromDetails={mockFunc}
                 setShowEditDataset={mockFunc}
                 editingDataset
-                isStandardDataset={false}
             />
         </Router>
     );
@@ -57,7 +54,6 @@ test('renders stepbar component with edit mode and info', () => {
                 setDatasetFromDetails={mockFunc}
                 setShowEditDataset={mockFunc}
                 editingDataset
-                isStandardDataset={false}
             />
         </Router>
     );
@@ -75,7 +71,6 @@ test('renders stepbar component with create mode', () => {
                 setDatasetFromDetails={mockFunc}
                 setShowEditDataset={mockFunc}
                 editingDataset={false}
-                isStandardDataset={false}
             />
         </Router>
     );

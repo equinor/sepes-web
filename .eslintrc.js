@@ -52,7 +52,6 @@ module.exports = {
         'react/no-unescaped-entities': 0,
         'react-hooks/exhaustive-deps': 0,
         'no-console': 0,
-        'class-methods-use-this': 0,
         radix: 0,
         'import/no-extraneous-dependencies': 0,
         camelcase: 0,

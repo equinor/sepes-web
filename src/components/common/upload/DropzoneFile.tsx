@@ -72,10 +72,4 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, accept, disabled, loading }
     );
 };
 
-Dropzone.defaultProps = {
-    accept: undefined,
-    disabled: undefined,
-    loading: undefined
-};
-
 export default Dropzone;

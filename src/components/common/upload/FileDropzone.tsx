@@ -1,4 +1,5 @@
 import React from 'react';
+//import imageCompression from 'browser-image-compression';
 import Dropzone from './DropzoneFile';
 
 const FileDropzoneContainer = (props: any) => {

@@ -143,9 +143,4 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
     // );
 };
 
-DatasetsTable.defaultProps = {
-    removeParticipant: undefined,
-    permissions: undefined
-};
-
 export default DatasetsTable;

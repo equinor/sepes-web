@@ -97,9 +97,4 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
     );
 };
 
-Prompt.defaultProps = {
-    fallBackAddress: '/',
-    customText: undefined
-};
-
 export default Prompt;

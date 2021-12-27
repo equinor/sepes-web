@@ -26,8 +26,4 @@ const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) =
     );
 };
 
-LoadingFull.defaultProps = {
-    noTimeout: false
-};
-
 export default LoadingFull;

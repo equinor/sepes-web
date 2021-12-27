@@ -19,6 +19,8 @@ test('renders stepbar component without permissions', async () => {
                 setSandbox={mockFunc}
                 updateCache={mockFunc}
                 setUpdateCache={mockFunc}
+                userClickedDelete={mockFunc}
+                setUserClickedDelete={mockFunc}
                 setResources={mockFunc}
                 setLoading={mockFunc}
                 setNewPhase={mockFunc}
@@ -26,8 +28,6 @@ test('renders stepbar component without permissions', async () => {
                 setNewCostanalysisLink={mockFunc}
                 controller={new AbortController()}
                 vmsWithOpenInternet={mockFunc}
-                setMakeAvailableInProgress={mockFunc}
-                makeAvailableInProgress={mockFunc}
             />
         </Router>
     );
@@ -55,6 +55,8 @@ test('renders stepbar component with permissions', async () => {
                 setSandbox={mockFunc}
                 updateCache={mockFunc}
                 setUpdateCache={mockFunc}
+                userClickedDelete={mockFunc}
+                setUserClickedDelete={mockFunc}
                 setResources={mockFunc}
                 setLoading={mockFunc}
                 setNewPhase={mockFunc}
@@ -62,8 +64,6 @@ test('renders stepbar component with permissions', async () => {
                 setNewCostanalysisLink={mockFunc}
                 controller={new AbortController()}
                 vmsWithOpenInternet={mockFunc}
-                setMakeAvailableInProgress={mockFunc}
-                makeAvailableInProgress={mockFunc}
             />
         </Router>
     );

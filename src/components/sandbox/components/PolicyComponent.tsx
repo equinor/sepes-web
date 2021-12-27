@@ -35,8 +35,4 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
     );
 };
 
-Dataset.defaultProps = {
-    displayCheckbox: undefined
-};
-
 export default Dataset;
