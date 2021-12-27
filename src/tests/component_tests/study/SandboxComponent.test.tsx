@@ -37,7 +37,8 @@ const study: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const studyWithoutPermissionToAddDataset: StudyObj = {
@@ -71,7 +72,8 @@ const studyWithoutPermissionToAddDataset: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const mockFunc = (id: string) => {};
@@ -87,7 +89,8 @@ test('renders dataset component without permission to add dataset', () => {
                 setUpdateCache={mockFunc}
                 updateCache={mockFunc}
                 disabled={false}
-                sandboxes={study.sandboxes}
+                setLoading={mockFunc}
+                wbsIsValid
             />
         </Router>
     );
@@ -109,7 +112,8 @@ test('renders dataset component with permission to add dataset', () => {
                 setUpdateCache={mockFunc}
                 updateCache={mockFunc}
                 disabled={true}
-                sandboxes={study.sandboxes}
+                setLoading={mockFunc}
+                wbsIsValid
             />
         </Router>
     );

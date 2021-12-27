@@ -41,7 +41,8 @@ const study: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const mockFunc = (id: string) => {};

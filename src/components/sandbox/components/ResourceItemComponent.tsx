@@ -101,4 +101,8 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
     );
 };
 
+ResourceItemComponent.defaultProps = {
+    name: undefined
+};
+
 export default ResourceItemComponent;

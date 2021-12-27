@@ -36,4 +36,10 @@ const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
     );
 };
 
+BreadcrumbTruncate.defaultProps = {
+    truncateLength: defaultLength,
+    link: window.location.pathname,
+    datacy: undefined
+};
+
 export default BreadcrumbTruncate;
