@@ -10,7 +10,9 @@ WORKDIR /home/node/app
 COPY package*.json ./
 # USER node
 USER 1001
-RUN npm ci --production
+RUN npm ci
+# TO DO run command under instead when in prod
+# RUN npm ci --production
 COPY . .
 RUN npm run build:prod
 EXPOSE 3000
