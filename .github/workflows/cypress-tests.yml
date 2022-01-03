@@ -27,8 +27,8 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
-      # - run: npm install
-      - run: npm ci
+      - run: npm install
+      # - run: npm ci
       - name: run step if multiline not null
         if: ${{ steps.id-token.outputs.TOKEN }}
         run: echo multiline not null
@@ -120,6 +120,8 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
+
+      - run: dir
 
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
