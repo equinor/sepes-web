@@ -54,7 +54,7 @@ const DeleteResourceComponent: React.FC<DeleteResourceComponentProps> = ({
     useKeyEvents(undefined, onClick, checkSandboxNameToText());
 
     return (
-        <Scrim>
+        <Scrim open>
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">
                     Sure you want to delete the {type} with name "{truncate(ResourceName, 30)}"?
