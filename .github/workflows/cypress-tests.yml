@@ -121,6 +121,8 @@ jobs:
           name: cypress-videos
           path: cypress/videos
 
+      - run: dir
+
       - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
       - uses: actions/upload-artifact@v2
