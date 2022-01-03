@@ -10,7 +10,7 @@ WORKDIR /home/node/app
 COPY package*.json ./
 # USER node
 USER 1001
-RUN npm ci --production
+RUN npm install
 COPY . .
 RUN npm run build:prod
 EXPOSE 3000
