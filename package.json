@@ -54,6 +54,7 @@
         "redux-devtools-extension": "^2.13.9",
         "redux-thunk": "^2.3.0",
         "sass-loader": "12.4.0",
+        "source-map-explorer": "^2.5.2",
         "styled-components": "^5.3.1",
         "ts-jest": "^26.5.6",
         "typescript": "^4.4.2"
@@ -66,7 +67,8 @@
         "eject": "react-scripts eject",
         "commit": "git-cz",
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
-        "analyze": "node scripts/analyze.js"
+        "analyze": "node scripts/analyze.js",
+        "analyze:explorer": "source-map-explorer 'build/static/js/*.js'"
     },
     "eslintConfig": {
         "extends": "react-app"
