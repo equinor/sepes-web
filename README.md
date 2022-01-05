@@ -73,3 +73,29 @@ services:
 5. To run the app, run "Docker-compose up -d --build
     - If it does not work properly, try a different version of docker compose. Top line in docker-compose.yml.
 6. To take down the app, run Docker-compose down
+
+## Run in production mode
+
+### Run in Docker
+
+```
+docker build -f local.Dockerfile -t sepes-local .
+```
+
+```
+docker run -p 3000:3000 -d sepes-local
+```
+
+### Run locally
+
+First you need to build a production build of the app
+
+```
+npm run build
+```
+
+Then you can run it with this command
+
+```
+npm run start:prod
+```
