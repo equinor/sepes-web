@@ -1,9 +1,0 @@
-{
-    "name": "insubsea-web",
-    "version": "1.0.0",
-    "description": "insubsea-web",
-    "main": "index.js",
-    "dependencies": {
-        "express": "^4.17.1"
-    }
-}
