@@ -16,5 +16,5 @@ RUN npm ci
 COPY . .
 RUN npm run build:prod
 EXPOSE 3000
-CMD ["node", "index.js"]
-# CMD ["npm", "start"]
+
+CMD ["npm", "start"]
