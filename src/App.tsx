@@ -21,16 +21,17 @@ export const UpdateCache = React.createContext({} as IContextProps);
 
 const App = () => {
     const [updateCache, setUpdateCache] = useState();
-    const appInsights = new ApplicationInsights({
-        config: {
-            instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
-        }
-    });
-    appInsights.loadAppInsights();
+    // const appInsights = new ApplicationInsights({
+    //     config: {
+    //         instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
+    //     }
+    // });
+    // appInsights.loadAppInsights();
+    // <Layout appInsights={appInsights}>
 
     return (
         <Router>
-            <Layout appInsights={appInsights}>
+            <Layout>
                 <UpdateCache.Provider value={{ updateCache, setUpdateCache }}>
                     <Switch>
                         <Route exact path="/" component={Home} />
