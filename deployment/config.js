@@ -4,11 +4,11 @@ exports.config = {
         BASE_API_URI: 'http://localhost:44371/'
     },
     dev: {
-        REDIRECT_URI: 'https://frontend-sepes-web-dev.radix.equinor.com',
-        BASE_API_URI: 'https://backend-sepes-api-dev.radix.equinor.com'
+        REDIRECT_URI: 'https://frontend-sepes-web-dev.radix.equinor.com/',
+        BASE_API_URI: 'https://backend-sepes-api-dev.radix.equinor.com/'
     },
     prod: {
-        REDIRECT_URI: 'https://sepes.equinor.com',
-        BASE_API_URI: 'https://backend-sepes-api-prod.radix.equinor.com'
+        REDIRECT_URI: 'https://sepes.equinor.com/',
+        BASE_API_URI: 'https://backend-sepes-api-prod.radix.equinor.com/'
     }
 };
