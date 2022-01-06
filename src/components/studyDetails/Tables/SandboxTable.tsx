@@ -3,7 +3,7 @@ import React from 'react';
 import { Table, Icon } from '@equinor/eds-core-react';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/Table.scss';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../../utils/CommonUtil';
 import TextTruncate from 'components/common/customComponents/infoDisplayComponents/TextTruncate';
 
 const { Body, Row, Cell, Head } = Table;

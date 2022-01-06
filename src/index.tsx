@@ -10,7 +10,7 @@ import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
-import LoadingFull from 'components/common/LoadingComponentFullscreen';
+import LoadingFull from './components/common/LoadingComponentFullscreen';
 import configureStore from './store/index';
 import { Provider } from 'react-redux';
 

@@ -9,7 +9,7 @@ import DatasetsTable from './Tables/DatasetsTable';
 //import { Permissions } from '../../index';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../utils/CommonUtil';
 
 const Wrapper = styled.div`
     display: grid;
