@@ -108,14 +108,16 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
 
         const performRequest = async () => {
             try {
-                let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                // let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                let response = await fetch(window.BASE_API_URI + url, options);
 
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
                     await SignInSilentRedirect();
                     headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     apiRequestInternal(url, headers, options);
-                    response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                    // response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
+                    response = await fetch(window.BASE_API_URI + url, options);
                 }
 
                 return resolve(await processAuthorizedResponse(response));

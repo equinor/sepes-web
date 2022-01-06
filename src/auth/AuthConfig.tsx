@@ -3,6 +3,9 @@ import { PublicClientApplication } from '@azure/msal-browser';
 import './Environment';
 
 console.log(window.REDIRECT_URI);
+console.log(window.BASE_API_URI);
+console.log(process.env.REACT_APP_SEPES_CLIENTID);
+console.log(process.env.REACT_APP_SEPES_AUTHORITY);
 // eslint-disable-next-line import/prefer-default-export
 export const myMSALObj = new PublicClientApplication({
     auth: {
