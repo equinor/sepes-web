@@ -9,8 +9,8 @@ console.log(process.env.REACT_APP_SEPES_AUTHORITY);
 // eslint-disable-next-line import/prefer-default-export
 export const myMSALObj = new PublicClientApplication({
     auth: {
-        clientId: process.env.REACT_APP_SEPES_CLIENTID + '',
-        authority: process.env.REACT_APP_SEPES_AUTHORITY,
+        clientId: 'e90cbb61-896e-4ec7-aa37-23511700e1ed',
+        authority: 'https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
         redirectUri: window.REDIRECT_URI
     },
     cache: {
