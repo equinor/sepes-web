@@ -5,7 +5,8 @@ import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import * as notify from '../components/common/notify';
 
-const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
+// const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
+const scope = 'e90cbb61-896e-4ec7-aa37-23511700e1ed/User.Impersonation';
 
 const request = { scopes: [scope] };
 
