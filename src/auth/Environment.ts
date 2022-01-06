@@ -14,8 +14,8 @@ const configureEnvironment = () => {
 
     if (cypress) {
         window.CYPRESS = JSON.parse(cypress);
-        window.TOKEN = window.CYPRESS['cytoken'] || '';
-        window.BASE_API_URI = window.CYPRESS['apiUrl'] || undefined;
+        window.TOKEN = window.CYPRESS.cytoken || '';
+        window.BASE_API_URI = window.CYPRESS.apiUrl || undefined;
     } else {
         window.CYPRESS = '';
         window.TOKEN = sessionStorage.getItem('accessToken') || '';
