@@ -3,6 +3,12 @@ kind: RadixApplication
 metadata:
   name: sepes-web
 spec:
+  build:
+    secrets:
+      - SEPES_AUTHORITY
+      - SEPES_BASIC_SCOPE
+      - SEPES_CLIENTID
+      - INSTRUMENTATION_KEY
   environments:
     - name: prod
       build:
