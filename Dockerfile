@@ -70,7 +70,7 @@ COPY --from=build /home/node/app/build .
 RUN chown -R node:node /home/node/app/*
 RUN chmod -R 755 /home/node/app/*
 
-# USER 1001
+USER 1001
 EXPOSE 3000
 
 # CMD ["npm", "start"]
