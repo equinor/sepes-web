@@ -18,7 +18,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../utils/CommonUtil';
 
 const LoadingWrapper = styled.div`
     height: 196px;

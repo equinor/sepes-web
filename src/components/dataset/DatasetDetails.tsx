@@ -25,7 +25,7 @@ import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
 import Prompt from '../common/Promt';
-import { getStudyId, getDatasetId } from 'utils/CommonUtil';
+import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 import { checkIfFileAlreadyIsUploaded, setFilesProgressToOnePercent } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 import FileBrowser from 'react-keyed-file-browser';

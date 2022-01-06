@@ -61,7 +61,7 @@
     },
     "scripts": {
         "start": "react-scripts -r @cypress/instrument-cra start",
-        "start:prod": "node index.js",
+        "start:prod": "node local.index.js",
         "build": "react-scripts build",
         "build:prod": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --detectOpenHandles",
