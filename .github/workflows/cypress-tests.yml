@@ -37,7 +37,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
       - name: docker build
         run: |
-          docker build . -t ${{ secrets.ACR_URL }}/sepes-api:latest
+          docker pull ${{ secrets.ACR_URL }}/sepes-api:latest
           docker run -p 44371:44371 -d ${{ secrets.ACR_URL }}/sepes-api:latest
 
       - name: npm install, build, and test

@@ -6,7 +6,7 @@ import Layout from './components/Layout';
 import CreateEditDataset from './components/dataset/CreateEditDataset';
 import DatasetDetails from './components/dataset/DatasetDetails';
 import Datasets from './components/dataset/DatasetOverviewPage/Datasets';
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+// import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import Sandbox from './components/sandbox/Sandbox';
 import './styles/app.scss';
 import NotFound from './components/common/informationalComponents/NotFound';
