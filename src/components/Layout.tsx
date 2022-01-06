@@ -5,11 +5,12 @@ import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 const Layout = (props: any) => {
+    // <ErrorBoundary appInsights={props.appInsights}>
     return (
         <>
             <Bar />
             <div style={{ marginBottom: '92px' }} />
-            <ErrorBoundary appInsights={props.appInsights}>
+            <ErrorBoundary>
                 <ReactNotification />
                 {props.children}
             </ErrorBoundary>
