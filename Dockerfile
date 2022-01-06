@@ -27,8 +27,10 @@ FROM node:14-alpine as build
 # RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 # ARG TENANT_ID
+ARG SEPES_AUTHORITY
+ARG SEPES_BASIC_SCOPE
 ARG SEPES_CLIENTID
-
+ARG INSTRUMENTATION_KEY
 
 RUN mkdir -p /home/node/app/node_modules \
     && chown -R node:node /home/node/app
@@ -45,9 +47,12 @@ COPY package*.json ./
 # TO DO run command under instead when in prod
 RUN npm ci --production
 
+
 # RUN chmod 777 /home/node/app/tsconfig.json
-RUN export REACT_APP_SEPES_AUTHORITY=https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0 && \
-    export REACT_APP_SEPES_CLIENTID=$(echo $SEPES_CLIENTID|base64 -d)
+RUN export REACT_APP_SEPES_AUTHORITY=$(echo $SEPES_AUTHORITY|base64 -d) && \
+    export REACT_APP_SEPES_CLIENTID=$(echo $SEPES_CLIENTID|base64 -d) && \
+    export REACT_APP_SEPES_BASIC_SCOPE=$(echo $SEPES_BASIC_SCOPE|base64 -d) && \
+    export REACT_APP_INSTRUMENTATION_KEY=$(echo $INSTRUMENTATION_KEY|base64 -d)
 
 COPY . .
 RUN npm run build:prod
