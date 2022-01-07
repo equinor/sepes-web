@@ -40,6 +40,8 @@ jobs:
           docker pull ${{ secrets.ACR_URL }}/sepes-api:latest
           docker run -p 44371:44371 -d ${{ secrets.ACR_URL }}/sepes-api:latest
 
+      - run: docker ps
+
       - name: npm install, build, and test
         run: |
           npm ci
@@ -48,6 +50,7 @@ jobs:
         env:
           CI: true
 
+      - run: docker ps
 
       # - name: Run cypress
       #   uses: cypress-io/github-action@v2
