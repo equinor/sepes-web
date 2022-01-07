@@ -15,7 +15,6 @@ import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '..
 import {
     validateUserInputVm,
     filterList,
-    returnPasswordVariant,
     returnUsernameVariant,
     arrayObjectsToArrayString,
     returnKeyOfDisplayValue,
@@ -35,6 +34,7 @@ import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
 import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
 import { useDispatch } from 'react-redux';
+import Password from 'components/common/customComponents/Password';
 
 const Wrapper = styled.div`
     height: auto;
@@ -118,6 +118,8 @@ const osType = {
 };
 
 const width = '400px';
+const helperText =
+    'The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter';
 
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
@@ -200,6 +202,14 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             setVm({
                 ...vm,
                 [field]: value
+            });
+        };
+
+        const handlePasswordChange = (value: string) => {
+            setHasChanged(true);
+            setVm({
+                ...vm,
+                password: value
             });
         };
 
@@ -406,28 +416,13 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                             </Tooltip>
                         }
                     />
-                    <div style={{ marginTop: '24px' }}>
-                        <TextField
-                            id="textfield3"
-                            autoComplete="off"
-                            placeholder="Password"
-                            type="password"
-                            onChange={(e: any) => handleChange('password', e.target.value)}
-                            value={vm.password}
-                            label="Password"
-                            meta="(required)"
-                            data-cy="vm_password"
-                            variant={returnPasswordVariant(vm.password)}
-                            inputIcon={
-                                <Tooltip
-                                    title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement="right"
-                                >
-                                    <Icon name="info_circle" />
-                                </Tooltip>
-                            }
-                        />
-                    </div>
+                    <Password
+                        onChange={handlePasswordChange}
+                        fieldValue={vm.password}
+                        limit={limits.password}
+                        helperText={helperText}
+                        dataCy="vm_password"
+                    />
                 </div>
                 <SizeFilterWrapper>
                     <UnstyledList>
