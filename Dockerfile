@@ -47,6 +47,7 @@ COPY package*.json ./
 # TO DO run command under instead when in prod
 RUN npm ci --production
 
+COPY . .
 
 # RUN chmod 777 /home/node/app/tsconfig.json
 RUN export REACT_APP_SEPES_AUTHORITY=$(echo $SEPES_AUTHORITY|base64 -d) && \
@@ -55,7 +56,6 @@ RUN export REACT_APP_SEPES_AUTHORITY=$(echo $SEPES_AUTHORITY|base64 -d) && \
     export REACT_APP_INSTRUMENTATION_KEY=$(echo $INSTRUMENTATION_KEY|base64 -d) && \
     npm run build:prod
 
-COPY . .
 # RUN npm run build:prod
 
 
