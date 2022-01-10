@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SandboxComponent from '../../../components/studyDetails/SandboxComponent';
+import SandboxComponent from '../../../components/studyDetails/Sandbox';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';

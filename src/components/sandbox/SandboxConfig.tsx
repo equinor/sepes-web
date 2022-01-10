@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { SandboxObj } from '../common/interfaces';
 import Dataset from './components/Dataset';
-import PolicyComponent from './components/PolicyComponent';
-import ResourcesComponent from './components/ResourcesComponent';
+import Policy from './components/Policy';
+import Resources from './components/Resources';
 
 const Wrapper = styled.div`
     display: grid;
@@ -64,9 +64,9 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     controller={controller}
                 />
                 <PolictyComponentWrapper>
-                    <PolicyComponent displayCheckbox sandbox={sandbox} />
+                    <Policy displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
-                <ResourcesComponent resources={resources} permissions={sandbox.permissions} />
+                <Resources resources={resources} permissions={sandbox.permissions} />
             </InfoWrapper>
         </Wrapper>
     );

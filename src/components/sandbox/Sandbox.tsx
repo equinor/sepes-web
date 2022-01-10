@@ -4,7 +4,7 @@ import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
 import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import LoadingFull from '../common/LoadingFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';

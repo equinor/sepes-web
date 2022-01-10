@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';

@@ -5,7 +5,7 @@ import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
-import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../../common/customComponents/DeleteResource';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import { useDispatch } from 'react-redux';
 import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
