@@ -35,6 +35,8 @@ import '../../../styles/addNewVm.scss';
 import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
 import { useDispatch } from 'react-redux';
 import Password from 'components/common/customComponents/Password';
+import HelperTexts from 'components/common/constants/HelperTexts';
+import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 
 const Wrapper = styled.div`
     height: auto;
@@ -118,8 +120,6 @@ const osType = {
 };
 
 const width = '400px';
-const helperText =
-    'The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter';
 
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
@@ -323,7 +323,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         }
                         data-cy="vm_name"
                         inputIcon={
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
+                            <Tooltip title={VmTextFieldsTooltip.Name} placement="right">
                                 <Icon name="info_circle" />
                             </Tooltip>
                         }
@@ -411,7 +411,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         disabled={!vm.operatingSystem}
                         helperText={usernameHelpText}
                         inputIcon={
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
+                            <Tooltip title={VmTextFieldsTooltip.Username} placement="right">
                                 {validatingUsername ? <DotProgress /> : <Icon name="info_circle" />}
                             </Tooltip>
                         }
@@ -420,7 +420,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         onChange={handlePasswordChange}
                         fieldValue={vm.password}
                         limit={limits.password}
-                        helperText={helperText}
+                        helperText={HelperTexts.PasswordText}
                         dataCy="vm_password"
                     />
                 </div>
