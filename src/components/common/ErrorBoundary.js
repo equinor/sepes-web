@@ -49,7 +49,7 @@ class ErrorBoundary extends Component {
             return (
                 <div style={{ paddingTop: '128px', textAlign: 'center' }}>
                     {this.makeErrorMessage(this.state.errorMessage)}
-                    {/*this.props.appInsights.trackTrace(this.state.errorMessage)*/}
+                    {this.props.appInsights.trackTrace(this.state.errorMessage)}
                     <Button
                         variant="outlined"
                         onClick={() => {
