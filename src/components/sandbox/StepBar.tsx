@@ -66,7 +66,8 @@ type StepBarProps = {
     controller: AbortController;
     vmsWithOpenInternet: any;
     setMakeAvailableInProgress: any;
-    makeAvailableInProgress: any;
+    makeAvailableInProgress: boolean;
+    setHasChanged: any;
 };
 
 const getSteps = () => {
@@ -102,7 +103,8 @@ const StepBar: React.FC<StepBarProps> = ({
     controller,
     vmsWithOpenInternet,
     setMakeAvailableInProgress,
-    makeAvailableInProgress
+    makeAvailableInProgress,
+    setHasChanged
 }) => {
     const history = useHistory();
     const steps = getSteps();
@@ -177,6 +179,7 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
+        setHasChanged(false);
         setDeleteSandboxInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
