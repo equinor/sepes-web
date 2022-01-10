@@ -17,6 +17,7 @@ import useKeyEvents from 'components/common/hooks/useKeyEvents';
 import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
 import { returnTooltipCreateSandbox } from 'components/common/helpers/studyHelpers';
+import { SandboxTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -144,7 +145,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 autoFocus
                 inputIcon={
                     <div>
-                        <Tooltip title="The value must be between 3 and 20 characters long (A-Z)" placement="right">
+                        <Tooltip title={SandboxTextFieldsTooltip.Name} placement="right">
                             <Icon name="info_circle" size={24} color="#6F6F6F" />
                         </Tooltip>
                     </div>

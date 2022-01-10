@@ -29,6 +29,7 @@ import DeleteResourceComponent from '../common/customComponents/DeleteResourceCo
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';
+import { StudyTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -415,7 +416,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
                                         <Tooltip
-                                            title="The value must be between 3 and 128 characters long (A-Z)"
+                                            title={StudyTextFieldsTooltip.Name}
                                             placement="right"
                                         >
                                             <Icon name="info_circle" />

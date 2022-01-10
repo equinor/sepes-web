@@ -17,6 +17,7 @@ import {
     returnToolTipForMakeAvailable
 } from 'components/common/helpers/sandboxHelpers';
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
+import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
 
 const set = require('lodash/set');
 
@@ -71,29 +72,15 @@ type StepBarProps = {
 const getSteps = () => {
     return [
         {
-            label: 'Config and data sets',
-            description:
-                'Configuration of sandbox, and selection of data sets. Selected data sets affects security policies when they are made available. This is the phase where you have flexibility to set up everything you need'
+            label: StepBarLabels.ConfigAndData,
+            description: StepBarDescriptions.ConfigAndData
         },
         {
-            label: 'Data sets available',
-            description:
-                'Data sets become available in the sandbox, and you can now work your magic. Data set restrictions are applied.'
+            label: StepBarLabels.DataSets,
+            description: StepBarDescriptions.DataSets
         }
     ];
 };
-/*
-,
-        {
-            label: 'Data retention',
-            description:
-                'Choose which data should be kept and which should be deleted when decommissioning the sandbox.'
-        },
-        {
-            label: 'Decommission sandbox',
-            description: 'Resources shuts down. Data will be removed according to your data retention  choices.'
-        }
-*/
 
 let resourcesFailed = false;
 const interval = 20000; //20 seconds
