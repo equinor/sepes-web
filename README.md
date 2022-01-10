@@ -99,3 +99,24 @@ Then you can run it with this command
 ```
 npm run start:prod
 ```
+
+### Add new environment variables
+
+If you need to add a new enviornment variable, you have to do the following
+
+1. Add a build secret(s) to the radixconfig-yaml file.
+2. Create a branch with the changes and commit the to the MASTER branch
+3. Go to https://console.radix.equinor.com/applications/sepes-web/config/
+4. Add the values of the secrets under build secrets
+5. Go to the DockerFile
+6. Add an ARG with the build secret(s)
+
+```
+ARG SEPES_NEW_VARIABLE
+```
+7. Then add it as an export statement
+
+```
+export REACT_APP_SEPES_NEW_VARIABLE=$(echo $SEPES_AUTHORITY|base64 -d)
+```
+8. Variable should be available under process.env.REACT_APP_SEPES_NEW_VARIABLE
