@@ -89,12 +89,35 @@ const Bar = () => {
         window.open(url, '_blank');
     };
 
+    const listUserRoles = () => {
+        const roles: string[] = [];
+        if (permissions.admin) {
+            roles.push('Admin');
+        }
+        if (permissions.sponsor) {
+            roles.push('Sponsor');
+        }
+        if (permissions.datasetAdmin) {
+            roles.push('Dataset admin');
+        }
+        return roles.join(', ');
+    };
+
+    const returnRolesListIfUserHasRoles = () => {
+        const listWithUserRoles = listUserRoles();
+        if (listWithUserRoles.length) {
+            return <Typography variant="meta">Role(s): {listWithUserRoles}</Typography>;
+        }
+        return null;
+    };
+
     const optionsTemplate = (
         <>
             <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
                 <div>
                     <Typography variant="h6">{permissions.fullName}</Typography>
                     <Typography variant="meta">{permissions.userName}</Typography>
+                    {returnRolesListIfUserHasRoles()}
                 </div>
             </Menu.Item>
             <Menu.Item onClick={() => redirectToLink('/releasenotes')}>
