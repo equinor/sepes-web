@@ -52,10 +52,11 @@ RUN npm ci --production
 RUN export REACT_APP_SEPES_AUTHORITY=$(echo $SEPES_AUTHORITY|base64 -d) && \
     export REACT_APP_SEPES_CLIENTID=$(echo $SEPES_CLIENTID|base64 -d) && \
     export REACT_APP_SEPES_BASIC_SCOPE=$(echo $SEPES_BASIC_SCOPE|base64 -d) && \
-    export REACT_APP_INSTRUMENTATION_KEY=$(echo $INSTRUMENTATION_KEY|base64 -d)
+    export REACT_APP_INSTRUMENTATION_KEY=$(echo $INSTRUMENTATION_KEY|base64 -d) && \
+    npm run build:prod
 
 COPY . .
-RUN npm run build:prod
+# RUN npm run build:prod
 
 
 
