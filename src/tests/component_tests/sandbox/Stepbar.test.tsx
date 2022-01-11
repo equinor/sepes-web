@@ -27,7 +27,8 @@ test('renders stepbar component without permissions', async () => {
                 controller={new AbortController()}
                 vmsWithOpenInternet={mockFunc}
                 setMakeAvailableInProgress={mockFunc}
-                makeAvailableInProgress={mockFunc}
+                makeAvailableInProgress={false}
+                setHasChanged={mockFunc}
             />
         </Router>
     );
@@ -63,7 +64,8 @@ test('renders stepbar component with permissions', async () => {
                 controller={new AbortController()}
                 vmsWithOpenInternet={mockFunc}
                 setMakeAvailableInProgress={mockFunc}
-                makeAvailableInProgress={mockFunc}
+                makeAvailableInProgress={false}
+                setHasChanged={mockFunc}
             />
         </Router>
     );

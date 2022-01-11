@@ -164,6 +164,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 vmsWithOpenInternet={vmsWithOpenInternet}
                                 makeAvailableInProgress={makeAvailableInProgress}
                                 setMakeAvailableInProgress={setMakeAvailableInProgress}
+                                setHasChanged={setHasChanged}
                             />
                             {returnStepComponent()}
                             {(step === 0 || step === 1) && (
