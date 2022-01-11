@@ -98,7 +98,6 @@
         "cypress-dark": "^1.7.14",
         "cypress-file-upload": "^5.0.7",
         "cypress-movie": "^3.0.20",
-        "cypress-plugin-retries": "^1.5.2",
         "cz-conventional-changelog": "^3.2.0",
         "eslint": "7.32.0",
         "eslint-config-airbnb": "^18.1.0",
