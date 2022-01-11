@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Tooltip } from '@equinor/eds-core-react';
 import SandboxTable from './Tables/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
-import CreateSandboxComponent from './CreateSandboxComponent';
+import CreateSandboxComponent from './CreateSandbox';
 import styled from 'styled-components';
 import { StudyObj } from '../common/interfaces';
 

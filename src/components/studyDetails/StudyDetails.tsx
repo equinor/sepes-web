@@ -1,14 +1,14 @@
 /*eslint-disable no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
-import StudyComponentFull from './StudyComponentFull';
+import StudyComponentFull from './StudyFull';
 import styled from 'styled-components';
-import DataSetComponent from './DataSetComponent';
-import ParticipantComponent from './ParticipantComponent';
-import SandBoxComponent from './SandboxComponent';
+import DataSetComponent from './DataSet';
+import ParticipantComponent from './Participant';
+import SandBoxComponent from './Sandbox';
 import Overview from './Overview';
 import { Tabs } from '@equinor/eds-core-react';
 import Promt from '../common/Promt';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import LoadingFull from '../common/LoadingFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';

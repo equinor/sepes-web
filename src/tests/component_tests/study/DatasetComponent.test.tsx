@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import DataSetComponent from '../../../components/studyDetails/DataSetComponent';
+import DataSetComponent from '../../../components/studyDetails/DataSet';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import StudyComponentFull from '../../../components/studyDetails/StudyComponentFull';
+import StudyComponentFull from '../../../components/studyDetails/StudyFull';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';

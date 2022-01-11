@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Icon } from '@equinor/eds-core-react';
-import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
+import CustomLogoComponent from '../common/customComponents/CustomLogo';
 import { StudyObj } from '../common/interfaces';
 import { useHistory } from 'react-router-dom';
 import { truncate } from 'components/common/helpers/helpers';

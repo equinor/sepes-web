@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
 import { Table } from '@equinor/eds-core-react';
-import ResourceItemComponent from './ResourceItemComponent';
+import ResourceItemComponent from './ResourceItem';
 import '../../../styles/Table.scss';
 import { SandboxPermissions } from 'components/common/interfaces';
 

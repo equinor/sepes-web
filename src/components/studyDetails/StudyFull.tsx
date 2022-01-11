@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
+import CustomLogoComponent from '../common/customComponents/CustomLogo';
 import {
     checkIfRequiredFieldsAreNull,
     returnAllowedLengthOfString,
@@ -24,8 +24,8 @@ import {
 } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
-import Loading from '../common/LoadingComponent';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import Loading from '../common/Loading';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';

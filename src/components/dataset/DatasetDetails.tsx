@@ -10,7 +10,7 @@ import {
     removeStudyDataset
 } from '../../services/Api';
 import { isIterable, truncate } from '../common/helpers/helpers';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import LoadingFull from '../common/LoadingFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
@@ -18,7 +18,7 @@ import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { UpdateCache } from '../../App';
 import { getStandardDatasetUrl, getStudySpecificDatasetUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
