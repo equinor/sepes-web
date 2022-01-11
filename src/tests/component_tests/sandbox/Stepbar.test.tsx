@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { sandboxWithAllPermissions, sandboxWithNoPermissions } from '../../mocks/sandbox/sandbox-mocks';
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 test('renders stepbar component without permissions', async () => {
     const history = createMemoryHistory();
