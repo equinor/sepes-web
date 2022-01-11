@@ -85,7 +85,7 @@ const studyWithoutPermissionToAddDataset: StudyObj = {
     wbsCodeValid: true
 };
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 test('renders dataset component without permission to add dataset', () => {
     const history = createMemoryHistory();

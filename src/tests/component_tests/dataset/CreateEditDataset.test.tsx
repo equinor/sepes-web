@@ -30,7 +30,7 @@ const datasetWithInfo: DatasetObj = {
     studyName: ''
 };
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 test('renders stepbar component without info', () => {
     const history = createMemoryHistory();

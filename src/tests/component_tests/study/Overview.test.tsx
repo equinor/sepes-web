@@ -45,7 +45,7 @@ const study: StudyObj = {
     wbsCodeValid: true
 };
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 const resultsAndLearnings = { resultsAndLearnings: 'this is a good study' };
 // const resultsAndLearningsResponse = { cache: { 'studies/1/resultsandlearnings': 'this is a good study' } };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import ParticipantTable from '../../../components/studyDetails/Tables/ParticipantTable';
 /* eslint-disable no-undef */
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 const participantsList = [
     {

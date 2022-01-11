@@ -140,7 +140,7 @@ const studyWithSandboxes: StudyObj = {
 };
 
 const loading = false;
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 test('renders StudyComponent full component with edit study', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
