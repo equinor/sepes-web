@@ -28,7 +28,6 @@ import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 import { checkIfFileAlreadyIsUploaded, setFilesProgressToOnePercent } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
-import FileBrowser from 'react-keyed-file-browser';
 import DatasetFileList from './DatasetFileList';
 import DatasetInformation from './DatasetInformation';
 import { truncateLength } from '../common/staticValues/lenghts';

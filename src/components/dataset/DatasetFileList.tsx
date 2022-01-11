@@ -133,12 +133,6 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
         updateOnNextVisit();
         const _files = [...files];
 
-        // let fileIndexToUse = _fileindex;
-        // if (fileIndexToUse === undefined) {
-        //     fileIndexToUse = returnIndexOfObjectArray(_files, 'name', _file);
-        // }
-        // console.log(fileIndexToUse, _file);
-
         _files.splice(_fileindex, 1);
         setFiles(_files);
         setViewableFiles(_files.slice(0, viewableFiles.length));
