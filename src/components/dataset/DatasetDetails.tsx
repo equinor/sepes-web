@@ -28,7 +28,6 @@ import Prompt from '../common/Promt';
 import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 import { checkIfFileAlreadyIsUploaded, setFilesProgressToOnePercent } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
-import FileBrowser from 'react-keyed-file-browser';
 import DatasetFileList from './DatasetFileList';
 import DatasetInformation from './DatasetInformation';
 import { truncateLength } from '../common/staticValues/lenghts';
@@ -487,44 +486,24 @@ const DatasetDetails = () => {
                                     />
                                 </div>
                             )}
-                            {folderViewMode ? (
-                                <FileBrowser
-                                    files={returnEnumberableFiles()}
-                                    headerRenderer={null}
-                                    icons={{
-                                        File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
-                                        Folder: <Icon name="folder" color="#FF9200" style={{ marginBottom: '-6px' }} />,
-                                        FolderOpen: (
-                                            <Icon name="folder_open" color="#FF9200" style={{ marginBottom: '-6px' }} />
-                                        ),
-                                        Delete: (
-                                            <Icon
-                                                name="delete_forever"
-                                                color="#FF9200"
-                                                style={{ marginBottom: '-6px' }}
-                                            />
-                                        )
-                                    }}
-                                />
-                            ) : (
-                                <DatasetFileList
-                                    loadingFiles={loadingFiles}
-                                    viewableFiles={viewableFiles}
-                                    setViewableFiles={setViewableFiles}
-                                    numberOfFilesInProgress={numberOfFilesInProgress}
-                                    dataset={dataset}
-                                    progressArray={progressArray}
-                                    files={files}
-                                    setFiles={setFiles}
-                                    setUpdateCache={setUpdateCache}
-                                    controllerSas={controllerSas}
-                                    controller={controller}
-                                    setController={setController}
-                                    abortArray={abortArray}
-                                    updateCache={updateCache}
-                                    getSasKey={getSasKey}
-                                />
-                            )}
+                            <DatasetFileList
+                                loadingFiles={loadingFiles}
+                                viewableFiles={viewableFiles}
+                                setViewableFiles={setViewableFiles}
+                                numberOfFilesInProgress={numberOfFilesInProgress}
+                                dataset={dataset}
+                                progressArray={progressArray}
+                                files={files}
+                                setFiles={setFiles}
+                                setUpdateCache={setUpdateCache}
+                                controllerSas={controllerSas}
+                                controller={controller}
+                                setController={setController}
+                                abortArray={abortArray}
+                                updateCache={updateCache}
+                                getSasKey={getSasKey}
+                                folderViewMode={folderViewMode}
+                            />
                         </div>
                         {!datasetResponse.loading ? (
                             <DatasetInformation

@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Icon, Button, LinearProgress, DotProgress, Search, EdsProvider } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { bytesToSize, truncate } from '../common/helpers/helpers';
+import {
+    bytesToSize,
+    returnIndexOfObjectArray,
+    returnObjectInArrayThatMatchValue,
+    truncate
+} from '../common/helpers/helpers';
 import { checkIfDeleteIsEnabled, handleScroll, returnFileListText } from 'components/common/helpers/datasetHelpers';
 import { getDatasetSasTokenDelete } from 'services/Api';
 import { getDatasetId, getStudyId } from 'utils/CommonUtil';
@@ -10,6 +15,8 @@ import { getDatasetsFilesUrl } from 'services/ApiCallStrings';
 import { deleteFile } from 'services/BlobStorage';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
 import { DatasetObj } from 'components/common/interfaces';
+import FileBrowser from 'react-keyed-file-browser';
+import './DatasetFileList.scss';
 
 const AttachmentWrapper = styled.div`
     display: grid;
@@ -33,6 +40,7 @@ type DatasetFileListProps = {
     abortArray: any;
     updateCache: any;
     getSasKey: any;
+    folderViewMode: boolean;
 };
 
 const intervalUpdateSasDelete = 285000;
@@ -51,7 +59,8 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
     updateCache,
     viewableFiles,
     setViewableFiles,
-    getSasKey
+    getSasKey,
+    folderViewMode
 }) => {
     const [searchValue, setSearchValue] = useState('');
     const [sasKeyDeleteExpired, setSasKeyDeleteExpired] = useState<boolean>(true);
@@ -106,7 +115,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
         setUpdateCache({ ...updateCache, [dataCache]: true });
     };
 
-    const removeFile = (_file: any, _fileindex): void => {
+    const removeFile = (_file: any, _fileindex?): void => {
         try {
             // controller.abort();
             // controller = new AbortController();
@@ -123,6 +132,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
 
         updateOnNextVisit();
         const _files = [...files];
+
         _files.splice(_fileindex, 1);
         setFiles(_files);
         setViewableFiles(_files.slice(0, viewableFiles.length));
@@ -158,6 +168,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
 
         getSasKeyDelete()
             .then((result: any) => {
+                console.log(result, fileName, _file[0]);
                 deleteFile(result, fileName ?? _file[0]);
             })
             .catch((ex: any) => {
@@ -194,7 +205,17 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
         }, 200);
     };
 
-    return (
+    const returnEnumberableFiles = () => {
+        const tempFiles: any = [];
+        files.forEach((_file) => {
+            const tempFile = _file;
+            Object.defineProperty(tempFile, 'size', { value: _file.size, enumerable: true });
+            tempFiles.push(_file);
+        });
+        return tempFiles;
+    };
+
+    return !folderViewMode ? (
         <>
             <div>
                 <Search
@@ -267,6 +288,28 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
                 )}
             </div>
         </>
+    ) : (
+        <FileBrowser
+            files={returnEnumberableFiles()}
+            headerRenderer={null}
+            onDeleteFile={(e) => {
+                console.log(e);
+                console.log(
+                    returnObjectInArrayThatMatchValue(files, 'name', e[0]),
+                    returnIndexOfObjectArray(files, 'name', e[0])
+                );
+                removeFile(
+                    returnObjectInArrayThatMatchValue(files, 'name', e[0]),
+                    returnIndexOfObjectArray(files, 'name', e[0])
+                );
+            }}
+            icons={{
+                File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
+                Folder: <Icon name="folder" color="#FF9200" style={{ marginBottom: '-6px' }} />,
+                FolderOpen: <Icon name="folder_open" color="#FF9200" style={{ marginBottom: '-6px' }} />,
+                Delete: <Icon name="delete_forever" color="#007079" style={{ marginBottom: '-6px' }} />
+            }}
+        />
     );
 };
 

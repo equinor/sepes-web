@@ -153,3 +153,16 @@ export const returnHelperText = (inputLength: number, limit: number, type: strin
 export const removeAllSpecialCharachtersExceptDashes = (input: string) => {
     return input.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
 };
+
+export const returnObjectInArrayThatMatchValue = (array: any, columnToCheck, valueToFind): number => {
+    const arrayObject = array.find((x: any) => x[columnToCheck] === valueToFind);
+    return arrayObject;
+};
+
+export const returnIndexOfObjectArray = (array: any, columnToCheck, valueToFind): number => {
+    const arrayObject = returnObjectInArrayThatMatchValue(array, columnToCheck, valueToFind);
+    if (arrayObject) {
+        return array.indexOf(arrayObject);
+    }
+    return -1;
+};
