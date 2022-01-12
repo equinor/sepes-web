@@ -3,6 +3,12 @@ kind: RadixApplication
 metadata:
   name: sepes-web
 spec:
+  build:
+    secrets:
+      - SEPES_AUTHORITY
+      - SEPES_BASIC_SCOPE
+      - SEPES_CLIENTID
+      - INSTRUMENTATION_KEY
   environments:
     - name: prod
       build:
@@ -46,10 +52,10 @@ spec:
             REACT_APP_SEPES_BASIC_SCOPE: "User.Impersonation"
           resources:
             requests:
-              memory: "512Mi"
+              memory: "4096Mi"
               cpu: "200m"
             limits:
-              memory: "20484Mi"
+              memory: "4096Mi"
               cpu: "400m"
   dnsExternalAlias:
     - alias: sepes.equinor.com
