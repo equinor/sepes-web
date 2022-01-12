@@ -258,6 +258,6 @@ test('test filterRoleList', () => {
 
 test('test checkIfStudyHasActiveResources', () => {
     expect(helpers.checkIfStudyHasActiveResources(study)).toBeFalsy;
-    expect(helpers.checkIfStudyHasActiveResources(studyWithDataset)).toBeFalsy;
-    expect(helpers.checkIfStudyHasActiveResources(studyWithSandbox)).toBeFalsy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithDataset)).toBeTruthy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithSandbox)).toBeTruthy;
 });
