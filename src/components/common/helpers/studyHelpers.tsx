@@ -78,17 +78,17 @@ export const returnTooltipTextSaveStudy = (
     studyOnChange: StudyObj,
     validateWbsInProgress
 ) => {
-    if (
-        wbsOnChangeIsValid === false &&
-        !newStudy &&
-        ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
-    ) {
+    if (wbsOnChangeIsValid === false && !newStudy && checkIfStudyHasActiveResources(study)) {
         return 'Can not change from valid to invalid WBS with active resources';
     }
     if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
         return 'Please fill out all required fields';
     }
     return '';
+};
+
+export const checkIfStudyHasActiveResources = (study: StudyObj): boolean => {
+    return (study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length);
 };
 
 export const returnTooltipCreateSandbox = (

@@ -17,6 +17,7 @@ import {
     truncate
 } from '../common/helpers/helpers';
 import {
+    checkIfStudyHasActiveResources,
     returnTooltipTextDeleteStudy,
     returnTooltipTextSaveStudy,
     returnWbsVariant,
@@ -208,6 +209,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (validateWbsInProgress) {
             wbsController.abort();
             wbsController = new AbortController();
+        }
+        // Set validateWbsInProgress to true immediately to prevent quicky adding a invalid wbs
+        if (hasChanged && !newStudy && checkIfStudyHasActiveResources(study)) {
+            setValidateWbsInProgress(true);
         }
 
         const timeoutId = setTimeout(() => {
@@ -415,10 +420,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     }
                                     helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
-                                        <Tooltip
-                                            title={StudyTextFieldsTooltip.Name}
-                                            placement="right"
-                                        >
+                                        <Tooltip title={StudyTextFieldsTooltip.Name} placement="right">
                                             <Icon name="info_circle" />
                                         </Tooltip>
                                     }
