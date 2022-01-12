@@ -151,10 +151,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                     </div>
                 }
             />
-            {/*<Label>
-                <span style={{ marginRight: '8px' }}>{EquinorIcon('warning_outlined', '#6F6F6F', 24)}</span>Name cannot
-                be changed later
-            </Label>*/}
             <CoreDevDropdown
                 label="Location"
                 options={regions}
@@ -165,16 +161,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
                 tabIndex={0}
                 meta="(required)"
             />
-            {/*
-            <CoreDevDropdown
-                label="Template"
-                options={options}
-                width={width}
-                onChange={handleDropdownChange}
-                name="template"
-                data-cy="sandbox_template"
-            />
-            */}
             <div style={{ marginLeft: 'auto' }}>
                 <Tooltip title={returnTooltipCreateSandbox(wbsIsValid, study, sandbox)} placement="left">
                     <Button

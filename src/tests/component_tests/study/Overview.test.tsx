@@ -59,6 +59,7 @@ test('renders StudyComponent full component with invalid study name', () => {
                 setResultsAndLearnings={mockFunc}
                 resultsAndLearnings={resultsAndLearnings}
                 controller={new AbortController()}
+                onFallAddressBackChange={mockFunc}
             />
         </Router>
     );

@@ -16,7 +16,7 @@ import {
     returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
 import { checkForInputErrors, checkIfDatasetNameAlreadyExists } from '../common/helpers/datasetHelpers';
-import Promt from '../common/Promt';
+import Promt from '../common/Prompt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';

@@ -50,6 +50,7 @@ type DatasetComponentProps = {
     updateCache: any;
     wbsIsValid: boolean | undefined;
     studySaveInProgress: boolean;
+    onFallAddressBackChange: any;
 };
 
 const DataSetComponent: React.FC<DatasetComponentProps> = ({
@@ -58,7 +59,8 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     setUpdateCache,
     updateCache,
     wbsIsValid,
-    studySaveInProgress
+    studySaveInProgress,
+    onFallAddressBackChange
 }) => {
     const history = useHistory();
     //const [datasetsList, setDatasetsList] = useState<any>([]);
@@ -94,8 +96,9 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
 
     const redirectToStudySpecificDataset = () => {
         const studyId = getStudyId();
+        const url = '/studies/' + studyId + '/datasets';
         history.push({
-            pathname: '/studies/' + studyId + '/datasets',
+            pathname: url,
             state: {
                 canCreateStudySpecificDataset: study.permissions.addRemoveDataset,
                 canEditStudySpecificDataset: study.permissions.addRemoveDataset,
@@ -104,17 +107,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
         });
     };
 
-    const returnTooltipText = () => {
-        if (study.permissions && !study.permissions.addRemoveDataset) {
-            return 'You do not have access to create a study specific data set';
-        }
-        if (!wbsIsValid) {
-            return 'WBS code for study is invalid. Can not create data set';
-        }
-        return '';
-    };
-    /*
-    const addDatasetToStudy = (row: any) => {
+    /*const addDatasetToStudy = (row: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true, [getDatasetsInStudyUrl(study.id)]: true });
         setIsOpen(false);
         if (row && !checkIfDatasetIsAlreadyAdded(row.id)) {
@@ -139,11 +132,20 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                 }
             });
         return elementExist;
+    };*/
+
+    const returnTooltipText = () => {
+        if (study.permissions && !study.permissions.addRemoveDataset) {
+            return 'You do not have access to create a study specific data set';
+        }
+        if (!wbsIsValid) {
+            return 'WBS code for study is invalid. Can not create data set';
+        }
+        return '';
     };
-*/
+
     return (
         <Wrapper>
-            {/*<Bar>*/}
             <div style={{ marginLeft: 'auto', marginTop: '32px', marginBottom: '8px' }}>
                 <Tooltip title={canCreateDataset && wbsIsValid ? '' : returnTooltipText()} placement="left">
                     <Button
@@ -183,6 +185,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                     editMode
                     studyId={study.id}
                     disabled={study.permissions && study.permissions.addRemoveDataset}
+                    onFallAddressBackChange={onFallAddressBackChange}
                 />
             </TableWrapper>
         </Wrapper>

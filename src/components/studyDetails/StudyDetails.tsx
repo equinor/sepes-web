@@ -7,7 +7,7 @@ import ParticipantComponent from './Participant';
 import SandBoxComponent from './Sandbox';
 import Overview from './Overview';
 import { Tabs } from '@equinor/eds-core-react';
-import Promt from '../common/Promt';
+import Promt from '../common/Prompt';
 import LoadingFull from '../common/LoadingFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
@@ -81,6 +81,7 @@ const StudyDetails = () => {
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
+    const [fallBackAddress, setFallBackAddress] = useState<string>('/');
 
     const permissions = useContext(Permissions);
     const displayStudyInfo = !studyResponse.loading && study;
@@ -98,6 +99,10 @@ const StudyDetails = () => {
         setWbsIsValid(study.wbsCodeValid);
     }, [study.wbsCodeValid]);
 
+    const handleFallbackAddressChange = (url:string) => {
+        setFallBackAddress(url);
+    };
+
     const changeComponent = () => {
         Cookies.remove(id);
         Cookies.set(id, activeTab, { expires: 1 });
@@ -111,6 +116,7 @@ const StudyDetails = () => {
                         updateCache={updateCache}
                         wbsIsValid={wbsIsValid}
                         studySaveInProgress={studySaveInProgress}
+                        onFallAddressBackChange={handleFallbackAddressChange}
                     />
                 );
             case 2:
@@ -124,6 +130,7 @@ const StudyDetails = () => {
                         study={study}
                         setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
+                        onFallAddressBackChange={handleFallbackAddressChange}
                     />
                 );
             case 3:
@@ -145,6 +152,7 @@ const StudyDetails = () => {
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         controller={controller}
+                        onFallAddressBackChange={handleFallbackAddressChange}
                     />
                 );
         }
@@ -155,7 +163,7 @@ const StudyDetails = () => {
             {studyResponse.notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
-                <Promt hasChanged={displayPrompt} />
+                <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />
                 {displayStudyInfo ? (
                     <StudyComponentFull
                         study={study}

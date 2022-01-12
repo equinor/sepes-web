@@ -12,7 +12,7 @@ import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { getResourceStatus } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
-import Prompt from 'components/common/Promt';
+import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
 import { SETCALLRESOURCESFALSE } from '../../store/actions/sandbox';
 

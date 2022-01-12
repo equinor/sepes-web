@@ -28,9 +28,10 @@ type SandboxComponentProps = {
     study: StudyObj;
     setLoading: any;
     wbsIsValid: boolean | undefined;
+    onFallAddressBackChange: any;
 };
 
-const SandboxComponent: React.FC<SandboxComponentProps> = ({
+const Sandbox: React.FC<SandboxComponentProps> = ({
     setStudy,
     setHasChanged,
     setUpdateCache,
@@ -38,7 +39,8 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
     disabled,
     study,
     setLoading,
-    wbsIsValid
+    wbsIsValid,
+    onFallAddressBackChange
 }) => {
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -90,10 +92,10 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                 )}
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
-                <SandboxTable sandboxes={study.sandboxes} />
+                <SandboxTable sandboxes={study.sandboxes} onFallAddressBackChange={onFallAddressBackChange} />
             </div>
         </Wrapper>
     );
 };
 
-export default SandboxComponent;
+export default Sandbox;
