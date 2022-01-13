@@ -41,7 +41,7 @@ const columns = [
         key: '',
         name: '',
         maxWidth: 250,
-        accessor: 'entityAccessGroup.code',
+        accessor: '',
         sortDirection: 'none',
         isSortable: false,
         style: { width: '10px' }
