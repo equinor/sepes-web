@@ -60,6 +60,13 @@ export interface DatasetObj {
     permissions: DatasetPermissionObj;
 }
 
+export interface DatasetLightObj {
+    name: string;
+    id: string;
+    sandboxes: SandboxLightObj[];
+    studyId: string;
+}
+
 export interface DatasetPermissionObj {
     deleteDataset: boolean;
     editDataset: boolean;
@@ -95,6 +102,12 @@ export interface SandboxObj {
     linkToCostAnalysis?: string;
     currentPhase: number | undefined;
     restrictionDisplayText: string;
+}
+
+export interface SandboxLightObj {
+    studyId: string;
+    name: string;
+    id: string;
 }
 
 export interface SandboxPermissions {

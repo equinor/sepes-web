@@ -8,6 +8,7 @@ import { truncate } from 'components/common/helpers/helpers';
 import TextTruncate from '../../common/customComponents/infoDisplayComponents/TextTruncate';
 import DataTable from 'components/common/table/DataTable';
 import { getStudyId } from 'utils/CommonUtil';
+import { DatasetLightObj } from 'components/common/interfaces';
 
 const { Row, Cell } = Table;
 
@@ -77,7 +78,7 @@ const DatasetsTable = (props: any) => {
         }
     };
 
-    const returnListOfItems = (dataset: any) => {
+    const returnListOfItems = (dataset: DatasetLightObj) => {
         if (dataset === undefined) {
             return {};
         }
