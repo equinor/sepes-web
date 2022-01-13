@@ -151,7 +151,7 @@ export const DataTable = (props) => {
 
     const recalculateItemNumbers = () => {
         const firstItemInPageIndex = currentPageIndex === 1 ? 1 : perPage * (currentPageIndex - 1) + 1;
-        const totalItems = useExternalPagingAndSorting ? externalTotalItems : data && data.length;
+        const totalItems = useExternalPagingAndSorting ? externalTotalItems : data.length;
 
         setItemNumbers({
             start: firstItemInPageIndex,
