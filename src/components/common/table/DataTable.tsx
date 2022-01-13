@@ -20,7 +20,8 @@ export const DataTable = (props) => {
         columns,
         cookiePrefix,
         loading,
-        abortAndSetNewController
+        abortAndSetNewController,
+        disablePagination
     } = props;
     const columnsCookie = cookiePrefix + 'Columns';
     const perPageCookie = cookiePrefix + 'PerPage';
@@ -44,7 +45,7 @@ export const DataTable = (props) => {
         end: 10
     });
 
-    const [hidePagination, setHidePagination] = useState(false);
+    const [hidePagination, setHidePagination] = useState(disablePagination || false);
 
     useEffect(() => {
         if (props.tableToPageOne) {
@@ -61,7 +62,7 @@ export const DataTable = (props) => {
         setTimeout(() => {
             setHidePagination(false);
         }, 10);
-        Cookies.set(pageNumberCookie, _pageNumber, { expires: 365 });
+        Cookies.set(pageNumberCookie, _pageNumber, { expires: 7 });
     };
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export const DataTable = (props) => {
             } else {
                 setPerPage(newPerPage);
                 setExternalPerPage(newPerPage);
-                Cookies.set(perPageCookie, newPerPage, { expires: 365 });
+                Cookies.set(perPageCookie, newPerPage, { expires: 7 });
                 if (currentPageIndex !== prevPage) {
                     forcePaginationToPage(prevPage < 1 ? 1 : prevPage);
                 }
@@ -120,7 +121,7 @@ export const DataTable = (props) => {
             props.setFetchReports(true);
             abortAndSetNewController();
         }
-        Cookies.set(pageNumberCookie, _pageIndex, { expires: 365 });
+        Cookies.set(pageNumberCookie, _pageIndex, { expires: 7 });
     };
 
     const changePageSize = (_perPage) => {
@@ -140,8 +141,8 @@ export const DataTable = (props) => {
             setExternalPerPage(_perPage);
             props.setFetchReports(true);
         }
-        Cookies.set(pageNumberCookie, 1, { expires: 365 });
-        Cookies.set(perPageCookie, _perPage, { expires: 365 });
+        Cookies.set(pageNumberCookie, 1, { expires: 7 });
+        Cookies.set(perPageCookie, _perPage, { expires: 7 });
     };
 
     useEffect(() => {

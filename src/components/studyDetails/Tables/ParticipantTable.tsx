@@ -6,6 +6,7 @@ import { studyOwner } from '../../common/staticValues/Roles';
 import useWindowDimensions from '../../common/hooks/useWindowDimensions';
 import DataTable from '../../common/table/DataTable';
 import '../../../styles/Table.scss';
+import { getStudyId } from 'utils/CommonUtil';
 
 const { Row, Cell } = Table;
 
@@ -15,9 +16,9 @@ const columns = [
         style: { textAlign: 'left' },
         name: 'Entity name',
         accessor: 'fullName',
-        sortDirection: 'ascending',
+        sortDirection: 'none',
         isSortable: true,
-        isSorted: true
+        isSorted: false
     },
     {
         key: 'code',
@@ -40,7 +41,7 @@ const columns = [
         key: '',
         name: '',
         maxWidth: 250,
-        accessor: 'entityAccessGroup.code',
+        accessor: '',
         sortDirection: 'none',
         isSortable: false,
         style: { width: '10px' }
@@ -92,55 +93,11 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
                 columns={editMode ? columns : columns.slice(0, 2)}
                 data={participants}
                 listItems={returnListOfItems}
-                cookiePrefix={'adminEntities-editMode' + editMode}
+                cookiePrefix={'participants-editMode' + editMode + getStudyId()}
+                disablePagination={!editMode}
             />
         </div>
     );
-    // return (
-    //     <div>
-    //         <Table style={{ width: '100%', marginBottom: '24px' }}>
-    //             <Head>
-    //                 <Row>
-    //                     <Cell scope="col">Name</Cell>
-    //                     {editMode && width > 800 && <Cell scope="col">E-mail</Cell>}
-    //                     <Cell scope="col">Role</Cell>
-    //                     {editMode && (
-    //                         <Cell style={{ width: '10px' }} scope="col">
-    //                             {''}
-    //                         </Cell>
-    //                     )}
-    //                 </Row>
-    //             </Head>
-    //             <Body>
-    //                 {participants &&
-    //                     participants.length > 0 &&
-    //                     participants.map((participant: ParticipantObj) => (
-    //                         <Row key={participant.userId + participant.role} id="tableRowNoPointerNoColor">
-    //                             <Cell>{participant.fullName}</Cell>
-    //                             {editMode && width > 800 && <Cell align="right">{participant.emailAddress}</Cell>}
-    //                             <Cell align="right">{participant.role}</Cell>
-    //                             {editMode && participant.role !== studyOwner ? (
-    //                                 <Cell align="right">
-    //                                     {permissions?.addRemoveParticipant && (
-    //                                         <Button
-    //                                             variant="ghost_icon"
-    //                                             onClick={() => removeParticipant(participant)}
-    //                                             style={{ color: '#3D3D3D' }}
-    //                                             data-cy="study_remove_participant"
-    //                                         >
-    //                                             <Icon name="close" style={{ cursor: 'pointer' }} size={24} />
-    //                                         </Button>
-    //                                     )}
-    //                                 </Cell>
-    //                             ) : (
-    //                                 editMode && <Cell>{''}</Cell>
-    //                             )}
-    //                         </Row>
-    //                     ))}
-    //             </Body>
-    //         </Table>
-    //     </div>
-    // );
 };
 
 DatasetsTable.defaultProps = {
