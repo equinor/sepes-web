@@ -300,6 +300,14 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             return '';
         };
 
+        const returnHelperTextVmName = (): string => {
+            if (checkIfVmNameAlreadyExists(vms, vm.name, sandbox)) {
+                return 'There already a VM with that name';
+            }
+
+            return 'Name cannot be changed later';
+        };
+
         useKeyEvents(undefined, createVm, true);
 
         return (
@@ -316,11 +324,8 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         label="Name"
                         meta={returnLimitMeta(20, vm.name)}
                         variant={returnVMnameVariant(vm.name, vms, sandbox)}
-                        helperText={
-                            checkIfVmNameAlreadyExists(vms, vm.name, sandbox)
-                                ? 'There already exists a vm with that name'
-                                : ''
-                        }
+                        helperText={returnHelperTextVmName()}
+                        helperIcon={<Icon name="warning_outlined" title="Warning" />}
                         data-cy="vm_name"
                         inputIcon={
                             <Tooltip title={VmTextFieldsTooltip.Name} placement="right">
@@ -334,17 +339,6 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                             {actualVmName || '-'}
                         </Typography>
                     </div>
-                    {/*<CoreDevDropdown
-                    label="Operating system"
-                    options={os}
-                    width={width}
-                    onChange={handleDropdownChange}
-                    name="operatingSystem"
-                    data-cy="vm_operatingSystem"
-                    meta="(required)"
-                    useOverflow
-                    tabIndex={0}
-                />*/}
                     <div>
                         <SizeFilterWrapper>
                             <UnstyledList>
