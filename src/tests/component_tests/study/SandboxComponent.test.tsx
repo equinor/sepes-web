@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SandboxComponent from '../../../components/studyDetails/Sandbox';
+import Sandbox from '../../../components/studyDetails/Sandbox';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
@@ -82,7 +82,7 @@ test('renders dataset component without permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
-            <SandboxComponent
+            <Sandbox
                 study={study}
                 setStudy={mockFunc}
                 setHasChanged={mockFunc}
@@ -91,6 +91,7 @@ test('renders dataset component without permission to add dataset', () => {
                 disabled={false}
                 setLoading={mockFunc}
                 wbsIsValid
+                onFallAddressBackChange={mockFunc}
             />
         </Router>
     );
@@ -105,7 +106,7 @@ test('renders dataset component with permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
         <Router history={history}>
-            <SandboxComponent
+            <Sandbox
                 study={studyWithoutPermissionToAddDataset}
                 setStudy={mockFunc}
                 setHasChanged={mockFunc}
@@ -114,6 +115,7 @@ test('renders dataset component with permission to add dataset', () => {
                 disabled={true}
                 setLoading={mockFunc}
                 wbsIsValid
+                onFallAddressBackChange={mockFunc}
             />
         </Router>
     );

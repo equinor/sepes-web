@@ -42,7 +42,9 @@ const DatasetsTable = (props: any) => {
 
     const redirectOnCellClick = (row: any) => {
         if (row.studyId && !mouseHoverSandbox) {
-            history.push('/studies/' + props.studyId + '/datasets/' + row.id);
+            const url = '/studies/' + props.studyId + '/datasets/' + row.id;
+            history.push(url);
+            props.onFallAddressBackChange(url);
         }
     };
 

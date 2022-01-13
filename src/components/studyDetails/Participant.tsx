@@ -43,7 +43,7 @@ type ParicipantComponentProps = {
     updateCache: any;
 };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const Paricipant: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const studyId = getStudyId();
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
@@ -251,4 +251,4 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     );
 };
 
-export default ParicipantComponent;
+export default Paricipant;

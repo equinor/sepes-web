@@ -10,9 +10,10 @@ const { Body, Row, Cell, Head } = Table;
 
 type SandboxTableProps = {
     sandboxes: any;
+    onFallAddressBackChange: any;
 };
 
-const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
+const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBackChange }) => {
     const studyId = getStudyId();
     const history = useHistory();
     const returnCell = (value: string, sandboxId: string, type: 'icon' | 'text') => {
@@ -26,7 +27,9 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes }) => {
 
     const redirectOnCellClick = (row: any) => {
         if (studyId && row.id) {
-            history.push('/studies/' + studyId + '/sandboxes/' + row.id);
+            const url = '/studies/' + studyId + '/sandboxes/' + row.id;
+            history.push(url);
+            onFallAddressBackChange(url);
         }
     };
     return (

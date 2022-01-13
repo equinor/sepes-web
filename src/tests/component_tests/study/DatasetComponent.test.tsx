@@ -98,6 +98,7 @@ test('renders dataset component without permission to add dataset', () => {
                 updateCache={mockFunc}
                 wbsIsValid
                 studySaveInProgress={false}
+                onFallAddressBackChange={mockFunc}
             />
         </Router>
     );
@@ -119,6 +120,7 @@ test('renders dataset component with permission to add dataset', () => {
                 updateCache={mockFunc}
                 wbsIsValid
                 studySaveInProgress={false}
+                onFallAddressBackChange={mockFunc}
             />
         </Router>
     );
