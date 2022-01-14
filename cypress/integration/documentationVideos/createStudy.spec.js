@@ -3,8 +3,12 @@ describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        cy.clearViewport();
+        // cy.clearViewport();
         cy.mockOutStudyList();
+        cy.mockOutStudy();
+        cy.mockOutDeleteStudy();
+        cy.mockOutResultsAndLearnings();
+        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
@@ -95,6 +99,7 @@ describe('Create study', () => {
             blocking: true,
             textSize: '20pt'
         });
+        cy.mockOutDeleteStudy();
         cy.deleteStudy(studyName);
     });
 });

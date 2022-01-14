@@ -269,3 +269,20 @@ Cypress.Commands.add('clearViewport', () => {
 Cypress.Commands.add('mockOutStudyList', () => {
     cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
 });
+Cypress.Commands.add('mockOutStudy', () => {
+    cy.intercept(
+        '/api/studies/*',
+        { times: 1 },
+        { fixture: 'documentationVideos/createStudy/documentationStudy.json' }
+    );
+});
+
+Cypress.Commands.add('mockOutDeleteStudy', () => {
+    cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/commonMocks/emptyResponse.json' });
+});
+Cypress.Commands.add('mockOutResultsAndLearnings', () => {
+    cy.intercept('/api/studies/*/resultsandlearnings', { fixture: 'study/emptyResultsAndLearnings.json' });
+});
+Cypress.Commands.add('mockOutPermissions', () => {
+    cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
+});
