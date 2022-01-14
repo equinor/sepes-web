@@ -11,8 +11,8 @@ import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
 import LoadingFull from 'components/common/LoadingFullscreen';
-import configureStore from './store/index';
 import { Provider } from 'react-redux';
+import { store } from 'store';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -26,8 +26,6 @@ export const Permissions = React.createContext<GeneralPermissions>({
     emailAddress: '',
     userName: ''
 });
-
-const store = configureStore();
 
 const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));

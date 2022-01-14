@@ -32,11 +32,11 @@ import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
-import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
-import { useDispatch } from 'react-redux';
 import Password from 'components/common/customComponents/Password';
 import HelperTexts from 'components/common/constants/HelperTexts';
 import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import { useDispatch } from 'react-redux';
 
 const Wrapper = styled.div`
     height: auto;
@@ -237,8 +237,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         dataDisks: []
                     });
                     // getResources();
-                    dispatch({ type: SETCALLRESOURCESTRUE });
-
+                    dispatch(setCallResources(true));
                     const vmsList: any = [...vms];
                     vmsList.push(result);
                     setVms(vmsList);

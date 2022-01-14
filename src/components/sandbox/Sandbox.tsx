@@ -14,7 +14,8 @@ import { getResourceStatus } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
-import { SETCALLRESOURCESFALSE } from '../../store/actions/sandbox';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import getCallResourcesStatus from 'store/sandboxes/sanboxesSelectors';
 
 const Wrapper = styled.div`
     display: grid;
@@ -66,7 +67,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
             undefined
     );
     const [hasChanged, setHasChanged] = useState<boolean>(false);
-    const callGetResources = useSelector((state: any) => state.callGetResources);
+    const callGetResources = useSelector(getCallResourcesStatus());
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -79,7 +80,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     useEffect(() => {
         if (callGetResources) {
             getResources();
-            dispatch({ type: SETCALLRESOURCESFALSE });
+            dispatch(setCallResources(false));
         }
     }, [callGetResources]);
 

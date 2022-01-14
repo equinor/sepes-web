@@ -5,8 +5,8 @@ import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 import { SandboxPermissions } from 'components/common/interfaces';
-import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
 import { useDispatch } from 'react-redux';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -42,8 +42,7 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
             if (result && result.message) {
                 console.log('Err');
             } else {
-                dispatch({ type: SETCALLRESOURCESTRUE });
-                // setCallGetResources(true);
+                dispatch(setCallResources(true));
             }
         });
     };
