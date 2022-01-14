@@ -1,13 +1,12 @@
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './reducers';
-// import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
-import thunkMiddleware from 'redux-thunk';
-import initialState from './reducers/initialState';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
+import sandboxesReducer from './sandboxes/sandboxesSlice';
 
-export default function configureStore() {
-    // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
-    const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
-    return createStore(rootReducer, initialState, composedEnhancer);
-}
-// composeEnhancers(applyMiddleware(thunk))
+export const store = configureStore({
+    reducer: {
+        sandboxes: sandboxesReducer
+    },
+    devTools: process.env.NODE_ENV !== 'production'
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispath = typeof store.dispatch;

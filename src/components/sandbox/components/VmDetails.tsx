@@ -22,7 +22,7 @@ import {
 } from 'components/common/helpers/sandboxHelpers';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import { useDispatch } from 'react-redux';
-import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -261,7 +261,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
-                dispatch({ type: SETCALLRESOURCESTRUE });
+                dispatch(setCallResources(true));
                 setVmSaved(true);
             } else {
                 console.log('Err');
