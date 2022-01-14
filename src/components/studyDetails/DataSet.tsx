@@ -29,23 +29,22 @@ const TableWrapper = styled.div`
         margin-top: 64px;
     }
 `;
-/*
-const Bar = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 0.3fr 296px;
-    margin-left: auto;
-    margin-top: 32px;
-    @media (max-width: 768px) {
-        margin-left: 0;
-        grid-template-columns: 1fr 0.3fr 1fr;
-    }
-    @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 0.3fr 1fr;
-        grid-gap: 8px;
-    }
-`;
-*/
+// This is needed for standard data set functionality
+// const Bar = styled.div`
+//     display: grid;
+//     grid-template-columns: 1fr 0.3fr 296px;
+//     margin-left: auto;
+//     margin-top: 32px;
+//     @media (max-width: 768px) {
+//         margin-left: 0;
+//         grid-template-columns: 1fr 0.3fr 1fr;
+//     }
+//     @media (max-width: 500px) {
+//         grid-template-columns: 1fr;
+//         grid-template-rows: 1fr 0.3fr 1fr;
+//         grid-gap: 8px;
+//     }
+// `;
 
 type DatasetComponentProps = {
     study: StudyObj;
@@ -70,7 +69,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const permissions = useContext(Permissions);
-    console.log(StandardDatasetFeatureToggle.AddDatasetToStudy);
     const datasetsResponse = useFetchUrl(
         getDatasetsUrl(),
         setDatasetsList,
