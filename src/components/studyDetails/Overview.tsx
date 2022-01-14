@@ -93,7 +93,7 @@ const Overview: React.FC<OverviewProps> = ({
         }
     };
 
-    useKeyEvents(handleCancel, handleSave, editMode);
+    useKeyEvents(handleCancel, undefined, editMode);
 
     return (
         <Wrapper>

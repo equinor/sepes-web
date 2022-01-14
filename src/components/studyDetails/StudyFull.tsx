@@ -348,7 +348,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         });
     };
 
-    useKeyEvents(handleCancel, handleSave, editMode && !userClickedDelete);
+    useKeyEvents(handleCancel, undefined, editMode && !userClickedDelete);
 
     return (
         <div
@@ -415,10 +415,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     }
                                     helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
-                                        <Tooltip
-                                            title={StudyTextFieldsTooltip.Name}
-                                            placement="right"
-                                        >
+                                        <Tooltip title={StudyTextFieldsTooltip.Name} placement="right">
                                             <Icon name="info_circle" />
                                         </Tooltip>
                                     }
