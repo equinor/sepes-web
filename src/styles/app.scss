@@ -2,11 +2,15 @@
 @import './equinor-colors.scss';
 
 html * {
-  font-family: Equinor !important;
+    font-family: Equinor !important;
 }
 html {
-  background-color: #F7F7F7;
+    background-color: #f7f7f7;
 }
 #root {
-  background-color: #F7F7F7;
+    background-color: #f7f7f7;
+}
+
+body {
+    overflow: visible !important; // Override so EDS scrim does not disable scrolling
 }
