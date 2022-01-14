@@ -166,7 +166,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                         disabled={!(canCreateDataset && wbsIsValid)}
                         data-testid="study_add_dataset"
                     >
-                        Create study specific data set1
+                        Create study specific data set
                     </Button>
                 </Tooltip>
             </div>
