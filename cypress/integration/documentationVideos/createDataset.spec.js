@@ -3,8 +3,12 @@ describe('Create data set', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        cy.clearViewport();
+        // cy.clearViewport();
         cy.mockOutStudyList();
+        cy.mockOutStudy();
+        cy.mockOutDeleteStudy();
+        cy.mockOutResultsAndLearnings();
+        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
@@ -19,7 +23,7 @@ describe('Create data set', () => {
             blocking: true,
             textSize: '3vh'
         });
-        cy.createStudy(studyName);
+        cy.createStudyWithoutInterceptingStudy(studyName);
     });
 
     it('clicks on data sets tab', () => {
@@ -55,6 +59,8 @@ describe('Create data set', () => {
 
     it('Create dataset', { keystrokeDelay: 100 }, () => {
         // cy.createDataset();
+        cy.mockOutDataSetRegions();
+        cy.mockOutDataSet();
         cy.text('Step 4 - Fill out the fields to create the data set', {
             duration: 3000,
             blocking: false,
@@ -133,13 +139,15 @@ describe('Create data set', () => {
     });
 
     it('Delete study specific data set', { keystrokeDelay: 100 }, () => {
+        cy.mockOutDataSetDelete();
+        cy.mockOutStudy();
         cy.text('How to delete the data set', {
             duration: 5000,
             blocking: true,
             textSize: '3vh'
         });
         cy.get('[data-cy=dataset_delete]').click({ force: true });
-        cy.get('[data-cy="delete_resource"]').type('cy dataset name');
+        cy.get('[data-cy="delete_resource"]').type('Documentation data set');
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
 

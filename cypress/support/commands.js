@@ -47,7 +47,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.wait(2000);
     cy.get('[data-cy=create_study]').click({ force: true });
 
-    cy.waitForStudyToLoad();
+    // cy.waitForStudyToLoad();
 });
 
 Cypress.Commands.add('createStudyWithLogo', (studyName) => {
@@ -270,19 +270,33 @@ Cypress.Commands.add('mockOutStudyList', () => {
     cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
 });
 Cypress.Commands.add('mockOutStudy', () => {
-    cy.intercept(
-        '/api/studies/*',
-        { times: 1 },
-        { fixture: 'documentationVideos/createStudy/documentationStudy.json' }
-    );
+    cy.intercept('/api/studies/', { fixture: 'documentationVideos/documentationStudy.json' });
+    cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'documentationVideos/documentationStudy.json' });
 });
 
 Cypress.Commands.add('mockOutDeleteStudy', () => {
-    cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/commonMocks/emptyResponse.json' });
+    cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/emptyResponse.json' });
 });
 Cypress.Commands.add('mockOutResultsAndLearnings', () => {
     cy.intercept('/api/studies/*/resultsandlearnings', { fixture: 'study/emptyResultsAndLearnings.json' });
 });
 Cypress.Commands.add('mockOutPermissions', () => {
     cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
+});
+
+// Data set mocks
+
+Cypress.Commands.add('mockOutDataSet', () => {
+    cy.intercept('/api/studies/*/datasets/*', { fixture: 'documentationVideos/documentationDataset.json' });
+});
+Cypress.Commands.add('mockOutDataSetDelete', () => {
+    cy.intercept('/api/studies/datasets/studyspecific/*', {
+        fixture: 'documentationVideos/emptyResponse.json'
+    });
+});
+
+Cypress.Commands.add('mockOutDataSetRegions', () => {
+    cy.intercept('/api/regions', {
+        fixture: 'documentationVideos/datasetRegions.json'
+    });
 });
