@@ -1,0 +1,36 @@
+{
+    "name": "Study for documentation",
+    "description": "cy description",
+    "wbsCode": "Automatic_test_cost",
+    "vendor": "cy vendor",
+    "restricted": false,
+    "logoUrl": null,
+    "wbsCodeValid": true,
+    "permissions": {
+        "updateMetadata": true,
+        "readResulsAndLearnings": true,
+        "updateResulsAndLearnings": true,
+        "closeStudy": true,
+        "deleteStudy": true,
+        "addRemoveDataset": true,
+        "addRemoveParticipant": true,
+        "addRemoveSandbox": true
+    },
+    "datasets": [],
+    "sandboxes": [],
+    "participants": [
+        {
+            "fullName": "Mock User",
+            "userName": "mock@user.com",
+            "emailAddress": "mock@user.com",
+            "role": "Study Owner",
+            "userId": 18,
+            "studyId": 0
+        }
+    ],
+    "updated": "0001-01-01T00:00:00",
+    "updatedBy": null,
+    "id": 999,
+    "created": "0001-01-01T00:00:00",
+    "createdBy": null
+}

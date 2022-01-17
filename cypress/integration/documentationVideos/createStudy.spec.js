@@ -5,6 +5,10 @@ describe('Create study', () => {
         cy.login();
         cy.clearViewport();
         cy.mockOutStudyList();
+        cy.mockOutStudy();
+        cy.mockOutDeleteStudy();
+        cy.mockOutResultsAndLearnings();
+        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
@@ -95,6 +99,7 @@ describe('Create study', () => {
             blocking: true,
             textSize: '20pt'
         });
+        cy.mockOutDeleteStudy();
         cy.deleteStudy(studyName);
     });
 });
