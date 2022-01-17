@@ -1,5 +1,6 @@
 import { StudyObj } from 'components/common/interfaces';
 import * as helpers from '../../components/common/helpers/studyHelpers';
+import { study, studyWithDataset, studyWithSandbox } from '../mocks/study/study-mocs';
 
 test('test validateUserInputStudy', () => {
     expect(
@@ -253,4 +254,10 @@ test('test filterRoleList', () => {
         rolesAllExceptSponsor
     );
     expect(helpers.filterRoleList(rolesAll, participantWithSponsorRep, studyWithAllRoles)).toEqual([]);
+});
+
+test('test checkIfStudyHasActiveResources', () => {
+    expect(helpers.checkIfStudyHasActiveResources(study)).toBeFalsy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithDataset)).toBeTruthy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithSandbox)).toBeTruthy;
 });

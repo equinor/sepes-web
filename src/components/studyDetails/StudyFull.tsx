@@ -17,6 +17,7 @@ import {
     truncate
 } from '../common/helpers/helpers';
 import {
+    checkIfStudyHasActiveResources,
     returnTooltipTextDeleteStudy,
     returnTooltipTextSaveStudy,
     returnWbsVariant,
@@ -208,6 +209,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         if (validateWbsInProgress) {
             wbsController.abort();
             wbsController = new AbortController();
+        }
+        // Set validateWbsInProgress to true immediately to prevent quicky adding a invalid wbs
+        if (hasChanged && !newStudy && checkIfStudyHasActiveResources(study)) {
+            setValidateWbsInProgress(true);
         }
 
         const timeoutId = setTimeout(() => {
