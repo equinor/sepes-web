@@ -153,6 +153,7 @@ describe('Create data set', () => {
 
     it('Delete study', { keystrokeDelay: 100 }, () => {
         cy.mockOutStudyList();
+        cy.mockOutDeleteStudy();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,
