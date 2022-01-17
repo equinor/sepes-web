@@ -3,7 +3,7 @@ describe('Create data set', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        // cy.clearViewport();
+        cy.clearViewport();
         cy.mockOutStudyList();
         cy.mockOutStudy();
         cy.mockOutDeleteStudy();
