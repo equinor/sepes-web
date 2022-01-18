@@ -4,17 +4,12 @@ describe('Create sandbox and virtual machine', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
-        cy.mockOutStudyList();
-        cy.mockOutStudy();
-        cy.mockOutDeleteStudy();
-        cy.mockOutResultsAndLearnings();
-        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
-        cy.mockOutAllSandboxCalls();
+        cy.mockOutAllCallsForCreateSandboxAndVirtualmachineDocsTest();
     });
 
     it('Create initial study', () => {
@@ -43,7 +38,7 @@ describe('Create sandbox and virtual machine', () => {
         cy.switchToSandboxesTab();
     });
 
-    const sandboxName = 'Docs sandbox ' + Cypress._.random(0, 1e6);
+    const sandboxName = 'Docs sandbox 99';
 
     it('clicks create sandbox', () => {
         cy.mockOutSandbox();
@@ -159,7 +154,7 @@ describe('Create sandbox and virtual machine', () => {
             pointAt: 'bottomRight'
         });
         cy.get('[data-cy=create_vm]').click();
-        cy.waitForVirtualMachineToBeCreated();
+        // cy.waitForVirtualMachineToBeCreated();
         cy.text('You are now on your newly created virtual machine!', {
             duration: 5000,
             blocking: true,
