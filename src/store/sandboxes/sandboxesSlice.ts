@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SandboxesState {
-    callGetResources:boolean;
+    callGetResources: boolean;
 }
 
 const initialState: SandboxesState = {
@@ -12,10 +12,10 @@ export const sandboxesSlice = createSlice({
     name: 'sandboxes',
     initialState,
     reducers: {
-        setCallResources: (state, action: PayloadAction<boolean>) => {
-            state.callGetResources = action.payload;
+        setCallResources: (state: SandboxesState, action: PayloadAction<boolean>) => {
+            return { ...state, callGetResources: action.payload };
         }
-     },
+    }
 });
 
 export const { setCallResources } = sandboxesSlice.actions;

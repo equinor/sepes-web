@@ -14,7 +14,6 @@ import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxH
 
 type VmConfigProps = {
     sandbox: SandboxObj;
-    resources: any;
     setUpdateCache: any;
     updateCache: any;
     controller: AbortController;
@@ -24,7 +23,6 @@ type VmConfigProps = {
 
 const VmConfig: React.FC<VmConfigProps> = ({
     sandbox,
-    resources,
     setUpdateCache,
     updateCache,
     controller,
@@ -145,7 +143,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         vms={vms}
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
-                        resources={resources}
                         permissions={sandbox.permissions}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}

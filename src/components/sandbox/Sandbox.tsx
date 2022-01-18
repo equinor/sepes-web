@@ -10,12 +10,13 @@ import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
-import { getResourceStatus } from '../../services/Api';
+import { getResourcesList } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import getCallResourcesStatus from 'store/sandboxes/sanboxesSelectors';
+import { setResourcesInStore } from 'store/resources/resourcesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -56,7 +57,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
         }
     });
 
-    const [resources, setResources] = useState<any>([]);
     const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox, undefined, undefined, false);
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
@@ -96,11 +96,11 @@ const Sandbox: React.FC<SandboxProps> = () => {
     }, [SandboxResponse.loading, sandbox.currentPhase]);
 
     const getResources = () => {
-        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
+        getResourcesList(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.message)) {
                 console.log('Err');
             } else {
-                setResources(result);
+                dispatch(setResourcesInStore(result));
             }
         });
     };
@@ -119,13 +119,12 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const returnStepComponent = () => {
         switch (step) {
             case 1:
-                return <Execution resources={resources} sandbox={sandbox} />;
+                return <Execution sandbox={sandbox} />;
             case 2:
                 return <div />;
             default:
                 return (
                     <SandboxConfig
-                        resources={resources}
                         sandboxId={sandboxId}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
@@ -156,7 +155,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 sandboxId={sandboxId}
                                 setUpdateCache={setUpdateCache}
                                 updateCache={updateCache}
-                                setResources={setResources}
                                 setLoading={SandboxResponse.setLoading}
                                 setNewPhase={setNewPhase}
                                 setDeleteSandboxInProgress={setDeleteSandboxInProgress}
@@ -171,7 +169,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                             {(step === 0 || step === 1) && (
                                 <VmConfig
                                     sandbox={sandbox}
-                                    resources={resources}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}
                                     controller={controller}

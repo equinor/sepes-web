@@ -8,7 +8,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
+import { deleteSandbox, getResourcesList, makeAvailable } from '../../services/Api';
 import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
@@ -18,6 +18,8 @@ import {
 } from 'components/common/helpers/sandboxHelpers';
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
+import { useDispatch } from 'react-redux';
+import { setResourcesInStore } from 'store/resources/resourcesSlice';
 
 const set = require('lodash/set');
 
@@ -58,7 +60,6 @@ type StepBarProps = {
     setSandbox: any;
     updateCache: any;
     setUpdateCache: any;
-    setResources: any;
     setLoading: any;
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
@@ -95,7 +96,6 @@ const StepBar: React.FC<StepBarProps> = ({
     setSandbox,
     updateCache,
     setUpdateCache,
-    setResources,
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
@@ -107,6 +107,7 @@ const StepBar: React.FC<StepBarProps> = ({
     setHasChanged
 }) => {
     const history = useHistory();
+    const dispatch = useDispatch();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
@@ -115,7 +116,6 @@ const StepBar: React.FC<StepBarProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
 
     useEffect(() => {
-        // getResources();
         let timer: any;
         try {
             timer = setInterval(async () => {
@@ -136,13 +136,13 @@ const StepBar: React.FC<StepBarProps> = ({
     }, []);
 
     const getResources = () => {
-        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
+        getResourcesList(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.message)) {
                 resourcesFailed = true;
 
                 console.log('Err');
             } else {
-                setResources(result);
+                dispatch(setResourcesInStore(result));
                 allResourcesStatusOkAndAtleastOneVm(
                     result,
                     setAnyVmWithOpenInternet,

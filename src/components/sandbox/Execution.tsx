@@ -32,11 +32,10 @@ const SatusWrapper = styled.div`
 `;
 
 type ExecutionProps = {
-    resources: any;
     sandbox: SandboxObj;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
+const Execution: React.FC<ExecutionProps> = ({ sandbox }) => {
     return (
         <Wrapper>
             <SatusWrapper>
@@ -51,7 +50,7 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
                     <Policy sandbox={sandbox} />
                 </div>
                 <div>
-                    <Resources resources={resources} permissions={sandbox.permissions} />
+                    <Resources permissions={sandbox.permissions} />
                 </div>
             </ResourceWrapper>
         </Wrapper>
