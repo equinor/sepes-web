@@ -290,6 +290,7 @@ const DatasetDetails = () => {
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
+            console.log(result);
             setLoading(false);
             if (result && !result.message) {
                 history.push('/studies/' + studyId);

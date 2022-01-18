@@ -266,37 +266,77 @@ Cypress.Commands.add('clearViewport', () => {
     header.setAttribute('style', 'opacity: 0');
 });
 
-Cypress.Commands.add('mockOutStudyList', () => {
-    cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
-});
-Cypress.Commands.add('mockOutStudy', () => {
-    cy.intercept('/api/studies/', { fixture: 'documentationVideos/documentationStudy.json' });
-    cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'documentationVideos/documentationStudy.json' });
-});
+// Cypress.Commands.add('mockOutStudyList', () => {
+//     cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
+// });
+// Cypress.Commands.add('mockOutStudy', () => {
+//     cy.intercept('/api/studies/', { fixture: 'documentationVideos/documentationStudy.json' });
+//     cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'documentationVideos/documentationStudy.json' });
+// });
 
-Cypress.Commands.add('mockOutDeleteStudy', () => {
-    cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/emptyResponse.json' });
-});
-Cypress.Commands.add('mockOutResultsAndLearnings', () => {
-    cy.intercept('/api/studies/*/resultsandlearnings', { fixture: 'study/emptyResultsAndLearnings.json' });
-});
-Cypress.Commands.add('mockOutPermissions', () => {
-    cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
-});
+// Cypress.Commands.add('mockOutDeleteStudy', () => {
+//     cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/emptyResponse.json' });
+// });
+// Cypress.Commands.add('mockOutResultsAndLearnings', () => {
+//     cy.intercept('/api/studies/*/resultsandlearnings', { fixture: 'study/emptyResultsAndLearnings.json' });
+// });
+// Cypress.Commands.add('mockOutPermissions', () => {
+//     cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
+// });
 
-// Data set mocks
+// // Data set mocks
 
-Cypress.Commands.add('mockOutDataSet', () => {
-    cy.intercept('/api/studies/*/datasets/*', { fixture: 'documentationVideos/documentationDataset.json' });
-});
-Cypress.Commands.add('mockOutDataSetDelete', () => {
-    cy.intercept('/api/studies/datasets/studyspecific/*', {
-        fixture: 'documentationVideos/emptyResponse.json'
-    });
-});
+// Cypress.Commands.add('mockOutDataSet', () => {
+//     cy.intercept('/api/studies/*/datasets/*', { fixture: 'documentationVideos/documentationDataset.json' });
+// });
+// Cypress.Commands.add('mockOutDataSetDelete', () => {
+//     cy.intercept('/api/studies/datasets/studyspecific/*', {
+//         fixture: 'documentationVideos/emptyResponse.json'
+//     });
+// });
 
-Cypress.Commands.add('mockOutDataSetRegions', () => {
-    cy.intercept('/api/regions', {
-        fixture: 'documentationVideos/datasetRegions.json'
-    });
-});
+// Cypress.Commands.add('mockOutDataSetRegions', () => {
+//     cy.intercept('/api/regions', {
+//         fixture: 'documentationVideos/datasetRegions.json'
+//     });
+// });
+
+// // Sandbox mocks
+
+// Cypress.Commands.add('mockOutSandbox', () => {
+//     cy.intercept('/api/sandboxes/*', {
+//         fixture: 'documentationVideos/documentationSandbox.json'
+//     });
+// });
+
+// Cypress.Commands.add('mockOutAvailableDataset', () => {
+//     cy.intercept('/api/sandbox/*/availabledatasets', []);
+// });
+
+// Cypress.Commands.add('mockOutVmSizes', () => {
+//     cy.intercept('/api/virtualmachines/2747/sizes', {
+//         fixture: 'documentationVideos/vmSizes.json'
+//     });
+// });
+
+// Cypress.Commands.add('mockOutVmDisks', () => {
+//     cy.intercept('/api/virtualmachines/2747/disks', {
+//         fixture: 'documentationVideos/vmDisks.json'
+//     });
+// });
+
+// Cypress.Commands.add('mockOutVmOperatingsystems', () => {
+//     cy.intercept('/api/virtualmachines/2747/disks', {
+//         fixture: 'documentationVideos/vmOperatingsystems.json'
+//     });
+// });
+
+// Cypress.Commands.add('mockOutSandboxResources', () => {
+//     cy.intercept('/api/sandboxes/*/resources', {
+//         fixture: 'documentationVideos/sandboxResources.json'
+//     });
+// });
+
+// Cypress.Commands.add('mockOutSandboxCostAnalysis', () => {
+//     cy.intercept('/api/sandboxes/2779/costanalysis', null);
+// });
