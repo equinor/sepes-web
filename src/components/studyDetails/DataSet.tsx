@@ -30,6 +30,7 @@ const TableWrapper = styled.div`
     }
 `;
 // This is needed for standard data set functionality
+// TODO: Bring it back when data set functioanlity is needed again
 // const Bar = styled.div`
 //     display: grid;
 //     grid-template-columns: 1fr 0.3fr 296px;
