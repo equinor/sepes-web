@@ -4,21 +4,21 @@ import { Table } from '@equinor/eds-core-react';
 import ResourceItemComponent from './ResourceItem';
 import '../../../styles/Table.scss';
 import { SandboxPermissions } from 'components/common/interfaces';
+import { useSelector } from 'react-redux';
+import getResourcesFromStore from 'store/resources/resourcesSelectors';
 
 const { Body, Row, Cell, Head } = Table;
 
 type ResourcesComponentProps = {
-    resources: any;
     permissions: SandboxPermissions;
 };
 
-const Dataset: React.FC<ResourcesComponentProps> = ({ resources, permissions }) => {
-    //const { resources, getResources } = props;
-    // const [expandList, setExpandList] = useState<boolean>(false);
+const Resources: React.FC<ResourcesComponentProps> = ({ permissions }) => {
     const [orderedResources, setOrderedResources] = useState<any>(false);
+    const resources = useSelector(getResourcesFromStore());
     useEffect(() => {
-        const temp = resources.reverse();
-        setOrderedResources(temp);
+        const sortedArray = [...resources];
+        setOrderedResources(sortedArray.reverse());
     }, [resources]);
 
     return (
@@ -58,4 +58,4 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, permissions }) 
     );
 };
 
-export default Dataset;
+export default Resources;

@@ -34,7 +34,6 @@ const PolictyComponentWrapper = styled.div`
 `;
 
 type SandboxConfigProps = {
-    resources: any;
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
@@ -44,7 +43,6 @@ type SandboxConfigProps = {
 };
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
-    resources,
     sandboxId,
     updateCache,
     setUpdateCache,
@@ -66,7 +64,7 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                 <PolictyComponentWrapper>
                     <Policy displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
-                <Resources resources={resources} permissions={sandbox.permissions} />
+                <Resources permissions={sandbox.permissions} />
             </InfoWrapper>
         </Wrapper>
     );
