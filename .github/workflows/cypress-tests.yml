@@ -55,7 +55,7 @@ jobs:
         # if: ${{ github.event_name != 'pull_request' }}
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" 
       
       # Sets up ffmpeg that is used for cutting off the first couple of seconds from the documentation video made from cypress
       - uses: FedericoCarboni/setup-ffmpeg@v1

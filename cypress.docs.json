@@ -12,7 +12,7 @@
         "TENANT_ID": "",
         "CLIENT_ID": "",
         "CLIENT_SECRET": "",
-        "API_URL": "https://backend-sepes-api-dev.radix.equinor.com/",
+        "API_URL": "http://localhost:44371/",
         "SCOPE": "User.Read User.Read.All User.Impersonation",
         "cypress-movie": {
             "enabled": true,
