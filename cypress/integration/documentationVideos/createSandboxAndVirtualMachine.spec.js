@@ -154,7 +154,6 @@ describe('Create sandbox and virtual machine', () => {
             pointAt: 'bottomRight'
         });
         cy.get('[data-cy=create_vm]').click();
-        // cy.waitForVirtualMachineToBeCreated();
         cy.text('You are now on your newly created virtual machine!', {
             duration: 5000,
             blocking: true,

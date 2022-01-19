@@ -143,15 +143,11 @@ Cypress.Commands.add('mockOutCalculateVmPrice', () => {
 });
 
 Cypress.Commands.add('mockOutVirtualMachine', () => {
-    // cy.intercept('GET', /\/api\/virtualmachines\/([0-9])$/, {
-    //     fixture: 'sandbox/virtualMachine.json'
-    // });
     cy.intercept('/api/virtualmachines/999', {
         fixture: 'sandbox/virtualMachine.json'
     });
 });
-// cy.intercept(/\/api\?_limit=(3|5)$/)
-// cy.route('GET', /\/api\/virtualmachines\/([0-9])$/).as('GETCustomer');
+
 Cypress.Commands.add('mockOutVirtualMachineRules', () => {
     cy.intercept('/api/virtualmachines/*/rules', {
         fixture: 'sandbox/virtualMachineRules.json'
