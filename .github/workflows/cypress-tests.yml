@@ -52,6 +52,7 @@ jobs:
           REACT_APP_SEPES_AUTHORITY: ${{ secrets.REACT_APP_SEPES_AUTHORITY }}
           REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
           REACT_APP_SEPES_BASIC_SCOPE: ${{ secrets.REACT_APP_SEPES_BASIC_SCOPE }}
+          CI: true
 
 
 
@@ -91,7 +92,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
 
       - name: Save documentation video
-        if: ${{ github.event_name != 'pull_request' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v1
         with:
           name: documentation-videos

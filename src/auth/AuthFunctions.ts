@@ -110,7 +110,9 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
             try {
                 // let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                 // let response = await fetch(window.BASE_API_URI + url, options);
-                let response = await fetch('http://localhost:44371/' + url, options);
+                const apiUrl = process.env.CI ? 'http://localhost:44371/' : window.BASE_API_URI;
+
+                let response = await fetch(apiUrl + url, options);
 
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
@@ -119,7 +121,7 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                     apiRequestInternal(url, headers, options);
                     // response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
                     // response = await fetch(window.BASE_API_URI + url, options);
-                    response = await fetch('http://localhost:44371/' + url, options);
+                    response = await fetch(apiUrl + url, options);
                 }
 
                 return resolve(await processAuthorizedResponse(response));
