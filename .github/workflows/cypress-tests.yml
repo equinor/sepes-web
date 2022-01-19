@@ -52,7 +52,7 @@ jobs:
           REACT_APP_SEPES_AUTHORITY: ${{ secrets.REACT_APP_SEPES_AUTHORITY }}
           REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
           REACT_APP_SEPES_BASIC_SCOPE: ${{ secrets.REACT_APP_SEPES_BASIC_SCOPE }}
-          CI: true
+          REACT_APP_SEPES_LOCAL: "test"
 
 
 
