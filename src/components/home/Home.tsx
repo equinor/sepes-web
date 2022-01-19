@@ -65,6 +65,7 @@ const Home = () => {
                             placement="top"
                         >
                             <Button
+                                disabled={!permissions.canCreateStudy}
                                 data-cy="new_study"
                                 style={{ width: '336px' }}
                                 onClick={() => {

@@ -27,6 +27,18 @@ export const Permissions = React.createContext<GeneralPermissions>({
     userName: 'test'
 });
 
+const test = {
+    admin: true,
+    canRead_PreApproved_Datasets: true,
+    canEdit_PreApproved_Datasets: true,
+    canCreateStudy: true,
+    datasetAdmin: true,
+    sponsor: true,
+    fullName: 'test',
+    emailAddress: 'test',
+    userName: 'test'
+};
+
 const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
@@ -53,7 +65,7 @@ const renderApp = async (user) => {
             <React.StrictMode>
                 <Provider store={store}>
                     <UserConfig.Provider value={user}>
-                        <Permissions.Provider value={result}>
+                        <Permissions.Provider value={test}>
                             <App />
                         </Permissions.Provider>
                     </UserConfig.Provider>
