@@ -53,21 +53,21 @@ jobs:
           docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:stable
           docker push ${{ secrets.ACR_URL }}/sepes-web:stable
 
-  PR:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v2
+  # PR:
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request'
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URL }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+  #     - uses: azure/docker-login@v1
+  #       with:
+  #         login-server: ${{ secrets.ACR_URL }}
+  #         username: ${{ secrets.ACR_USERNAME }}
+  #         password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: docker tag
-        run: |
-          prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-          docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
-          docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-          docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+  #     - name: docker tag
+  #       run: |
+  #         prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+  #         docker pull ${{ secrets.ACR_URL }}/sepes-web:latest
+  #         docker tag ${{ secrets.ACR_URL }}/sepes-web:latest ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+  #         docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
