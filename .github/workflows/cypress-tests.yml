@@ -28,10 +28,15 @@ jobs:
           echo "::set-output name=TOKEN::$TOKEN"
 
       # - run: npm install
-      - run: npm ci
-      - name: run step if multiline not null
-        if: ${{ steps.id-token.outputs.TOKEN }}
-        run: echo multiline not null
+      # - run: npm ci
+
+      - name: npm install, build, and test
+        run: |
+          npm ci
+          npm start & npx wait-on http://localhost:3000
+        env:
+          CI: true
+
 
 
       # - name: Run cypress
@@ -47,7 +52,7 @@ jobs:
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
       - name: Run documentation cypress tests
-        if: ${{ github.event_name != 'pull_request' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
