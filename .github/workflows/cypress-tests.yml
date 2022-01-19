@@ -27,26 +27,31 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
-      - run: npm install
+      # - run: npm install
 
-      - name: Run cypress
-        uses: cypress-io/github-action@v2
-        # env:
-          # DEBUG: 'cypress:*'
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          config-file: cypress.docs.json
-          spec: cypress/integration/documentationVideos/*
+      # - name: Run cypress
+      #   uses: cypress-io/github-action@v2
+      #   # env:
+      #     # DEBUG: 'cypress:*'
+      #   with:
+      #     start: npm start
+      #     wait-on: 'http://localhost:3000'
+      #     config-file: cypress.json
+      #     spec: cypress/integration/**/*.js
+      #     browser: chrome
+      #     env: cypressToken=${{ steps.id-token.outputs.TOKEN }},apiUrl=http://localhost:5002
 
       # - run: npm ci
 
-      # - name: npm install, build, and test
-      #   run: |
-      #     npm install
-      #     npm start & npx wait-on http://localhost:3000
-      #   env:
-      #     CI: true
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm start & npx wait-on http://localhost:3000
+        env:
+          REACT_APP_SEPES_CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          REACT_APP_SEPES_AUTHORITY: ${{ secrets.REACT_APP_SEPES_AUTHORITY }}
+          REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
+          REACT_APP_SEPES_BASIC_SCOPE: ${{ secrets.REACT_APP_SEPES_BASIC_SCOPE }}
 
 
 
