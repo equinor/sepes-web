@@ -265,38 +265,3 @@ Cypress.Commands.add('clearViewport', () => {
     const header = window.parent.document.querySelector('.runner.container header');
     header.setAttribute('style', 'opacity: 0');
 });
-
-Cypress.Commands.add('mockOutStudyList', () => {
-    cy.intercept('/api/studies', { times: 1 }, { fixture: 'study/emptyStudyList.json' });
-});
-Cypress.Commands.add('mockOutStudy', () => {
-    cy.intercept('/api/studies/', { fixture: 'documentationVideos/documentationStudy.json' });
-    cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'documentationVideos/documentationStudy.json' });
-});
-
-Cypress.Commands.add('mockOutDeleteStudy', () => {
-    cy.intercept('/api/studies/*/close', { fixture: 'documentationVideos/emptyResponse.json' });
-});
-Cypress.Commands.add('mockOutResultsAndLearnings', () => {
-    cy.intercept('/api/studies/*/resultsandlearnings', { fixture: 'study/emptyResultsAndLearnings.json' });
-});
-Cypress.Commands.add('mockOutPermissions', () => {
-    cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
-});
-
-// Data set mocks
-
-Cypress.Commands.add('mockOutDataSet', () => {
-    cy.intercept('/api/studies/*/datasets/*', { fixture: 'documentationVideos/documentationDataset.json' });
-});
-Cypress.Commands.add('mockOutDataSetDelete', () => {
-    cy.intercept('/api/studies/datasets/studyspecific/*', {
-        fixture: 'documentationVideos/emptyResponse.json'
-    });
-});
-
-Cypress.Commands.add('mockOutDataSetRegions', () => {
-    cy.intercept('/api/regions', {
-        fixture: 'documentationVideos/datasetRegions.json'
-    });
-});

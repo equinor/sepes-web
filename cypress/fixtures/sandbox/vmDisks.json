@@ -1,0 +1,16 @@
+[
+    { "key": "standardssd-e1-lrs", "displayValue": "4 GB" },
+    { "key": "standardssd-e2-lrs", "displayValue": "8 GB" },
+    { "key": "standardssd-e3-lrs", "displayValue": "16 GB" },
+    { "key": "standardssd-e4-lrs", "displayValue": "32 GB" },
+    { "key": "standardssd-e6-lrs", "displayValue": "64 GB" },
+    { "key": "standardssd-e10-lrs", "displayValue": "128 GB" },
+    { "key": "standardssd-e15-lrs", "displayValue": "256 GB" },
+    { "key": "standardssd-e20-lrs", "displayValue": "512 GB" },
+    { "key": "standardssd-e30-lrs", "displayValue": "1024 GB" },
+    { "key": "standardssd-e40-lrs", "displayValue": "2048 GB" },
+    { "key": "standardssd-e50-lrs", "displayValue": "4096 GB" },
+    { "key": "standardssd-e60-lrs", "displayValue": "8192 GB" },
+    { "key": "standardssd-e70-lrs", "displayValue": "16384 GB" },
+    { "key": "standardssd-e80-lrs", "displayValue": "32767 GB" }
+]

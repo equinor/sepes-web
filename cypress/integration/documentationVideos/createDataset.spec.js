@@ -4,15 +4,11 @@ describe('Create data set', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
-        cy.mockOutStudyList();
-        cy.mockOutStudy();
-        cy.mockOutDeleteStudy();
-        cy.mockOutResultsAndLearnings();
-        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
+        cy.mockOutAllCallsForCreateDatasetDocsTest();
         cy.login();
     });
 
@@ -59,8 +55,9 @@ describe('Create data set', () => {
 
     it('Create dataset', { keystrokeDelay: 100 }, () => {
         // cy.createDataset();
-        cy.mockOutDataSetRegions();
+        cy.mockOutRegions();
         cy.mockOutDataSet();
+        cy.mockOutDatasetResources();
         cy.text('Step 4 - Fill out the fields to create the data set', {
             duration: 3000,
             blocking: false,

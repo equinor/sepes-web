@@ -4,12 +4,12 @@ describe('Create sandbox and virtual machine', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
-        cy.mockOutStudyList();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
+        cy.mockOutAllCallsForCreateSandboxAndVirtualmachineDocsTest();
     });
 
     it('Create initial study', () => {
@@ -38,9 +38,10 @@ describe('Create sandbox and virtual machine', () => {
         cy.switchToSandboxesTab();
     });
 
-    const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
+    const sandboxName = 'Docs sandbox 99';
 
     it('clicks create sandbox', () => {
+        cy.mockOutSandbox();
         cy.text('Step 3 - Click on the create sandbox button', {
             duration: 3000,
             blocking: false,
@@ -153,7 +154,6 @@ describe('Create sandbox and virtual machine', () => {
             pointAt: 'bottomRight'
         });
         cy.get('[data-cy=create_vm]').click();
-        cy.waitForVirtualMachineToBeCreated();
         cy.text('You are now on your newly created virtual machine!', {
             duration: 5000,
             blocking: true,

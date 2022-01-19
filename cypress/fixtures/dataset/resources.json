@@ -1,0 +1,9 @@
+[
+    {
+        "name": "docs999",
+        "type": "Storage Account",
+        "status": "Creating",
+        "linkToExternalSystem": null,
+        "retryLink": null
+    }
+]

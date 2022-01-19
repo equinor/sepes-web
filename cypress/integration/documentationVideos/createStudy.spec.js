@@ -4,15 +4,11 @@ describe('Create study', () => {
     before(() => {
         cy.login();
         cy.clearViewport();
-        cy.mockOutStudyList();
-        cy.mockOutStudy();
-        cy.mockOutDeleteStudy();
-        cy.mockOutResultsAndLearnings();
-        cy.mockOutPermissions();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
+        cy.commonStudyMocks();
         cy.login();
     });
 
