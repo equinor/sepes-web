@@ -16,15 +16,15 @@ import { store } from 'store';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
-    admin: false,
-    canRead_PreApproved_Datasets: false,
-    canEdit_PreApproved_Datasets: false,
-    canCreateStudy: false,
-    datasetAdmin: false,
-    sponsor: false,
-    fullName: '',
-    emailAddress: '',
-    userName: ''
+    admin: true,
+    canRead_PreApproved_Datasets: true,
+    canEdit_PreApproved_Datasets: true,
+    canCreateStudy: true,
+    datasetAdmin: true,
+    sponsor: true,
+    fullName: 'test',
+    emailAddress: 'test',
+    userName: 'test'
 });
 
 const renderApp = async (user) => {
