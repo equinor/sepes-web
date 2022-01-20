@@ -188,6 +188,7 @@ const StepBar: React.FC<StepBarProps> = ({
                 setDeleteSandboxInProgress(false);
             }
             history.push('/studies/' + studyId);
+            dispatch(setSandboxInStore({}));
         });
     };
 
