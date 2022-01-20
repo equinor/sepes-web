@@ -2,7 +2,6 @@
 describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
-        // cy.login();
         cy.clearViewport();
     });
 
