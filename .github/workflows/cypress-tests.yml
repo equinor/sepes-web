@@ -238,8 +238,6 @@ jobs:
         env:
           PRTAG: ${{ env.prImageTag }}
         run: |
-          echo $PRTAG
-          echo ${{ env.prImageTag }}
           docker tag ${{ env.ciTag }} $PRTAG
           docker push $PRTAG
 
@@ -254,7 +252,7 @@ jobs:
           CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
           CLIENTSECRET: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
           PRNUMBER: ${{ steps.set-variables.outputs.prNumber }}
-          PRTAG: ${{ steps.set-variables.outputs.prImageTag }}
+          PRTAG: ${{ env.prImageTag }}
           ACR_URL: ${{ secrets.ACR_URL }}
           ACRUSERNAME: ${{ secrets.ACR_USERNAME }}
           ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
