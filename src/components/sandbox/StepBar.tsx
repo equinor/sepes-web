@@ -9,7 +9,6 @@ import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { EquinorIcon } from '../common/StyledComponents';
 import { deleteSandbox, getResourcesList, makeAvailable } from '../../services/Api';
-import { SandboxObj } from '../common/interfaces';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import {
@@ -18,8 +17,10 @@ import {
 } from 'components/common/helpers/sandboxHelpers';
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setResourcesInStore } from 'store/resources/resourcesSlice';
+import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
+import { setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
 
 const set = require('lodash/set');
 
@@ -56,10 +57,6 @@ type StepBarProps = {
     step: number;
     studyId: string;
     sandboxId: string;
-    sandbox: SandboxObj;
-    setSandbox: any;
-    updateCache: any;
-    setUpdateCache: any;
     setLoading: any;
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
@@ -69,6 +66,8 @@ type StepBarProps = {
     setMakeAvailableInProgress: any;
     makeAvailableInProgress: boolean;
     setHasChanged: any;
+    updateCache: any;
+    setUpdateCache: any;
 };
 
 const getSteps = () => {
@@ -92,10 +91,6 @@ const StepBar: React.FC<StepBarProps> = ({
     setStep,
     studyId,
     sandboxId,
-    sandbox,
-    setSandbox,
-    updateCache,
-    setUpdateCache,
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
@@ -104,7 +99,9 @@ const StepBar: React.FC<StepBarProps> = ({
     vmsWithOpenInternet,
     setMakeAvailableInProgress,
     makeAvailableInProgress,
-    setHasChanged
+    setHasChanged,
+    updateCache,
+    setUpdateCache
 }) => {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -114,6 +111,7 @@ const StepBar: React.FC<StepBarProps> = ({
     const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const sandbox = useSelector(getSandboxFromStore());
 
     useEffect(() => {
         let timer: any;
@@ -139,7 +137,6 @@ const StepBar: React.FC<StepBarProps> = ({
         getResourcesList(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.message)) {
                 resourcesFailed = true;
-
                 console.log('Err');
             } else {
                 dispatch(setResourcesInStore(result));
@@ -150,7 +147,8 @@ const StepBar: React.FC<StepBarProps> = ({
                     setAllResourcesOk,
                     sandbox,
                     setNewCostanalysisLink,
-                    setSandbox
+                    dispatch,
+                    setSandboxInStore
                 );
             }
         });
@@ -204,8 +202,13 @@ const StepBar: React.FC<StepBarProps> = ({
             if (result.message || result.errors) {
                 setNewPhase(0);
             } else {
-                setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
-                setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
+                dispatch(
+                    setSandboxInStore({
+                        ...sandbox,
+                        datasets: result.datasets,
+                        permissions: result.permissions
+                    })
+                );
                 setNewPhase(1);
             }
         });
