@@ -208,10 +208,9 @@ jobs:
       - name: set-variables
         run: |
           prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-          echo ${{ secrets.ACR_URL }}/sepes-web:$prNumber
           echo "prImageTag=${{ secrets.ACR_URL }}/sepes-web:$prNumber" >> $GITHUB_ENV
-
-          echo "::set-output name=prNumber::$prNumber"
+          echo "prNumber=$prNumber" >> $GITHUB_ENV
+          # echo "::set-output name=prNumber::$prNumber"
           # echo "::set-output name=prImageTag::${{ secrets.ACR_URL }}/sepes-web:$prNumber"
 
       # Download dockerfile from previous build stage to tag and push image to ACR for PR environment
@@ -251,7 +250,7 @@ jobs:
         env:
           CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
           CLIENTSECRET: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-          PRNUMBER: ${{ steps.set-variables.outputs.prNumber }}
+          PRNUMBER: ${{ env.prNumber }}
           PRTAG: ${{ env.prImageTag }}
           ACR_URL: ${{ secrets.ACR_URL }}
           ACRUSERNAME: ${{ secrets.ACR_USERNAME }}
