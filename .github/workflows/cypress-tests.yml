@@ -27,12 +27,12 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
+      - run: npm ci
+
       # Only used for documentation videos 
       - name: npm install, build, and test
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          npm ci
-          npm start & npx wait-on http://localhost:3000
+        # if: ${{ github.event_name != 'pull_request' }}
+        run: npm start & npx wait-on http://localhost:3000
         env:
           REACT_APP_SEPES_CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
           REACT_APP_SEPES_AUTHORITY: ${{ secrets.REACT_APP_SEPES_AUTHORITY }}
@@ -41,7 +41,7 @@ jobs:
           REACT_APP_SEPES_API_URL: "http://localhost:44371/"
 
       - name: Run documentation cypress tests
-        if: ${{ github.event_name != 'pull_request' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" 
@@ -64,7 +64,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
 
       - name: Save documentation video
-        if: ${{ github.event_name != 'pull_request' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v1
         with:
           name: documentation-videos
