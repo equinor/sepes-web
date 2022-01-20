@@ -21,6 +21,9 @@ import {
     returnOpenClosedOutboundRule
 } from 'components/common/helpers/sandboxHelpers';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import getResourcesFromStore from 'store/resources/resourcesSelectors';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -42,8 +45,6 @@ type VmDetailsProps = {
     vms: any;
     setActiveTab: any;
     index: number;
-    resources: any;
-    getResources: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
@@ -83,11 +84,9 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     vms,
     setActiveTab,
     index,
-    resources,
     permissions,
     setUpdateCache,
     updateCache,
-    getResources,
     setVmSaved,
     setHasChangedGlobal,
     hasChangedVmRules,
@@ -97,6 +96,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
+    const dispatch = useDispatch();
+    const resources = useSelector(getResourcesFromStore());
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -260,7 +261,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
                 setVms(tempsVms);
-                getResources();
+                dispatch(setCallResources(true));
                 setVmSaved(true);
             } else {
                 console.log('Err');
@@ -349,7 +350,6 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}
                     updateCache={updateCache}
-                    getResources={getResources}
                 />
                 <div>
                     <Table style={{ width: '100%' }}>

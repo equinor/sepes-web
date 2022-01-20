@@ -16,4 +16,8 @@ const TextTruncate: React.FC<TextTruncateProps> = ({ inputText, truncateLength =
     );
 };
 
+TextTruncate.defaultProps = {
+    truncateLength: defaultLength
+};
+
 export default TextTruncate;

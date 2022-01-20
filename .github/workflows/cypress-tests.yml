@@ -18,26 +18,24 @@ env:
 
 jobs:
   build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Docker build 
-      uses: docker/build-push-action@v2
+    - uses: azure/docker-login@v1
       with:
-        context: .
-        tags: ${{ env.ciTag }}
-        outputs: type=docker,dest=/tmp/${{ env.dockerCacheFilename }}.tar
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ env.dockerCacheFilename }}
-        path: /tmp/${{ env.dockerCacheFilename }}.tar
-
+        login-server: ${{ secrets.ACR_URL }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - name: docker build
+      run: |
+        prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+        docker build -f ci.Dockerfile -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
+        docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
   ci:
     runs-on: ubuntu-latest
     needs: build
@@ -80,8 +78,8 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
-      - run: npm install
-
+      # - run: npm install
+      - run: npm ci
       - name: run step if multiline not null
         if: ${{ steps.id-token.outputs.TOKEN }}
         run: echo multiline not null
@@ -99,6 +97,43 @@ jobs:
       #     browser: chrome
       #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
+      - name: Run documentation cypress tests
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run CYPRESS_NO_COMMAND_LOG=1 --config-file "cypress.docs.json" --spec "cypress/integration/documentationVideos/*" --env cyAccessToken=${{env.token}}
+      
+      # Sets up ffmpeg that is used for cutting off the first couple of seconds from the documentation video made from cypress
+      - uses: FedericoCarboni/setup-ffmpeg@v1
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: setup-ffmpeg
+      
+      # Cut the firste couple of seconds of the documentation video
+      - run: ffmpeg -i cypress/videos/documentationVideos/createStudy.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createStudy-cut.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
+
+      - run: ffmpeg -i cypress/videos/documentationVideos/createDataset.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createDataset-cut.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
+
+      - run: ffmpeg -i cypress/videos/documentationVideos/createSandboxAndVirtualMachine.spec.js.mp4 -ss 3 -vcodec copy -acodec copy cypress/videos/documentationVideos/createSandboxAndVirtualMachine-cut.spec.spec.js.mp4
+        if: ${{ github.event_name != 'pull_request' }}
+
+      - name: Save documentation video
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: documentation-videos
+          path: cypress/videos/documentationVideos
+
+      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
+        if: ${{ github.event_name != 'pull_request' }}
+        name: Azure Blob Upload with Destination folder defined
+        with:
+          connection_string: ${{ secrets.VIDEO_DOC_BLOB_KEY }}
+          container_name: videos
+          source_folder: cypress/videos/documentationVideos
 
       - name: Run quick running cypress tests
         env:
@@ -136,176 +171,96 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
+      # Temporary comment out until we have fix for getting cypress coverage
+      # - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
 
-      - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Cypress-Coverage-report
+      #     path: coverage/lcov-report/
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Cypress-Coverage-report
-          path: coverage/lcov-report/
+      # - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
+      #   if: ${{ github.event_name == 'pull_request' }}
 
-      - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
-        if: ${{ github.event_name == 'pull_request' }}
+      # - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
+      #   if: ${{ github.event_name == 'pull_request' }}
 
-      - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
-        if: ${{ github.event_name == 'pull_request' }}
+      # - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
+      #   if: ${{ github.event_name == 'pull_request' }}
 
-      - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
-        if: ${{ github.event_name == 'pull_request' }}
+      # - name: comment PR
+      #   uses: machine-learning-apps/pr-comment@master
+      #   if: ${{ github.event_name == 'pull_request' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     path: cypress_test_summary3.txt
 
-      - name: comment PR
-        uses: machine-learning-apps/pr-comment@master
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          path: cypress_test_summary3.txt
+      # - run: npx nyc report --reporter json  --report-dir coverage
 
-      - run: npx nyc report --reporter json  --report-dir coverage
-
-      - name: Create jest coverage report
-        run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-        continue-on-error: true
-
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Jest-Coverage-report
-          path: jest-coverage/lcov-report/
-
-      - name: copy file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "./jest-coverage/coverage-final.json"
-          target: "./coverage/coverage-final-jest.json"
+      # - name: Create jest coverage report
+      #   run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
+      #   continue-on-error: true
 
 
-      - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage > totalCoverage.txt
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Jest-Coverage-report
+      #     path: jest-coverage/lcov-report/
+
+      # - name: copy file
+      #   uses: canastro/copy-file-action@master
+      #   with:
+      #     source: "./jest-coverage/coverage-final.json"
+      #     target: "./coverage/coverage-final-jest.json"
 
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Total coverage report5
-          path: totalCoverage.txt
+      # - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage > totalCoverage.txt
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Total coverage report
-          path: totalCoverage
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Total coverage report
+      #     path: totalCoverage
 
-      - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
+      # - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
 
-      - run: awk '{print $3}' totalCoverage2.txt
+      # - run: awk '{print $3}' totalCoverage2.txt
 
-      - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
-        id: coveragePercentage
+      # - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
+      #   id: coveragePercentage
 
-      - uses: gliech/create-github-secret-action@v1
-        if: github.ref == 'refs/heads/develop'
-        with:
-          name: coverage_percentage
-          value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          pa_token: ${{ secrets.PA_TOKEN }}
+      # # - uses: gliech/create-github-secret-action@v1.4.9
+      # #   # if: github.ref == 'refs/heads/develop'
+      # #   with:
+      # #     name: coverage_percentage
+      # #     value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+      # #     pa_token: ${{ secrets.PA_TOKEN }}
 
-      - name: Create Awesome Badge
-        uses: schneegans/dynamic-badges-action@v1.1.0
-        if: github.ref == 'refs/heads/develop'
-        with:
-          auth: ${{ secrets.GIST_SECRET }}
-          gistID: 66a47f0b2d120954c140e9d2b61c3d7b
-          filename: test.json
-          label: Coverage
-          message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          color: orangee
 
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script
-        env:
-          COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-          COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
-        with:
-          script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
+      # - name: Create Awesome Badge
+      #   uses: schneegans/dynamic-badges-action@v1.1.0
+      #   if: github.ref == 'refs/heads/develop'
+      #   with:
+      #     auth: ${{ secrets.GIST_SECRET }}
+      #     gistID: 66a47f0b2d120954c140e9d2b61c3d7b
+      #     filename: test.json
+      #     label: Coverage
+      #     message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+      #     color: orangee
 
-      - name: comment coverage PR
-        uses: unsplash/comment-on-pr@master
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: ${{ steps.my-script.outputs.result }}
-          check_for_duplicate_msg: true 
-  
-  pr:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      # # - uses: Amadevus/pwsh-script@v2
+      # #   id: my-script
+      # #   env:
+      # #     COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
+      # #     COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
+      # #   with:
+      # #     script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
 
-      # Download dockerfile from previous build stage to tag and push image to ACR for production environment
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.dockerCacheFilename }}
-          path: /tmp
-
-      - name: Azure ACR Login
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URL }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      # Loads the image from Download artifact step
-      - name: Load image
-        run: |
-          docker load --input /tmp/${{ env.dockerCacheFilename }}.tar
-
-      - name: docker tag
-        run: |
-          prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-          docker tag "${{ env.ciTag }}" ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-          docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-
-      # # Push PR image to ACR
-      # - name: Push image
-      #   run: |
-      #     prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-      #     docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-  
-  prod:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # Download dockerfile from previous build stage to tag and push image to ACR for production environment
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.dockerCacheFilename }}
-          path: /tmp
-
-      - name: Azure ACR Login
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URL }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      # Loads the image from Download artifact step
-      - name: Load image
-        run: |
-          docker load --input /tmp/${{ env.dockerCacheFilename }}.tar
-
-      - name: Retag image
-        run: |
-          docker tag "${{ env.ciTag }}" "${{ env.prodTag }}"
-
-      # Push CI image to ACR
-      - name: Push image
-        run: |
-          docker push ${{ env.prodTag }}
+      # # - name: comment coverage PR
+      # #   uses: unsplash/comment-on-pr@master
+      # #   if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
+      # #   env:
+      # #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # #   with:
+      # #     msg: ${{ steps.my-script.outputs.result }}
+      # #     check_for_duplicate_msg: true 

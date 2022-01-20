@@ -10,7 +10,9 @@ import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
-import LoadingFull from 'components/common/LoadingComponentFullscreen';
+import LoadingFull from 'components/common/LoadingFullscreen';
+import { Provider } from 'react-redux';
+import { store } from 'store';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
@@ -34,11 +36,13 @@ const renderApp = async (user) => {
         if (result && result.admin !== undefined) {
             return ReactDOM.render(
                 <React.StrictMode>
-                    <UserConfig.Provider value={user}>
-                        <Permissions.Provider value={result}>
-                            <App />
-                        </Permissions.Provider>
-                    </UserConfig.Provider>
+                    <Provider store={store}>
+                        <UserConfig.Provider value={user}>
+                            <Permissions.Provider value={result}>
+                                <App />
+                            </Permissions.Provider>
+                        </UserConfig.Provider>
+                    </Provider>
                 </React.StrictMode>,
                 document.getElementById('root')
             );

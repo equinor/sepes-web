@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Tooltip, Icon } from '@equinor/eds-core-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { close } from '@equinor/eds-icons';
-import { useHistory } from 'react-router-dom';
-import { unlinkStudyDataset } from '../../services/Api';
+import { Link, useHistory } from 'react-router-dom';
+import { addStudyDataset, unlinkStudyDataset } from '../../services/Api';
 import { StudyObj } from '../common/interfaces';
 //import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
 //import { Permissions } from '../../index';
 //import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getDatasetsInStudyUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
-import { getStudyId } from 'utils/CommonUtil';
-
-const icons = {
-    close
-};
-Icon.add(icons);
+import { getDatasetsInStudyUrl, getDatasetsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getStudyId } from '../../utils/CommonUtil';
+import StandardDatasetFeatureToggle from '../common/constants/StudyFeatureToggle';
+import { Permissions } from 'index';
+import useFetchUrl from 'components/common/hooks/useFetchUrl';
+import SearchWithDropdown from 'components/common/customComponents/SearchWithDropdown';
 
 const Wrapper = styled.div`
     display: grid;
@@ -31,23 +29,23 @@ const TableWrapper = styled.div`
         margin-top: 64px;
     }
 `;
-/*
-const Bar = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 0.3fr 296px;
-    margin-left: auto;
-    margin-top: 32px;
-    @media (max-width: 768px) {
-        margin-left: 0;
-        grid-template-columns: 1fr 0.3fr 1fr;
-    }
-    @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 0.3fr 1fr;
-        grid-gap: 8px;
-    }
-`;
-*/
+// This is needed for standard data set functionality
+// TODO: Bring it back when data set functioanlity is needed again
+// const Bar = styled.div`
+//     display: grid;
+//     grid-template-columns: 1fr 0.3fr 296px;
+//     margin-left: auto;
+//     margin-top: 32px;
+//     @media (max-width: 768px) {
+//         margin-left: 0;
+//         grid-template-columns: 1fr 0.3fr 1fr;
+//     }
+//     @media (max-width: 500px) {
+//         grid-template-columns: 1fr;
+//         grid-template-rows: 1fr 0.3fr 1fr;
+//         grid-gap: 8px;
+//     }
+// `;
 
 type DatasetComponentProps = {
     study: StudyObj;
@@ -56,6 +54,7 @@ type DatasetComponentProps = {
     updateCache: any;
     wbsIsValid: boolean | undefined;
     studySaveInProgress: boolean;
+    onFallAddressBackChange: any;
 };
 
 const DataSetComponent: React.FC<DatasetComponentProps> = ({
@@ -64,13 +63,19 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     setUpdateCache,
     updateCache,
     wbsIsValid,
-    studySaveInProgress
+    studySaveInProgress,
+    onFallAddressBackChange
 }) => {
     const history = useHistory();
-    //const [datasetsList, setDatasetsList] = useState<any>([]);
-    //const [isOpen, setIsOpen] = useState<boolean>(false);
-    //const permissions = useContext(Permissions);
-    //const datasetsResponse = useFetchUrl(getDatasetsUrl(), setDatasetsList, permissions.canRead_PreApproved_Datasets);
+    const [datasetsList, setDatasetsList] = useState<any>([]);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const permissions = useContext(Permissions);
+    const datasetsResponse = useFetchUrl(
+        getDatasetsUrl(),
+        setDatasetsList,
+        permissions.canRead_PreApproved_Datasets && StandardDatasetFeatureToggle.AddDatasetToStudy
+    );
+
     const [canCreateDataset, setCanCreateDataset] = useState<any>(false);
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
@@ -100,25 +105,17 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
 
     const redirectToStudySpecificDataset = () => {
         const studyId = getStudyId();
+        const url = '/studies/' + studyId + '/datasets';
         history.push({
-            pathname: '/studies/' + studyId + '/datasets',
+            pathname: url,
             state: {
                 canCreateStudySpecificDataset: study.permissions.addRemoveDataset,
-                canEditStudySpecificDataset: study.permissions.addRemoveDataset
+                canEditStudySpecificDataset: study.permissions.addRemoveDataset,
+                datasets: study.datasets
             }
         });
     };
 
-    const returnTooltipText = () => {
-        if (study.permissions && !study.permissions.addRemoveDataset) {
-            return 'You do not have access to create a study specific data set';
-        }
-        if (!wbsIsValid) {
-            return 'WBS code for study is invalid. Can not create data set';
-        }
-        return '';
-    };
-    /*
     const addDatasetToStudy = (row: any) => {
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(study.id)]: true, [getDatasetsInStudyUrl(study.id)]: true });
         setIsOpen(false);
@@ -137,18 +134,28 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     };
     const checkIfDatasetIsAlreadyAdded = (id: string) => {
         let elementExist = false;
-        study.datasets &&
+        if (study.datasets) {
             study.datasets.forEach((element: any) => {
                 if (element.id === id) {
                     elementExist = true;
                 }
             });
+        }
         return elementExist;
     };
-*/
+
+    const returnTooltipText = () => {
+        if (study.permissions && !study.permissions.addRemoveDataset) {
+            return 'You do not have access to create a study specific data set';
+        }
+        if (!wbsIsValid) {
+            return 'WBS code for study is invalid. Can not create data set';
+        }
+        return '';
+    };
+
     return (
         <Wrapper>
-            {/*<Bar>*/}
             <div style={{ marginLeft: 'auto', marginTop: '32px', marginBottom: '8px' }}>
                 <Tooltip title={canCreateDataset && wbsIsValid ? '' : returnTooltipText()} placement="left">
                     <Button
@@ -164,23 +171,28 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                     </Button>
                 </Tooltip>
             </div>
-            {/*
-                <span style={{ textAlign: 'center' }}>or</span>
-                <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-                    <SearchWithDropdown
-                        handleOnClick={addDatasetToStudy}
-                        arrayList={datasetsList}
-                        isOpen={isOpen}
-                        filter={checkIfDatasetIsAlreadyAdded}
-                        label="Add data set from catalogue"
-                        disabled={study.permissions && !study.permissions.addRemoveDataset}
-                    />
-                </div>
-            </Bar>
-            <Link to="/datasets" style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}>
-                Advanced search
-            </Link>
-            */}
+            {StandardDatasetFeatureToggle.AddDatasetToStudy && (
+                <>
+                    <span style={{ textAlign: 'center' }}>or</span>
+                    <div onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+                        <SearchWithDropdown
+                            handleOnClick={addDatasetToStudy}
+                            arrayList={datasetsList}
+                            isOpen={isOpen}
+                            filter={checkIfDatasetIsAlreadyAdded}
+                            label="Add data set from catalogue"
+                            disabled={study.permissions && !study.permissions.addRemoveDataset}
+                        />
+                    </div>
+
+                    <Link
+                        to="/datasets"
+                        style={{ color: '#007079', float: 'right', marginLeft: 'auto', marginTop: '32px' }}
+                    >
+                        Advanced search
+                    </Link>
+                </>
+            )}
             <TableWrapper style={{ marginTop: '44px' }}>
                 <DatasetsTable
                     datasets={study.datasets}
@@ -188,6 +200,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                     editMode
                     studyId={study.id}
                     disabled={study.permissions && study.permissions.addRemoveDataset}
+                    onFallAddressBackChange={onFallAddressBackChange}
                 />
             </TableWrapper>
         </Wrapper>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Tooltip } from '@equinor/eds-core-react';
 import SandboxTable from './Tables/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
-import CreateSandboxComponent from './CreateSandboxComponent';
+import CreateSandboxComponent from './CreateSandbox';
 import styled from 'styled-components';
 import { StudyObj } from '../common/interfaces';
 
@@ -28,9 +28,10 @@ type SandboxComponentProps = {
     study: StudyObj;
     setLoading: any;
     wbsIsValid: boolean | undefined;
+    onFallAddressBackChange: any;
 };
 
-const SandboxComponent: React.FC<SandboxComponentProps> = ({
+const Sandbox: React.FC<SandboxComponentProps> = ({
     setStudy,
     setHasChanged,
     setUpdateCache,
@@ -38,7 +39,8 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
     disabled,
     study,
     setLoading,
-    wbsIsValid
+    wbsIsValid,
+    onFallAddressBackChange
 }) => {
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -90,10 +92,10 @@ const SandboxComponent: React.FC<SandboxComponentProps> = ({
                 )}
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
-                <SandboxTable sandboxes={study.sandboxes} />
+                <SandboxTable sandboxes={study.sandboxes} onFallAddressBackChange={onFallAddressBackChange} />
             </div>
         </Wrapper>
     );
 };
 
-export default SandboxComponent;
+export default Sandbox;

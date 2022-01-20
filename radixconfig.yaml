@@ -3,6 +3,12 @@ kind: RadixApplication
 metadata:
   name: sepes-web
 spec:
+  build:
+    secrets:
+      - SEPES_AUTHORITY
+      - SEPES_BASIC_SCOPE
+      - SEPES_CLIENTID
+      - INSTRUMENTATION_KEY
   environments:
     - name: prod
       build:
@@ -20,6 +26,7 @@ spec:
       publicPort: http
       environmentConfig:
         - environment: prod
+          runAsNonRoot: true
           variables: 
             REACT_APP_SEPES_REDIRECT_URI: "https://sepes.equinor.com/"
             REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-prod.radix.equinor.com/"
@@ -36,6 +43,7 @@ spec:
               memory: "1024Mi"
               cpu: "400m"
         - environment: dev
+          runAsNonRoot: true
           variables: 
             REACT_APP_SEPES_REDIRECT_URI: "https://frontend-sepes-web-dev.radix.equinor.com/"
             REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-dev.radix.equinor.com/"
@@ -44,10 +52,10 @@ spec:
             REACT_APP_SEPES_BASIC_SCOPE: "User.Impersonation"
           resources:
             requests:
-              memory: "256Mi"
+              memory: "4096Mi"
               cpu: "200m"
             limits:
-              memory: "1024Mi"
+              memory: "4096Mi"
               cpu: "400m"
   dnsExternalAlias:
     - alias: sepes.equinor.com

@@ -4,19 +4,10 @@ import styled from 'styled-components';
 import { Button, TextField, Icon, Tooltip, Menu, Typography, DotProgress } from '@equinor/eds-core-react';
 import CheckBox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {
-    dollar,
-    visibility,
-    visibility_off,
-    business,
-    settings,
-    info_circle,
-    warning_filled
-} from '@equinor/eds-icons';
 import { StudyObj } from '../common/interfaces';
 import { createStudy, updateStudy, closeStudy, validateWbsCode } from '../../services/Api';
 import AddImageAndCompressionContainer from '../common/upload/ImageDropzone';
-import CustomLogoComponent from '../common/customComponents/CustomLogoComponent';
+import CustomLogoComponent from '../common/customComponents/CustomLogo';
 import {
     checkIfRequiredFieldsAreNull,
     returnAllowedLengthOfString,
@@ -26,6 +17,7 @@ import {
     truncate
 } from '../common/helpers/helpers';
 import {
+    checkIfStudyHasActiveResources,
     returnTooltipTextDeleteStudy,
     returnTooltipTextSaveStudy,
     returnWbsVariant,
@@ -33,22 +25,12 @@ import {
 } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
-import Loading from '../common/LoadingComponent';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import Loading from '../common/Loading';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';
-
-const icons = {
-    dollar,
-    visibility,
-    visibility_off,
-    business,
-    settings,
-    info_circle,
-    warning_filled
-};
-Icon.add(icons);
+import { StudyTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -228,6 +210,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             wbsController.abort();
             wbsController = new AbortController();
         }
+        // Set validateWbsInProgress to true immediately to prevent quicky adding a invalid wbs
+        if (hasChanged && !newStudy && checkIfStudyHasActiveResources(study)) {
+            setValidateWbsInProgress(true);
+        }
 
         const timeoutId = setTimeout(() => {
             if (hasChanged) {
@@ -367,7 +353,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         });
     };
 
-    useKeyEvents(handleCancel, handleSave, editMode && !userClickedDelete);
+    useKeyEvents(handleCancel, undefined, editMode && !userClickedDelete);
 
     return (
         <div
@@ -434,10 +420,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                     }
                                     helperIcon={<Icon name="warning_filled" title="Warning" />}
                                     inputIcon={
-                                        <Tooltip
-                                            title="The value must be between 3 and 128 characters long (A-Z)"
-                                            placement="right"
-                                        >
+                                        <Tooltip title={StudyTextFieldsTooltip.Name} placement="right">
                                             <Icon name="info_circle" />
                                         </Tooltip>
                                     }

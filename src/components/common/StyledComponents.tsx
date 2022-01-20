@@ -6,6 +6,8 @@ import {
     cloud_upload,
     delete_forever,
     arrow_drop_down,
+    arrow_drop_up,
+    arrow_back,
     clear,
     mood_very_happy,
     warning_outlined,
@@ -16,13 +18,32 @@ import {
     error_outlined,
     more_vertical,
     refresh,
-    hourglass_empty
+    hourglass_empty,
+    folder,
+    file,
+    folder_open,
+    visibility,
+    visibility_off,
+    info_circle,
+    dollar,
+    business,
+    settings,
+    warning_filled,
+    close,
+    chevron_right,
+    account_circle,
+    report_bug,
+    exit_to_app,
+    copy,
+    checkbox
 } from '@equinor/eds-icons';
 
 const icons = {
     cloud_upload,
     delete_forever,
     arrow_drop_down,
+    arrow_drop_up,
+    arrow_back,
     clear,
     mood_very_happy,
     warning_outlined,
@@ -33,7 +54,24 @@ const icons = {
     error_outlined,
     more_vertical,
     refresh,
-    hourglass_empty
+    hourglass_empty,
+    folder,
+    file,
+    folder_open,
+    visibility,
+    visibility_off,
+    info_circle,
+    dollar,
+    business,
+    settings,
+    warning_filled,
+    close,
+    chevron_right,
+    account_circle,
+    report_bug,
+    exit_to_app,
+    copy,
+    checkbox
 };
 Icon.add(icons);
 

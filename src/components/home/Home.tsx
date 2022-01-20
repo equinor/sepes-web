@@ -3,7 +3,7 @@ import { getStudiesUrl } from '../../services/ApiCallStrings';
 import Studies from './Studies';
 import { Button, Tooltip, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import LoadingFull from '../common/LoadingFullscreen';
 import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
@@ -26,7 +26,6 @@ const RightWrapper = styled.div`
     padding: 16px;
     border-radius: 4px;
     margin-right: 32px;
-    max-height: 451px;
     text-align: center;
     position: fixed;
     @media (max-width: 768px) {

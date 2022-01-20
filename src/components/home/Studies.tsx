@@ -1,5 +1,5 @@
 import React from 'react';
-import StudyComponent from './StudyComponent';
+import StudyComponent from './Study';
 import { StudyObj } from '../common/interfaces';
 
 type StudiesProps = {

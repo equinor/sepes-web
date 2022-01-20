@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import SandboxTable from '../../../components/studyDetails/Tables/SandboxTable';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+const mockFunc = (id: string) => {};
 const sandboxList = [
     {
         name: 'test1',
@@ -17,7 +18,7 @@ const sandboxList = [
 test('renders Sandbox table component', () => {
     const { getByText } = render(
         <Router>
-            <SandboxTable sandboxes={sandboxList} />
+            <SandboxTable sandboxes={sandboxList}  onFallAddressBackChange={mockFunc} />
         </Router>
     );
     let linkElement = getByText('test1');

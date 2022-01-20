@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Icon, DotProgress, Tooltip } from '@equinor/eds-core-react';
-import { close } from '@equinor/eds-icons';
+import { Button, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
 import ParticipantTable from './Tables/ParticipantTable';
@@ -15,11 +14,7 @@ import { UserConfig } from '../../index';
 import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
-
-const icons = {
-    close
-};
-Icon.add(icons);
+import StudyTextSnippets from 'components/common/constants/StudyTextSnippets';
 
 const Wrapper = styled.div`
     display: grid;
@@ -48,13 +43,13 @@ type ParicipantComponentProps = {
     updateCache: any;
 };
 
-const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const Paricipant: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
     const studyId = getStudyId();
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
     const [roleNotSelected, setRoleNotSelected] = useState<boolean>(true);
     const [selectedParticipant, setSelectedParticipant] = useState<ParticipantObj | undefined>();
-    const [text, setText] = useState<string>('Type minimum three characters to search');
+    const [text, setText] = useState<string>(StudyTextSnippets.MinimumCharactersToSearch);
     const [role, setRole] = useState<string>('');
     const rolesResponse = useFetchUrl('studies/' + studyId + '/availableroles', setRoles);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
@@ -98,7 +93,7 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
                 delay: 500 // ms
             });
         } else {
-            callback([]);
+            callback([{ label: StudyTextSnippets.MinimumCharactersToSearch, isDisabled: true }]);
         }
     };
 
@@ -256,4 +251,4 @@ const ParicipantComponent: React.FC<ParicipantComponentProps> = ({ study, setStu
     );
 };
 
-export default ParicipantComponent;
+export default Paricipant;

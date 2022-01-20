@@ -78,11 +78,7 @@ export const returnTooltipTextSaveStudy = (
     studyOnChange: StudyObj,
     validateWbsInProgress
 ) => {
-    if (
-        wbsOnChangeIsValid === false &&
-        !newStudy &&
-        ((study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length))
-    ) {
+    if (wbsOnChangeIsValid === false && !newStudy && checkIfStudyHasActiveResources(study)) {
         return 'Can not change from valid to invalid WBS with active resources';
     }
     if (!validateUserInputStudy(studyOnChange, wbsOnChangeIsValid, validateWbsInProgress, newStudy)) {
@@ -91,15 +87,19 @@ export const returnTooltipTextSaveStudy = (
     return '';
 };
 
+export const checkIfStudyHasActiveResources = (study: StudyObj): boolean => {
+    return (study.sandboxes && study.sandboxes.length) || (study.datasets && study.datasets.length);
+};
+
 export const returnTooltipCreateSandbox = (
     wbsIsValid: boolean | undefined,
-    wbsCode: string,
+    study: StudyObj,
     sandbox: SandboxCreateObj
 ) => {
     if (!wbsIsValid) {
         return 'Need a valid WBS code for this study to create sandbox';
     }
-    if (!(validateUserInputSandbox(sandbox, wbsCode) && wbsIsValid)) {
+    if (!(validateUserInputSandbox(sandbox, study) && wbsIsValid)) {
         return 'Please fill out all required fields';
     }
     return '';

@@ -15,8 +15,8 @@ import {
     returnHelperText,
     returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
-import { checkForInputErrors } from '../common/helpers/datasetHelpers';
-import Promt from '../common/Promt';
+import { checkForInputErrors, checkIfDatasetNameAlreadyExists } from '../common/helpers/datasetHelpers';
+import Promt from '../common/Prompt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
@@ -97,6 +97,7 @@ interface passedProps {
     pathname: string;
     canCreateStudySpecificDataset: boolean;
     canEditStudySpecificDataset: boolean;
+    datasets: DatasetObj[];
 }
 
 type CreateEditDatasetProps = {
@@ -271,12 +272,22 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         );
     };
 
+    const returnHelperTextDatasetName = (): string => {
+        if (checkIfDatasetNameAlreadyExists(listOfVmsFromStudy, dataset?.name)) {
+            return 'There already exists a dataset with that name';
+        }
+        return returnHelperText(dataset?.name.length, 50, 'dataset');
+    };
+
     useKeyEvents(handleCancel, addDataset, true);
 
     const isStandardDatasetAndCantEdit = isStandardDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets;
     const canEditDataset =
         datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset;
     const canCreateStudySpecificDataset = location && location.state && location.state.canCreateStudySpecificDataset;
+    const listOfVmsFromStudy = location && location.state && location.state.datasets;
+
+    const vmNameAlreadyExist = checkIfDatasetNameAlreadyExists(listOfVmsFromStudy, dataset?.name);
 
     return isStandardDatasetAndCantEdit || canEditDataset || canCreateStudySpecificDataset ? (
         <>
@@ -297,8 +308,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
-                        variant={returnTextfieldTypeBasedOninput(dataset?.name)}
-                        helperText={dataset && dataset.name && returnHelperText(dataset.name.length, 50, 'dataset')}
+                        variant={returnTextfieldTypeBasedOninput(dataset?.name, true, undefined, vmNameAlreadyExist)}
+                        helperText={dataset && dataset.name && returnHelperTextDatasetName()}
                         helperIcon={<Icon name="warning_filled" title="Warning" />}
                         style={{ width, backgroundColor: '#FFFFFF' }}
                         onChange={(e: any) => handleChange('name', e.target.value)}
@@ -395,7 +406,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             placement="right"
                         >
                             <Button
-                                disabled={checkForInputErrors(dataset) || loading}
+                                disabled={checkForInputErrors(dataset) || loading || vmNameAlreadyExist}
                                 onClick={addDataset}
                                 data-cy="dataset_save"
                                 data-testid="dataset_save"

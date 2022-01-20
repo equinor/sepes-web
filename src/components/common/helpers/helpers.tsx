@@ -2,6 +2,7 @@
 import React from 'react';
 import truncateLength from '../staticValues/lenghts';
 
+/**Add html linebreaks if the string contains \n */
 export const lineBreak = (text) => {
     return text
         ? text.split('\n').map((item: string, number: number) => {
@@ -22,8 +23,13 @@ export const checkIfRequiredFieldsAreNull = (value: any, userPressedCreate?: boo
     return 'default';
 };
 
-export const returnTextfieldTypeBasedOninput = (value: any, dashAllowed = true, limit = 50) => {
-    if (!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) {
+export const returnTextfieldTypeBasedOninput = (
+    value: any,
+    dashAllowed = true,
+    limit = 50,
+    specialCaseError = false
+) => {
+    if ((!validateResourceName(value, dashAllowed) && value !== '' && value !== undefined) || specialCaseError) {
         return 'error';
     }
     if (value && value.length > limit) {
@@ -142,4 +148,21 @@ export const returnHelperText = (inputLength: number, limit: number, type: strin
         return '';
     }
     return `ProTip! Good ${type} names contain fewer than ${limit} characters.`;
+};
+
+export const removeAllSpecialCharachtersExceptDashes = (input: string) => {
+    return input.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+};
+
+export const returnObjectInArrayThatMatchValue = (array: any, columnToCheck, valueToFind): number => {
+    const arrayObject = array.find((x: any) => x[columnToCheck] === valueToFind);
+    return arrayObject;
+};
+
+export const returnIndexOfObjectArray = (array: any, columnToCheck, valueToFind): number => {
+    const arrayObject = returnObjectInArrayThatMatchValue(array, columnToCheck, valueToFind);
+    if (arrayObject) {
+        return array.indexOf(arrayObject);
+    }
+    return -1;
 };

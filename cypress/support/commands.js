@@ -47,7 +47,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.wait(2000);
     cy.get('[data-cy=create_study]').click({ force: true });
 
-    cy.waitForStudyToLoad();
+    // cy.waitForStudyToLoad();
 });
 
 Cypress.Commands.add('createStudyWithLogo', (studyName) => {
@@ -248,4 +248,20 @@ Cypress.Commands.add('restoreLocalStorageCache', () => {
     Object.keys(LOCAL_STORAGE_MEMORY).forEach((key) => {
         localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
     });
+});
+
+// Documentation commands
+
+Cypress.Commands.add('clearViewport', () => {
+    const runnerContainer = window.parent.document.getElementsByClassName('iframes-container')[0];
+    runnerContainer.setAttribute('style', 'left: 0; top: 0; width: 100%; height: 100%;');
+
+    const sizeContainer = window.parent.document.getElementsByClassName('size-container')[0];
+    sizeContainer.setAttribute('style', '');
+
+    const sidebar = window.parent.document.getElementsByClassName('reporter-wrap')[0];
+    sidebar.setAttribute('style', 'opacity: 0');
+
+    const header = window.parent.document.querySelector('.runner.container header');
+    header.setAttribute('style', 'opacity: 0');
 });

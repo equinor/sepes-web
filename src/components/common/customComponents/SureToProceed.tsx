@@ -31,7 +31,7 @@ const SureToProceed: React.FC<SureToProceedComponentProps> = ({ setUserClickedBu
     useClickOutside(wrapperRef, setUserClickedButton);
 
     return (
-        <Scrim>
+        <Scrim open>
             <Wrapper ref={wrapperRef}>
                 <Typography variant="h4">Are you sure you want to proceed with {type}?</Typography>
                 <div>

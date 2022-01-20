@@ -58,43 +58,47 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
     return (
         <div>
             <ReactPrompt when={hasChanged} message={handleBlockedNavigation} />
-            {visibleScrim && (
-                <Scrim onClose={() => setVisibleScrim(!visibleScrim)}>
-                    <Dialog style={{ width: '400px', height: '220px' }}>
-                        <Title>Unsaved changes</Title>
-                        <CustomContent scrollable={false}>
-                            Are you sure you want to leave this page? <br />
-                            {customText || 'All unsaved changes will be lost.'}
-                        </CustomContent>
-                        <span style={{ marginLeft: 'auto' }}>
-                            <Actions>
-                                <TempButtonWrapper>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => {
-                                            setVisibleScrim(false);
-                                        }}
-                                    >
-                                        Stay on page
-                                    </Button>
-                                    <Button
-                                        color="danger"
-                                        onClick={() => {
-                                            setVisibleScrim(false);
-                                            setConfirmedNavigation(true);
-                                        }}
-                                    >
-                                        Leave
-                                    </Button>
-                                    {/*<Button>Save as draft</Button>*/}
-                                </TempButtonWrapper>
-                            </Actions>
-                        </span>
-                    </Dialog>
-                </Scrim>
-            )}
+
+            <Scrim open={visibleScrim} onClose={() => setVisibleScrim(!visibleScrim)}>
+                <Dialog style={{ width: '400px', height: '220px' }}>
+                    <Title>Unsaved changes</Title>
+                    <CustomContent scrollable={false}>
+                        Are you sure you want to leave this page? <br />
+                        {customText || 'All unsaved changes will be lost.'}
+                    </CustomContent>
+                    <span style={{ marginLeft: 'auto' }}>
+                        <Actions>
+                            <TempButtonWrapper>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => {
+                                        setVisibleScrim(false);
+                                    }}
+                                >
+                                    Stay on page
+                                </Button>
+                                <Button
+                                    color="danger"
+                                    onClick={() => {
+                                        setVisibleScrim(false);
+                                        setConfirmedNavigation(true);
+                                    }}
+                                >
+                                    Leave
+                                </Button>
+                                {/*<Button>Save as draft</Button>*/}
+                            </TempButtonWrapper>
+                        </Actions>
+                    </span>
+                </Dialog>
+            </Scrim>
         </div>
     );
+};
+
+Prompt.defaultProps = {
+    fallBackAddress: '/',
+    customText: undefined
 };
 
 export default Prompt;

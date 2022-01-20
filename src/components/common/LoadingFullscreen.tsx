@@ -17,13 +17,15 @@ const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) =
     }, []);
     return (
         <div>
-            {showLoading && (
-                <Scrim>
-                    <CircularProgress style={{ marginLeft: '48%', marginBottom: '25%' }} />
-                </Scrim>
-            )}
+            <Scrim open={showLoading}>
+                <CircularProgress style={{ marginLeft: '48%', marginBottom: '25%' }} />
+            </Scrim>
         </div>
     );
+};
+
+LoadingFull.defaultProps = {
+    noTimeout: false
 };
 
 export default LoadingFull;

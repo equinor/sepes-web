@@ -5,8 +5,10 @@ import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
-import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../../common/customComponents/DeleteResource';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
+import { useDispatch } from 'react-redux';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -31,7 +33,6 @@ type VmPropertiesProps = {
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
-    getResources: any;
 };
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
@@ -41,13 +42,13 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     setActiveTab,
     permissions,
     setUpdateCache,
-    updateCache,
-    getResources
+    updateCache
 }) => {
     const sandboxId = window.location.pathname.split('/')[4];
     const { size, sizeName, privateIp, publicIp } = vmProperties.extendedInfo || {};
     const { MemoryGB, numberOfCores } = size || {};
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -77,12 +78,12 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const deleteVm = (): void => {
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
         setActiveTab(0);
-        const currentVms: any = [...vms];
-        currentVms.splice(vms.indexOf(vmProperties), 1);
-        setVms(currentVms);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.message) {
-                getResources();
+                dispatch(setCallResources(true));
+                const currentVms: any = [...vms];
+                currentVms.splice(vms.indexOf(vmProperties), 1);
+                setVms(currentVms);
             }
         });
     };

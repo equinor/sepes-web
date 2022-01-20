@@ -14,7 +14,7 @@ type BreadcrumbTruncateProps = {
 const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
     breadcrumbText,
     truncateLength = defaultLength,
-    link = '',
+    link = window.location.pathname,
     datacy
 }) => {
     const history = useHistory();
@@ -34,6 +34,12 @@ const BreadcrumbTruncate: React.FC<BreadcrumbTruncateProps> = ({
             </Breadcrumbs.Breadcrumb>
         </Tooltip>
     );
+};
+
+BreadcrumbTruncate.defaultProps = {
+    truncateLength: defaultLength,
+    link: window.location.pathname,
+    datacy: undefined
 };
 
 export default BreadcrumbTruncate;

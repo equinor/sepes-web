@@ -1,0 +1,11 @@
+[
+    {
+        "name": "vm-rule-4270-control-internet-access",
+        "direction": 1,
+        "description": "Control outbound internet access. Set to Allow or Deny as needed!",
+        "protocol": null,
+        "ip": null,
+        "port": 0,
+        "action": 1
+    }
+]

@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SandboxObj, SandboxPermissions } from '../common/interfaces';
+import { SandboxObj } from '../common/interfaces';
 import Dataset from './components/Dataset';
-import PolicyComponent from './components/PolicyComponent';
-import ResourcesComponent from './components/ResourcesComponent';
+import Policy from './components/Policy';
+import Resources from './components/Resources';
 
 const Wrapper = styled.div`
     display: grid;
@@ -34,24 +34,20 @@ const PolictyComponentWrapper = styled.div`
 `;
 
 type SandboxConfigProps = {
-    resources: any;
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
     setSandbox: any;
     sandbox: SandboxObj;
-    getResources: any;
     controller: AbortController;
 };
 
 const SandboxConfig: React.FC<SandboxConfigProps> = ({
-    resources,
     sandboxId,
     updateCache,
     setUpdateCache,
     setSandbox,
     sandbox,
-    getResources,
     controller
 }) => {
     return (
@@ -66,13 +62,9 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     controller={controller}
                 />
                 <PolictyComponentWrapper>
-                    <PolicyComponent displayCheckbox sandbox={sandbox} />
+                    <Policy displayCheckbox sandbox={sandbox} />
                 </PolictyComponentWrapper>
-                <ResourcesComponent
-                    resources={resources}
-                    getResources={getResources}
-                    permissions={sandbox.permissions}
-                />
+                <Resources permissions={sandbox.permissions} />
             </InfoWrapper>
         </Wrapper>
     );

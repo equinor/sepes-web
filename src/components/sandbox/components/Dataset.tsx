@@ -12,7 +12,7 @@ import {
     getStudyByIdUrl
 } from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../../utils/CommonUtil';
 import { truncate } from 'components/common/helpers/helpers';
 import { returnTooltipTextDataset } from '../../common/helpers/sandboxHelpers';
 

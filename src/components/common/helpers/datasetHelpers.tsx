@@ -1,8 +1,8 @@
 import { DatasetObj } from '../interfaces';
-import { checkIfInputIsNumberWihoutCharacters, round } from './helpers';
+import { checkIfInputIsNumberWihoutCharacters, round, validateResourceName } from './helpers';
 
 export const checkForInputErrors = (dataset: DatasetObj) => {
-    if (!dataset?.name?.length || !dataset?.classification?.length || !dataset?.location?.length) {
+    if (!validateResourceName(dataset?.name) || !dataset?.classification?.length || !dataset?.location?.length) {
         return true;
     }
     if (dataset?.dataId && !checkIfInputIsNumberWihoutCharacters(dataset?.dataId.toString())) {
@@ -94,4 +94,12 @@ export const returnFileListText = (dataset: DatasetObj, searchValue: string): st
     }
 
     return '';
+};
+
+export const checkIfDatasetNameAlreadyExists = (datasets, datasetName: string): boolean => {
+    const datasetsWithSameName = datasets && datasets.filter((_dataset: DatasetObj) => datasetName === _dataset.name);
+    if (datasetsWithSameName && datasetsWithSameName.length) {
+        return true;
+    }
+    return false;
 };

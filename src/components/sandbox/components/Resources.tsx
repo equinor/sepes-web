@@ -1,29 +1,28 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
 import { Table } from '@equinor/eds-core-react';
-import ResourceItemComponent from './ResourceItemComponent';
+import ResourceItemComponent from './ResourceItem';
 import '../../../styles/Table.scss';
 import { SandboxPermissions } from 'components/common/interfaces';
+import { useSelector } from 'react-redux';
+import getResourcesFromStore from 'store/resources/resourcesSelectors';
 
 const { Body, Row, Cell, Head } = Table;
 
 type ResourcesComponentProps = {
-    resources: any;
-    getResources: any;
     permissions: SandboxPermissions;
 };
 
-const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, permissions }) => {
-    //const { resources, getResources } = props;
-    // const [expandList, setExpandList] = useState<boolean>(false);
+const Resources: React.FC<ResourcesComponentProps> = ({ permissions }) => {
     const [orderedResources, setOrderedResources] = useState<any>(false);
+    const resources = useSelector(getResourcesFromStore());
     useEffect(() => {
-        const temp = resources.reverse();
-        setOrderedResources(temp);
+        const sortedArray = [...resources];
+        setOrderedResources(sortedArray.reverse());
     }, [resources]);
 
     return (
-        <div style={{ height: '331px', overflowX: 'hidden' }}>
+        <div style={{ height: '331px', overflowX: 'hidden' }} data-cy="sandbox_resources">
             <Table style={{ width: '100%', marginBottom: '24px', height: '200px' }}>
                 <Head>
                     <Row>
@@ -42,7 +41,6 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, p
                                             status={resource.status}
                                             linkToResource={resource.linkToExternalSystem}
                                             retryLink={resource.retryLink}
-                                            getResources={getResources}
                                             permission={permissions}
                                         />
                                     </Cell>
@@ -60,4 +58,4 @@ const Dataset: React.FC<ResourcesComponentProps> = ({ resources, getResources, p
     );
 };
 
-export default Dataset;
+export default Resources;
