@@ -208,9 +208,11 @@ jobs:
       - name: set-variables
         run: |
           prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-          tag=$prnumber
+          echo ${{ secrets.ACR_URL }}/sepes-web:$prNumber
+          echo "prImageTag=${{ secrets.ACR_URL }}/sepes-web:$prNumber" >> $GITHUB_ENV
+
           echo "::set-output name=prNumber::$prNumber"
-          echo "::set-output name=prImageTag::${{ secrets.ACR_URL }}/sepes-web:$prNumber"
+          # echo "::set-output name=prImageTag::${{ secrets.ACR_URL }}/sepes-web:$prNumber"
 
       # Download dockerfile from previous build stage to tag and push image to ACR for PR environment
       - name: Download artifact
@@ -234,9 +236,10 @@ jobs:
       # Push CI image to ACR
       - name: Tag and push image
         env:
-          PRTAG: ${{ steps.set-variables.outputs.prImageTag }}
+          PRTAG: ${{ env.prImageTag }}
         run: |
           echo $PRTAG
+          echo ${{ env.prImageTag }}
           docker tag ${{ env.ciTag }} $PRTAG
           docker push $PRTAG
 
