@@ -16,63 +16,38 @@ import { store } from 'store';
 
 export const UserConfig = React.createContext(myMSALObj);
 export const Permissions = React.createContext<GeneralPermissions>({
-    admin: true,
-    canRead_PreApproved_Datasets: true,
-    canEdit_PreApproved_Datasets: true,
-    canCreateStudy: true,
-    datasetAdmin: true,
-    sponsor: true,
-    fullName: 'test',
-    emailAddress: 'test',
-    userName: 'test'
+    admin: false,
+    canRead_PreApproved_Datasets: false,
+    canEdit_PreApproved_Datasets: false,
+    canCreateStudy: false,
+    datasetAdmin: false,
+    sponsor: false,
+    fullName: '',
+    emailAddress: '',
+    userName: ''
 });
-
-const test = {
-    admin: true,
-    canRead_PreApproved_Datasets: true,
-    canEdit_PreApproved_Datasets: true,
-    canCreateStudy: true,
-    datasetAdmin: true,
-    sponsor: true,
-    fullName: 'test',
-    emailAddress: 'test',
-    userName: 'test'
-};
 
 const renderApp = async (user) => {
     ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
-        // if (result && (result.requestId || result.errors)) {
-        //     return ReactDOM.render(<GeneralError />, document.getElementById('root'));
-        // }
-        // if (result && result.admin !== undefined) {
-        //     return ReactDOM.render(
-        //         <React.StrictMode>
-        //             <Provider store={store}>
-        //                 <UserConfig.Provider value={user}>
-        //                     <Permissions.Provider value={result}>
-        //                         <App />
-        //                     </Permissions.Provider>
-        //                 </UserConfig.Provider>
-        //             </Provider>
-        //         </React.StrictMode>,
-        //         document.getElementById('root')
-        //     );
-        // }
-        // return ReactDOM.render(<NoApi />, document.getElementById('root'));
-
-        return ReactDOM.render(
-            <React.StrictMode>
-                <Provider store={store}>
-                    <UserConfig.Provider value={user}>
-                        <Permissions.Provider value={test}>
-                            <App />
-                        </Permissions.Provider>
-                    </UserConfig.Provider>
-                </Provider>
-            </React.StrictMode>,
-            document.getElementById('root')
-        );
+        if (result && (result.requestId || result.errors)) {
+            return ReactDOM.render(<GeneralError />, document.getElementById('root'));
+        }
+        if (result && result.admin !== undefined) {
+            return ReactDOM.render(
+                <React.StrictMode>
+                    <Provider store={store}>
+                        <UserConfig.Provider value={user}>
+                            <Permissions.Provider value={result}>
+                                <App />
+                            </Permissions.Provider>
+                        </UserConfig.Provider>
+                    </Provider>
+                </React.StrictMode>,
+                document.getElementById('root')
+            );
+        }
+        return ReactDOM.render(<NoApi />, document.getElementById('root'));
     });
 };
 
