@@ -55,6 +55,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
         return () => {
             controller.abort();
             controller = new AbortController();
+            dispatch(setSandboxInStore({}));
         };
     }, []);
 
