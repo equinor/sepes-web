@@ -108,13 +108,8 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
 
         const performRequest = async () => {
             try {
-                // let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                // let response = await fetch(window.BASE_API_URI + url, options);
-                // const apiUrl =
-                //     process.env.REACT_APP_SEPES_LOCAL === 'test' ? 'http://localhost:44371/' : window.BASE_API_URI;
                 // Look for CI api url first from github action. If not use standard way.
                 const apiUrl = process.env.REACT_APP_SEPES_API_URL ?? window.BASE_API_URI;
-
                 let response = await fetch(apiUrl + url, options);
 
                 if (!response.ok && response.status === 401) {
@@ -122,8 +117,6 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
                     await SignInSilentRedirect();
                     headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     apiRequestInternal(url, headers, options);
-                    // response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                    // response = await fetch(window.BASE_API_URI + url, options);
                     response = await fetch(apiUrl + url, options);
                 }
 
