@@ -13,8 +13,8 @@ on:
 env:
   dockerCacheFilename: "ci-image"
   ciTag: "${{ secrets.ACR_URL }}/sepes-web:latest"
-  prodTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
-  prTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
+  # prodTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
+  # prTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
     - name: docker build
       run: |
         prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-        docker build -f ci.Dockerfile -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
+        docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
         docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
   ci:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Download dockerfile from previous build stage to tag and push image to ACRg for CI environment
+      # Download dockerfile from previous build stage to tag and push image to ACR for CI environment
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
