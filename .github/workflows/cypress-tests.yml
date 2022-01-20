@@ -264,8 +264,8 @@ jobs:
             -Image $env:PRTAG `
             -AcrUrl $env:ACR_URL `
             -PrNumber $env:PRNUMBER `
-            -AcrPassword ${{ secrets.ACR_PASSWORD }} `
-            -AcrUsername ${{ secrets.ACR_USERNAME }}
+            -AcrPassword $env:ACRPASSWORD | ConvertTo-SecureString -AsPlainText -Force `
+            -AcrUsername $env:ACRUSERNAME | ConvertTo-SecureString -AsPlainText -Force
 
       # - name: Run quick running cypress tests
       #   env:
