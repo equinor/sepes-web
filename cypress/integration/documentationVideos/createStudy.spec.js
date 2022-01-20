@@ -3,13 +3,14 @@ describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        cy.clearViewport();
+        // cy.clearViewport();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
         cy.commonStudyMocks();
         cy.login();
+        cy.viewport(1080, 1080);
     });
 
     it('Create study', { keystrokeDelay: 100 }, () => {
@@ -21,7 +22,7 @@ describe('Create study', () => {
         });
         cy.get('[data-cy=new_study]').arrow({
             text: 'Click create study to go to the create-study form',
-            textSize: '3vh',
+            textSize: '2vh',
             blocking: true,
             duration: 5000
         });
