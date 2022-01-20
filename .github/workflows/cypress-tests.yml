@@ -31,11 +31,18 @@ jobs:
         login-server: ${{ secrets.ACR_URL }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
+
     - name: docker build
       run: |
         prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
         docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
         docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.dockerCacheFilename }}
+        path: /tmp/${{ env.dockerCacheFilename }}.tar
   ci:
     runs-on: ubuntu-latest
     needs: build
