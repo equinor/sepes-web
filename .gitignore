@@ -35,3 +35,4 @@ yarn-error.log*
 /totalCoverage
 /cypress/videos/
 /temp
+/deployment/node_modules
