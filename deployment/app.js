@@ -18,6 +18,14 @@ const compiled = sqrl.Compile(template);
 const data = { ...config[env], PUBLIC_URL: process.env.PUBLIC_URL || '' };
 const result = compiled(data, sqrl);
 
+const RateLimit = require('express-rate-limit');
+const limiter = new RateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 40
+});
+
+app.use(limiter);
+
 // Writes the new index.html
 fs.writeFile(path + 'index.html', result, 'utf-8', function (err, data) {
     if (err) console.log(err);
