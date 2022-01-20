@@ -45,12 +45,12 @@ jobs:
         tags: ${{ env.ciTag }}
         outputs: type=docker,dest=/tmp/${{ env.dockerCacheFilename }}
 
-    - name: docker build
-      run: |
+    # - name: docker build
+    #   run: |
         # prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
         # docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
         # docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-        ls /tmp
+        # ls /tmp
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
@@ -88,9 +88,8 @@ jobs:
       # Push CI image to ACR
       - name: Push image
         run: |
-          docker image ls
-          # docker tag ${{ env.dockerCacheFilename }} ${{ env.ciTag }}
-          # docker push ${{ env.ciTag }}
+          # docker tag ${{ env.ciTag }} ${{ env.ciTag }}
+          docker push ${{ env.ciTag }}
 
       - uses: Azure/login@v1
         with:
