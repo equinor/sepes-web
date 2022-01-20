@@ -43,7 +43,7 @@ jobs:
         context: .
         file: ./ci.Dockerfile
         tags: ${{ env.ciTag }}
-        outputs: type=oci,dest=/tmp/${{ env.dockerCacheFilename }}
+        outputs: type=docker,dest=/tmp/${{ env.dockerCacheFilename }}
 
     - name: docker build
       run: |
