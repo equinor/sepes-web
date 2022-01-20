@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from '@equinor/eds-core-react';
 import AddNewVm from './AddNewVm';
-import { SandboxObj, SizeObj, DropdownObj, OperatingSystemObj, VmObj } from '../../common/interfaces';
+import { SizeObj, DropdownObj, OperatingSystemObj, VmObj } from '../../common/interfaces';
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
@@ -11,9 +11,10 @@ import VmDetails from './VmDetails';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxHelpers';
+import { useSelector } from 'react-redux';
+import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 
 type VmConfigProps = {
-    sandbox: SandboxObj;
     setUpdateCache: any;
     updateCache: any;
     controller: AbortController;
@@ -22,7 +23,6 @@ type VmConfigProps = {
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({
-    sandbox,
     setUpdateCache,
     updateCache,
     controller,
@@ -30,6 +30,7 @@ const VmConfig: React.FC<VmConfigProps> = ({
     setHasChanged
 }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
+    const sandbox = useSelector(getSandboxFromStore());
     const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
@@ -115,7 +116,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
             case 0:
                 return showAddNewVm ? (
                     <AddNewVm
-                        sandbox={sandbox}
                         setVms={setVms}
                         vms={vms}
                         sizes={sizes}

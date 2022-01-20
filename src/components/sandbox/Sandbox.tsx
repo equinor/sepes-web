@@ -143,7 +143,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                             {returnStepComponent()}
                             {(step === 0 || step === 1) && (
                                 <VmConfig
-                                    sandbox={sandbox}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}
                                     controller={controller}
