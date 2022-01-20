@@ -22,8 +22,6 @@ import { setResourcesInStore } from 'store/resources/resourcesSlice';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
 
-const set = require('lodash/set');
-
 const Wrapper = styled.div`
     display: grid;
     grid-template-rows: 64px 1fr;
