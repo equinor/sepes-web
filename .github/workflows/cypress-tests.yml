@@ -32,12 +32,17 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
     - name: docker build
       run: |
         prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
         docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
         docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-
+        ls /tmp
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
@@ -70,10 +75,13 @@ jobs:
         run: |
           docker load --input /tmp/${{ env.dockerCacheFilename }}.tar
 
+
       # Push CI image to ACR
       - name: Push image
         run: |
-          docker push ${{ env.ciTag }}
+          docker image ls
+          # docker tag ${{ env.dockerCacheFilename }} ${{ env.ciTag }}
+          # docker push ${{ env.ciTag }}
 
       - uses: Azure/login@v1
         with:
