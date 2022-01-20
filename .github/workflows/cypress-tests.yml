@@ -11,7 +11,7 @@ on:
   - cron:  '0 4 * * 1,2,3,4,5'
 
 env:
-  dockerCacheFilename: "ci-image"
+  dockerCacheFilename: "ci-image.tar"
   ciTag: "${{ secrets.ACR_URL }}/sepes-web:latest"
   # prodTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
   # prTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
@@ -37,17 +37,26 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v1
 
+    - name: Build and export
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./ci.Dockerfile
+        tags: ${{ env.ciTag }}
+        outputs: type=oci,dest=/tmp/${{ env.dockerCacheFilename }}
+
     - name: docker build
       run: |
-        prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-        docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
-        docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
+        # prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+        # docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
+        # docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
         ls /tmp
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.dockerCacheFilename }}
-        path: /tmp/${{ env.dockerCacheFilename }}.tar
+        path: /tmp/${{ env.dockerCacheFilename }}
   ci:
     runs-on: ubuntu-latest
     needs: build
