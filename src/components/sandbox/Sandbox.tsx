@@ -2,20 +2,18 @@ import React, { useState, useContext, useEffect } from 'react';
 import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
-import { SandboxObj } from '../common/interfaces';
 import VmConfig from './components/VmConfig';
 import LoadingFull from '../common/LoadingFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getSandboxByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { getResourcesList } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCallResources } from 'store/sandboxes/sandboxesSlice';
-import getCallResourcesStatus from 'store/sandboxes/sanboxesSelectors';
+import { setCallResources, setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
+import { getCallResourcesStatus, getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setResourcesInStore } from 'store/resources/resourcesSlice';
 
 const Wrapper = styled.div`
@@ -33,47 +31,31 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const studyId = getStudyId();
     const sandboxId = getSandboxId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
-    const [sandbox, setSandbox] = useState<SandboxObj>({
-        deleted: false,
-        region: '',
-        resources: [],
-        datasets: [],
-        studyId: '',
-        technicalContactEmail: '',
-        technicalContactName: '',
-        name: '',
-        template: '',
-        id: sandboxId,
-        currentPhase: undefined,
-        linkToCostAnalysis: '',
-        studyName: '',
-        restrictionDisplayText: '',
-        permissions: {
-            delete: false,
-            editInboundRules: false,
-            openInternet: false,
-            update: false,
-            increasePhase: false
-        }
-    });
 
-    const SandboxResponse = useFetchUrl('sandboxes/' + sandboxId, setSandbox, undefined, undefined, false);
+    const dispatch = useDispatch();
+    const SandboxResponse = useFetchUrl(
+        'sandboxes/' + sandboxId,
+        undefined,
+        undefined,
+        undefined,
+        false,
+        dispatch,
+        setSandboxInStore
+    );
+
+    const sandbox = useSelector(getSandboxFromStore());
     const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
-    const [step, setStep] = useState<number | undefined>(
-        (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
-            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase) ||
-            undefined
-    );
+    const [step, setStep] = useState<number | undefined>((sandbox && sandbox.currentPhase) || undefined);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const callGetResources = useSelector(getCallResourcesStatus());
-    const dispatch = useDispatch();
 
     useEffect(() => {
         return () => {
             controller.abort();
             controller = new AbortController();
+            dispatch(setSandboxInStore({}));
         };
     }, []);
 
@@ -85,11 +67,8 @@ const Sandbox: React.FC<SandboxProps> = () => {
     }, [callGetResources]);
 
     useEffect(() => {
-        if (
-            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)] &&
-            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase
-        ) {
-            setNewPhase(SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase);
+        if (sandbox && sandbox.currentPhase) {
+            setNewPhase(sandbox.currentPhase);
         } else if (sandbox.currentPhase !== undefined && !SandboxResponse.loading) {
             setNewPhase(sandbox.currentPhase);
         }
@@ -106,14 +85,14 @@ const Sandbox: React.FC<SandboxProps> = () => {
     };
 
     const setNewPhase = (phase: any) => {
-        if (SandboxResponse.cache[getSandboxByIdUrl(sandboxId)]) {
+        if (sandbox) {
             setStep(phase);
-            SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].currentPhase = phase;
+            dispatch(setSandboxInStore({ ...sandbox, currentPhase: phase }));
         }
     };
 
     const setNewCostanalysisLink = (link: any) => {
-        SandboxResponse.cache[getSandboxByIdUrl(sandboxId)].linkToCostAnalysis = link;
+        sandbox.linkToCostAnalysis = link;
     };
 
     const returnStepComponent = () => {
@@ -129,7 +108,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         sandbox={sandbox}
-                        setSandbox={setSandbox}
                         controller={controller}
                     />
                 );
@@ -147,14 +125,10 @@ const Sandbox: React.FC<SandboxProps> = () => {
                         )}
                         <Wrapper>
                             <StepBar
-                                sandbox={sandbox}
-                                setSandbox={setSandbox}
                                 step={step}
                                 setStep={setStep}
                                 studyId={studyId}
                                 sandboxId={sandboxId}
-                                setUpdateCache={setUpdateCache}
-                                updateCache={updateCache}
                                 setLoading={SandboxResponse.setLoading}
                                 setNewPhase={setNewPhase}
                                 setDeleteSandboxInProgress={setDeleteSandboxInProgress}
@@ -164,11 +138,12 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 makeAvailableInProgress={makeAvailableInProgress}
                                 setMakeAvailableInProgress={setMakeAvailableInProgress}
                                 setHasChanged={setHasChanged}
+                                updateCache={updateCache}
+                                setUpdateCache={setUpdateCache}
                             />
                             {returnStepComponent()}
                             {(step === 0 || step === 1) && (
                                 <VmConfig
-                                    sandbox={sandbox}
                                     setUpdateCache={setUpdateCache}
                                     updateCache={updateCache}
                                     controller={controller}

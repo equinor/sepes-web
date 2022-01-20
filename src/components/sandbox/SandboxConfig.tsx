@@ -37,7 +37,6 @@ type SandboxConfigProps = {
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
-    setSandbox: any;
     sandbox: SandboxObj;
     controller: AbortController;
 };
@@ -46,7 +45,6 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
     sandboxId,
     updateCache,
     setUpdateCache,
-    setSandbox,
     sandbox,
     controller
 }) => {
@@ -57,9 +55,8 @@ const SandboxConfig: React.FC<SandboxConfigProps> = ({
                     sandboxId={sandboxId}
                     updateCache={updateCache}
                     setUpdateCache={setUpdateCache}
-                    setSandbox={setSandbox}
-                    sandbox={sandbox}
                     controller={controller}
+                    sandbox={sandbox}
                 />
                 <PolictyComponentWrapper>
                     <Policy displayCheckbox sandbox={sandbox} />

@@ -212,7 +212,8 @@ export const allResourcesStatusOkAndAtleastOneVm = (
     setAllResourcesOk,
     sandbox,
     setNewCostanalysisLink,
-    setSandbox
+    dispatch: any,
+    setSandboxInStore: any
 ) => {
     let res = true;
     if (!resourcesIn || !Array.isArray(resourcesIn)) {
@@ -231,7 +232,7 @@ export const allResourcesStatusOkAndAtleastOneVm = (
             }
         }
         if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
-            getCostAnalysisLinkToSandbox(sandbox, setNewCostanalysisLink, setSandbox);
+            getCostAnalysisLinkToSandbox(sandbox, setNewCostanalysisLink, dispatch, setSandboxInStore);
         }
     });
     setAnyVmWithOpenInternet(!noOpenInternet);
@@ -239,11 +240,16 @@ export const allResourcesStatusOkAndAtleastOneVm = (
     setAllResourcesOk(res && hasVm && noOpenInternet);
 };
 
-const getCostAnalysisLinkToSandbox = (sandbox: SandboxObj, setNewCostanalysisLink: any, setSandbox: any) => {
+const getCostAnalysisLinkToSandbox = (
+    sandbox: SandboxObj,
+    setNewCostanalysisLink: any,
+    dispatch: any,
+    setSandboxInStore: any
+) => {
     getSandboxCostAnalysis(sandbox.id).then((result: any) => {
         if (result && !result.message) {
             setNewCostanalysisLink(result);
-            setSandbox({ ...sandbox, linkToCostAnalysis: result });
+            dispatch(setSandboxInStore({ sandbox, linkToCostAnalysis: result }));
         }
     });
 };
