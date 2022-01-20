@@ -4,7 +4,7 @@ param (
     [Parameter(Mandatory=$True)][string]$Image,
     [Parameter(Mandatory=$True)][string]$AcrUrl,
     [Parameter(Mandatory=$True)][string]$PrNumber,
-    [Parameter(Mandatory=$True)][string]$WebappName,
+    #[Parameter(Mandatory=$True)][string]$WebappName,
     [Parameter(Mandatory=$True)][securestring]$AcrPassword,
     [Parameter(Mandatory=$True)][securestring]$AcrUsername,
     [Parameter()][string]$Url,
@@ -24,7 +24,7 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 ######################################################
 
 $var = Read-ValueFile -FilePath $Environment
-$webappName = "web-frontend-ci-1320"
+$webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($Url)/"
 $InformationPreference = 'Continue'
 
@@ -50,7 +50,7 @@ $webApp = New-CIWebApp -Token $token `
     -AcrUsername $AcrUsername `
     -AcrUrl $AcrUrl `
     -Verbose
-
+exit
 
 New-DnsRecord -Token $token `
     -ResourceGroup $var.azure.dnsZone.resourceGroup `

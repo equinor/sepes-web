@@ -203,11 +203,69 @@ jobs:
     needs: build
     if: ${{ github.event_name == 'pull_request' }}
     steps:
+      - uses: actions/checkout@v2
+
+      - name: set-variables
+        run: |
+          prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
+          tag=$prnumber
+          echo "::set-output name=prNumber::$prNumber"
+          echo "::set-output name=prImageTag::${{ secrets.ACR_URL }}/sepes-web:$prNumber"
+
+      # Download dockerfile from previous build stage to tag and push image to ACR for PR environment
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.dockerCacheFilename }}
+          path: /tmp
+
+      - name: Azure ACR Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # Loads the image from Download artifact step
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.dockerCacheFilename }}
+
+      # Push CI image to ACR
+      - name: Tag and push image
+        env:
+          PRTAG: ${{ steps.set-variables.outputs.prImageTag }}
+        run: |
+          echo $PRTAG
+          docker tag ${{ env.ciTag }} $PRTAG
+          docker push $PRTAG
+
       - name: Retrieve token for mock user
         id: id-token
         run: |
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
+
+      - name : deploy PR environment
+        env:
+          CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          CLIENTSECRET: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          PRNUMBER: ${{ steps.set-variables.outputs.prNumber }}
+          PRTAG: ${{ steps.set-variables.outputs.prImageTag }}
+          ACR_URL: ${{ secrets.ACR_URL }}
+          ACRUSERNAME: ${{ secrets.ACR_USERNAME }}
+          ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
+        shell: pwsh
+        run: |
+          .github\scripts\pr-deploy.ps1 `
+            -Environment .github\scripts\ciAppsettings.json `
+            -ClientSecret $env:CLIENTSECRET `
+            -ClientId $env:CLIENTID `
+            -Image $env:PRTAG `
+            -AcrUrl $env:ACR_URL `
+            -PrNumber $env:PRNUMBER `
+            -AcrPassword $env:ACRPASSWORD `
+            -AcrUsername $env:ACRUSERNAME
 
       # - name: Run quick running cypress tests
       #   env:
