@@ -33,5 +33,5 @@ yarn-error.log*
 /.env
 /cypress/screenshots
 /totalCoverage
-/cypress/videos/longRunningTests
+/cypress/videos/
 /temp

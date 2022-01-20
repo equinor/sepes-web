@@ -108,16 +108,16 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
 
         const performRequest = async () => {
             try {
-                // let response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                let response = await fetch(window.BASE_API_URI + url, options);
+                // Look for CI api url first from github action. If not use standard way.
+                const apiUrl = process.env.REACT_APP_SEPES_API_URL ?? window.BASE_API_URI;
+                let response = await fetch(apiUrl + url, options);
 
                 if (!response.ok && response.status === 401) {
                     //Unauthorized, need to re-authorize. Only try this once
                     await SignInSilentRedirect();
                     headers.set('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
                     apiRequestInternal(url, headers, options);
-                    // response = await fetch(process.env.REACT_APP_SEPES_BASE_API_URL + url, options);
-                    response = await fetch(window.BASE_API_URI + url, options);
+                    response = await fetch(apiUrl + url, options);
                 }
 
                 return resolve(await processAuthorizedResponse(response));
