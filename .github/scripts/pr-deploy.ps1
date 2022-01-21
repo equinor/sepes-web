@@ -46,8 +46,8 @@ $webApp = New-CIWebApp -Token $token `
     -AppServicePlan $var.azure.ciWebApp.appServicePlan `
     -AppSettings $var.azure.ciWebApp.siteConfig.appSettings `
     -HttpLogging $var.azure.ciWebApp.siteConfig.httpLogging `
-    -AcrPassword "$AcrPassword" `
-    -AcrUsername "$AcrUsername" `
+    -AcrPassword $AcrPassword `
+    -AcrUsername $AcrUsername `
     -AcrUrl $AcrUrl `
     -Verbose
 exit
