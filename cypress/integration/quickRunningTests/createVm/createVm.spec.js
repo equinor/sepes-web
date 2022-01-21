@@ -12,9 +12,9 @@ describe('Create vm', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.waitForStudyToLoad();
-        cy.wait(2000);
-        cy.get('[data-cy=datasets_tab]').click();
+        // cy.waitForStudyToLoad();
+        // cy.get('[data-cy=datasets_tab]').click();
+        cy.switchToDatasetsTab();
     });
 
     it('clicks add study specific dataset', () => {
