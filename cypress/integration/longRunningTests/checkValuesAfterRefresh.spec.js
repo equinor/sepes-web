@@ -29,7 +29,8 @@ describe('Check values after refresh', () => {
         cy.addMockUserAsParticipant();
 
         cy.reload();
-        cy.get('[data-cy=participants_tab]').click({ force: true });
+        // cy.get('[data-cy=participants_tab]').click({ force: true });
+        cy.switchToParticipantsTab();
         cy.contains('Mock User').should('be.visible');
         cy.contains('Vendor Admin').should('be.visible');
 
@@ -70,8 +71,8 @@ describe('Check values after refresh', () => {
         // cy.waitForStudyToLoad();
 
         cy.contains('cy dataset name').should('not.exist');
-
-        cy.get('[data-cy=sandbox_tab]').click();
+        cy.switchToSandboxesTab();
+        // cy.get('[data-cy=sandbox_tab]').click();
 
         cy.wait(2000);
         cy.get('[data-cy=create_sandbox]').click();
