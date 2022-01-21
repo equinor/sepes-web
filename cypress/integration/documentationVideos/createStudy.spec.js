@@ -3,14 +3,13 @@ describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
         cy.login();
-        // cy.clearViewport();
+        cy.clearViewport();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
         cy.commonStudyMocks();
         cy.login();
-        cy.viewport(1080, 1080);
     });
 
     it('Create study', { keystrokeDelay: 100 }, () => {

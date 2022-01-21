@@ -20,10 +20,10 @@
                 "enabled": true,
                 "shape": "dot"
             },
-            "width": 1080,
+            "width": 1920,
             "height": 1080
         }
     },
-    "viewportWidth": 1080,
+    "viewportWidth": 1920,
     "viewportHeight": 1080
 }
