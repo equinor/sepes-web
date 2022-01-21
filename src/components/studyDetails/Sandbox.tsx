@@ -92,7 +92,7 @@ const Sandbox: React.FC<SandboxComponentProps> = ({
                 )}
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
-                <SandboxTable sandboxes={study.sandboxes} onFallBackAddressChange={onFallBackAddressChange} />
+                <SandboxTable sandboxes={study.sandboxes} onFallBackAddressChange={onFallBackAddressChange} editMode />
             </div>
         </Wrapper>
     );

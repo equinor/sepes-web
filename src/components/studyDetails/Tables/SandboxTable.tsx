@@ -34,9 +34,10 @@ const columns = [
 type SandboxTableProps = {
     sandboxes: any;
     onFallBackAddressChange: any;
+    editMode: boolean;
 };
 
-const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddressChange }) => {
+const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddressChange, editMode }) => {
     const studyId = getStudyId();
     const history = useHistory();
     const returnCell = (sandbox: SandboxLightObj, type: 'icon' | 'text') => {
@@ -75,8 +76,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddres
                 data={sandboxes ?? []}
                 listItems={returnListOfItems}
                 cookiePrefix={'sandboxes-editMode' + getStudyId()}
-                disablePagination
-                useExternalPagingAndSorting={false}
+                disablePagination={!editMode || sandboxes.length < 10}
             />
         </div>
     );

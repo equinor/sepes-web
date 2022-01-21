@@ -99,7 +99,7 @@ const StudyDetails = () => {
         setWbsIsValid(study.wbsCodeValid);
     }, [study.wbsCodeValid]);
 
-    const handleFallbackAddressChange = (url:string) => {
+    const handleFallbackAddressChange = (url: string) => {
         setFallBackAddress(url);
     };
 

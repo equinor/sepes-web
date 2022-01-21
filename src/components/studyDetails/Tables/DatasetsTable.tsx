@@ -120,7 +120,7 @@ const DatasetsTable = (props: any) => {
                 data={datasets}
                 listItems={returnListOfItems}
                 cookiePrefix={'datasets-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode}
+                disablePagination={!editMode || datasets.length < 10}
             />
         </div>
     );
