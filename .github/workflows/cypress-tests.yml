@@ -97,10 +97,10 @@ jobs:
           container_name: videos
           source_folder: cypress/videos/documentationVideos
 
-      # - name: Run quick running cypress tests
-      #   env:
-      #     token: ${{ steps.id-token.outputs.TOKEN }}
-      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       - name: Run long running cypress tests  
         env:
