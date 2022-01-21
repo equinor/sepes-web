@@ -54,7 +54,7 @@ type DatasetComponentProps = {
     updateCache: any;
     wbsIsValid: boolean | undefined;
     studySaveInProgress: boolean;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
 };
 
 const DataSetComponent: React.FC<DatasetComponentProps> = ({
@@ -64,7 +64,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     updateCache,
     wbsIsValid,
     studySaveInProgress,
-    onFallAddressBackChange
+    onFallBackAddressChange
 }) => {
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
@@ -200,7 +200,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                     editMode
                     studyId={study.id}
                     disabled={study.permissions && study.permissions.addRemoveDataset}
-                    onFallAddressBackChange={onFallAddressBackChange}
+                    onFallBackAddressChange={onFallBackAddressChange}
                 />
             </TableWrapper>
         </Wrapper>

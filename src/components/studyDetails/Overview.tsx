@@ -43,7 +43,7 @@ type OverviewProps = {
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
     controller: AbortController;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
 };
 
 const Overview: React.FC<OverviewProps> = ({
@@ -52,7 +52,7 @@ const Overview: React.FC<OverviewProps> = ({
     setResultsAndLearnings,
     resultsAndLearnings,
     controller,
-    onFallAddressBackChange
+    onFallBackAddressChange
 }) => {
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
@@ -162,8 +162,13 @@ const Overview: React.FC<OverviewProps> = ({
                 <div />
             )}
             <div>
-                <SandboxTable sandboxes={sandboxes} onFallAddressBackChange={onFallAddressBackChange} />
-                <DatasetsTable datasets={datasets} editMode={false} studyId={id} />
+                <SandboxTable sandboxes={sandboxes} onFallBackAddressChange={onFallBackAddressChange} />
+                <DatasetsTable
+                    datasets={datasets}
+                    editMode={false}
+                    studyId={id}
+                    onFallBackAddressChange={onFallBackAddressChange}
+                />
                 <ParticipantTable participants={participants} editMode={false} />
             </div>
         </Wrapper>
