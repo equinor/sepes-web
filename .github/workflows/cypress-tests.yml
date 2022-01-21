@@ -257,6 +257,8 @@ jobs:
           ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
         shell: pwsh
         run: |
+          $env:CLIENTID
+          $ClientSecret
           .github\scripts\pr-deploy.ps1 `
             -Environment .github\scripts\ciAppsettings.json `
             -ClientSecret $env:CLIENTSECRET `

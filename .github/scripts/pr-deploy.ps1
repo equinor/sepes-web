@@ -24,6 +24,7 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 ######################################################
 
 $var = Read-ValueFile -FilePath $Environment
+$var
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($Url)/"
 $InformationPreference = 'Continue'
