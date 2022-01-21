@@ -249,7 +249,7 @@ jobs:
       - name : deploy PR environment
         env:
           CLIENTID: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
-          CLIENTSECRET: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_ID }}
+          CLIENTSECRET: ${{ secrets.DEV_AZURE_CREDENTIALS_CLIENT_SECRET }}
           PRNUMBER: ${{ env.prNumber }}
           PRTAG: ${{ env.prImageTag }}
           ACR_URL: ${{ secrets.ACR_URL }}
@@ -257,8 +257,6 @@ jobs:
           ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
         shell: pwsh
         run: |
-          $env:CLIENTID
-          $ClientSecret
           .github\scripts\pr-deploy.ps1 `
             -Environment .github\scripts\ciAppsettings.json `
             -ClientSecret $env:CLIENTSECRET `
