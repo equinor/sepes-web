@@ -76,7 +76,7 @@ const DatasetsTable = (props: any) => {
         if (row.studyId && !mouseHoverSandbox) {
             const url = '/studies/' + props.studyId + '/datasets/' + row.id;
             history.push(url);
-            props.onFallAddressBackChange(url);
+            props.onFallBackAddressChange(url);
         }
     };
 

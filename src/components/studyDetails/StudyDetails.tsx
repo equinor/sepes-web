@@ -116,7 +116,7 @@ const StudyDetails = () => {
                         updateCache={updateCache}
                         wbsIsValid={wbsIsValid}
                         studySaveInProgress={studySaveInProgress}
-                        onFallAddressBackChange={handleFallbackAddressChange}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
             case 2:
@@ -130,7 +130,7 @@ const StudyDetails = () => {
                         study={study}
                         setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
-                        onFallAddressBackChange={handleFallbackAddressChange}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
             case 3:
@@ -152,7 +152,7 @@ const StudyDetails = () => {
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         controller={controller}
-                        onFallAddressBackChange={handleFallbackAddressChange}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
         }

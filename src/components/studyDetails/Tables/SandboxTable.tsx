@@ -33,10 +33,10 @@ const columns = [
 
 type SandboxTableProps = {
     sandboxes: any;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
 };
 
-const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBackChange }) => {
+const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddressChange }) => {
     const studyId = getStudyId();
     const history = useHistory();
     const returnCell = (sandbox: SandboxLightObj, type: 'icon' | 'text') => {
@@ -52,7 +52,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBac
         if (studyId && row.id) {
             const url = '/studies/' + studyId + '/sandboxes/' + row.id;
             history.push(url);
-            onFallAddressBackChange(url);
+            onFallBackAddressChange(url);
         }
     };
 

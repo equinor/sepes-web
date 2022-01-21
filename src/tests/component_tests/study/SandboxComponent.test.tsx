@@ -91,7 +91,7 @@ test('renders dataset component without permission to add dataset', () => {
                 disabled={false}
                 setLoading={mockFunc}
                 wbsIsValid
-                onFallAddressBackChange={mockFunc}
+                onFallBackAddressChange={mockFunc}
             />
         </Router>
     );
@@ -115,7 +115,7 @@ test('renders dataset component with permission to add dataset', () => {
                 disabled={true}
                 setLoading={mockFunc}
                 wbsIsValid
-                onFallAddressBackChange={mockFunc}
+                onFallBackAddressChange={mockFunc}
             />
         </Router>
     );

@@ -48,14 +48,14 @@ const columns = [
     }
 ];
 
-type DatasetsTableProps = {
+type ParticipantsTableProps = {
     participants: any;
     removeParticipant?: any;
     editMode: boolean;
     permissions?: StudyPermissions;
 };
 
-const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
+const ParticipantsTable: React.FC<ParticipantsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
     const { width } = useWindowDimensions();
 
     const returnListOfItems = (participant: ParticipantObj) => {
@@ -100,9 +100,9 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
     );
 };
 
-DatasetsTable.defaultProps = {
+ParticipantsTable.defaultProps = {
     removeParticipant: undefined,
     permissions: undefined
 };
 
-export default DatasetsTable;
+export default ParticipantsTable;
