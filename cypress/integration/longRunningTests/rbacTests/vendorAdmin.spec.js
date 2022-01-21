@@ -1,4 +1,7 @@
 describe('Vendor admin', () => {
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false;
+    });
     const studyName = 'Cypress Test';
     const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
     before(() => {
@@ -16,7 +19,7 @@ describe('Vendor admin', () => {
         cy.login();
     });
 
-    it.skip('check that that vendor admin can do what the role allows', () => {
+    it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();

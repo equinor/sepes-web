@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 describe('Create vm', () => {
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false;
+    });
     const studyName = 'Cypress Test';
     before(() => {
         cy.login();
