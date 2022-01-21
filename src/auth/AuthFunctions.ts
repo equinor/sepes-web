@@ -109,7 +109,8 @@ const apiRequestInternal = async (url: string, headers: Headers, options: any) =
         const performRequest = async () => {
             try {
                 // Look for CI api url first from github action. If not use standard way.
-                const apiUrl = process.env.REACT_APP_SEPES_API_URL ?? window.BASE_API_URI;
+                // const apiUrl = process.env.REACT_APP_SEPES_API_URL ?? window.BASE_API_URI;
+                const apiUrl = window.BASE_API_URI;
                 let response = await fetch(apiUrl + url, options);
 
                 if (!response.ok && response.status === 401) {
