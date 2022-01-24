@@ -13,4 +13,4 @@ RUN npm ci --production
 COPY . .
 RUN npm run build:prod
 EXPOSE 3000
-CMD ["node", "index.js"]
+CMD ["node", "local.index.js"]
