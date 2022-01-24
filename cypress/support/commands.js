@@ -47,7 +47,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.wait(2000);
     cy.get('[data-cy=create_study]').click({ force: true });
 
-    // cy.waitForStudyToLoad();
+    cy.waitForStudyToLoad();
 });
 
 Cypress.Commands.add('createStudyWithLogo', (studyName) => {
@@ -199,19 +199,18 @@ Cypress.Commands.add('addMockUserAsParticipant', () => {
 });
 
 Cypress.Commands.add('switchToParticipantsTab', () => {
-    cy.get('[data-cy=participants_tab]').click({ force: true });
+    cy.wait(1000);
+    cy.get('[data-cy=participants_tab]').click();
 });
 
 Cypress.Commands.add('switchToDatasetsTab', () => {
-    cy.get('[data-cy=datasets_tab]').click({ force: true });
+    cy.wait(1000);
+    cy.get('[data-cy=datasets_tab]').click();
 });
 
 Cypress.Commands.add('switchToSandboxesTab', () => {
+    cy.wait(1000);
     cy.get('[data-cy=sandbox_tab]').click();
-});
-
-Cypress.Commands.add('switchToParticipantsTab', () => {
-    cy.get('[data-cy=participants_tab]').click({ force: true });
 });
 
 Cypress.Commands.add('refreshPage', () => {
