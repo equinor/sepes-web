@@ -19,7 +19,7 @@ describe('Create sandbox and virtual machine', () => {
             blocking: true,
             textSize: '3vh'
         });
-        cy.createStudy(studyName);
+        cy.createStudyWithoutInterceptingStudy(studyName);
     });
 
     it('clicks on sandboxes tab', () => {
