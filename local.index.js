@@ -4,9 +4,9 @@ const path = require('path');
 const app = express();
 console.log('Starting express...');
 
-const RateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
 
-const limiter = new RateLimit({
+const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 40
 });
