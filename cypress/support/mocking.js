@@ -8,6 +8,8 @@ Cypress.Commands.add('commonStudyMocks', () => {
     cy.mockOutPermissions();
 });
 
+// Study mocks
+
 Cypress.Commands.add('mockOutStudyList', () => {
     cy.intercept('/api/studies', { fixture: 'study/emptyStudyList.json' });
 });
@@ -24,6 +26,9 @@ Cypress.Commands.add('mockOutResultsAndLearnings', () => {
 });
 Cypress.Commands.add('mockOutPermissions', () => {
     cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
+});
+Cypress.Commands.add('mockOutStudyParticipant', () => {
+    cy.intercept('api/participants/*', { fixture: 'study/studyParticipant.json' });
 });
 
 // Data set mocks

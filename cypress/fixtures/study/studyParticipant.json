@@ -1,0 +1,10 @@
+[
+    {
+        "fullName": "Mock User",
+        "source": "Db",
+        "databaseId": 1,
+        "objectId": "1",
+        "emailAddress": "mock@user.com",
+        "userName": "mock@user.com"
+    }
+]
