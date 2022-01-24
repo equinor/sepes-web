@@ -12,7 +12,7 @@ describe('Dataset file upload', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.get('[data-cy=datasets_tab]').click({ force: true });
+        cy.switchToDatasetsTab();
     });
 
     it('clicks add study specific dataset', () => {

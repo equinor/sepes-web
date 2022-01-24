@@ -18,7 +18,7 @@ describe('Study viewer vm', () => {
         cy.saveLocalStorageCache();
     });
 
-    it('check that that study viewer can do what the role allows', () => {
+    it.skip('check that that study viewer can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();
