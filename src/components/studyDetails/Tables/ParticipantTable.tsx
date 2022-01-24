@@ -55,7 +55,12 @@ type ParticipantsTableProps = {
     permissions?: StudyPermissions;
 };
 
-const ParticipantsTable: React.FC<ParticipantsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
+const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
+    participants,
+    removeParticipant,
+    editMode,
+    permissions
+}) => {
     const { width } = useWindowDimensions();
 
     const returnListOfItems = (participant: ParticipantObj) => {
@@ -94,7 +99,7 @@ const ParticipantsTable: React.FC<ParticipantsTableProps> = ({ participants, rem
                 data={participants}
                 listItems={returnListOfItems}
                 cookiePrefix={'participants-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode}
+                disablePagination={!editMode || participants.length < 10}
             />
         </div>
     );

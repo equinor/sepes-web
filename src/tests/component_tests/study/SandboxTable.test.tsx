@@ -18,7 +18,7 @@ const sandboxList = [
 test('renders Sandbox table component', () => {
     const { getByText } = render(
         <Router>
-            <SandboxTable sandboxes={sandboxList}  onFallBackAddressChange={mockFunc} />
+            <SandboxTable sandboxes={sandboxList} onFallBackAddressChange={mockFunc} editMode/>
         </Router>
     );
     let linkElement = getByText('test1');

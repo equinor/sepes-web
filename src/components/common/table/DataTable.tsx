@@ -9,20 +9,47 @@ Icon.add({ chevron_down, chevron_up, unfold_more });
 let prevPage;
 let prevPerPage;
 
-export const DataTable = (props) => {
-    const {
-        data,
-        useExternalPagingAndSorting,
-        setExternalPerPage,
-        setExternalPageIndex,
-        setExternalSortBy,
-        externalTotalItems,
-        columns,
-        cookiePrefix,
-        loading,
-        abortAndSetNewController,
-        disablePagination
-    } = props;
+type DataTableProps = {
+    data: any;
+    useExternalPagingAndSorting?: boolean;
+    setExternalPerPage?: any;
+    setExternalPageIndex?: any;
+    setExternalSortBy?: any;
+    externalTotalItems?: any;
+    columns: any;
+    cookiePrefix: string;
+    loading?: any;
+    abortAndSetNewController?: any;
+    disablePagination: boolean;
+    listItems: any;
+    tableToPageOne?: any;
+    setTableToPageOne?: any;
+    setFetchReports?: any;
+    userHasAbortedRequest?: boolean;
+    setUserHasAbortedRequest?: any;
+    isFetchingAnyRequest?: boolean;
+};
+
+export const DataTable: React.FC<DataTableProps> = ({
+    data,
+    useExternalPagingAndSorting,
+    setExternalPerPage,
+    setExternalPageIndex,
+    setExternalSortBy,
+    externalTotalItems,
+    columns,
+    cookiePrefix,
+    loading,
+    abortAndSetNewController,
+    disablePagination,
+    listItems,
+    tableToPageOne,
+    setTableToPageOne,
+    setFetchReports,
+    userHasAbortedRequest,
+    setUserHasAbortedRequest,
+    isFetchingAnyRequest
+}) => {
     const columnsCookie = cookiePrefix + 'Columns';
     const perPageCookie = cookiePrefix + 'PerPage';
     const pageNumberCookie = cookiePrefix + 'PageNumber';
@@ -38,7 +65,6 @@ export const DataTable = (props) => {
     const [viewableData, setViewableData] = useState([]);
     const [sortedData, setSortedData] = useState(data);
     const [updateTable, setUpdateTable] = useState(true);
-    // const [showLoading, setShowLoading] = useState(false);
     const [columnHover, setColumnHover] = useState('');
     const [itemNumbers, setItemNumbers] = useState({
         start: 1,
@@ -48,12 +74,12 @@ export const DataTable = (props) => {
     const [hidePagination, setHidePagination] = useState(disablePagination || false);
 
     useEffect(() => {
-        if (props.tableToPageOne) {
-            props.setTableToPageOne(false);
-            props.setFetchReports(true);
+        if (tableToPageOne) {
+            setTableToPageOne(false);
+            setFetchReports(true);
             forcePaginationToPage(1);
         }
-    }, [props.tableToPageOne]);
+    }, [tableToPageOne]);
 
     const forcePaginationToPage = (_pageNumber) => {
         setExternalPageIndex(_pageNumber - 1);
@@ -66,13 +92,13 @@ export const DataTable = (props) => {
     };
 
     useEffect(() => {
-        if (useExternalPagingAndSorting && props.userHasAbortedRequest) {
+        if (useExternalPagingAndSorting && userHasAbortedRequest) {
             let newPerPage = prevPerPage || 10;
 
             if (prevPerPage < 10) {
                 newPerPage = 10;
             }
-            if (!props.tableToPageOne && newPerPage === perPage) {
+            if (!tableToPageOne && newPerPage === perPage) {
                 forcePaginationToPage(prevPage < 1 ? 1 : prevPage);
             } else {
                 setPerPage(newPerPage);
@@ -82,16 +108,16 @@ export const DataTable = (props) => {
                     forcePaginationToPage(prevPage < 1 ? 1 : prevPage);
                 }
             }
-            props.setUserHasAbortedRequest(false);
+            setUserHasAbortedRequest(false);
         }
-    }, [props.userHasAbortedRequest, props.tableToPageOne]);
+    }, [userHasAbortedRequest, tableToPageOne]);
 
     useEffect(() => {
-        if (!props.isFetchingAnyRequest && useExternalPagingAndSorting) {
+        if (!isFetchingAnyRequest && useExternalPagingAndSorting) {
             prevPage = currentPageIndex;
             prevPerPage = perPage;
         }
-    }, [props.isFetchingAnyRequest]);
+    }, [isFetchingAnyRequest]);
 
     const setAsSelected = () => {
         const _perPage = Number(Cookies.get(perPageCookie));
@@ -112,13 +138,13 @@ export const DataTable = (props) => {
         }
         setCurrentPageIndex(_pageIndex);
         if (useExternalPagingAndSorting) {
-            if (!props.isFetchingAnyRequest) {
+            if (!isFetchingAnyRequest) {
                 prevPage = currentPageIndex;
             }
             //we can assume that consumers of this component use 0-based page indexing
 
             setExternalPageIndex(_pageIndex - 1);
-            props.setFetchReports(true);
+            setFetchReports(true);
             abortAndSetNewController();
         }
         Cookies.set(pageNumberCookie, _pageIndex, { expires: 7 });
@@ -132,14 +158,14 @@ export const DataTable = (props) => {
         setCurrentPageIndex(0);
 
         if (useExternalPagingAndSorting) {
-            if (!props.isFetchingAnyRequest) {
+            if (!isFetchingAnyRequest) {
                 prevPerPage = perPage;
             }
 
             abortAndSetNewController();
             setExternalPageIndex(0);
             setExternalPerPage(_perPage);
-            props.setFetchReports(true);
+            setFetchReports(true);
         }
         Cookies.set(pageNumberCookie, 1, { expires: 7 });
         Cookies.set(perPageCookie, _perPage, { expires: 7 });
@@ -167,14 +193,6 @@ export const DataTable = (props) => {
             recalculateItemNumbers();
         }
     }, [currentPageIndex, perPage, data]);
-
-    // useEffect(() => {
-    //     setCurrentPageIndex(1);
-    //     if (useExternalPagingAndSorting) {
-    //         //we can assume that consumers of this component use 0-based page indexing
-    //         setExternalPageIndex(currentPageIndex - 1);
-    //     }
-    // }, [perPage]);
 
     const returnSlicedData = (_data) => {
         const firstItemInPageIndex = currentPageIndex === 1 ? 0 : perPage * (currentPageIndex - 1);
@@ -257,7 +275,7 @@ export const DataTable = (props) => {
                 }
                 return {};
             }),
-        [state.columns, data, props.listItems, viewableData]
+        [state.columns, data, listItems, viewableData]
     );
 
     useEffect(() => {
@@ -326,7 +344,7 @@ export const DataTable = (props) => {
                 </Table.Head>
                 <Table.Body style={{ opacity: loading ? '0.5' : '1' }}>
                     {state.cellValues && state.cellValues.length > 0 ? (
-                        state.cellValues?.slice(0, perPage).map((row) => props.listItems(row))
+                        state.cellValues?.slice(0, perPage).map((row) => listItems(row))
                     ) : (
                         <Table.Row>
                             {columns.map((a, b) => {
@@ -355,6 +373,22 @@ export const DataTable = (props) => {
             )}
         </>
     );
+};
+
+DataTable.defaultProps = {
+    useExternalPagingAndSorting: false,
+    setExternalPerPage: undefined,
+    setExternalPageIndex: undefined,
+    setExternalSortBy: undefined,
+    externalTotalItems: undefined,
+    loading: undefined,
+    abortAndSetNewController: undefined,
+    tableToPageOne: undefined,
+    setTableToPageOne: undefined,
+    setFetchReports: undefined,
+    userHasAbortedRequest: false,
+    setUserHasAbortedRequest: undefined,
+    isFetchingAnyRequest: false
 };
 
 export default DataTable;

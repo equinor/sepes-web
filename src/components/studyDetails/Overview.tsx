@@ -162,7 +162,7 @@ const Overview: React.FC<OverviewProps> = ({
                 <div />
             )}
             <div>
-                <SandboxTable sandboxes={sandboxes} onFallBackAddressChange={onFallBackAddressChange} />
+                <SandboxTable sandboxes={sandboxes} onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
                 <DatasetsTable
                     datasets={datasets}
                     editMode={false}
