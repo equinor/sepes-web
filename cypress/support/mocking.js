@@ -119,6 +119,12 @@ Cypress.Commands.add('mockOutSandboxResources', () => {
     });
 });
 
+Cypress.Commands.add('mockOutSandboxResourcesWithVM', () => {
+    cy.intercept('/api/sandboxes/*/resources', {
+        fixture: 'sandbox/sandboxResourcesWithVM.json'
+    });
+});
+
 Cypress.Commands.add('mockOutSandboxCostAnalysis', () => {
     cy.intercept('/api/sandboxes/*/costanalysis');
 });
