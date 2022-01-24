@@ -1,7 +1,6 @@
 import React from 'react';
-import { faBlind } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Typography } from '@equinor/eds-core-react';
+import { Typography, Icon } from '@equinor/eds-core-react';
+import { explore_off } from '@equinor/eds-icons';
 
 const NoApi = () => {
     return (
@@ -18,7 +17,7 @@ const NoApi = () => {
                 zIndex: 1000
             }}
         >
-            <FontAwesomeIcon icon={faBlind} size="5x" style={{ margin: '20px' }} />
+            <Icon data={explore_off} size={48} style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
                     Unable to reach API..
