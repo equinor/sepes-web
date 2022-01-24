@@ -308,7 +308,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
-                        variant={returnTextfieldTypeBasedOninput(dataset?.name, true, undefined, vmNameAlreadyExist)}
+                        variant={returnTextfieldTypeBasedOninput(dataset?.name, false, undefined, vmNameAlreadyExist)}
                         helperText={dataset && dataset.name && returnHelperTextDatasetName()}
                         helperIcon={<Icon name="warning_filled" title="Warning" />}
                         style={{ width, backgroundColor: '#FFFFFF' }}
