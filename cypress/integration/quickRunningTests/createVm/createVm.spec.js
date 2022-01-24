@@ -15,7 +15,6 @@ describe('Create vm', () => {
     });
 
     it('clicks on data sets tab', () => {
-        cy.waitForStudyToLoad();
         cy.switchToDatasetsTab();
     });
 
@@ -26,7 +25,6 @@ describe('Create vm', () => {
     it('fills out dataset information', () => {
         cy.createDataset();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
-        // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
         cy.switchToSandboxesTab();
