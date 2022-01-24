@@ -96,7 +96,7 @@
         "@typescript-eslint/eslint-plugin": "^5.7.0",
         "@typescript-eslint/parser": "^5.7.0",
         "@typescript-eslint/typescript-estree": "^5.7.0",
-        "cypress": "^9.2.0",
+        "cypress": "^7.6.0",
         "cypress-dark": "^1.7.14",
         "cypress-file-upload": "^5.0.7",
         "cypress-movie": "^3.0.20",

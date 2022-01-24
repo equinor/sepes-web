@@ -20,7 +20,7 @@ describe('Create study', () => {
         });
         cy.get('[data-cy=new_study]').arrow({
             text: 'Click create study to go to the create-study form',
-            textSize: '3vh',
+            textSize: '2vh',
             blocking: true,
             duration: 5000
         });
