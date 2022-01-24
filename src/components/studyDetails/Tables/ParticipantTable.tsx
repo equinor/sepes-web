@@ -99,7 +99,7 @@ const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
                 data={participants}
                 listItems={returnListOfItems}
                 cookiePrefix={'participants-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode || participants.length < 10}
+                disablePagination={!editMode || (participants && Object.values(participants).length < 10)}
             />
         </div>
     );

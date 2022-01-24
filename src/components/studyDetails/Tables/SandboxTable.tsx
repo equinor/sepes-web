@@ -76,7 +76,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddres
                 data={sandboxes ?? []}
                 listItems={returnListOfItems}
                 cookiePrefix={'sandboxes-editMode' + getStudyId()}
-                disablePagination={!editMode || sandboxes.length < 10}
+                disablePagination={!editMode || (sandboxes && Object.values(sandboxes).length < 10)}
             />
         </div>
     );
