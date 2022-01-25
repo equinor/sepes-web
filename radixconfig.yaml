@@ -8,7 +8,9 @@ spec:
       - SEPES_AUTHORITY
       - SEPES_BASIC_SCOPE
       - SEPES_CLIENTID
+      - SEPES_CLIENTID_PROD
       - INSTRUMENTATION_KEY
+      - INSTRUMENTATION_KEY_PROD
   environments:
     - name: prod
       build:

@@ -6,6 +6,7 @@ import { TopBar, Icon, Button, Menu, Typography } from '@equinor/eds-core-react'
 import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
 import { requestChangeLink, documentationLink } from '../common/staticValues/commonLinks';
+import { getEnvironment } from 'components/common/helpers/helpers';
 
 const { Header } = TopBar;
 
@@ -160,21 +161,6 @@ const Bar = () => {
         </>
     );
 
-    const getEnvironment = () => {
-        const { hostname } = window.location;
-
-        if (localStorage.getItem('cyToken')?.length) {
-            return 'MOCKUSER';
-        }
-        if (hostname === 'localhost') return 'LOCALHOST';
-        if (hostname === 'frontend-sepes-web-dev.radix.equinor.com') return 'DEV';
-        if (hostname === 'frontend-sepes-web-qa.radix.equinor.com') return 'QA';
-        if (hostname === 'frontend-sepes-web-prod.radix.equinor.com' || hostname === 'sepes.equinor.com') {
-            return 'PROD';
-        }
-
-        return '';
-    };
     const environment = getEnvironment();
     return (
         <Wrapper>
