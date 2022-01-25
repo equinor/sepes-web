@@ -4,8 +4,12 @@ import { myMSALObj } from './AuthConfig';
 import { StudyObj } from '../components/common/interfaces';
 import axios from 'axios';
 import * as notify from '../components/common/notify';
+import { getEnvironment } from 'components/common/helpers/helpers';
 
-const scope = process.env.REACT_APP_SEPES_CLIENTID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
+const environment = getEnvironment();
+const clientID =
+    environment === 'PROD' ? process.env.REACT_APP_SEPES_CLIENTID_PROD : process.env.REACT_APP_SEPES_CLIENTID;
+const scope = clientID + '/' + process.env.REACT_APP_SEPES_BASIC_SCOPE;
 
 const request = { scopes: [scope] };
 

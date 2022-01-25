@@ -11,6 +11,7 @@ import Sandbox from './components/sandbox/Sandbox';
 import './styles/app.scss';
 import NotFound from './components/common/informationalComponents/NotFound';
 import ReleaseNotes from './components/releaseNotes/ReleaseNotes';
+import { getEnvironment } from 'components/common/helpers/helpers';
 
 interface IContextProps {
     updateCache: any;
@@ -23,7 +24,10 @@ const App = () => {
     const [updateCache, setUpdateCache] = useState();
     const appInsights = new ApplicationInsights({
         config: {
-            instrumentationKey: process.env.REACT_APP_INSTRUMENTATION_KEY
+            instrumentationKey:
+                getEnvironment() === 'PROD'
+                    ? process.env.REACT_APP_INSTRUMENTATION_KEY_PROD
+                    : process.env.REACT_APP_INSTRUMENTATION_KEY
         }
     });
     appInsights.loadAppInsights();
