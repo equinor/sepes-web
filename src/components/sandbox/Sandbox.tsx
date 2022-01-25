@@ -92,7 +92,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     };
 
     const setNewCostanalysisLink = (link: any) => {
-        sandbox.linkToCostAnalysis = link;
+        dispatch(setSandboxInStore({ ...sandbox, setNewCostanalysisLink: link }));
     };
 
     const returnStepComponent = () => {
