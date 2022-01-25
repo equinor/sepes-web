@@ -166,3 +166,19 @@ export const returnIndexOfObjectArray = (array: any, columnToCheck, valueToFind)
     }
     return -1;
 };
+
+export const getEnvironment = () => {
+    const { hostname } = window.location;
+
+    if (localStorage.getItem('cyToken')?.length) {
+        return 'MOCKUSER';
+    }
+    if (hostname === 'localhost') return 'LOCALHOST';
+    if (hostname === 'frontend-sepes-web-dev.radix.equinor.com') return 'DEV';
+    if (hostname === 'frontend-sepes-web-qa.radix.equinor.com') return 'QA';
+    if (hostname === 'frontend-sepes-web-prod.radix.equinor.com' || hostname === 'sepes.equinor.com') {
+        return 'PROD';
+    }
+
+    return '';
+};
