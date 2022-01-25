@@ -260,7 +260,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         }
         setEditMode(false);
 
-        if (!wbsIsValid) {
+        if (!wbsOnChangeIsValid) {
             studyOnChange.wbsCode = '';
         }
 
