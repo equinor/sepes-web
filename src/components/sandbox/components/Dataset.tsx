@@ -8,13 +8,14 @@ import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
     getAvailableDatasetsUrl,
     getDatasetsInSandboxUrl,
-    getSandboxByIdUrl,
     getStudyByIdUrl
 } from '../../../services/ApiCallStrings';
 import '../../../styles/Table.scss';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../../utils/CommonUtil';
 import { truncate } from 'components/common/helpers/helpers';
 import { returnTooltipTextDataset } from '../../common/helpers/sandboxHelpers';
+import { useDispatch } from 'react-redux';
+import { setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
 
 const SatusWrapper = styled.div`
     display: flex;
@@ -23,23 +24,16 @@ const SatusWrapper = styled.div`
 
 const { Body, Row, Cell, Head } = Table;
 
-type datasetProps = {
+type DatasetProps = {
     sandboxId: string;
     updateCache: any;
     setUpdateCache: any;
-    setSandbox: any;
     sandbox: SandboxObj;
     controller: AbortController;
 };
 
-const Dataset: React.FC<datasetProps> = ({
-    sandboxId,
-    updateCache,
-    setUpdateCache,
-    setSandbox,
-    sandbox,
-    controller
-}) => {
+const Dataset: React.FC<DatasetProps> = ({ sandboxId, updateCache, setUpdateCache, sandbox, controller }) => {
+    const dispatch = useDispatch();
     const studyId = getStudyId();
     const [availableDatasets, setAvailableDatasets] = useState<any>([]);
     const availableDatasetsResponse = useFetchUrl(
@@ -58,22 +52,22 @@ const Dataset: React.FC<datasetProps> = ({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
             [getDatasetsInSandboxUrl(sandboxId)]: true,
-            [getAvailableDatasetsUrl(sandboxId)]: true,
-            [getSandboxByIdUrl(sandboxId)]: true
+            [getAvailableDatasetsUrl(sandboxId)]: true
         });
+
         if (evt.target.checked) {
             putDatasetForSandbox(sandboxId, dataset.datasetId).then((result: any) => {
                 setAddDatasetInprogress({ [dataset.datasetId]: false });
                 if (result && result.message) {
                     console.log('Err');
                 } else {
-                    const tempDatasets: any = sandbox.datasets;
-                    tempDatasets.push(dataset.datasetId);
-                    setSandbox({
-                        ...sandbox,
-                        datasets: tempDatasets,
-                        restrictionDisplayText: result.restrictionDisplayText
-                    });
+                    dispatch(
+                        setSandboxInStore({
+                            ...sandbox,
+                            datasets: { ...sandbox.datasets, dataset },
+                            restrictionDisplayText: result.restrictionDisplayText
+                        })
+                    );
                 }
             });
         } else {
@@ -82,13 +76,13 @@ const Dataset: React.FC<datasetProps> = ({
                 if (result && result.message) {
                     console.log('Err');
                 } else {
-                    const tempDatasets: any = sandbox.datasets;
-                    tempDatasets.splice(tempDatasets.indexOf(dataset.datasetId), 1);
-                    setSandbox({
-                        ...sandbox,
-                        datasets: tempDatasets,
-                        restrictionDisplayText: result.restrictionDisplayText
-                    });
+                    dispatch(
+                        setSandboxInStore({
+                            ...sandbox,
+                            datasets: Object.values(sandbox.datasets).filter((d) => d.id === dataset.datasetId),
+                            restrictionDisplayText: result.restrictionDisplayText
+                        })
+                    );
                 }
             });
         }

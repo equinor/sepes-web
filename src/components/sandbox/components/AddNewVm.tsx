@@ -15,7 +15,6 @@ import { checkColumDoesNotExceedInputLength, returnLimitMeta, roundUp } from '..
 import {
     validateUserInputVm,
     filterList,
-    returnPasswordVariant,
     returnUsernameVariant,
     arrayObjectsToArrayString,
     returnKeyOfDisplayValue,
@@ -28,13 +27,17 @@ import {
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
-import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
+import { DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import '../../../styles/addNewVm.scss';
-import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
-import { useDispatch } from 'react-redux';
+import Password from 'components/common/customComponents/Password';
+import HelperTexts from 'components/common/constants/HelperTexts';
+import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 
 const Wrapper = styled.div`
     height: auto;
@@ -81,7 +84,6 @@ const UnstyledList = styled.ul`
 `;
 
 type AddNewVmProps = {
-    sandbox: SandboxObj;
     setVms: any;
     vms: any;
     setActiveTab: any;
@@ -121,7 +123,6 @@ const width = '400px';
 
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
-        sandbox,
         setVms,
         vms,
         sizes,
@@ -139,6 +140,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         setHasChanged
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
+        const sandbox = useSelector(getSandboxFromStore());
         const [actualVmName, setActualVmName] = useState<string>('');
         const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
         const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
@@ -203,6 +205,14 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             });
         };
 
+        const handlePasswordChange = (value: string) => {
+            setHasChanged(true);
+            setVm({
+                ...vm,
+                password: value
+            });
+        };
+
         const createVm = () => {
             if (!vmIsValid) {
                 return;
@@ -227,8 +237,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         dataDisks: []
                     });
                     // getResources();
-                    dispatch({ type: SETCALLRESOURCESTRUE });
-
+                    dispatch(setCallResources(true));
                     const vmsList: any = [...vms];
                     vmsList.push(result);
                     setVms(vmsList);
@@ -290,6 +299,14 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             return '';
         };
 
+        const returnHelperTextVmName = (): string => {
+            if (checkIfVmNameAlreadyExists(vms, vm.name, sandbox)) {
+                return 'There already a VM with that name';
+            }
+
+            return 'Name cannot be changed later';
+        };
+
         useKeyEvents(undefined, createVm, true);
 
         return (
@@ -306,14 +323,11 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         label="Name"
                         meta={returnLimitMeta(20, vm.name)}
                         variant={returnVMnameVariant(vm.name, vms, sandbox)}
-                        helperText={
-                            checkIfVmNameAlreadyExists(vms, vm.name, sandbox)
-                                ? 'There already exists a vm with that name'
-                                : ''
-                        }
+                        helperText={returnHelperTextVmName()}
+                        helperIcon={<Icon name="warning_outlined" title="Warning" />}
                         data-cy="vm_name"
                         inputIcon={
-                            <Tooltip title="The value must be between 3 and 20 characters long" placement="right">
+                            <Tooltip title={VmTextFieldsTooltip.Name} placement="right">
                                 <Icon name="info_circle" />
                             </Tooltip>
                         }
@@ -324,17 +338,6 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                             {actualVmName || '-'}
                         </Typography>
                     </div>
-                    {/*<CoreDevDropdown
-                    label="Operating system"
-                    options={os}
-                    width={width}
-                    onChange={handleDropdownChange}
-                    name="operatingSystem"
-                    data-cy="vm_operatingSystem"
-                    meta="(required)"
-                    useOverflow
-                    tabIndex={0}
-                />*/}
                     <div>
                         <SizeFilterWrapper>
                             <UnstyledList>
@@ -401,33 +404,18 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         disabled={!vm.operatingSystem}
                         helperText={usernameHelpText}
                         inputIcon={
-                            <Tooltip title="The value must be between 1 and 20 characters long" placement="right">
+                            <Tooltip title={VmTextFieldsTooltip.Username} placement="right">
                                 {validatingUsername ? <DotProgress /> : <Icon name="info_circle" />}
                             </Tooltip>
                         }
                     />
-                    <div style={{ marginTop: '24px' }}>
-                        <TextField
-                            id="textfield3"
-                            autoComplete="off"
-                            placeholder="Password"
-                            type="password"
-                            onChange={(e: any) => handleChange('password', e.target.value)}
-                            value={vm.password}
-                            label="Password"
-                            meta="(required)"
-                            data-cy="vm_password"
-                            variant={returnPasswordVariant(vm.password)}
-                            inputIcon={
-                                <Tooltip
-                                    title="The value must be between 12 and 123 characters long. Must contain one special character, one number and one uppercase letter"
-                                    placement="right"
-                                >
-                                    <Icon name="info_circle" />
-                                </Tooltip>
-                            }
-                        />
-                    </div>
+                    <Password
+                        onChange={handlePasswordChange}
+                        fieldValue={vm.password}
+                        limit={limits.password}
+                        helperText={HelperTexts.PasswordText}
+                        dataCy="vm_password"
+                    />
                 </div>
                 <SizeFilterWrapper>
                     <UnstyledList>

@@ -16,7 +16,7 @@ import {
     returnTextfieldTypeBasedOninput
 } from '../common/helpers/helpers';
 import { checkForInputErrors, checkIfDatasetNameAlreadyExists } from '../common/helpers/datasetHelpers';
-import Promt from '../common/Promt';
+import Promt from '../common/Prompt';
 import { UpdateCache } from '../../App';
 import { EquinorIcon } from '../common/StyledComponents';
 import { Permissions } from '../../index';
@@ -308,7 +308,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
-                        variant={returnTextfieldTypeBasedOninput(dataset?.name, true, undefined, vmNameAlreadyExist)}
+                        variant={returnTextfieldTypeBasedOninput(dataset?.name, false, undefined, vmNameAlreadyExist)}
                         helperText={dataset && dataset.name && returnHelperTextDatasetName()}
                         helperIcon={<Icon name="warning_filled" title="Warning" />}
                         style={{ width, backgroundColor: '#FFFFFF' }}

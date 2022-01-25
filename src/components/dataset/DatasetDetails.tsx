@@ -10,7 +10,7 @@ import {
     removeStudyDataset
 } from '../../services/Api';
 import { isIterable, truncate } from '../common/helpers/helpers';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import LoadingFull from '../common/LoadingFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
@@ -18,17 +18,16 @@ import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';
 import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { UpdateCache } from '../../App';
 import { getStandardDatasetUrl, getStudySpecificDatasetUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { resourceStatus, resourceType } from '../common/staticValues/types';
 import { uploadFile } from '../../services/BlobStorage';
-import Prompt from '../common/Promt';
-import { getStudyId, getDatasetId } from 'utils/CommonUtil';
+import Prompt from '../common/Prompt';
+import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 import { checkIfFileAlreadyIsUploaded, setFilesProgressToOnePercent } from 'components/common/helpers/datasetHelpers';
 import { checkUrlIfGeneralDataset } from 'utils/DatasetUtil';
-import FileBrowser from 'react-keyed-file-browser';
 import DatasetFileList from './DatasetFileList';
 import DatasetInformation from './DatasetInformation';
 import { truncateLength } from '../common/staticValues/lenghts';
@@ -291,6 +290,7 @@ const DatasetDetails = () => {
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
+            console.log(result);
             setLoading(false);
             if (result && !result.message) {
                 history.push('/studies/' + studyId);
@@ -487,44 +487,24 @@ const DatasetDetails = () => {
                                     />
                                 </div>
                             )}
-                            {folderViewMode ? (
-                                <FileBrowser
-                                    files={returnEnumberableFiles()}
-                                    headerRenderer={null}
-                                    icons={{
-                                        File: <Icon name="file" color="#007079" style={{ marginBottom: '-6px' }} />,
-                                        Folder: <Icon name="folder" color="#FF9200" style={{ marginBottom: '-6px' }} />,
-                                        FolderOpen: (
-                                            <Icon name="folder_open" color="#FF9200" style={{ marginBottom: '-6px' }} />
-                                        ),
-                                        Delete: (
-                                            <Icon
-                                                name="delete_forever"
-                                                color="#FF9200"
-                                                style={{ marginBottom: '-6px' }}
-                                            />
-                                        )
-                                    }}
-                                />
-                            ) : (
-                                <DatasetFileList
-                                    loadingFiles={loadingFiles}
-                                    viewableFiles={viewableFiles}
-                                    setViewableFiles={setViewableFiles}
-                                    numberOfFilesInProgress={numberOfFilesInProgress}
-                                    dataset={dataset}
-                                    progressArray={progressArray}
-                                    files={files}
-                                    setFiles={setFiles}
-                                    setUpdateCache={setUpdateCache}
-                                    controllerSas={controllerSas}
-                                    controller={controller}
-                                    setController={setController}
-                                    abortArray={abortArray}
-                                    updateCache={updateCache}
-                                    getSasKey={getSasKey}
-                                />
-                            )}
+                            <DatasetFileList
+                                loadingFiles={loadingFiles}
+                                viewableFiles={viewableFiles}
+                                setViewableFiles={setViewableFiles}
+                                numberOfFilesInProgress={numberOfFilesInProgress}
+                                dataset={dataset}
+                                progressArray={progressArray}
+                                files={files}
+                                setFiles={setFiles}
+                                setUpdateCache={setUpdateCache}
+                                controllerSas={controllerSas}
+                                controller={controller}
+                                setController={setController}
+                                abortArray={abortArray}
+                                updateCache={updateCache}
+                                getSasKey={getSasKey}
+                                folderViewMode={folderViewMode}
+                            />
                         </div>
                         {!datasetResponse.loading ? (
                             <DatasetInformation

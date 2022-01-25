@@ -6,10 +6,9 @@ import styled from 'styled-components';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import DeleteResourceComponent from '../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourceStatus, makeAvailable } from '../../services/Api';
-import { SandboxObj } from '../common/interfaces';
+import { deleteSandbox, getResourcesList, makeAvailable } from '../../services/Api';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import {
@@ -17,8 +16,11 @@ import {
     returnToolTipForMakeAvailable
 } from 'components/common/helpers/sandboxHelpers';
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
-
-const set = require('lodash/set');
+import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
+import { useDispatch, useSelector } from 'react-redux';
+import { setResourcesInStore } from 'store/resources/resourcesSlice';
+import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
+import { setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -53,11 +55,6 @@ type StepBarProps = {
     step: number;
     studyId: string;
     sandboxId: string;
-    sandbox: SandboxObj;
-    setSandbox: any;
-    updateCache: any;
-    setUpdateCache: any;
-    setResources: any;
     setLoading: any;
     setNewPhase: any;
     setDeleteSandboxInProgress: any;
@@ -65,35 +62,24 @@ type StepBarProps = {
     controller: AbortController;
     vmsWithOpenInternet: any;
     setMakeAvailableInProgress: any;
-    makeAvailableInProgress: any;
+    makeAvailableInProgress: boolean;
+    setHasChanged: any;
+    updateCache: any;
+    setUpdateCache: any;
 };
 
 const getSteps = () => {
     return [
         {
-            label: 'Config and data sets',
-            description:
-                'Configuration of sandbox, and selection of data sets. Selected data sets affects security policies when they are made available. This is the phase where you have flexibility to set up everything you need'
+            label: StepBarLabels.ConfigAndData,
+            description: StepBarDescriptions.ConfigAndData
         },
         {
-            label: 'Data sets available',
-            description:
-                'Data sets become available in the sandbox, and you can now work your magic. Data set restrictions are applied.'
+            label: StepBarLabels.DataSets,
+            description: StepBarDescriptions.DataSets
         }
     ];
 };
-/*
-,
-        {
-            label: 'Data retention',
-            description:
-                'Choose which data should be kept and which should be deleted when decommissioning the sandbox.'
-        },
-        {
-            label: 'Decommission sandbox',
-            description: 'Resources shuts down. Data will be removed according to your data retention  choices.'
-        }
-*/
 
 let resourcesFailed = false;
 const interval = 20000; //20 seconds
@@ -103,11 +89,6 @@ const StepBar: React.FC<StepBarProps> = ({
     setStep,
     studyId,
     sandboxId,
-    sandbox,
-    setSandbox,
-    updateCache,
-    setUpdateCache,
-    setResources,
     setLoading,
     setNewPhase,
     setDeleteSandboxInProgress,
@@ -115,18 +96,22 @@ const StepBar: React.FC<StepBarProps> = ({
     controller,
     vmsWithOpenInternet,
     setMakeAvailableInProgress,
-    makeAvailableInProgress
+    makeAvailableInProgress,
+    setHasChanged,
+    updateCache,
+    setUpdateCache
 }) => {
     const history = useHistory();
+    const dispatch = useDispatch();
     const steps = getSteps();
     const [userClickedMakeAvailable, setUserClickedMakeAvailable] = useState<boolean>(false);
     const [allResourcesOk, setAllResourcesOk] = useState<boolean>(false);
     const [sandboxHasVm, setSandboxHasVm] = useState<boolean>(false);
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
+    const sandbox = useSelector(getSandboxFromStore());
 
     useEffect(() => {
-        // getResources();
         let timer: any;
         try {
             timer = setInterval(async () => {
@@ -147,13 +132,12 @@ const StepBar: React.FC<StepBarProps> = ({
     }, []);
 
     const getResources = () => {
-        getResourceStatus(sandboxId, controller.signal).then((result: any) => {
+        getResourcesList(sandboxId, controller.signal).then((result: any) => {
             if (result && (result.errors || result.message)) {
                 resourcesFailed = true;
-
                 console.log('Err');
             } else {
-                setResources(result);
+                dispatch(setResourcesInStore(result));
                 allResourcesStatusOkAndAtleastOneVm(
                     result,
                     setAnyVmWithOpenInternet,
@@ -161,7 +145,8 @@ const StepBar: React.FC<StepBarProps> = ({
                     setAllResourcesOk,
                     sandbox,
                     setNewCostanalysisLink,
-                    setSandbox
+                    dispatch,
+                    setSandboxInStore
                 );
             }
         });
@@ -190,6 +175,7 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
+        setHasChanged(false);
         setDeleteSandboxInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
@@ -214,8 +200,13 @@ const StepBar: React.FC<StepBarProps> = ({
             if (result.message || result.errors) {
                 setNewPhase(0);
             } else {
-                setSandbox(set({ ...sandbox }, 'permissions.openInternet', result.permissions.openInternet));
-                setSandbox(set({ ...sandbox }, 'datasets', result.datasets));
+                dispatch(
+                    setSandboxInStore({
+                        ...sandbox,
+                        datasets: result.datasets,
+                        permissions: result.permissions
+                    })
+                );
                 setNewPhase(1);
             }
         });

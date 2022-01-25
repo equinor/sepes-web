@@ -8,6 +8,7 @@ describe('Create data set', () => {
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
+        cy.mockOutAllCallsForCreateDatasetDocsTest();
         cy.login();
     });
 
@@ -18,7 +19,7 @@ describe('Create data set', () => {
             blocking: true,
             textSize: '3vh'
         });
-        cy.createStudy(studyName);
+        cy.createStudyWithoutInterceptingStudy(studyName);
     });
 
     it('clicks on data sets tab', () => {
@@ -54,6 +55,9 @@ describe('Create data set', () => {
 
     it('Create dataset', { keystrokeDelay: 100 }, () => {
         // cy.createDataset();
+        cy.mockOutRegions();
+        cy.mockOutDataSet();
+        cy.mockOutDatasetResources();
         cy.text('Step 4 - Fill out the fields to create the data set', {
             duration: 3000,
             blocking: false,
@@ -132,17 +136,21 @@ describe('Create data set', () => {
     });
 
     it('Delete study specific data set', { keystrokeDelay: 100 }, () => {
+        cy.mockOutDataSetDelete();
+        cy.mockOutStudy();
         cy.text('How to delete the data set', {
             duration: 5000,
             blocking: true,
             textSize: '3vh'
         });
         cy.get('[data-cy=dataset_delete]').click({ force: true });
-        cy.get('[data-cy="delete_resource"]').type('cy dataset name');
+        cy.get('[data-cy="delete_resource"]').type('Documentation data set');
         cy.get('[data-cy=delete_resource_delete]').click({ force: true });
     });
 
     it('Delete study', { keystrokeDelay: 100 }, () => {
+        cy.mockOutStudyList();
+        cy.mockOutDeleteStudy();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,

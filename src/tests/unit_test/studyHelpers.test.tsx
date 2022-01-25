@@ -1,82 +1,102 @@
+import { StudyObj } from 'components/common/interfaces';
 import * as helpers from '../../components/common/helpers/studyHelpers';
+import { study, studyWithDataset, studyWithSandbox } from '../mocks/study/study-mocs';
 
 test('test validateUserInputStudy', () => {
     expect(
-        helpers.validateUserInputStudy({
-            name: 'testName',
-            vendor: 'testVendor',
-            wbsCode: '',
-            restricted: false,
-            description: '',
-            logoUrl: '',
-            id: '',
-            resultsAndLearnings: '',
-            datasets: [],
-            participants: [],
-            sandboxes: [],
-            permissions: {
-                addRemoveDataset: false,
-                addRemoveParticipant: false,
-                addRemoveSandbox: false,
-                closeStudy: false,
-                deleteStudy: false,
-                readResulsAndLearnings: false,
-                updateMetadata: false,
-                updateResulsAndLearnings: false
-            }
-        })
+        helpers.validateUserInputStudy(
+            {
+                name: 'testName',
+                vendor: 'testVendor',
+                wbsCode: '',
+                restricted: false,
+                description: '',
+                logoUrl: '',
+                id: '',
+                resultsAndLearnings: '',
+                datasets: [],
+                participants: [],
+                sandboxes: [],
+                permissions: {
+                    addRemoveDataset: false,
+                    addRemoveParticipant: false,
+                    addRemoveSandbox: false,
+                    closeStudy: false,
+                    deleteStudy: false,
+                    readResulsAndLearnings: false,
+                    updateMetadata: false,
+                    updateResulsAndLearnings: false
+                },
+                wbsCodeValid: true
+            },
+            true,
+            false,
+            false
+        )
     ).toBeTruthy();
 
     expect(
-        helpers.validateUserInputStudy({
-            name: '',
-            vendor: 'testVendor',
-            wbsCode: '',
-            restricted: false,
-            description: '',
-            logoUrl: '',
-            id: '',
-            resultsAndLearnings: '',
-            datasets: [],
-            participants: [],
-            sandboxes: [],
-            permissions: {
-                addRemoveDataset: false,
-                addRemoveParticipant: false,
-                addRemoveSandbox: false,
-                closeStudy: false,
-                deleteStudy: false,
-                readResulsAndLearnings: false,
-                updateMetadata: false,
-                updateResulsAndLearnings: false
-            }
-        })
+        helpers.validateUserInputStudy(
+            {
+                name: '',
+                vendor: 'testVendor',
+                wbsCode: '',
+                restricted: false,
+                description: '',
+                logoUrl: '',
+                id: '',
+                resultsAndLearnings: '',
+                datasets: [],
+                participants: [],
+                sandboxes: [],
+                permissions: {
+                    addRemoveDataset: false,
+                    addRemoveParticipant: false,
+                    addRemoveSandbox: false,
+                    closeStudy: false,
+                    deleteStudy: false,
+                    readResulsAndLearnings: false,
+                    updateMetadata: false,
+                    updateResulsAndLearnings: false
+                },
+                wbsCodeValid: true
+            },
+            true,
+            false,
+            false
+        )
     ).toBeFalsy();
 
     expect(
-        helpers.validateUserInputStudy({
-            name: '',
-            vendor: '',
-            wbsCode: '',
-            restricted: false,
-            description: '',
-            logoUrl: '',
-            id: '',
-            resultsAndLearnings: '',
-            datasets: [],
-            participants: [],
-            sandboxes: [],
-            permissions: {
-                addRemoveDataset: false,
-                addRemoveParticipant: false,
-                addRemoveSandbox: false,
-                closeStudy: false,
-                deleteStudy: false,
-                readResulsAndLearnings: false,
-                updateMetadata: false,
-                updateResulsAndLearnings: false
-            }
-        })
+        helpers.validateUserInputStudy(
+            {
+                name: '',
+                vendor: '',
+                wbsCode: '',
+                restricted: false,
+                description: '',
+                logoUrl: '',
+                id: '',
+                resultsAndLearnings: '',
+                datasets: [],
+                participants: [],
+                sandboxes: [],
+                permissions: {
+                    addRemoveDataset: false,
+                    addRemoveParticipant: false,
+                    addRemoveSandbox: false,
+                    closeStudy: false,
+                    deleteStudy: false,
+                    readResulsAndLearnings: false,
+                    updateMetadata: false,
+                    updateResulsAndLearnings: false
+                },
+                wbsCodeValid: true
+            },
+            true,
+            false,
+            false
+        )
     ).toBeFalsy();
 });
 
@@ -149,7 +169,7 @@ test('test filterRoleList', () => {
         userId: 1
     };
 
-    const study = {
+    const study: StudyObj = {
         name: 'StudyName',
         vendor: 'Bouvet',
         wbsCode: 'abc123',
@@ -170,10 +190,11 @@ test('test filterRoleList', () => {
             readResulsAndLearnings: false,
             updateMetadata: false,
             updateResulsAndLearnings: false
-        }
+        },
+        wbsCodeValid: true
     };
 
-    const studyWithSponsorRep = {
+    const studyWithSponsorRep: StudyObj = {
         name: 'StudyName',
         vendor: 'Bouvet',
         wbsCode: 'abc123',
@@ -194,10 +215,11 @@ test('test filterRoleList', () => {
             readResulsAndLearnings: false,
             updateMetadata: false,
             updateResulsAndLearnings: false
-        }
+        },
+        wbsCodeValid: true
     };
 
-    const studyWithAllRoles = {
+    const studyWithAllRoles: StudyObj = {
         name: 'StudyName',
         vendor: 'Bouvet',
         wbsCode: 'abc123',
@@ -223,7 +245,8 @@ test('test filterRoleList', () => {
             readResulsAndLearnings: false,
             updateMetadata: false,
             updateResulsAndLearnings: false
-        }
+        },
+        wbsCodeValid: true
     };
 
     expect(helpers.filterRoleList(rolesAll, participantWithoutRole, study)).toEqual(rolesAll);
@@ -231,4 +254,10 @@ test('test filterRoleList', () => {
         rolesAllExceptSponsor
     );
     expect(helpers.filterRoleList(rolesAll, participantWithSponsorRep, studyWithAllRoles)).toEqual([]);
+});
+
+test('test checkIfStudyHasActiveResources', () => {
+    expect(helpers.checkIfStudyHasActiveResources(study)).toBeFalsy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithDataset)).toBeTruthy;
+    expect(helpers.checkIfStudyHasActiveResources(studyWithSandbox)).toBeTruthy;
 });

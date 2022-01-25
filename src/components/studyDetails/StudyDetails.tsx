@@ -1,14 +1,14 @@
 /*eslint-disable no-unneeded-ternary */
 import React, { useState, useContext, useEffect } from 'react';
-import StudyComponentFull from './StudyComponentFull';
+import StudyComponentFull from './StudyFull';
 import styled from 'styled-components';
-import DataSetComponent from './DataSetComponent';
-import ParticipantComponent from './ParticipantComponent';
-import SandBoxComponent from './SandboxComponent';
+import DataSetComponent from './DataSet';
+import ParticipantComponent from './Participant';
+import SandBoxComponent from './Sandbox';
 import Overview from './Overview';
 import { Tabs } from '@equinor/eds-core-react';
-import Promt from '../common/Promt';
-import LoadingFull from '../common/LoadingComponentFullscreen';
+import Promt from '../common/Prompt';
+import LoadingFull from '../common/LoadingFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { resultsAndLearningsObj, StudyObj } from '../common/interfaces';
@@ -18,7 +18,7 @@ import useFetchUrl from '../common/hooks/useFetchUrl';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
-import { getStudyId } from 'utils/CommonUtil';
+import { getStudyId } from '../../utils/CommonUtil';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -81,6 +81,7 @@ const StudyDetails = () => {
     const studyResponse = useFetchUrl(getStudyByIdUrl(id), setStudy, id ? true : false, controller);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
+    const [fallBackAddress, setFallBackAddress] = useState<string>('/');
 
     const permissions = useContext(Permissions);
     const displayStudyInfo = !studyResponse.loading && study;
@@ -98,6 +99,10 @@ const StudyDetails = () => {
         setWbsIsValid(study.wbsCodeValid);
     }, [study.wbsCodeValid]);
 
+    const handleFallbackAddressChange = (url: string) => {
+        setFallBackAddress(url);
+    };
+
     const changeComponent = () => {
         Cookies.remove(id);
         Cookies.set(id, activeTab, { expires: 1 });
@@ -111,6 +116,7 @@ const StudyDetails = () => {
                         updateCache={updateCache}
                         wbsIsValid={wbsIsValid}
                         studySaveInProgress={studySaveInProgress}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
             case 2:
@@ -124,6 +130,7 @@ const StudyDetails = () => {
                         study={study}
                         setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
             case 3:
@@ -145,6 +152,7 @@ const StudyDetails = () => {
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         controller={controller}
+                        onFallBackAddressChange={handleFallbackAddressChange}
                     />
                 );
         }
@@ -155,7 +163,7 @@ const StudyDetails = () => {
             {studyResponse.notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
-                <Promt hasChanged={displayPrompt} />
+                <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />
                 {displayStudyInfo ? (
                     <StudyComponentFull
                         study={study}

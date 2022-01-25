@@ -5,10 +5,10 @@ import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
 import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
-import DeleteResourceComponent from '../../common/customComponents/DeleteResourceComponent';
+import DeleteResourceComponent from '../../common/customComponents/DeleteResource';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import { useDispatch } from 'react-redux';
-import { SETCALLRESOURCESTRUE } from 'store/actions/sandbox';
+import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -80,7 +80,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setActiveTab(0);
         deleteVirtualMachine(vmProperties.id).then((result: any) => {
             if (result && !result.message) {
-                dispatch({ type: SETCALLRESOURCESTRUE });
+                dispatch(setCallResources(true));
                 const currentVms: any = [...vms];
                 currentVms.splice(vms.indexOf(vmProperties), 1);
                 setVms(currentVms);

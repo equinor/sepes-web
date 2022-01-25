@@ -1,7 +1,6 @@
 import React from 'react';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Typography } from '@equinor/eds-core-react';
+import { Typography, Icon } from '@equinor/eds-core-react';
+import { close_circle_outlined } from '@equinor/eds-icons';
 
 const NoAccess = () => {
     return (
@@ -18,7 +17,7 @@ const NoAccess = () => {
                 zIndex: 1000
             }}
         >
-            <FontAwesomeIcon icon={faTimesCircle} size="5x" style={{ margin: '20px' }} />
+            <Icon data={close_circle_outlined} size={48} style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center' }} variant="h4">
                     You do not have the required study role to view this page.

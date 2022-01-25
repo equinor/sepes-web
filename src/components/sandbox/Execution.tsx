@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import PolicyComponent from './components/PolicyComponent';
-import ResourcesComponent from './components/ResourcesComponent';
 import { EquinorIcon } from '../common/StyledComponents';
 import DatasetConfirmed from './components/DatasetsConfirmed';
 import { SandboxObj } from '../common/interfaces';
+import Policy from './components/Policy';
+import Resources from './components/Resources';
 
 const Wrapper = styled.div`
     display: grid;
@@ -32,11 +32,10 @@ const SatusWrapper = styled.div`
 `;
 
 type ExecutionProps = {
-    resources: any;
     sandbox: SandboxObj;
 };
 
-const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
+const Execution: React.FC<ExecutionProps> = ({ sandbox }) => {
     return (
         <Wrapper>
             <SatusWrapper>
@@ -48,10 +47,10 @@ const Execution: React.FC<ExecutionProps> = ({ resources, sandbox }) => {
                     <DatasetConfirmed sandbox={sandbox} />
                 </div>
                 <div>
-                    <PolicyComponent sandbox={sandbox} />
+                    <Policy sandbox={sandbox} />
                 </div>
                 <div>
-                    <ResourcesComponent resources={resources} permissions={sandbox.permissions} />
+                    <Resources permissions={sandbox.permissions} />
                 </div>
             </ResourceWrapper>
         </Wrapper>

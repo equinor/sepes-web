@@ -41,7 +41,8 @@ const study: StudyObj = {
         readResulsAndLearnings: true,
         updateMetadata: true,
         updateResulsAndLearnings: true
-    }
+    },
+    wbsCodeValid: true
 };
 
 const mockFunc = (id: string) => {};
@@ -58,6 +59,7 @@ test('renders StudyComponent full component with invalid study name', () => {
                 setResultsAndLearnings={mockFunc}
                 resultsAndLearnings={resultsAndLearnings}
                 controller={new AbortController()}
+                onFallBackAddressChange={mockFunc}
             />
         </Router>
     );

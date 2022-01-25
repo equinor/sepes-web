@@ -6,8 +6,40 @@ import { EquinorIcon } from '../../common/StyledComponents';
 import '../../../styles/Table.scss';
 import { truncate } from 'components/common/helpers/helpers';
 import TextTruncate from '../../common/customComponents/infoDisplayComponents/TextTruncate';
+import DataTable from 'components/common/table/DataTable';
+import { getStudyId } from 'utils/CommonUtil';
+import { DatasetLightObj } from 'components/common/interfaces';
 
-const { Body, Row, Cell, Head } = Table;
+const { Row, Cell } = Table;
+
+const columns = [
+    {
+        key: 'name',
+        style: { textAlign: 'left' },
+        name: 'Dataset',
+        accessor: 'name',
+        sortDirection: 'none',
+        isSortable: true,
+        isSorted: false
+    },
+    {
+        key: 'sandboxes',
+        name: 'Sandboxes',
+        style: { textAlign: 'left' },
+        accessor: 'sandboxes.name',
+        sortDirection: 'none',
+        isSortable: false
+    },
+    {
+        key: '',
+        name: '',
+        maxWidth: 250,
+        accessor: '',
+        sortDirection: 'none',
+        isSortable: false,
+        style: { width: '10px' }
+    }
+];
 
 const DatasetsTable = (props: any) => {
     const { editMode, datasets } = props;
@@ -42,61 +74,54 @@ const DatasetsTable = (props: any) => {
 
     const redirectOnCellClick = (row: any) => {
         if (row.studyId && !mouseHoverSandbox) {
-            history.push('/studies/' + props.studyId + '/datasets/' + row.id);
+            const url = '/studies/' + props.studyId + '/datasets/' + row.id;
+            history.push(url);
+            props.onFallBackAddressChange(url);
         }
     };
 
+    const returnListOfItems = (dataset: DatasetLightObj) => {
+        if (dataset === undefined) {
+            return {};
+        }
+        return (
+            <Row key={dataset.id} onClick={() => redirectOnCellClick(dataset)} id="tableRow">
+                {returnCell(dataset, dataset.name, 'text')}
+                {editMode && (
+                    <Cell>
+                        {dataset.sandboxes &&
+                            dataset.sandboxes.length > 0 &&
+                            dataset.sandboxes.map((sandbox: any, index: number) => {
+                                return (
+                                    <Link
+                                        key={sandbox.id}
+                                        style={{ color: '#000000', cursor: 'pointer' }}
+                                        to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.id}
+                                        onMouseOver={() => setMouseHoverSandbox(true)}
+                                        onMouseLeave={() => setMouseHoverSandbox(false)}
+                                    >
+                                        {index === dataset.sandboxes.length - 1
+                                            ? sandbox && truncate(sandbox.name)
+                                            : sandbox.name && <TextTruncate inputText={sandbox.name} /> + ', '}
+                                    </Link>
+                                );
+                            })}
+                    </Cell>
+                )}
+                {returnCell(dataset, '', 'icon')}
+            </Row>
+        );
+    };
+
     return (
-        <div>
-            <Table style={{ width: '100%', marginBottom: '24px' }}>
-                <Head>
-                    <Row>
-                        <Cell scope="col">Dataset</Cell>
-                        {editMode && <Cell scope="col">Sandboxes</Cell>}
-                        <Cell style={{ width: '10px' }} scope="col">
-                            {''}
-                        </Cell>
-                    </Row>
-                </Head>
-                <Body>
-                    {datasets && datasets.length > 0 ? (
-                        datasets.map((row) => (
-                            <Row key={row.id} onClick={() => redirectOnCellClick(row)} id="tableRow">
-                                {returnCell(row, row.name, 'text')}
-                                {editMode && (
-                                    <Cell>
-                                        {row.sandboxes &&
-                                            row.sandboxes.length > 0 &&
-                                            row.sandboxes.map((sandbox: any, index: number) => {
-                                                return (
-                                                    <Link
-                                                        key={sandbox.id}
-                                                        style={{ color: '#000000', cursor: 'pointer' }}
-                                                        to={'/studies/' + props.studyId + '/sandboxes/' + sandbox.id}
-                                                        onMouseOver={() => setMouseHoverSandbox(true)}
-                                                        onMouseLeave={() => setMouseHoverSandbox(false)}
-                                                    >
-                                                        {index === row.sandboxes.length - 1
-                                                            ? sandbox && truncate(sandbox.name)
-                                                            : sandbox.name &&
-                                                              <TextTruncate inputText={sandbox.name} /> + ', '}
-                                                    </Link>
-                                                );
-                                            })}
-                                    </Cell>
-                                )}
-                                {returnCell(row, '', 'icon')}
-                            </Row>
-                        ))
-                    ) : (
-                        <Row key={1} id="tableRowNoPointerNoColor">
-                            <Cell>No datasets added</Cell>
-                            {editMode && <Cell />}
-                            <Cell>{''}</Cell>
-                        </Row>
-                    )}
-                </Body>
-            </Table>
+        <div style={{ width: '100%', marginBottom: '24px' }}>
+            <DataTable
+                columns={editMode ? columns : columns.slice(0, 1).concat(columns.slice(2, 3))}
+                data={datasets}
+                listItems={returnListOfItems}
+                cookiePrefix={'datasets-editMode' + editMode + getStudyId()}
+                disablePagination={!editMode || (datasets && Object.values(datasets).length < 10)}
+            />
         </div>
     );
 };

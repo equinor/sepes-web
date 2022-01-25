@@ -1,0 +1,50 @@
+[
+    {
+        "name": "rg-study-docs2352-docs2352-35f",
+        "type": "Resource Group",
+        "status": "Ok",
+        "linkToExternalSystem": "https://portal.azure.com/#@StatoilSRM.onmicrosoft.com/resource/subscriptions/6cfb8f33-6d4b-43bf-9000-91fd6f53ca28/resourceGroups/rg-study-docs2352-docs2352-35f",
+        "retryLink": null,
+        "additionalProperties": {}
+    },
+    {
+        "name": "stdiagdocs235docs2352d2e",
+        "type": "Storage Account",
+        "status": "Creating",
+        "linkToExternalSystem": null,
+        "retryLink": null,
+        "additionalProperties": {}
+    },
+    {
+        "name": "nsg-snet-docs2352-docs2352",
+        "type": "Network Security Group",
+        "status": "Creating (queued)",
+        "linkToExternalSystem": null,
+        "retryLink": null,
+        "additionalProperties": {}
+    },
+    {
+        "name": "vnet-docs2352-docs2352",
+        "type": "Virtual Network",
+        "status": "Creating (queued)",
+        "linkToExternalSystem": null,
+        "retryLink": null,
+        "additionalProperties": {}
+    },
+    {
+        "name": "bastion-docs2352-docs2352",
+        "type": "Bastion",
+        "status": "Creating (queued)",
+        "linkToExternalSystem": null,
+        "retryLink": null,
+        "additionalProperties": {}
+    },
+    {
+        "name": "vm-docs2352-docs2352-docs1241",
+        "type": "Virtual Machine",
+        "status": "Creating (queued)",
+        "linkToExternalSystem": null,
+        "retryLink": null,
+        "additionalProperties": {}
+    }
+]

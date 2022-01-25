@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 describe('Create vm', () => {
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false;
+    });
     const studyName = 'Cypress Test';
     before(() => {
         cy.login();
@@ -12,19 +15,16 @@ describe('Create vm', () => {
     });
 
     it('clicks on data sets tab', () => {
-        // cy.waitForStudyToLoad();
-        // cy.wait(2000);
-        cy.get('[data-cy=datasets_tab]').click({ force: true });
+        cy.switchToDatasetsTab();
     });
 
     it('clicks add study specific dataset', () => {
-        cy.get('[data-cy=add_study_specific_dataset]').click({ force: true });
+        cy.get('[data-cy=add_study_specific_dataset]').click();
     });
 
     it('fills out dataset information', () => {
         cy.createDataset();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
-        // cy.waitForStudyToLoad();
     });
     it('clicks sandbox tab', () => {
         cy.switchToSandboxesTab();

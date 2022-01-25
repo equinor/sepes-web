@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import DatasetsOverviewTable from './DatasetsOverviewTable';
-import LoadingComponentFull from '../../common/LoadingComponentFullscreen';
+import LoadingComponentFull from '../../common/LoadingFullscreen';
 import styled from 'styled-components';
 import { Permissions } from '../../../index';
 import NoAccess from '../../common/informationalComponents/NoAccess';

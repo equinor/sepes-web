@@ -2,25 +2,25 @@
 describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
-        cy.login();
         cy.clearViewport();
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
+        cy.commonStudyMocks();
         cy.login();
     });
 
     it('Create study', { keystrokeDelay: 100 }, () => {
         cy.visit('/');
         cy.text('Now we will create a study', {
-            duration: 2000,
-            blocking: false,
+            duration: 4000,
+            blocking: true,
             textSize: '3vh'
         });
         cy.get('[data-cy=new_study]').arrow({
             text: 'Click create study to go to the create-study form',
-            textSize: '3vh',
+            textSize: '2vh',
             blocking: true,
             duration: 5000
         });
@@ -88,11 +88,13 @@ describe('Create study', () => {
     });
 
     it('Delete study', () => {
+        cy.mockOutStudyList();
         cy.text('Delete the study', {
             duration: 5000,
             blocking: true,
             textSize: '20pt'
         });
+        cy.mockOutDeleteStudy();
         cy.deleteStudy(studyName);
     });
 });

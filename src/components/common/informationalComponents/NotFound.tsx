@@ -1,8 +1,7 @@
 import React from 'react';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { Typography } from '@equinor/eds-core-react';
+import { Icon, Typography } from '@equinor/eds-core-react';
+import { close } from '@equinor/eds-icons';
 
 const NotFound = () => {
     return (
@@ -19,7 +18,7 @@ const NotFound = () => {
                 zIndex: 1000
             }}
         >
-            <FontAwesomeIcon icon={faTimesCircle} size="5x" style={{ margin: '20px' }} />
+            <Icon data={close} size={48} style={{ margin: '20px' }} />
             <div>
                 <Typography style={{ textAlign: 'center', marginBottom: '4px' }} variant="h4">
                     This resource does not exist or have been removed..

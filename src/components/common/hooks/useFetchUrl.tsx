@@ -4,7 +4,15 @@ import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 
 const cache = {};
 
-const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache = true) => {
+const useFetchUrl = (
+    url: string,
+    setter: any,
+    condition?,
+    controller?,
+    shouldCache = true,
+    dispatch: any = undefined,
+    actionCreatorWithPayload: any = undefined
+) => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
@@ -29,11 +37,21 @@ const useFetchUrl = (url: string, setter, condition?, controller?, shouldCache =
                         if (url) {
                             cache[url] = result;
                         }
-                        if (setUpdateCache) {
-                            setUpdateCache({ ...updateCache, [url]: false });
-                        }
+
                         setIntialValue(result);
-                        setter(result);
+
+                        if (setter !== undefined) {
+                            setter(result);
+                        }
+
+                        if (dispatch !== undefined && actionCreatorWithPayload !== undefined) {
+                            dispatch(actionCreatorWithPayload(result));
+                        } else {
+                            // eslint-disable-next-line no-lonely-if
+                            if (setUpdateCache) {
+                                setUpdateCache({ ...updateCache, [url]: false });
+                            }
+                        }
                     } else {
                         setNotFound(true);
                     }
