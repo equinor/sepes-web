@@ -3,7 +3,6 @@ import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip, Typography } from '@equinor/eds-core-react';
-import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak, returnLimitMeta } from '../common/helpers/helpers';
 import { Label } from '../common/StyledComponents';
@@ -55,9 +54,8 @@ const Overview: React.FC<OverviewProps> = ({
     onFallBackAddressChange
 }) => {
     const study = useSelector(getStudyFromStore());
-    const { datasets, participants, sandboxes, id } = study;
+    const { datasets, participants, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-    console.log(participants);
 
     const resultsAndLearningsResponse = useFetchUrl(
         getResultsAndLearningsUrl(id),

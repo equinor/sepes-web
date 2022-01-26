@@ -321,10 +321,10 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         } else {
             study.id = id;
             if (imageUrl) {
-                dispatch(setStudyInStore(dispatch(setStudyInStore(newStudy))));
+                dispatch(setStudyInStore(newStudy));
                 // setStudy(dispatch(setStudyInStore(newStudy)));
             } else {
-                dispatch(setStudyInStore(dispatch(setStudyInStore(studyOnChange))));
+                dispatch(setStudyInStore(studyOnChange));
                 // setStudy(studyOnChange);
             }
             setLoading(false);

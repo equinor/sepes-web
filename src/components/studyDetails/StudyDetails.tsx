@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom';
 import { getStudyId } from '../../utils/CommonUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
-import { setStudyInStore } from 'store/studies/studiesSlice';
+import { setStudyInStore, setStudyToInitialState } from 'store/studies/studiesSlice';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -88,7 +88,7 @@ const StudyDetails = () => {
         undefined,
         id ? true : false,
         controller,
-        false,
+        true,
         dispatch,
         setStudyInStore
     );
@@ -105,7 +105,7 @@ const StudyDetails = () => {
         return () => {
             controller.abort();
             controller = new AbortController();
-            // dispatch(setStudyInStore({}));
+            dispatch(setStudyToInitialState());
         };
     }, []);
 

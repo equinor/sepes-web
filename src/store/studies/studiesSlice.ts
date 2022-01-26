@@ -40,10 +40,13 @@ export const studiesSlice = createSlice({
     reducers: {
         setStudyInStore: (state: StudiesState, action: PayloadAction<any>) => {
             return { ...state, study: action.payload };
+        },
+        setStudyToInitialState: (state: StudiesState) => {
+            return { ...state, study };
         }
     }
 });
 
-export const { setStudyInStore } = studiesSlice.actions;
+export const { setStudyInStore, setStudyToInitialState } = studiesSlice.actions;
 
 export default studiesSlice.reducer;
