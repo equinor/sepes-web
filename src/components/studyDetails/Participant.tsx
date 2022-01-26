@@ -4,7 +4,7 @@ import { Button, DotProgress, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import * as api from '../../services/Api';
 import ParticipantTable from './Tables/ParticipantTable';
-import { ParticipantObj, StudyObj } from '../common/interfaces';
+import { ParticipantObj } from '../common/interfaces';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import AsynchSelect from '../common/customComponents/AsyncSelect';
 import { ValidateEmail } from '../common/helpers/helpers';
