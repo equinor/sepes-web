@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/equinor/sepes-web/compare/1.2.1...1.2.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* **study:** fix long loading screen ([f84da54](https://github.com/equinor/sepes-web/commit/f84da5456e437c997b3b48c4b1f6e503830d1e2e)), closes [#1464](https://github.com/equinor/sepes-web/issues/1464)
+* **study:** fix long loading screen ([0f4e887](https://github.com/equinor/sepes-web/commit/0f4e887d38b6bd105d5ab34e2413bf5605c76beb)), closes [#1464](https://github.com/equinor/sepes-web/issues/1464)
+* upgrade @types/node from 16.11.17 to 16.11.18 ([239073f](https://github.com/equinor/sepes-web/commit/239073f4c420d0ed0b78b3cae1e489124ca10ee8))
+
 ### [1.2.1](https://github.com/equinor/sepes-web/compare/1.2.0...1.2.1) (2022-01-25)
 
 ## [1.2.0](https://github.com/equinor/sepes-web/compare/1.1.3...1.2.0) (2022-01-25)
