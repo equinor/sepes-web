@@ -7,16 +7,6 @@ import { Provider } from 'react-redux';
 import { studyWithSandboxes } from 'tests/mocks/study/study-mocs';
 
 const mockFunc = (id: string) => {};
-const sandboxList = [
-    {
-        name: 'test1',
-        id: '1'
-    },
-    {
-        name: 'test2',
-        id: '2'
-    }
-];
 
 /* eslint-disable no-undef */
 test('renders Sandbox table component', () => {
