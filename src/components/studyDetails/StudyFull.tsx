@@ -259,6 +259,11 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             setStudyOnChange({ ...studyOnChange, logoUrl: imageUrl });
         }
         setEditMode(false);
+
+        if (!wbsOnChangeIsValid) {
+            studyOnChange.wbsCode = '';
+        }
+
         sendStudyToApi(studyOnChange);
         setNewStudy(false);
     };
@@ -629,7 +634,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                                                                     : wbsIsValid,
                                                                 validateWbsInProgress,
                                                                 newStudy
-                                                            )
+                                                            ) || validateWbsInProgress
                                                         }
                                                     >
                                                         {newStudy ? 'Create' : 'Save'}
