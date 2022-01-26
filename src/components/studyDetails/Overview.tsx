@@ -11,6 +11,8 @@ import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 import useFetchUrl from 'components/common/hooks/useFetchUrl';
 import useKeyEvents from 'components/common/hooks/useKeyEvents';
+import { useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -38,7 +40,6 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 const resultsAndLearningsLimit = 4096;
 
 type OverviewProps = {
-    study: StudyObj;
     setHasChanged: any;
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
@@ -47,15 +48,16 @@ type OverviewProps = {
 };
 
 const Overview: React.FC<OverviewProps> = ({
-    study,
     setHasChanged,
     setResultsAndLearnings,
     resultsAndLearnings,
     controller,
     onFallBackAddressChange
 }) => {
+    const study = useSelector(getStudyFromStore());
     const { datasets, participants, sandboxes, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
+    console.log(participants);
 
     const resultsAndLearningsResponse = useFetchUrl(
         getResultsAndLearningsUrl(id),
@@ -162,7 +164,7 @@ const Overview: React.FC<OverviewProps> = ({
                 <div />
             )}
             <div>
-                <SandboxTable sandboxes={sandboxes} onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
+                <SandboxTable onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
                 <DatasetsTable
                     datasets={datasets}
                     editMode={false}

@@ -4,6 +4,8 @@ import StudyComponentFull from '../../../components/studyDetails/StudyFull';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import mockStore from 'tests/mocks/mockStore';
 
 const permissions = {
     addRemoveDataset: true,
@@ -144,25 +146,25 @@ const mockFunc = (id: string) => {};
 test('renders StudyComponent full component with edit study', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={study}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: study } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
     let linkElement = await getByText('StudyName');
     //Check that the study is displayed with the correct info
@@ -194,25 +196,25 @@ test('renders StudyComponent full component with edit study', async () => {
 test('renders StudyComponent full component with invalid study name', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={studyWithInvalidName}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithInvalidName } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = await getByText('Edit');
@@ -225,25 +227,25 @@ test('renders StudyComponent full component with invalid study name', async () =
 test('renders StudyComponent full component with invalid vendor name', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={studyWithInvalidVendor}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithInvalidVendor } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = await getByText('Edit');
@@ -268,25 +270,25 @@ test('renders StudyComponent full component with invalid vendor name', async () 
 test('renders StudyComponent full component with no permission to edit', async () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={studyWithNoPermissions}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithNoPermissions } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     expect(await getByText('Edit').closest('button')?.disabled).toBeTruthy();
@@ -295,25 +297,25 @@ test('renders StudyComponent full component with no permission to edit', async (
 test('renders StudyComponent full component with  permission to delete', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={study}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: study } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
     let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
@@ -336,25 +338,25 @@ test('renders StudyComponent full component with  permission to delete', async (
 test('renders StudyComponent full component with no permission to delete', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = await render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={studyWithNoDelete}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithNoDelete } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
     let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();
@@ -376,25 +378,25 @@ test('renders StudyComponent full component with no permission to delete', async
 test('renders StudyComponent full component with sandbox in study', async () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
-        <Router history={history}>
-            <StudyComponentFull
-                study={studyWithSandboxes}
-                newStudy={false}
-                setNewStudy={mockFunc}
-                setLoading={mockFunc}
-                loading={loading}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                cache={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                setDeleteStudyInProgress={mockFunc}
-                hasChanged={false}
-                wbsIsValid={true}
-                setWbsIsValid={mockFunc}
-                setStudySaveInProgress={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithSandboxes } })}>
+            <Router history={history}>
+                <StudyComponentFull
+                    newStudy={false}
+                    setNewStudy={mockFunc}
+                    setLoading={mockFunc}
+                    loading={loading}
+                    setHasChanged={mockFunc}
+                    cache={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    setDeleteStudyInProgress={mockFunc}
+                    hasChanged={false}
+                    wbsIsValid={true}
+                    setWbsIsValid={mockFunc}
+                    setStudySaveInProgress={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
     let linkElement = await getByText('Edit');
     expect(linkElement).toBeInTheDocument();

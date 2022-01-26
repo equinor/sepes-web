@@ -18,6 +18,9 @@ import { getRegionsUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
 import { returnTooltipCreateSandbox } from 'components/common/helpers/studyHelpers';
 import { SandboxTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
+import { useDispatch, useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
+import { setStudyInStore } from 'store/studies/studiesSlice';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -35,11 +38,9 @@ const Wrapper = styled.div`
 
 type CreateSandboxComponentProps = {
     setToggle: any;
-    setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
-    study: StudyObj;
     setLoading: any;
     wbsIsValid: boolean | undefined;
 };
@@ -50,15 +51,15 @@ const limits = {
 
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setToggle,
-    setStudy,
     setHasChanged,
     setUpdateCache,
     updateCache,
-    study,
     setLoading,
     wbsIsValid
 }) => {
     const history = useHistory();
+    const study = useSelector(getStudyFromStore());
+    const dispatch = useDispatch();
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
     const wrapperRef = useRef(null);
@@ -102,7 +103,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         setLoading(true);
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.message) {
-                setStudy(result);
+                dispatch(setStudyInStore(result));
                 setLoading(false);
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {

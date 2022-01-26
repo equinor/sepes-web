@@ -62,6 +62,7 @@ const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
     permissions
 }) => {
     const { width } = useWindowDimensions();
+    console.log(participants);
 
     const returnListOfItems = (participant: ParticipantObj) => {
         if (participant === undefined) {
@@ -96,7 +97,7 @@ const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
         <div>
             <DataTable
                 columns={editMode ? columns : columns.slice(0, 2)}
-                data={participants}
+                data={[]}
                 listItems={returnListOfItems}
                 cookiePrefix={'participants-editMode' + editMode + getStudyId()}
                 disablePagination={!editMode || (participants && Object.values(participants).length < 10)}

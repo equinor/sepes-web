@@ -7,22 +7,22 @@ import sandboxesReducer from '../../../store/sandboxes/sandboxesSlice';
 import resourcesReducer from '../../../store/resources/resourcesSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { mockStore } from '../../mocks/mockStore';
 
 const mockFunc = (id: string) => {};
 
+const initialStateWithPermissions = { sandboxes: { sandbox: sandboxWithAllPermissions, callGetResources: false } };
+const initialStateWithoutPermissions = { sandboxes: { sandbox: sandboxWithNoPermissions, callGetResources: false } };
 
-const initialStateWithPermissions = { sandboxes: { sandbox: sandboxWithAllPermissions, callGetResources: false }};
-const initialStateWithoutPermissions = { sandboxes: { sandbox: sandboxWithNoPermissions, callGetResources: false }};
-
-const mockStore = (state: any) => {
-    return configureStore({
-        reducer: {
-            sandboxes: sandboxesReducer,
-            resources: resourcesReducer
-        },    
-        preloadedState: state
-    });
-};
+// const mockStore = (state: any) => {
+//     return configureStore({
+//         reducer: {
+//             sandboxes: sandboxesReducer,
+//             resources: resourcesReducer
+//         },
+//         preloadedState: state
+//     });
+// };
 
 test('renders stepbar component without permissions', async () => {
     const history = createMemoryHistory();

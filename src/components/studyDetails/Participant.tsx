@@ -15,6 +15,9 @@ import { useHistory } from 'react-router-dom';
 import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import { getStudyId } from 'utils/CommonUtil';
 import StudyTextSnippets from 'components/common/constants/StudyTextSnippets';
+import { useDispatch, useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
+import { setStudyInStore } from 'store/studies/studiesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -37,13 +40,13 @@ const TableWrapper = styled.div`
 `;
 
 type ParicipantComponentProps = {
-    study: StudyObj;
-    setStudy: any;
     setUpdateCache: any;
     updateCache: any;
 };
 
-const Paricipant: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUpdateCache, updateCache }) => {
+const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, updateCache }) => {
+    const study = useSelector(getStudyFromStore());
+    const dispatch = useDispatch();
     const studyId = getStudyId();
     const [roles, setRoles] = useState<any>();
     const [participantNotSelected, setParticipantNotSelected] = useState<boolean>(true);
@@ -105,7 +108,8 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUp
     const removeParticipant = (participant: any) => {
         const participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
-        setStudy({ ...study, participants: participantList });
+        // setStudy({ ...study, participants: participantList });
+        dispatch(setStudyInStore({ ...study, participants: participantList }));
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
             if (result && !result.message && isSubscribed) {
@@ -140,7 +144,8 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ study, setStudy, setUp
                 if (result && !result.message) {
                     const participantList: any = [...study.participants];
                     participantList.push(result);
-                    setStudy({ ...study, participants: participantList });
+                    // setStudy({ ...study, participants: participantList });
+                    dispatch(setStudyInStore({ ...study, participants: participantList }));
                 } else {
                     console.log('Err getting participants');
                 }
