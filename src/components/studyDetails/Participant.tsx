@@ -108,7 +108,6 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
     const removeParticipant = (participant: any) => {
         const participantList: any = [...study.participants];
         participantList.splice(participantList.indexOf(participant), 1);
-        // setStudy({ ...study, participants: participantList });
         dispatch(setStudyInStore({ ...study, participants: participantList }));
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         api.removeStudyParticipant(studyId, participant.userId, participant.role).then((result: any) => {
@@ -144,7 +143,6 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
                 if (result && !result.message) {
                     const participantList: any = [...study.participants];
                     participantList.push(result);
-                    // setStudy({ ...study, participants: participantList });
                     dispatch(setStudyInStore({ ...study, participants: participantList }));
                 } else {
                     console.log('Err getting participants');

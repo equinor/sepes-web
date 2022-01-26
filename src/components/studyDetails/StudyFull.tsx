@@ -312,7 +312,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     dispatch(setStudyInStore(newStudy));
-                    // setStudy(newStudy);
                     history.push('/studies/' + result.id);
                 } else {
                     console.log('Err');
@@ -322,10 +321,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             study.id = id;
             if (imageUrl) {
                 dispatch(setStudyInStore(newStudy));
-                // setStudy(dispatch(setStudyInStore(newStudy)));
             } else {
                 dispatch(setStudyInStore(studyOnChange));
-                // setStudy(studyOnChange);
             }
             setLoading(false);
 

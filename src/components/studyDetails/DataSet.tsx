@@ -3,7 +3,6 @@ import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
 import { addStudyDataset, unlinkStudyDataset } from '../../services/Api';
-import { StudyObj } from '../common/interfaces';
 //import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
 //import { Permissions } from '../../index';
@@ -80,7 +79,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     const [canCreateDataset, setCanCreateDataset] = useState<any>(false);
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
-        // setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
         dispatch(
             setStudyInStore({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) })
         );
@@ -127,7 +125,6 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
             const studyId = window.location.pathname.split('/')[2];
             const datasetList: any = [...study.datasets];
             datasetList.push(row);
-            // setStudy({ ...study, datasets: datasetList });
             dispatch(setStudyInStore({ ...study, datasets: datasetList }));
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.message) {

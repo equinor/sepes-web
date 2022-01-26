@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
-import { SandboxCreateObj, DropdownObj, StudyObj } from '../common/interfaces';
+import { SandboxCreateObj, DropdownObj } from '../common/interfaces';
 import {
     returnAllowedLengthOfString,
     returnHelperText,
