@@ -44,30 +44,6 @@ interface passedProps {
 const StudyDetails = () => {
     const id = getStudyId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
-    // const [study, setStudy] = useState<StudyObj>({
-    //     name: '',
-    //     vendor: '',
-    //     wbsCode: '',
-    //     restricted: false,
-    //     description: '',
-    //     logoUrl: '',
-    //     id: '',
-    //     resultsAndLearnings: '',
-    //     datasets: [],
-    //     participants: [],
-    //     wbsCodeValid: false,
-    //     sandboxes: [],
-    //     permissions: {
-    //         addRemoveDataset: false,
-    //         addRemoveParticipant: false,
-    //         addRemoveSandbox: false,
-    //         closeStudy: false,
-    //         deleteStudy: false,
-    //         readResulsAndLearnings: false,
-    //         updateMetadata: false,
-    //         updateResulsAndLearnings: false
-    //     }
-    // });
     const study = useSelector(getStudyFromStore());
     const dispatch = useDispatch();
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
