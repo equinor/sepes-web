@@ -7,6 +7,8 @@ import { getStudyId } from '../../../utils/CommonUtil';
 import TextTruncate from 'components/common/customComponents/infoDisplayComponents/TextTruncate';
 import DataTable from 'components/common/table/DataTable';
 import { SandboxLightObj } from 'components/common/interfaces';
+import { useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
 
 const { Row, Cell } = Table;
 
@@ -32,14 +34,14 @@ const columns = [
 ];
 
 type SandboxTableProps = {
-    sandboxes: any;
     onFallBackAddressChange: any;
     editMode: boolean;
 };
 
-const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddressChange, editMode }) => {
+const SandboxTable: React.FC<SandboxTableProps> = ({ onFallBackAddressChange, editMode }) => {
     const studyId = getStudyId();
     const history = useHistory();
+    const study = useSelector(getStudyFromStore());
     const returnCell = (sandbox: SandboxLightObj, type: 'icon' | 'text') => {
         //This means it is a study specific dataset
         return (
@@ -73,10 +75,10 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallBackAddres
         <div style={{ width: '100%', marginBottom: '24px' }}>
             <DataTable
                 columns={columns}
-                data={sandboxes ?? []}
+                data={study.sandboxes ?? []}
                 listItems={returnListOfItems}
                 cookiePrefix={'sandboxes-editMode' + getStudyId()}
-                disablePagination={!editMode || (sandboxes && Object.values(sandboxes).length < 10)}
+                disablePagination={!editMode || (study.sandboxes && Object.values(study.sandboxes).length < 10)}
             />
         </div>
     );

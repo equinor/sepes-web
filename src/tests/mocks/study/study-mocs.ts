@@ -101,3 +101,37 @@ export const studyWithSandbox: StudyObj = {
         updateResulsAndLearnings: true
     }
 };
+
+export const studyWithSandboxes: StudyObj = {
+    name: 'Study Mock',
+    vendor: 'Mock123',
+    wbsCode: '123',
+    restricted: false,
+    description: '',
+    logoUrl: '',
+    id: '',
+    resultsAndLearnings: '',
+    datasets: [dataset],
+    participants: [],
+    wbsCodeValid: false,
+    sandboxes: [
+        {
+            name: 'test1',
+            id: '1'
+        },
+        {
+            name: 'test2',
+            id: '2'
+        }
+    ],
+    permissions: {
+        addRemoveDataset: true,
+        addRemoveParticipant: true,
+        addRemoveSandbox: true,
+        closeStudy: true,
+        deleteStudy: true,
+        readResulsAndLearnings: true,
+        updateMetadata: true,
+        updateResulsAndLearnings: true
+    }
+};

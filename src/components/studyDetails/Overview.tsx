@@ -3,7 +3,6 @@ import DatasetsTable from './Tables/DatasetsTable';
 import ParticipantTable from './Tables/ParticipantTable';
 import SandboxTable from './Tables/SandboxTable';
 import { Button, TextField, Tooltip, Typography } from '@equinor/eds-core-react';
-import { StudyObj } from '../common/interfaces';
 import { editResultsAndLearnings } from '../../services/Api';
 import { lineBreak, returnLimitMeta } from '../common/helpers/helpers';
 import { Label } from '../common/StyledComponents';
@@ -11,6 +10,8 @@ import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 import useFetchUrl from 'components/common/hooks/useFetchUrl';
 import useKeyEvents from 'components/common/hooks/useKeyEvents';
+import { useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -38,7 +39,6 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 const resultsAndLearningsLimit = 4096;
 
 type OverviewProps = {
-    study: StudyObj;
     setHasChanged: any;
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
@@ -47,14 +47,14 @@ type OverviewProps = {
 };
 
 const Overview: React.FC<OverviewProps> = ({
-    study,
     setHasChanged,
     setResultsAndLearnings,
     resultsAndLearnings,
     controller,
     onFallBackAddressChange
 }) => {
-    const { datasets, participants, sandboxes, id } = study;
+    const study = useSelector(getStudyFromStore());
+    const { datasets, participants, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const resultsAndLearningsResponse = useFetchUrl(
@@ -162,7 +162,7 @@ const Overview: React.FC<OverviewProps> = ({
                 <div />
             )}
             <div>
-                <SandboxTable sandboxes={sandboxes} onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
+                <SandboxTable onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
                 <DatasetsTable
                     datasets={datasets}
                     editMode={false}

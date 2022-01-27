@@ -31,6 +31,9 @@ import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';
 import { StudyTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
+import { useDispatch, useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
+import { setStudyInStore } from 'store/studies/studiesSlice';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -133,12 +136,10 @@ const limits = {
 let wbsController = new AbortController();
 
 type StudyComponentFullProps = {
-    study: StudyObj;
     newStudy: boolean;
     setNewStudy: any;
     setLoading: any;
     loading: boolean;
-    setStudy: any;
     setHasChanged: any;
     hasChanged: boolean;
     cache: any;
@@ -151,12 +152,10 @@ type StudyComponentFullProps = {
 };
 
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
-    study,
     newStudy,
     setNewStudy,
     setLoading,
     loading,
-    setStudy,
     setHasChanged,
     hasChanged,
     cache,
@@ -168,6 +167,8 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     setStudySaveInProgress
 }) => {
     const history = useHistory();
+    const study = useSelector(getStudyFromStore());
+    const dispatch = useDispatch();
     const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
     const [editMode, setEditMode] = useState<boolean>(newStudy);
@@ -310,7 +311,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     setStudySaveInProgress(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
-                    setStudy(newStudy);
+                    dispatch(setStudyInStore(newStudy));
                     history.push('/studies/' + result.id);
                 } else {
                     console.log('Err');
@@ -319,9 +320,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         } else {
             study.id = id;
             if (imageUrl) {
-                setStudy({ ...studyOnChange, logoUrl: imageUrl });
+                dispatch(setStudyInStore(newStudy));
             } else {
-                setStudy(studyOnChange);
+                dispatch(setStudyInStore(studyOnChange));
             }
             setLoading(false);
 

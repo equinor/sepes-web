@@ -25,7 +25,12 @@ const useFetchUrl = (
 
         if (shouldCache && cache[url] && !updateCache[url]) {
             const dataCached = cache[url];
-            setter(dataCached);
+            if (setter !== undefined) {
+                setter(dataCached);
+            } else {
+                dispatch(actionCreatorWithPayload(dataCached));
+            }
+
             setIntialValue(dataCached);
             setLoading(false);
         } else {
