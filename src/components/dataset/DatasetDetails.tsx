@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Typography, Icon, LinearProgress, Chip, Switch, Breadcrumbs, Tooltip } from '@equinor/eds-core-react';
-import { DatasetObj, DatasetResourcesObj } from '../common/interfaces';
+import { DatasetResourcesObj } from '../common/interfaces';
 import {
     getDatasetSasToken,
     getStudySpecificDatasetFiles,
@@ -33,6 +33,9 @@ import DatasetInformation from './DatasetInformation';
 import { truncateLength } from '../common/staticValues/lenghts';
 import BreadcrumbTruncate from '../common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import './DatasetDetailsStyle.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDatasetFromStore } from '../../store/datasets/datasetsSelectors';
+import { setDatasetInStore, setDatasetToInitialState } from 'store/datasets/datasetsSlice';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -74,6 +77,8 @@ export interface FileObj {
 const DatasetDetails = () => {
     const datasetId = getDatasetId();
     const studyId = getStudyId();
+    const dataset = useSelector(getDatasetFromStore());
+    const dispatch = useDispatch();
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
@@ -81,22 +86,15 @@ const DatasetDetails = () => {
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [controller, setController] = useState<AbortController>(new AbortController());
-    const [dataset, setDataset] = useState<DatasetObj>({
-        name: '',
-        studyName: '',
-        storageAccountLink: undefined,
-        permissions: {
-            deleteDataset: false,
-            editDataset: false
-        }
-    });
 
     const datasetResponse = useFetchUrl(
         isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
-        setDataset,
+        undefined,
         undefined,
         controller,
-        false
+        false,
+        dispatch,
+        setDatasetInStore
     );
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
@@ -156,6 +154,7 @@ const DatasetDetails = () => {
             cancelAllDownloads();
             abortArray = [];
             progressArray = [];
+            dispatch(setDatasetToInitialState());
         };
     }, []);
 
@@ -261,7 +260,7 @@ const DatasetDetails = () => {
             setStorageAccountStatus(resource.status);
             if (resource.status === resourceStatus.ok && resource.type === resourceType.storageAccount) {
                 res = true;
-                setDataset({ ...dataset, storageAccountLink: resource.linkToExternalSystem });
+                dispatch(setDatasetInStore({ ...dataset, storageAccountLink: resource.linkToExternalSystem }));
                 const dataCache = isStandard
                     ? getStandardDatasetUrl(studyId)
                     : getStudySpecificDatasetUrl(datasetId, studyId);
@@ -523,13 +522,7 @@ const DatasetDetails = () => {
             </>
         )
     ) : (
-        <CreateEditDataset
-            datasetFromDetails={dataset}
-            setDatasetFromDetails={setDataset}
-            setShowEditDataset={setShowEditDataset}
-            editingDataset
-            isStandardDataset={isStandard}
-        />
+        <CreateEditDataset setShowEditDataset={setShowEditDataset} editingDataset isStandardDataset={isStandard} />
     );
 };
 
