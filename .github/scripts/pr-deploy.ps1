@@ -17,14 +17,10 @@ Import-Module .\.github\scripts\powershell-modules\AzureResources.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Utility.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 
-https://2019.pr.sepes.equinor.com
-
 ######################################################
 ### Read environment file with parameter values and set variables
 ######################################################
 $VerbosePreference = 'Continue'
-$PrNumber = "2019"
-$DnsZone = "pr.sepes.equinor.com"
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($PrNumber).$($DnsZone)/"
