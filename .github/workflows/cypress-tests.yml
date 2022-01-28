@@ -255,7 +255,7 @@ jobs:
           ACR_URL: ${{ secrets.ACR_URL }}
           ACRUSERNAME: ${{ secrets.ACR_USERNAME }}
           ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
-          DNSZONE: ${{ secret.PR_DNS_ZONE }}
+          DNSZONE: ${{ secrets.PR_DNS_ZONE }}
         shell: pwsh
         run: |
           .github\scripts\pr-deploy.ps1 `
