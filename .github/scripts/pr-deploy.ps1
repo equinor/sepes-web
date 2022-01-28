@@ -42,7 +42,7 @@ $webApp = New-CIWebApp -Token $token `
     -image $Image `
     -Location $var.azure.location `
     -UserIdentity $var.azure.ciWebApp.userIdentity `
-    -RedirectUri $RedirectUri `
+    -RedirectUri "$RedirectUri" `
     -AppServicePlan $var.azure.ciWebApp.appServicePlan `
     -AppSettings $var.azure.ciWebApp.siteConfig.appSettings `
     -HttpLogging $var.azure.ciWebApp.siteConfig.httpLogging `
