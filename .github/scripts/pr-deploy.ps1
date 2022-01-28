@@ -22,17 +22,22 @@ https://2019.pr.sepes.equinor.com
 ######################################################
 ### Read environment file with parameter values and set variables
 ######################################################
-
+$VerbosePreference = 'Continue'
+$PrNumber = "2019"
+$DnsZone = "pr.sepes.equinor.com"
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($PrNumber).$($DnsZone)/"
 $InformationPreference = 'Continue'
+
+Write-Host "Done setting variables"
 
 $token = Get-AzureToken `
     -applicationId $ClientId `
     -secret $ClientSecret `
     -TenantId $var.azure.tenantId
 
+Write-Host "Done setting variables"
 
 $webApp = New-CIWebApp -Token $token `
     -Name $webappName `
