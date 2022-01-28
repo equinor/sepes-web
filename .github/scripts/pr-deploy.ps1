@@ -7,7 +7,7 @@ param (
     #[Parameter(Mandatory=$True)][string]$WebappName,
     [Parameter(Mandatory=$True)][securestring]$AcrPassword,
     [Parameter(Mandatory=$True)][securestring]$AcrUsername,
-    [Parameter()][string]$Url,
+    [Parameter(Mandatory=$True)][string]$DnsZone,
     [Parameter()][string]$ClientSecret,
     [Parameter()][string]$ClientId
 )
@@ -17,7 +17,7 @@ Import-Module .\.github\scripts\powershell-modules\AzureResources.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Utility.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 
-
+https://2019.pr.sepes.equinor.com
 
 ######################################################
 ### Read environment file with parameter values and set variables
@@ -25,7 +25,7 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
-$RedirectUri = "https://$($Url)/"
+$RedirectUri = "https://$($PrNumber).$($DnsZone)/"
 $InformationPreference = 'Continue'
 
 $token = Get-AzureToken `
@@ -50,22 +50,22 @@ $webApp = New-CIWebApp -Token $token `
     -AcrUsername $AcrUsername `
     -AcrUrl $AcrUrl `
     -Verbose
-exit
 
 New-DnsRecord -Token $token `
     -ResourceGroup $var.azure.dnsZone.resourceGroup `
     -Subscription $var.azure.subscription `
-    -RecordName "asuid.$PrNumber.pr" `
+    -RecordName "asuid.$PrNumber" `
     -TTL 60 `
     -Type TXT `
     -ZoneName $var.azure.dnsZone.name `
     -Address $webApp.properties.customDomainVerificationId `
     -Verbose
+exit
 
 New-DnsRecord -Token $token `
     -ResourceGroup $var.azure.subscription `
     -Subscription $var.azure.subscription `
-    -RecordName "$PrNumber.pr" `
+    -RecordName "$PrNumber" `
     -TTL 60 `
     -Type CName `
     -ZoneName $var.azure.dnsZone.name `

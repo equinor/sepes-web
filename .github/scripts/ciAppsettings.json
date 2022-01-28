@@ -24,8 +24,8 @@
             }
         },
         "dnsZone": {
-            "name": "dev.sepes.equinor.com",
-            "resourceGroup": "rg-sepes-dev"
+            "name": "pr.sepes.equinor.com",
+            "resourceGroup": "rg-sepes-ci"
         }
     }
 }
