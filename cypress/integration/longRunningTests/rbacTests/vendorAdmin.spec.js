@@ -1,6 +1,6 @@
 describe('Vendor admin', () => {
-    const studyName = 'Cypress Test';
-    const sandboxName = 'Cypress ' + Cypress._.random(0, 1e6);
+    const studyName = 'Study for documentation';
+    const sandboxName = 'Docs sandbox 99';
     before(() => {
         cy.login();
         cy.intercept('/api/permissions', { fixture: 'rbac/vendorAdmin/permissions.json' });
@@ -10,20 +10,22 @@ describe('Vendor admin', () => {
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('cyToken');
         cy.login();
+        cy.mockOutRbacTests();
     });
 
     afterEach(() => {
         cy.login();
     });
 
-    it.skip('check that that vendor admin can do what the role allows', () => {
+    it('check that that vendor admin can do what the role allows', () => {
         cy.get('[data-cy=new_study]').should('be.disabled');
         cy.intercept('/api/permissions', { fixture: 'rbac/admin/permissions.json' });
         cy.refreshPage();
-
-        cy.createStudyWithoutInterceptingStudy(studyName);
-        cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/vendorAdmin/study.json' });
+        cy.intercept('/api/studies/*', { fixture: 'rbac/vendorAdmin/study.json' });
+        cy.intercept('/api/studies/', { fixture: 'rbac/vendorAdmin/study.json' });
         cy.intercept('/api/studies/*/resultsandlearnings', { resultsAndLearnings: 'We learned a lot' });
+        cy.createStudyWithoutInterceptingStudy(studyName);
+
         cy.get('[data-cy=edit_study]').should('be.disabled');
 
         cy.get('[data-cy=edit_results_and_learnings]').should('be.disabled');
@@ -38,9 +40,11 @@ describe('Vendor admin', () => {
         cy.switchToSandboxesTab();
         cy.get('[data-cy=create_sandbox]').should('be.enabled');
 
+        cy.intercept('/api/studies/*', { times: 1 }, { fixture: 'rbac/admin/study.json' });
         cy.switchToDatasetsTab();
         cy.reload();
         cy.get('[data-cy=add_study_specific_dataset]').click();
+        cy.mockOutDataSet();
         cy.createDataset();
 
         cy.wait(2000);
@@ -82,7 +86,7 @@ describe('Vendor admin', () => {
         cy.get('[data-cy=dataset_delete]').should('be.disabled');
 
         cy.get('[data-cy=file_upload_check]').should('have.css', 'opacity', '0.5');
-
+        cy.mockOutStudy();
         cy.get('[data-cy=dataset_back_to_study]').click({ force: true });
         cy.wait(3000);
         cy.switchToSandboxesTab();
@@ -90,15 +94,21 @@ describe('Vendor admin', () => {
         cy.reload();
         cy.login();
         cy.get('[data-cy=create_sandbox]').click();
+        cy.mockOutSandbox();
+        cy.mockOutVirtualMachine();
+        cy.mockOutVirtualMachineRules();
+        cy.mockOutVirtualMachineExtended();
+        cy.mockOutSandboxVirtualMachineList();
         cy.createSandbox(sandboxName);
 
-        cy.createVm();
+        cy.createVm(false);
 
         cy.createVmRules();
 
         cy.location().then((loc) => {
             cy.wait(3000);
             cy.login();
+            cy.mockOutSandboxVirtualMachineList(true);
             cy.reload();
             cy.login();
             cy.intercept(
