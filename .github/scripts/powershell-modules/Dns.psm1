@@ -53,10 +53,8 @@ function New-DnsRecord {
                 }
             }
         }
-
         # Convert body to json payload and invoke the webrequest
         $body = $body | ConvertTo-Json -Depth 10
-        Write-Verbose $body
         $requestParams = @{
             Method  = 'PUT'
             Uri     = "https://management.azure.com/subscriptions/$subscription/resourceGroups/$ResourceGroup/providers/Microsoft.Network/dnsZones/$ZoneName/$Type/$($RecordName)?api-version=$apiVersion"

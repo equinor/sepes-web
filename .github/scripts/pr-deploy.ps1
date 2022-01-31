@@ -20,20 +20,16 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 ######################################################
 ### Read environment file with parameter values and set variables
 ######################################################
-$VerbosePreference = 'Continue'
+# $VerbosePreference = 'Continue'
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($PrNumber).$($DnsZone)/"
 $InformationPreference = 'Continue'
 
-Write-Host "Done setting variables"
-
 $token = Get-AzureToken `
     -applicationId $ClientId `
     -secret $ClientSecret `
     -TenantId $var.azure.tenantId
-
-Write-Host "Done setting variables"
 
 $webApp = New-CIWebApp -Token $token `
     -Name $webappName `
@@ -60,6 +56,16 @@ New-DnsRecord -Token $token `
     -Type TXT `
     -ZoneName $var.azure.dnsZone.name `
     -Address $webApp.properties.customDomainVerificationId `
+    -Verbose
+
+New-DnsRecord -Token $token `
+    -ResourceGroup $var.azure.dnsZone.resourceGroup `
+    -Subscription $var.azure.subscription `
+    -RecordName "$PrNumber" `
+    -TTL 60 `
+    -Type CName `
+    -ZoneName $var.azure.dnsZone.name `
+    -Address $webApp.properties.defaultHostName `
     -Verbose
 exit
 

@@ -254,3 +254,12 @@ function CheckAppNameAvailability {
         Write-Error $_ -ErrorAction Stop
     }
 }
+
+function Set-CustomDomain {
+    param (
+        [Parameter(Mandatory=$true)][string]$Token,
+        [Parameter(Mandatory=$true)][string]$Name,
+        [Parameter(Mandatory=$true)][string]$Subscription
+    )
+    
+}
