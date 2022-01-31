@@ -67,7 +67,7 @@ New-DnsRecord -Token $token `
     -ZoneName $var.azure.dnsZone.name `
     -Address $webApp.properties.defaultHostName `
     -Verbose
-exit
+
 
 New-DnsRecord -Token $token `
     -ResourceGroup $var.azure.subscription `
@@ -77,4 +77,14 @@ New-DnsRecord -Token $token `
     -Type CName `
     -ZoneName $var.azure.dnsZone.name `
     -Address $webApp.properties.defaultHostName `
+    -Verbose
+
+
+$webApp = Set-WebAppCustomHostname -Token $token `
+    -Name $webappName `
+    -ResourceGroup $var.azure.resourceGroup.name `
+    -Subscription $var.azure.subscription `
+    -Location $var.azure.location `
+    -AppServicePlan $var.azure.ciWebApp.appServicePlan `
+    -CustomDomain "$($PrNumber).$($DnsZone)" `
     -Verbose

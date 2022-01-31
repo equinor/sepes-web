@@ -255,11 +255,86 @@ function CheckAppNameAvailability {
     }
 }
 
-function Set-CustomDomain {
+function Set-WebAppCustomHostname {
+    <#
+    .DESCRIPTION
+        Function for creating an Azure web app
+        API documentation link: https://docs.microsoft.com/en-us/rest/api/appservice/web-apps
+    .EXAMPLE
+        TODO: Add or remove example
+    #>
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true)][string]$Token,
         [Parameter(Mandatory=$true)][string]$Name,
-        [Parameter(Mandatory=$true)][string]$Subscription
+        [Parameter(Mandatory=$true)][string]$Subscription,
+        [Parameter(Mandatory=$true)][string]$ResourceGroup,
+        [Parameter(Mandatory=$true)][string]$Location,
+        [Parameter(Mandatory=$true)][string]$AppServicePlan,
+        [Parameter(Mandatory=$true)][string]$CustomDomain
     )
-    
+    Import-Module .\.github\scripts\powershell-modules\AzureResources.psm1 -Force
+    $apiVersion = "2019-08-01"
+
+    # Check if app service plan exist and get resource ID
+    $aspId = (Get-AzureResource -Subscription $Subscription -Token $token -Name $AppServicePlan).id
+
+    # Convert appsettings object to hashtable
+    if ($AppSettings) {
+        $AppSettings = $AppSettings | ConvertTo-Json | ConvertFrom-Json -AsHashtable
+    }
+
+    try {
+        # Check if webpp exist
+        $check = Get-WebApp -Token $token -Name $Name -Subscription $Subscription -ResourceGroup $ResourceGroup
+
+        if ($check.error.code -eq "ResourceNotFound") {
+            Write-Verbose "webapp does not exist. Creating new"
+            $NameCheck = CheckAppNameAvailability -Name $Name -Subscription $Subscription -Token $token
+            if ($NameCheck.nameAvailable -eq $false) {
+                Write-Error "Webapp name already exist, but not in target resource group" -ErrorAction Stop
+            }
+        }
+        # elseif ($check.name -eq $Name) {
+        #     # Update existing webapp. Since the webapp exist it will also fetch current app settings and merge
+        #     Write-Verbose "Updating existing webapp"
+        #     $currentAppSettings = Get-AppSettings -Token $Token -Subscription $Subscription -ResourceGroup $ResourceGroup -Name $Name
+        #     if ($currentAppSettings.GetEnumerator() -ne $null) {
+        #         $currentAppSettings = Merge-AppSettings -currentAppSettings $currentAppSettings -AppSettings $AppSettings
+        #     }
+        # }
+        # else {
+        #     Write-Error "Unknow status code from webapp"
+        # }
+
+
+        $body = New-Object -TypeName psobject -Property @{
+            location = $Location
+            properties = @{
+                hostNames = @(
+                    $CustomDomain
+                )
+            }
+        }
+
+        # Convert body to json payload and invoke the webrequest
+        $body = $body | ConvertTo-Json -Depth 10
+        $requestParams = @{
+            Method  = 'PUT'
+            Uri     = "https://management.azure.com/subscriptions/$subscription/resourceGroups/$ResourceGroup/providers/Microsoft.Web/sites/$($Name)?api-version=$apiVersion"
+            Headers = @{
+                'Authorization' =  $Token
+            }
+        }
+        $reply = Invoke-WebRequest @requestParams -Body $body -ContentType application/json
+        if ($reply.StatusCode -eq 200) {
+            return $reply.Content | ConvertFrom-Json
+        }
+        else {
+            Write-Error "Something went wrong with function app deploy"
+        }
+    }
+    catch {
+        Write-Error $_.Exception -ErrorAction Stop
+    }
 }
