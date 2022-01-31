@@ -69,18 +69,7 @@ New-DnsRecord -Token $token `
     -Verbose
 
 
-New-DnsRecord -Token $token `
-    -ResourceGroup $var.azure.subscription `
-    -Subscription $var.azure.subscription `
-    -RecordName "$PrNumber" `
-    -TTL 60 `
-    -Type CName `
-    -ZoneName $var.azure.dnsZone.name `
-    -Address $webApp.properties.defaultHostName `
-    -Verbose
-
-
-$webApp = Set-WebAppCustomHostname -Token $token `
+Set-WebAppCustomHostname -Token $token `
     -Name $webappName `
     -ResourceGroup $var.azure.resourceGroup.name `
     -Subscription $var.azure.subscription `
