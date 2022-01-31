@@ -30,7 +30,9 @@ Cypress.Commands.add('mockOutPermissions', () => {
 Cypress.Commands.add('mockOutStudyParticipant', () => {
     cy.intercept('api/participants/*', { fixture: 'study/studyParticipant.json' });
 });
-
+Cypress.Commands.add('mockOutAvailableroles', () => {
+    cy.intercept('api/studies/*/availableroles', { fixture: 'study/availableRoles.json' });
+});
 // Data set mocks
 
 Cypress.Commands.add('mockOutAllCallsForCreateDatasetDocsTest', () => {
@@ -198,4 +200,5 @@ Cypress.Commands.add('mockOutRbacTests', () => {
     cy.mockOutValidateVmUsername();
     cy.mockOutCalculateVmPrice();
     cy.mockOutDeleteStudy();
+    cy.mockOutAvailableroles();
 });
