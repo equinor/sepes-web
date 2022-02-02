@@ -24,7 +24,7 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($PrNumber).$($DnsZone)/"
-$url = $($PrNumber).$($DnsZone)
+$url = "$($PrNumber).$($DnsZone)"
 $InformationPreference = 'Continue'
 
 $token = Get-AzureToken `
@@ -75,7 +75,7 @@ Set-WebAppCustomHostname -Token $token `
     -Subscription $var.azure.subscription `
     -Location $var.azure.location `
     -AppServicePlan $var.azure.ciWebApp.appServicePlan `
-    -DefaultHostname $webApp.properties.defaultHostName
+    -DefaultHostname $webApp.properties.defaultHostName `
     -CustomDomain $url `
     -Verbose
 
