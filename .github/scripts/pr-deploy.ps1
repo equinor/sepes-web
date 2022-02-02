@@ -24,6 +24,7 @@ Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 $var = Read-ValueFile -FilePath $Environment
 $webappName = "web-frontend-pr-$PrNumber"
 $RedirectUri = "https://$($PrNumber).$($DnsZone)/"
+$url = $($PrNumber).$($DnsZone)
 $InformationPreference = 'Continue'
 
 $token = Get-AzureToken `
@@ -68,12 +69,31 @@ New-DnsRecord -Token $token `
     -Address $webApp.properties.defaultHostName `
     -Verbose
 
-
 Set-WebAppCustomHostname -Token $token `
     -Name $webappName `
     -ResourceGroup $var.azure.resourceGroup.name `
     -Subscription $var.azure.subscription `
     -Location $var.azure.location `
     -AppServicePlan $var.azure.ciWebApp.appServicePlan `
-    -CustomDomain "$($PrNumber).$($DnsZone)" `
+    -DefaultHostname $webApp.properties.defaultHostName
+    -CustomDomain $url `
+    -Verbose
+
+$certificate = New-WebAppCertificate -Token $token `
+    -Name $webappName `
+    -ResourceGroup $var.azure.resourceGroup.name `
+    -Subscription $var.azure.subscription `
+    -Location $var.azure.location `
+    -AppServicePlan $var.azure.ciWebApp.appServicePlan `
+    -CustomDomain $url `
+    -Verbose
+
+$binding = Set-WebAppSslBinding -Token $token `
+    -Name $webappName `
+    -ResourceGroup $var.azure.resourceGroup.name `
+    -Subscription $var.azure.subscription `
+    -Location $var.azure.location `
+    -AppServicePlan $var.azure.ciWebApp.appServicePlan `
+    -CustomDomain $url `
+    -Thumbprint $certificate.properties.thumbprint `
     -Verbose
