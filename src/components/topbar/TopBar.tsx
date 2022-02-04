@@ -73,7 +73,9 @@ const Bar = () => {
     const user = useContext(UserConfig);
     const permissions = useContext(Permissions);
     const [description, setDescription] = useState('');
-    const [isScrimVisible, setIsScrimVisible] = useState(false);
+    const [isFeedbackScrimVisible, setIsFeedbackScrimVisible] = useState(false);
+    const [isServiceNowRefScrimVisible, setIServiceNowRefScrimVisible] = useState(false);
+    const [serviceNowReference, setServiceNowReference] = useState('');
 
     const openMenu = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
@@ -118,25 +120,20 @@ const Bar = () => {
     };
 
     const handleCloseFeedbackDialog = () => {
-        setIsScrimVisible(false);
+        setIsFeedbackScrimVisible(false);
     };
 
     const handleSendFeedback = () => {
         const category = 'incident';
         createEnquiry(category, description).then((response: any) => {
-            setIsScrimVisible(false);
-            if (response.result.status !== 'success') {
+            setIsFeedbackScrimVisible(false);
+            if (response.result.status === 'success') {
+                setIServiceNowRefScrimVisible(true);
+                setServiceNowReference(response.result.details.number);
+            } else {
                 console.log('Err');
             }
         });
-    };
-
-    const returnDescriptionFieldVariant = (description: string) => {
-        if (!description) {
-            return 'error';
-        }
-
-        return 'default';
     };
 
     const optionsTemplate = (
@@ -169,17 +166,6 @@ const Bar = () => {
                     data={report_bug}
                 />
                 Report bug
-            </Menu.Item>
-            <Menu.Item onClick={() => setIsScrimVisible(true)}>
-                <Icon
-                    color="#6F6F6F"
-                    style={{ cursor: 'pointer' }}
-                    size={24}
-                    className="icon"
-                    title="Release notes"
-                    data={comment_chat}
-                />
-                Send feedback
             </Menu.Item>
             <Menu.Section title="">
                 <Menu.Item onClick={() => user.logoutRedirect()}>
@@ -220,6 +206,16 @@ const Bar = () => {
                     >
                         Documentation
                     </Button>
+                    <Button id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackScrimVisible(true)}>
+                        <Icon
+                            style={{ cursor: 'pointer' }}
+                            size={24}
+                            color="#007079"
+                            className="icon"
+                            title="sendFeeback"
+                            data={comment_chat}
+                        />
+                    </Button>
                     <Button
                         id="menuButton"
                         variant="ghost_icon"
@@ -248,7 +244,11 @@ const Bar = () => {
                 </TopBar.Actions>
             </TopBar>
 
-            <Scrim open={isScrimVisible} isDismissable onClose={() => setIsScrimVisible(!isScrimVisible)}>
+            <Scrim
+                open={isFeedbackScrimVisible}
+                isDismissable
+                onClose={() => setIsFeedbackScrimVisible(!isFeedbackScrimVisible)}
+            >
                 <Dialog style={{ width: '500px', height: '370px' }}>
                     <Title>
                         <Typography variant="h2">Feedback form</Typography>
@@ -265,6 +265,9 @@ const Bar = () => {
                             variant="default"
                             autoFocus
                         />
+                        <Typography variant="caption" style={{ marginTop: '5px' }}>
+                            Please note that your feedback will be sent to ServiceNow.
+                        </Typography>
                     </CustomContent>
                     <Actions>
                         <Button onClick={handleSendFeedback} disabled={!description} style={{ marginRight: '5px' }}>
@@ -273,6 +276,23 @@ const Bar = () => {
                         <Button onClick={handleCloseFeedbackDialog} variant="ghost">
                             Cancel
                         </Button>
+                    </Actions>
+                </Dialog>
+            </Scrim>
+            <Scrim
+                open={isServiceNowRefScrimVisible}
+                isDismissable
+                onClose={() => setIServiceNowRefScrimVisible(!isServiceNowRefScrimVisible)}
+            >
+                <Dialog style={{ width: '400px' }}>
+                    <CustomContent scrollable={false}>
+                    <Title>
+                        <Typography variant="h3">Your ServiceNow reference:</Typography>
+                    </Title>
+                        <Typography variant="body_long_bold">{serviceNowReference}</Typography>
+                    </CustomContent>
+                    <Actions>
+                        <Button onClick={() => setIServiceNowRefScrimVisible(false)}>Ok</Button>
                     </Actions>
                 </Dialog>
             </Scrim>
