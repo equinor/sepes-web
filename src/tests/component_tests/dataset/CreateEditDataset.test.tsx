@@ -5,6 +5,8 @@ import { DatasetObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import { Provider } from 'react-redux';
+import mockStore from 'tests/mocks/mockStore';
 jest.mock('react-keyed-file-browser', () => jest.fn(() => {}));
 
 const dataset: DatasetObj = {
@@ -30,20 +32,16 @@ const datasetWithInfo: DatasetObj = {
     studyName: ''
 };
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 test('renders stepbar component without info', () => {
     const history = createMemoryHistory();
     const { getByTestId } = render(
-        <Router history={history}>
-            <CreateEditDataset
-                datasetFromDetails={dataset}
-                setDatasetFromDetails={mockFunc}
-                setShowEditDataset={mockFunc}
-                editingDataset
-                isStandardDataset={false}
-            />
-        </Router>
+        <Provider store={mockStore({ datasets: { dataset: dataset } })}>
+            <Router history={history}>
+                <CreateEditDataset setShowEditDataset={mockFunc} editingDataset isStandardDataset={false} />
+            </Router>
+        </Provider>
     );
 
     expect(getByTestId('dataset_save').hasAttribute('disabled')).toEqual(true);
@@ -51,15 +49,11 @@ test('renders stepbar component without info', () => {
 test('renders stepbar component with edit mode and info', () => {
     const history = createMemoryHistory();
     const { getByTestId, getByText } = render(
-        <Router history={history}>
-            <CreateEditDataset
-                datasetFromDetails={datasetWithInfo}
-                setDatasetFromDetails={mockFunc}
-                setShowEditDataset={mockFunc}
-                editingDataset
-                isStandardDataset={false}
-            />
-        </Router>
+        <Provider store={mockStore({ datasets: { dataset: datasetWithInfo } })}>
+            <Router history={history}>
+                <CreateEditDataset setShowEditDataset={mockFunc} editingDataset isStandardDataset={false} />
+            </Router>
+        </Provider>
     );
     const linkElement = getByText('Edit dataset');
     expect(linkElement).toBeInTheDocument();
@@ -69,15 +63,11 @@ test('renders stepbar component with edit mode and info', () => {
 test('renders stepbar component with create mode', () => {
     const history = createMemoryHistory();
     const { getByTestId, getByText } = render(
-        <Router history={history}>
-            <CreateEditDataset
-                datasetFromDetails={datasetWithInfo}
-                setDatasetFromDetails={mockFunc}
-                setShowEditDataset={mockFunc}
-                editingDataset={false}
-                isStandardDataset={false}
-            />
-        </Router>
+        <Provider store={mockStore({ datasets: { dataset: datasetWithInfo } })}>
+            <Router history={history}>
+                <CreateEditDataset setShowEditDataset={mockFunc} editingDataset={false} isStandardDataset={false} />
+            </Router>
+        </Provider>
     );
     const linkElement = getByText('Create dataset');
     expect(linkElement).toBeInTheDocument();

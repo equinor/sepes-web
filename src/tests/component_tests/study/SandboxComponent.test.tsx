@@ -4,6 +4,8 @@ import Sandbox from '../../../components/studyDetails/Sandbox';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import mockStore from 'tests/mocks/mockStore';
 jest.mock('react-keyed-file-browser', () => jest.fn(() => {}));
 
 const study: StudyObj = {
@@ -81,19 +83,19 @@ const mockFunc = (id: string) => {};
 test('renders dataset component without permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
-        <Router history={history}>
-            <Sandbox
-                study={study}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                disabled={false}
-                setLoading={mockFunc}
-                wbsIsValid
-                onFallBackAddressChange={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: study } })}>
+            <Router history={history}>
+                <Sandbox
+                    setHasChanged={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    disabled={false}
+                    setLoading={mockFunc}
+                    wbsIsValid
+                    onFallBackAddressChange={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = getByText('Create sandbox');
@@ -105,19 +107,19 @@ test('renders dataset component without permission to add dataset', () => {
 test('renders dataset component with permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
-        <Router history={history}>
-            <Sandbox
-                study={studyWithoutPermissionToAddDataset}
-                setStudy={mockFunc}
-                setHasChanged={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                disabled={true}
-                setLoading={mockFunc}
-                wbsIsValid
-                onFallBackAddressChange={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithoutPermissionToAddDataset } })}>
+            <Router history={history}>
+                <Sandbox
+                    setHasChanged={mockFunc}
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    disabled={true}
+                    setLoading={mockFunc}
+                    wbsIsValid
+                    onFallBackAddressChange={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = getByText('Create sandbox');

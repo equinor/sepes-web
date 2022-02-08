@@ -30,7 +30,9 @@ Cypress.Commands.add('mockOutPermissions', () => {
 Cypress.Commands.add('mockOutStudyParticipant', () => {
     cy.intercept('api/participants/*', { fixture: 'study/studyParticipant.json' });
 });
-
+Cypress.Commands.add('mockOutAvailableroles', () => {
+    cy.intercept('api/studies/*/availableroles', { fixture: 'study/availableRoles.json' });
+});
 // Data set mocks
 
 Cypress.Commands.add('mockOutAllCallsForCreateDatasetDocsTest', () => {
@@ -44,6 +46,7 @@ Cypress.Commands.add('mockOutAllCallsForCreateDatasetDocsTest', () => {
 
 Cypress.Commands.add('mockOutDataSet', () => {
     cy.intercept('/api/studies/*/datasets/*', { fixture: 'dataset/dataset.json' });
+    cy.intercept('/api/studies/*/datasetsstudyspecific', { fixture: 'dataset/dataset.json' });
 });
 Cypress.Commands.add('mockOutDataSetDelete', () => {
     cy.intercept('/api/studies/datasets/studyspecific/*', { fixture: 'common/emptyResponse.json' });
@@ -91,8 +94,12 @@ Cypress.Commands.add('mockOutSandbox', () => {
     });
 });
 
-Cypress.Commands.add('mockOutAvailableDataset', () => {
-    cy.intercept('/api/sandbox/*/availabledatasets', { fixture: 'common/emptyResponse.json' });
+Cypress.Commands.add('mockOutAvailableDataset', (withOneDataset = false) => {
+    if (withOneDataset) {
+        cy.intercept('/api/sandbox/*/availabledatasets', { fixture: 'sandbox/availableDatasets.json' });
+    } else {
+        cy.intercept('/api/sandbox/*/availabledatasets', { fixture: 'common/emptyResponse.json' });
+    }
 });
 
 Cypress.Commands.add('mockOutVmSizes', () => {
@@ -129,10 +136,16 @@ Cypress.Commands.add('mockOutSandboxCostAnalysis', () => {
     cy.intercept('/api/sandboxes/*/costanalysis');
 });
 
-Cypress.Commands.add('mockOutSandboxVirtualMachineList', () => {
-    cy.intercept('/api/virtualmachines/forsandbox/*', {
-        fixture: 'common/emptyList.json'
-    });
+Cypress.Commands.add('mockOutSandboxVirtualMachineList', (withOneVM = false) => {
+    if (withOneVM) {
+        cy.intercept('/api/virtualmachines/forsandbox/*', {
+            fixture: 'sandbox/vmForSandbox.json'
+        });
+    } else {
+        cy.intercept('/api/virtualmachines/forsandbox/*', {
+            fixture: 'common/emptyList.json'
+        });
+    }
 });
 
 Cypress.Commands.add('mockOutCalculateVmName', () => {
@@ -169,4 +182,23 @@ Cypress.Commands.add('mockOutVirtualMachineExtended', () => {
     cy.intercept('/api/virtualmachines/*/extended', {
         fixture: 'sandbox/vmExtended.json'
     });
+});
+
+// Study Viewer mocks
+
+Cypress.Commands.add('mockOutRbacTests', () => {
+    cy.mockOutResultsAndLearnings();
+    cy.mockOutStudyList();
+    cy.mockOutRegions();
+    cy.mockOutSandboxResources();
+    cy.mockOutAvailableDataset(true);
+    cy.mockOutVmSizes();
+    cy.mockOutVmOperatingsystems();
+    cy.mockOutCalculateVmName();
+    cy.mockOutSandboxCostAnalysis();
+    cy.mockOutVmDisks();
+    cy.mockOutValidateVmUsername();
+    cy.mockOutCalculateVmPrice();
+    cy.mockOutDeleteStudy();
+    cy.mockOutAvailableroles();
 });

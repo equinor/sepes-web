@@ -4,6 +4,8 @@ import Overview from '../../../components/studyDetails/Overview';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import mockStore from 'tests/mocks/mockStore';
 
 const study: StudyObj = {
     name: 'StudyName',
@@ -52,16 +54,17 @@ const resultsAndLearnings = { resultsAndLearnings: 'this is a good study' };
 test('renders StudyComponent full component with invalid study name', () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <Overview
-                study={study}
-                setHasChanged={mockFunc}
-                setResultsAndLearnings={mockFunc}
-                resultsAndLearnings={resultsAndLearnings}
-                controller={new AbortController()}
-                onFallBackAddressChange={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: study } })}>
+            <Router history={history}>
+                <Overview
+                    setHasChanged={mockFunc}
+                    setResultsAndLearnings={mockFunc}
+                    resultsAndLearnings={resultsAndLearnings}
+                    controller={new AbortController()}
+                    onFallBackAddressChange={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = getByText('sandbox1');
