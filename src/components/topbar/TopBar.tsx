@@ -284,12 +284,16 @@ const Bar = () => {
                 isDismissable
                 onClose={() => setIServiceNowRefScrimVisible(!isServiceNowRefScrimVisible)}
             >
-                <Dialog style={{ width: '400px' }}>
+                <Dialog style={{ width: '450px', height: '250px' }}>
                     <CustomContent scrollable={false}>
-                    <Title>
-                        <Typography variant="h3">Your ServiceNow reference:</Typography>
-                    </Title>
-                        <Typography variant="body_long_bold">{serviceNowReference}</Typography>
+                        <Typography variant="h3">Thank you for your feedback!</Typography>
+                        <Typography variant="body_short" style={{ marginTop: '20px' }}>
+                            We have created a ServiceNow enquiry with the following task reference. You will receive an
+                            email shortly. Please click the link to the task in the email to follow up in ServiceNow.
+                        </Typography>
+                        <Typography variant="body_short_bold" style={{ marginTop: '20px' }}>
+                            {serviceNowReference}
+                        </Typography>
                     </CustomContent>
                     <Actions>
                         <Button onClick={() => setIServiceNowRefScrimVisible(false)}>Ok</Button>
