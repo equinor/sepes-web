@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/equinor/sepes-web/compare/1.2.2...1.3.0) (2022-02-08)
+
+
+### Features
+
+* add feedback form ([3baea75](https://github.com/equinor/sepes-web/commit/3baea75ddc808ef5990f04e5f903a807fdddb233)), closes [#1356](https://github.com/equinor/sepes-web/issues/1356)
+* **dataset:** save folder view mode ([d3755d4](https://github.com/equinor/sepes-web/commit/d3755d4b840bbfa53941c7d9899ea5fd0231a3c3)), closes [#1455](https://github.com/equinor/sepes-web/issues/1455)
+* feedback form improvements ([ad3685e](https://github.com/equinor/sepes-web/commit/ad3685e736c343900b36a7a94bc1b1752c85fbd8)), closes [#1562](https://github.com/equinor/sepes-web/issues/1562)
+* improvements to send feedback UI ([c1e3794](https://github.com/equinor/sepes-web/commit/c1e37945fed1988aa56e09c071d221810f0b1d57)), closes [#1559](https://github.com/equinor/sepes-web/issues/1559)
+
+
+### Bug Fixes
+
+* **study:** infinite loading screen when create study throws error ([1bd21c7](https://github.com/equinor/sepes-web/commit/1bd21c7723877e28989875b08ef490467c31022e)), closes [#1549](https://github.com/equinor/sepes-web/issues/1549)
+* upgrade @types/node from 16.11.18 to 16.11.19 ([2106747](https://github.com/equinor/sepes-web/commit/2106747a8b44df5822085803a4de8de688e2ec69))
+* upgrade expect from 27.4.2 to 27.4.6 ([34f1235](https://github.com/equinor/sepes-web/commit/34f1235f3f990af8b0a0b202e613c9841306ce3a))
+
 ### [1.2.2](https://github.com/equinor/sepes-web/compare/1.2.1...1.2.2) (2022-01-26)
 
 
