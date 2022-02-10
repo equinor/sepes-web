@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/equinor/sepes-web/compare/1.3.0...1.4.0) (2022-02-10)
+
+
+### Features
+
+* **vm:** show vm creation error ([6360759](https://github.com/equinor/sepes-web/commit/6360759eb201fb474f0398fa20845b1c3d91c20b)), closes [#1565](https://github.com/equinor/sepes-web/issues/1565)
+
 ## [1.3.0](https://github.com/equinor/sepes-web/compare/1.2.2...1.3.0) (2022-02-08)
 
 
