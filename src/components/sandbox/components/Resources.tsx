@@ -22,7 +22,7 @@ const Resources: React.FC<ResourcesComponentProps> = ({ permissions }) => {
     }, [resources]);
 
     return (
-        <div style={{ height: '331px', overflowX: 'hidden' }} data-cy="sandbox_resources">
+        <div style={{ height: '410px', overflowX: 'hidden' }} data-cy="sandbox_resources">
             <Table style={{ width: '100%', marginBottom: '24px', height: '200px' }}>
                 <Head>
                     <Row>
@@ -33,7 +33,7 @@ const Resources: React.FC<ResourcesComponentProps> = ({ permissions }) => {
                     {orderedResources && orderedResources.length > 0 && Array.isArray(orderedResources) ? (
                         orderedResources.map((resource: any, i: number) => {
                             return (
-                                <Row key={i} id="tableRowNoPointerNoColor">
+                                <Row key={i} id="tableRowNoPointerNoColor" style={{ height: '55px' }}>
                                     <Cell>
                                         <ResourceItemComponent
                                             name={resource.name}
