@@ -256,6 +256,7 @@ jobs:
           ACRUSERNAME: ${{ secrets.ACR_USERNAME }}
           ACRPASSWORD: ${{ secrets.ACR_PASSWORD }}
           DNSZONE: ${{ secrets.PR_DNS_ZONE }}
+          APPINSIGHTSKEY: ${{ secrets.DEV_APPINSIGHTSKEY }}
         shell: pwsh
         run: |
           .github\scripts\pr-deploy.ps1 `
@@ -267,6 +268,7 @@ jobs:
             -PrNumber $env:PRNUMBER `
             -AcrPassword ($env:ACRPASSWORD | ConvertTo-SecureString -AsPlainText -Force) `
             -AcrUsername ($env:ACRUSERNAME | ConvertTo-SecureString -AsPlainText -Force) `
+            -AppInsightsKey ($env:APPINSIGHTSKEY | ConvertTo-SecureString -AsPlainText -Force) `
             -DnsZone $env:DNSZONE
 
       # - name: Run quick running cypress tests

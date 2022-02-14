@@ -63,10 +63,10 @@ function New-CIWebApp {
         [Parameter(Mandatory=$true)][string]$RedirectUri,
         [Parameter(Mandatory=$true)][securestring]$AcrPassword,
         [Parameter(Mandatory=$true)][securestring]$AcrUsername,
+        [Parameter(Mandatory=$true)][securestring]$AppInsightsKey,
         [Parameter(Mandatory=$true)][string]$AcrUrl,
         [Parameter(Mandatory=$true)][string]$Image,
         [Parameter(Mandatory=$true)][string]$TenantId,
-        [Parameter(Mandatory=$true)][string]$UserIdentity,
         [Parameter()][object]$AppSettings,
         [Parameter()][string]$HttpsOnly = $true,
         [Parameter()][string]$HttpLogging = $true,
@@ -113,12 +113,6 @@ function New-CIWebApp {
         $body = New-Object -TypeName psobject -Property @{
             kind = "web"
             location = $Location
-            identity = @{
-                type = "UserAssigned"
-                userAssignedIdentities = @{
-                        "$UserIdentity" = @{}
-                }
-            }
             properties = @{
                 httpsOnly = $HttpsOnly
                 serverFarmId = $aspId
@@ -139,6 +133,10 @@ function New-CIWebApp {
         $body.Properties.siteConfig.appSettings += @{
             name = "DOCKER_REGISTRY_SERVER_USERNAME"
             value = ($AcrUsername | ConvertFrom-SecureString -AsPlainText)
+        }
+        $body.Properties.siteConfig.appSettings += @{
+            name = "REACT_APP_INSTRUMENTATION_KEY"
+            value = ($AppInsightsKey | ConvertFrom-SecureString -AsPlainText)
         }
         $body.Properties.siteConfig.appSettings += @{
             name = "DOCKER_REGISTRY_SERVER_URL"

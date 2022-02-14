@@ -7,6 +7,7 @@ param (
     #[Parameter(Mandatory=$True)][string]$WebappName,
     [Parameter(Mandatory=$True)][securestring]$AcrPassword,
     [Parameter(Mandatory=$True)][securestring]$AcrUsername,
+    [Parameter(Mandatory=$True)][securestring]$AppInsightsKey,
     [Parameter(Mandatory=$True)][string]$DnsZone,
     [Parameter()][string]$ClientSecret,
     [Parameter()][string]$ClientId
@@ -39,11 +40,11 @@ $webApp = New-CIWebApp -Token $token `
     -Subscription $var.azure.subscription `
     -image $Image `
     -Location $var.azure.location `
-    -UserIdentity $var.azure.ciWebApp.userIdentity `
     -RedirectUri "$RedirectUri" `
     -AppServicePlan $var.azure.ciWebApp.appServicePlan `
     -AppSettings $var.azure.ciWebApp.siteConfig.appSettings `
     -HttpLogging $var.azure.ciWebApp.siteConfig.httpLogging `
+    -AppInsightsKey $AppInsightsKey `
     -AcrPassword $AcrPassword `
     -AcrUsername $AcrUsername `
     -AcrUrl $AcrUrl `
