@@ -10,7 +10,6 @@
         },
         "ciWebApp": {
             "appServicePlan": "asp-sepes-non-prod",
-            "userIdentity": "/subscriptions/6cfb8f33-6d4b-43bf-9000-91fd6f53ca28/resourcegroups/rg-sepes-ci/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-web-sepes-ci",
             "siteConfig": {
                 "alwaysOn": "True",
                 "httpLoging": "True",
