@@ -45,13 +45,6 @@ jobs:
         tags: ${{ env.ciTag }}
         outputs: type=docker,dest=/tmp/${{ env.dockerCacheFilename }}
 
-    # - name: docker build
-    #   run: |
-        # prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
-        # docker build -f ci.Dockerfile -o type=oci,dest=/tmp/${{ env.dockerCacheFilename }}.tar -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
-        # docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-        # ls /tmp
-
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
@@ -104,22 +97,6 @@ jobs:
 
       # - run: npm install
       - run: npm ci
-      - name: run step if multiline not null
-        if: ${{ steps.id-token.outputs.TOKEN }}
-        run: echo multiline not null
-
-
-      # - name: Run cypress
-      #   uses: cypress-io/github-action@v2
-      #   # env:
-      #     # DEBUG: 'cypress:*'
-      #   with:
-      #     start: npm start
-      #     wait-on: 'http://localhost:3000'
-      #     config-file: cypress_chromium.dev.json
-      #     spec: cypress/integration/quickRunningTests/**/
-      #     browser: chrome
-      #     env: cyAccessToken=${{ steps.id-token.outputs.TOKEN }}
 
       - name: Run documentation cypress tests
         if: ${{ github.event_name != 'pull_request' }}

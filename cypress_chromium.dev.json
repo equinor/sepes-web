@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://1319.pr.sepes.equinor.com/",
+    "baseUrl": "https://13190.pr.sepes.equinor.com/",
     "defaultCommandTimeout": 20000,
     "pageLoadTimeout": 200000,
     "requestTimeout": 200000,
