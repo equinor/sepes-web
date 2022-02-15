@@ -271,10 +271,13 @@ jobs:
             -AppInsightsKey ($env:APPINSIGHTSKEY | ConvertTo-SecureString -AsPlainText -Force) `
             -DnsZone $env:DNSZONE
 
-      # - name: Run quick running cypress tests
-      #   env:
-      #     token: ${{ steps.id-token.outputs.TOKEN }}
-      #   run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+          $prUrl = "https://$env:PRNUMBER.$env:DNSZONE"
+          echo "PR_URL=$prUrl" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: Run quick running cypress tests
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
+        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}} --config baseUrl=${{env.PR_URL}}
 
 
       # Temporary comment out until we have fix for getting cypress coverage
