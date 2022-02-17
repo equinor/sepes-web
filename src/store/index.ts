@@ -3,13 +3,15 @@ import sandboxesReducer from './sandboxes/sandboxesSlice';
 import resourcesReducer from './resources/resourcesSlice';
 import studiesReducer from './studies/studiesSlice';
 import datasetsReducer from './datasets/datasetsSlice';
+import userSettingsReducer from './usersettings/userSettingsSlice';
 
 export const store = configureStore({
     reducer: {
         sandboxes: sandboxesReducer,
         resources: resourcesReducer,
         studies: studiesReducer,
-        datasets: datasetsReducer
+        datasets: datasetsReducer,
+        userSettings: userSettingsReducer
     },
     devTools: process.env.NODE_ENV !== 'production'
 });
