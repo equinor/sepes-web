@@ -9,7 +9,8 @@ export const resourceType = {
 
 export const resourceStatus = {
     ok: 'Ok',
-    queued: 'queued'
+    queued: 'queued',
+    failed: 'failed'
 };
 
 export const inputErrorsVmRules = {

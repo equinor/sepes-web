@@ -6,7 +6,7 @@ import { sandboxWithAllPermissions, sandboxWithNoPermissions } from '../../mocks
 import { Provider } from 'react-redux';
 import { mockStore } from '../../mocks/mockStore';
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 const initialStateWithPermissions = { sandboxes: { sandbox: sandboxWithAllPermissions, callGetResources: false } };
 const initialStateWithoutPermissions = { sandboxes: { sandbox: sandboxWithNoPermissions, callGetResources: false } };

@@ -130,7 +130,7 @@ Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
     cy.wait('@getVm');
 });
 
-Cypress.Commands.add('createVm', () => {
+Cypress.Commands.add('createVm', (intercept = true) => {
     // cy.waitForSandboxToLoad();
     cy.get('[data-cy=vm_name]').type('cy name');
     // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
@@ -144,11 +144,13 @@ Cypress.Commands.add('createVm', () => {
     cy.get('[data-cy=vm_dataDisks]').click({ force: true });
     cy.contains('4 GB').click({ force: true });
     cy.get('[data-cy=create_vm]').click();
-    cy.waitForVirtualMachineToBeCreated();
+    if (intercept) {
+        cy.waitForVirtualMachineToBeCreated();
+    }
 });
 
-Cypress.Commands.add('createVmRules', () => {
-    cy.wait(8000);
+Cypress.Commands.add('createVmRules', (wait = 8000) => {
+    cy.wait(wait);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');

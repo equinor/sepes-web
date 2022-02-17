@@ -1,14 +1,17 @@
 /* eslint-disable react/jsx-fragments, no-shadow */
 import React, { Fragment, useContext, useState } from 'react';
 import styled from 'styled-components';
-import { TopBar, Icon, Button, Menu, Typography } from '@equinor/eds-core-react';
+import { TopBar, Icon, Button, Menu, Typography, Dialog, Scrim, TextField } from '@equinor/eds-core-react';
 // import NavTabs from './NavTabs';
 import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
 import { requestChangeLink, documentationLink } from '../common/staticValues/commonLinks';
 import { getEnvironment } from 'components/common/helpers/helpers';
+import { comment_chat, exit_to_app, info_circle, report_bug, account_circle } from '@equinor/eds-icons';
+import createEnquiry from 'services/serviceNowApiService';
 
 const { Header } = TopBar;
+const { Actions, Title, CustomContent } = Dialog;
 
 const Wrapper = styled.div`
     z-index: 99;
@@ -69,6 +72,10 @@ const Bar = () => {
     const isOpen = Boolean(buttonEl);
     const user = useContext(UserConfig);
     const permissions = useContext(Permissions);
+    const [description, setDescription] = useState('');
+    const [isFeedbackScrimVisible, setIsFeedbackScrimVisible] = useState(false);
+    const [isServiceNowRefScrimVisible, setIServiceNowRefScrimVisible] = useState(false);
+    const [serviceNowReference, setServiceNowReference] = useState('');
 
     const openMenu = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
@@ -112,6 +119,23 @@ const Bar = () => {
         return null;
     };
 
+    const handleCloseFeedbackDialog = () => {
+        setIsFeedbackScrimVisible(false);
+    };
+
+    const handleSendFeedback = () => {
+        const category = 'incident';
+        createEnquiry(category, description).then((response: any) => {
+            setIsFeedbackScrimVisible(false);
+            if (response.result.status === 'success') {
+                setIServiceNowRefScrimVisible(true);
+                setServiceNowReference(response.result.details.number);
+            } else {
+                console.log('Err');
+            }
+        });
+    };
+
     const optionsTemplate = (
         <>
             <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
@@ -124,22 +148,22 @@ const Bar = () => {
             <Menu.Item onClick={() => redirectToLink('/releasenotes')}>
                 <Icon
                     color="#6F6F6F"
-                    name="info_circle"
                     style={{ cursor: 'pointer' }}
                     size={24}
                     className="icon"
                     title="Release notes"
+                    data={info_circle}
                 />
                 Release notes
             </Menu.Item>
             <Menu.Item onClick={() => redirectToExternalLink(requestChangeLink)}>
                 <Icon
                     color="#6F6F6F"
-                    name="report_bug"
                     style={{ cursor: 'pointer' }}
                     size={24}
                     className="icon"
                     title="Release notes"
+                    data={report_bug}
                 />
                 Report bug
             </Menu.Item>
@@ -147,11 +171,11 @@ const Bar = () => {
                 <Menu.Item onClick={() => user.logoutRedirect()}>
                     <Icon
                         color="#6F6F6F"
-                        name="exit_to_app"
                         style={{ cursor: 'pointer' }}
                         size={24}
                         className="icon"
                         title="Log out"
+                        data={exit_to_app}
                     />
                     <Typography group="navigation" variant="menu_title" as="span">
                         Log out
@@ -182,18 +206,28 @@ const Bar = () => {
                     >
                         Documentation
                     </Button>
+                    <Button id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackScrimVisible(true)}>
+                        <Icon
+                            style={{ cursor: 'pointer' }}
+                            size={24}
+                            color="#007079"
+                            className="icon"
+                            title="sendFeeback"
+                            data={comment_chat}
+                        />
+                    </Button>
                     <Button
                         id="menuButton"
                         variant="ghost_icon"
                         onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
                     >
                         <Icon
-                            name="account_circle"
                             style={{ cursor: 'pointer' }}
                             size={24}
                             color="#007079"
                             className="icon"
                             title="account"
+                            data={account_circle}
                         />
                     </Button>
                     <Menu
@@ -209,6 +243,63 @@ const Bar = () => {
                     </Menu>
                 </TopBar.Actions>
             </TopBar>
+
+            <Scrim
+                open={isFeedbackScrimVisible}
+                isDismissable
+                onClose={() => setIsFeedbackScrimVisible(!isFeedbackScrimVisible)}
+            >
+                <Dialog style={{ width: '500px', height: '370px' }}>
+                    <Title>
+                        <Typography variant="h2">Feedback form</Typography>
+                    </Title>
+                    <CustomContent scrollable={false}>
+                        <TextField
+                            label="Description"
+                            placeholder="Please provide a short description"
+                            multiline
+                            rows={7}
+                            id="descriptionField"
+                            style={{ resize: 'none' }}
+                            onChange={(e) => setDescription(e.target.value)}
+                            variant="default"
+                            autoFocus
+                        />
+                        <Typography variant="caption" style={{ marginTop: '5px' }}>
+                            Please note that your feedback will be sent to ServiceNow.
+                        </Typography>
+                    </CustomContent>
+                    <Actions>
+                        <Button onClick={handleSendFeedback} disabled={!description} style={{ marginRight: '5px' }}>
+                            Send
+                        </Button>
+                        <Button onClick={handleCloseFeedbackDialog} variant="ghost">
+                            Cancel
+                        </Button>
+                    </Actions>
+                </Dialog>
+            </Scrim>
+            <Scrim
+                open={isServiceNowRefScrimVisible}
+                isDismissable
+                onClose={() => setIServiceNowRefScrimVisible(!isServiceNowRefScrimVisible)}
+            >
+                <Dialog style={{ width: '450px', height: '250px' }}>
+                    <CustomContent scrollable={false}>
+                        <Typography variant="h3">Thank you for your feedback!</Typography>
+                        <Typography variant="body_short" style={{ marginTop: '20px' }}>
+                            We have created a ServiceNow enquiry with the following task reference. You will receive an
+                            email shortly. Please click the link to the task in the email to follow up in ServiceNow.
+                        </Typography>
+                        <Typography variant="body_short_bold" style={{ marginTop: '20px' }}>
+                            {serviceNowReference}
+                        </Typography>
+                    </CustomContent>
+                    <Actions>
+                        <Button onClick={() => setIServiceNowRefScrimVisible(false)}>Ok</Button>
+                    </Actions>
+                </Dialog>
+            </Scrim>
         </Wrapper>
     );
 };

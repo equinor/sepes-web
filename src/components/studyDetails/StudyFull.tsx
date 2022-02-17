@@ -169,7 +169,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const history = useHistory();
     const study = useSelector(getStudyFromStore());
     const dispatch = useDispatch();
-    const { id, logoUrl, name, description, wbsCode, vendor, restricted } = study;
+    const { logoUrl, name, description, wbsCode, vendor, restricted } = study;
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
     const [editMode, setEditMode] = useState<boolean>(newStudy);
     const [imageUrl, setImageUrl] = useState<string>('');
@@ -262,7 +262,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setEditMode(false);
 
         if (!wbsOnChangeIsValid) {
-            studyOnChange.wbsCode = '';
+            setStudyOnChange({ ...studyOnChange, wbsCode: '' });
         }
 
         sendStudyToApi(studyOnChange);
@@ -306,9 +306,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
         setStudySaveInProgress(true);
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
+                setLoading(false);
+                setStudySaveInProgress(false);
                 if (result && !result.message) {
-                    setLoading(false);
-                    setStudySaveInProgress(false);
                     const newStudy = result;
                     cache[getStudyByIdUrl(study.id)] = result;
                     dispatch(setStudyInStore(newStudy));
@@ -318,15 +318,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 }
             });
         } else {
-            study.id = id;
             if (imageUrl) {
                 dispatch(setStudyInStore(newStudy));
             } else {
                 dispatch(setStudyInStore(studyOnChange));
             }
-            setLoading(false);
 
             updateStudy(study, imageUrl).then((result: any) => {
+                setLoading(false);
                 setStudySaveInProgress(false);
                 if (result && !result.message) {
                     cache[getStudyByIdUrl(study.id)] = result;

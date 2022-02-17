@@ -282,7 +282,7 @@ export const DataTable: React.FC<DataTableProps> = ({
         if (columns) {
             if (!useExternalPagingAndSorting) {
                 if (updateTable) {
-                    const sorted = sortData(data);
+                    const sorted = sortData(Object.values(data));
                     setSortedData(data);
                     setState((prevState) => ({ ...prevState, cellValues: returnSlicedData(sorted) }));
                     setUpdateTable(false);
