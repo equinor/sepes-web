@@ -45,7 +45,7 @@
         "react-dropzone": "^11.5.1",
         "react-keyed-file-browser": "^1.14.0",
         "react-markdown": "^5.0.3",
-        "react-notifications-component": "^3.1.0",
+        "react-notifications-component": "^3.3.2",
         "react-redux": "^7.2.5",
         "react-router-dom": "^5.2.1",
         "react-scripts": "^5.0.0",
