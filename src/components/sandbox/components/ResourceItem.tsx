@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Label, EquinorIcon } from '../../common/StyledComponents';
-import { DotProgress, Tooltip, Button } from '@equinor/eds-core-react';
+import { DotProgress, Tooltip, Button, Icon } from '@equinor/eds-core-react';
 import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { apiRequestWithToken } from '../../../auth/AuthFunctions';
 import { SandboxPermissions } from 'components/common/interfaces';
@@ -86,6 +86,14 @@ const ResourceItemComponent: React.FC<ResourceItemComponentProps> = ({
                                 </a>
                             </Tooltip>
                         </div>
+                        {retryLink ? (
+                            <Label style={{ marginBottom: '5px', color: '#eb0000' }}>
+                                <Icon name="error_outlined" title="Warning" />
+                                Please retry again
+                            </Label>
+                        ) : (
+                            null
+                        )}
                     </div>
                 ) : (
                     <div>{type}</div>

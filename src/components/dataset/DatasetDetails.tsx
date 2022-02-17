@@ -36,6 +36,8 @@ import './DatasetDetailsStyle.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDatasetFromStore } from '../../store/datasets/datasetsSelectors';
 import { setDatasetInStore, setDatasetToInitialState } from 'store/datasets/datasetsSlice';
+import { getDatasetFolderViewMode } from '../../store/usersettings/userSettingsSelectors';
+import { toggleDatasetFolderView } from 'store/usersettings/userSettingsSlice';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -79,6 +81,7 @@ const DatasetDetails = () => {
     const studyId = getStudyId();
     const dataset = useSelector(getDatasetFromStore());
     const dispatch = useDispatch();
+    const isDatasetFolderView = useSelector(getDatasetFolderViewMode());
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
@@ -111,7 +114,6 @@ const DatasetDetails = () => {
     const [sasKey, setSasKey] = useState<string>('');
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
     const [totalProgress, setTotalProgress] = useState<number>(0);
-    const [folderViewMode, setFolderViewMode] = useState<boolean>(false);
     const [numberOfFilesInProgress, setNumberOfFilesInProgress] = useState<number>(0);
 
     useEffect(() => {
@@ -470,8 +472,8 @@ const DatasetDetails = () => {
                             )}
                             <div style={{ textAlign: 'end' }}>
                                 <Switch
-                                    checked={folderViewMode}
-                                    onChange={() => setFolderViewMode(!folderViewMode)}
+                                    checked={isDatasetFolderView}
+                                    onChange={() => dispatch(toggleDatasetFolderView(!isDatasetFolderView))}
                                     label="Folder view"
                                     style={{ float: 'right' }}
                                 />
@@ -502,7 +504,7 @@ const DatasetDetails = () => {
                                 abortArray={abortArray}
                                 updateCache={updateCache}
                                 getSasKey={getSasKey}
-                                folderViewMode={folderViewMode}
+                                folderViewMode={isDatasetFolderView}
                             />
                         </div>
                         {!datasetResponse.loading ? (
