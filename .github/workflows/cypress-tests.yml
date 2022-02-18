@@ -14,7 +14,6 @@ env:
   dockerCacheFilename: "ci-image.tar"
   ciTag: "${{ secrets.ACR_URL }}/sepes-web:latest"
   # prodTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
-  # prTag: "${{ secrets.ACR_URL }}/sepes-web:stable"
 
 jobs:
   build:
@@ -174,8 +173,6 @@ jobs:
           path: cypress/videos
 
 
-      # Add deploy of web app for PR env
-
   PR:
     runs-on: ubuntu-latest
     needs: build
@@ -256,7 +253,6 @@ jobs:
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
         run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
-
 
       # Temporary comment out until we have fix for getting cypress coverage
       # - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
