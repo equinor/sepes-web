@@ -18,6 +18,7 @@ Import-Module .\.github\scripts\powershell-modules\AzureResources.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Utility.psm1 -Force
 Import-Module .\.github\scripts\powershell-modules\Dns.psm1 -Force
 
+
 ######################################################
 ### Read environment file with parameter values and set variables
 ######################################################
