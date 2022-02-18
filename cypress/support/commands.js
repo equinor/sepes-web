@@ -47,7 +47,7 @@ Cypress.Commands.add('createStudy', (studyName) => {
     cy.wait(2000);
     cy.get('[data-cy=create_study]').click({ force: true });
 
-    // cy.waitForStudyToLoad();
+    cy.waitForStudyToLoad();
 });
 
 Cypress.Commands.add('createStudyWithLogo', (studyName) => {
@@ -130,7 +130,7 @@ Cypress.Commands.add('waitForVirtualMachineToBeCreated', () => {
     cy.wait('@getVm');
 });
 
-Cypress.Commands.add('createVm', () => {
+Cypress.Commands.add('createVm', (intercept = true) => {
     // cy.waitForSandboxToLoad();
     cy.get('[data-cy=vm_name]').type('cy name');
     // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
@@ -144,11 +144,13 @@ Cypress.Commands.add('createVm', () => {
     cy.get('[data-cy=vm_dataDisks]').click({ force: true });
     cy.contains('4 GB').click({ force: true });
     cy.get('[data-cy=create_vm]').click();
-    cy.waitForVirtualMachineToBeCreated();
+    if (intercept) {
+        cy.waitForVirtualMachineToBeCreated();
+    }
 });
 
-Cypress.Commands.add('createVmRules', () => {
-    cy.wait(8000);
+Cypress.Commands.add('createVmRules', (wait = 8000) => {
+    cy.wait(wait);
     cy.get('[data-cy=vm_add_rule]').click();
     cy.get('[data-cy=vm_rule_description]').type('cy rule description');
     cy.get('[data-cy=vm_rule_ip]').type('192.168.1.1');
@@ -185,33 +187,37 @@ Cypress.Commands.add('editResultsAndLearnings', () => {
 });
 
 Cypress.Commands.add('addMockUserAsParticipant', () => {
-    cy.get('[data-cy=participants_tab]').click({ force: true });
-    cy.intercept('api/participants/*').as('getMockUser');
-    cy.intercept('api/studies/*/participants/*').as('addParticipantRequest');
-    cy.contains('Type minimum three chara').type('Mock User');
+    // TODO: Make Intercept and wait for api Calls stable. Commented out for now
+    // cy.get('[data-cy=participants_tab]').click({ force: true });
 
-    cy.wait('@getMockUser');
+    cy.switchToParticipantsTab();
+    // cy.intercept('api/participants/*').as('getMockUser');
+    cy.mockOutStudyParticipant();
+    // cy.intercept('api/studies/*/participants/*').as('addParticipantRequest');
+    cy.contains('Type minimum three chara').type('Mock User');
+    cy.wait(4000);
+    // cy.wait('@getMockUser');
     cy.focused().type('{enter}');
     cy.get('[data-cy=participant_role]').click({ force: true });
     cy.contains('Vendor Admin').click({ force: true });
     cy.get('[data-cy=study_add_participant]').click({ force: true });
-    cy.wait('@addParticipantRequest');
+    cy.wait(4000);
+    // cy.wait('@addParticipantRequest');
 });
 
 Cypress.Commands.add('switchToParticipantsTab', () => {
-    cy.get('[data-cy=participants_tab]').click({ force: true });
+    cy.wait(1000);
+    cy.get('[data-cy=participants_tab]').click();
 });
 
 Cypress.Commands.add('switchToDatasetsTab', () => {
-    cy.get('[data-cy=datasets_tab]').click({ force: true });
+    cy.wait(1000);
+    cy.get('[data-cy=datasets_tab]').click();
 });
 
 Cypress.Commands.add('switchToSandboxesTab', () => {
+    cy.wait(1000);
     cy.get('[data-cy=sandbox_tab]').click();
-});
-
-Cypress.Commands.add('switchToParticipantsTab', () => {
-    cy.get('[data-cy=participants_tab]').click({ force: true });
 });
 
 Cypress.Commands.add('refreshPage', () => {

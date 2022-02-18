@@ -19,7 +19,7 @@ describe('Create sandbox and virtual machine', () => {
             blocking: true,
             textSize: '3vh'
         });
-        cy.createStudy(studyName);
+        cy.createStudyWithoutInterceptingStudy(studyName);
     });
 
     it('clicks on sandboxes tab', () => {
@@ -58,7 +58,8 @@ describe('Create sandbox and virtual machine', () => {
             text: 'Enter a name for the sandbox. Can not be changed later',
             textSize: '3vh',
             blocking: true,
-            duration: 5000
+            duration: 5000,
+            offsetY: 40
         });
         cy.get('[data-cy=sandbox_name]').type(sandboxName);
         cy.get('[data-cy=sandbox_region]').arrow({
@@ -87,72 +88,116 @@ describe('Create sandbox and virtual machine', () => {
     it('Create vm', { keystrokeDelay: 100 }, () => {
         cy.text('Step 6 - Create VM', {
             duration: 3000,
-            blocking: false,
+            blocking: true,
             textSize: '3vh'
         });
-        cy.get('[data-cy=vm_name]').arrow({
-            text: 'Enter vm name. Can not be changed later',
-            textSize: '3vh',
+
+        cy.text('Enter vm name. Can not be changed later', {
+            duration: 6000,
             blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight',
-            color: 'green'
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_name]').arrow({
+        //     text: 'Enter vm name. Can not be changed later',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight',
+        //     color: 'green'
+        // });
         cy.get('[data-cy=vm_name]').type('cy name');
-        // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
-        cy.get('[data-cy=vm_operatingSystem]').arrow({
-            text: 'Choose vm operating system',
-            textSize: '3vh',
-            blocking: true,
+        cy.text('The actual resource name will be a combination of this name as well as the sandbox and study name', {
             duration: 5000,
-            pointAt: 'bottomRight'
+            blocking: true,
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_operatingSystem]').click({ force: true });
+        cy.text('Choose vm operating system. You can filter by recommended if you are unsure', {
+            duration: 3000,
+            blocking: true,
+            textSize: '3vh'
+        });
+        // cy.get('[data-cy=vm_operatingSystem]').arrow({
+        //     text: 'Choose vm operating system',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=vm_operatingSystem]').type('Windows Server Datacenter Core 2019 (17763.2114.2108051826)');
         cy.contains('Windows Server Datacenter Core 2019 (17763.2114.2108051826)').click({ force: true });
 
-        cy.get('[data-cy=vm_username]').arrow({
-            text: 'Choose a username for the vm',
-            textSize: '3vh',
+        cy.text('Choose a username for the vm', {
+            duration: 3000,
             blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight'
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_username]').arrow({
+        //     text: 'Choose a username for the vm',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=vm_username]').type('cy username');
-        cy.get('[data-cy=vm_password]').arrow({
-            text: 'Choose a password for the vm',
-            textSize: '3vh',
+        cy.text('Choose a password for the vm. Can be reset after creation', {
+            duration: 3000,
             blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight'
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_password]').arrow({
+        //     text: 'Choose a password for the vm',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=vm_password]').type('Cypassword123!!');
         // cy.get('[data-cy=vm_size]').click({ force: true });
-        cy.get('[data-cy=vm_size]').arrow({
-            text: 'Choose a size for the vm. This effects cost',
-            textSize: '3vh',
+        cy.text('Choose a size for the vm. This effects cost', {
+            duration: 3000,
             blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight'
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_size]').arrow({
+        //     text: 'Choose a size for the vm. This effects cost',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=vm_size]').type('Standard_F1');
         cy.contains('Standard_F1').click({ force: true });
-        cy.get('[data-cy=vm_dataDisks]').arrow({
-            text: 'Choose a disk size for the vm. This effects cost',
-            textSize: '3vh',
+        cy.text('Choose a disk size for the vm. This also effects cost', {
+            duration: 3000,
             blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight'
+            textSize: '3vh'
         });
+        // cy.get('[data-cy=vm_dataDisks]').arrow({
+        //     text: 'Choose a disk size for the vm. This effects cost',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=vm_dataDisks]').click({ force: true });
         cy.contains('4 GB').click({ force: true });
-
-        cy.get('[data-cy=create_vm]').arrow({
-            text: 'When all required fields are filled out. Click create',
-            textSize: '3vh',
-            blocking: true,
-            duration: 5000,
-            pointAt: 'bottomRight'
-        });
+        cy.mockOutSandboxResourcesWithVM();
+        cy.text(
+            'When all required fields are filled out, you get an estimate on cost. Check this before proceeding. Click create!',
+            {
+                duration: 5000,
+                blocking: true,
+                textSize: '3vh'
+            }
+        );
+        // cy.get('[data-cy=create_vm]').arrow({
+        //     text: 'When all required fields are filled out. Click create',
+        //     textSize: '3vh',
+        //     blocking: true,
+        //     duration: 5000,
+        //     pointAt: 'bottomRight'
+        // });
         cy.get('[data-cy=create_vm]').click();
         cy.text('You are now on your newly created virtual machine!', {
             duration: 5000,

@@ -11,7 +11,7 @@ type DatasetProps = {
     sandbox: SandboxObj;
 };
 
-const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
+const Policy: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
     return (
         <>
             <Table style={{ width: '100%', marginBottom: '24px', marginRight: '86px' }}>
@@ -35,8 +35,8 @@ const Dataset: React.FC<DatasetProps> = ({ displayCheckbox, sandbox }) => {
     );
 };
 
-Dataset.defaultProps = {
+Policy.defaultProps = {
     displayCheckbox: undefined
 };
 
-export default Dataset;
+export default Policy;

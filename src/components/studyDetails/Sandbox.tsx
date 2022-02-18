@@ -4,7 +4,6 @@ import SandboxTable from './Tables/SandboxTable';
 import { EquinorIcon } from '../common/StyledComponents';
 import CreateSandboxComponent from './CreateSandbox';
 import styled from 'styled-components';
-import { StudyObj } from '../common/interfaces';
 
 const DropdownWrapper = styled.div`
     float: right;
@@ -20,27 +19,23 @@ const Wrapper = styled.div`
 `;
 
 type SandboxComponentProps = {
-    setStudy: any;
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
     disabled: boolean;
-    study: StudyObj;
     setLoading: any;
     wbsIsValid: boolean | undefined;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
 };
 
 const Sandbox: React.FC<SandboxComponentProps> = ({
-    setStudy,
     setHasChanged,
     setUpdateCache,
     updateCache,
     disabled,
-    study,
     setLoading,
     wbsIsValid,
-    onFallAddressBackChange
+    onFallBackAddressChange
 }) => {
     const [toggle, setToggle] = useState<boolean>(false);
 
@@ -82,17 +77,15 @@ const Sandbox: React.FC<SandboxComponentProps> = ({
                     <CreateSandboxComponent
                         setHasChanged={setHasChanged}
                         setToggle={setToggle}
-                        setStudy={setStudy}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        study={study}
                         setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
                     />
                 )}
             </DropdownWrapper>
             <div style={{ marginTop: '42px' }}>
-                <SandboxTable sandboxes={study.sandboxes} onFallAddressBackChange={onFallAddressBackChange} />
+                <SandboxTable onFallBackAddressChange={onFallBackAddressChange} editMode />
             </div>
         </Wrapper>
     );

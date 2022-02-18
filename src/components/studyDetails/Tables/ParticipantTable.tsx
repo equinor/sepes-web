@@ -48,14 +48,19 @@ const columns = [
     }
 ];
 
-type DatasetsTableProps = {
+type ParticipantsTableProps = {
     participants: any;
     removeParticipant?: any;
     editMode: boolean;
     permissions?: StudyPermissions;
 };
 
-const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParticipant, editMode, permissions }) => {
+const ParticipantsTable: React.FC<ParticipantsTableProps> = ({
+    participants,
+    removeParticipant,
+    editMode,
+    permissions
+}) => {
     const { width } = useWindowDimensions();
 
     const returnListOfItems = (participant: ParticipantObj) => {
@@ -91,18 +96,18 @@ const DatasetsTable: React.FC<DatasetsTableProps> = ({ participants, removeParti
         <div>
             <DataTable
                 columns={editMode ? columns : columns.slice(0, 2)}
-                data={participants}
+                data={Object.values(participants)}
                 listItems={returnListOfItems}
                 cookiePrefix={'participants-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode}
+                disablePagination={!editMode || (participants && Object.values(participants).length < 10)}
             />
         </div>
     );
 };
 
-DatasetsTable.defaultProps = {
+ParticipantsTable.defaultProps = {
     removeParticipant: undefined,
     permissions: undefined
 };
 
-export default DatasetsTable;
+export default ParticipantsTable;

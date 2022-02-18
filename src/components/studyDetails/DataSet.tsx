@@ -3,7 +3,6 @@ import { Button, Tooltip } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
 import { addStudyDataset, unlinkStudyDataset } from '../../services/Api';
-import { StudyObj } from '../common/interfaces';
 //import SearchWithDropdown from '../common/customComponents/SearchWithDropdown';
 import DatasetsTable from './Tables/DatasetsTable';
 //import { Permissions } from '../../index';
@@ -14,6 +13,9 @@ import StandardDatasetFeatureToggle from '../common/constants/StudyFeatureToggle
 import { Permissions } from 'index';
 import useFetchUrl from 'components/common/hooks/useFetchUrl';
 import SearchWithDropdown from 'components/common/customComponents/SearchWithDropdown';
+import { useDispatch, useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
+import { setStudyInStore } from 'store/studies/studiesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -48,24 +50,22 @@ const TableWrapper = styled.div`
 // `;
 
 type DatasetComponentProps = {
-    study: StudyObj;
-    setStudy: any;
     setUpdateCache: any;
     updateCache: any;
     wbsIsValid: boolean | undefined;
     studySaveInProgress: boolean;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
 };
 
 const DataSetComponent: React.FC<DatasetComponentProps> = ({
-    study,
-    setStudy,
     setUpdateCache,
     updateCache,
     wbsIsValid,
     studySaveInProgress,
-    onFallAddressBackChange
+    onFallBackAddressChange
 }) => {
+    const study = useSelector(getStudyFromStore());
+    const dispatch = useDispatch();
     const history = useHistory();
     const [datasetsList, setDatasetsList] = useState<any>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -79,7 +79,9 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
     const [canCreateDataset, setCanCreateDataset] = useState<any>(false);
     const removeDataset = (row: any) => {
         const studyId = getStudyId();
-        setStudy({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) });
+        dispatch(
+            setStudyInStore({ ...study, datasets: study.datasets.filter((dataset: any) => dataset.id !== row.id) })
+        );
         setUpdateCache({
             ...updateCache,
             [getStudyByIdUrl(studyId)]: true,
@@ -123,7 +125,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
             const studyId = window.location.pathname.split('/')[2];
             const datasetList: any = [...study.datasets];
             datasetList.push(row);
-            setStudy({ ...study, datasets: datasetList });
+            dispatch(setStudyInStore({ ...study, datasets: datasetList }));
             addStudyDataset(studyId, row.id).then((result: any) => {
                 if (result && result.message) {
                     console.log('Err');
@@ -200,7 +202,7 @@ const DataSetComponent: React.FC<DatasetComponentProps> = ({
                     editMode
                     studyId={study.id}
                     disabled={study.permissions && study.permissions.addRemoveDataset}
-                    onFallAddressBackChange={onFallAddressBackChange}
+                    onFallBackAddressChange={onFallBackAddressChange}
                 />
             </TableWrapper>
         </Wrapper>

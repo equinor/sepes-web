@@ -7,6 +7,8 @@ import { getStudyId } from '../../../utils/CommonUtil';
 import TextTruncate from 'components/common/customComponents/infoDisplayComponents/TextTruncate';
 import DataTable from 'components/common/table/DataTable';
 import { SandboxLightObj } from 'components/common/interfaces';
+import { useSelector } from 'react-redux';
+import getStudyFromStore from 'store/studies/studiesSelector';
 
 const { Row, Cell } = Table;
 
@@ -32,13 +34,14 @@ const columns = [
 ];
 
 type SandboxTableProps = {
-    sandboxes: any;
-    onFallAddressBackChange: any;
+    onFallBackAddressChange: any;
+    editMode: boolean;
 };
 
-const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBackChange }) => {
+const SandboxTable: React.FC<SandboxTableProps> = ({ onFallBackAddressChange, editMode }) => {
     const studyId = getStudyId();
     const history = useHistory();
+    const study = useSelector(getStudyFromStore());
     const returnCell = (sandbox: SandboxLightObj, type: 'icon' | 'text') => {
         //This means it is a study specific dataset
         return (
@@ -52,7 +55,7 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBac
         if (studyId && row.id) {
             const url = '/studies/' + studyId + '/sandboxes/' + row.id;
             history.push(url);
-            onFallAddressBackChange(url);
+            onFallBackAddressChange(url);
         }
     };
 
@@ -72,11 +75,10 @@ const SandboxTable: React.FC<SandboxTableProps> = ({ sandboxes, onFallAddressBac
         <div style={{ width: '100%', marginBottom: '24px' }}>
             <DataTable
                 columns={columns}
-                data={sandboxes ?? []}
+                data={study.sandboxes ?? []}
                 listItems={returnListOfItems}
                 cookiePrefix={'sandboxes-editMode' + getStudyId()}
-                disablePagination
-                useExternalPagingAndSorting={false}
+                disablePagination={!editMode || (study.sandboxes && Object.values(study.sandboxes).length < 10)}
             />
         </div>
     );

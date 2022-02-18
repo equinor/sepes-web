@@ -35,6 +35,9 @@ import {
 } from '../../services/ApiCallStrings';
 import { checkUrlNewDataset } from '../../utils/DatasetUtil';
 import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
+import { useDispatch, useSelector } from 'react-redux';
+import getDatasetFromStore from 'store/datasets/datasetsSelectors';
+import { setDatasetInStore } from 'store/datasets/datasetsSlice';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -101,16 +104,12 @@ interface passedProps {
 }
 
 type CreateEditDatasetProps = {
-    datasetFromDetails: DatasetObj;
-    setDatasetFromDetails: any;
     setShowEditDataset: any;
     editingDataset: boolean;
     isStandardDataset: boolean;
 };
 
 const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
-    datasetFromDetails,
-    setDatasetFromDetails,
     setShowEditDataset,
     editingDataset,
     isStandardDataset
@@ -119,7 +118,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const datasetId = getDatasetId();
     const history = useHistory();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
-    const [dataset, setDataset] = useState<DatasetObj>(datasetFromDetails);
+    const dataset = useSelector(getDatasetFromStore());
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState<boolean>(false);
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
@@ -176,7 +176,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         [getStudyByIdUrl(studyId)]: true,
                         [getStudySpecificDatasetUrl(result.id, studyId)]: true
                     });
-                    setDatasetFromDetails(result);
+                    dispatch(setDatasetInStore(result));
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
@@ -206,7 +206,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                 if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
-                    setDatasetFromDetails(result);
+                    dispatch(setDatasetInStore(result));
                     setShowEditDataset(false);
                 } else {
                     setUserPressedCreate(false);
@@ -223,28 +223,34 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
         }
         if (columName === 'dataId') {
             if (value < 0 || value === '') {
-                setDataset({ ...dataset, dataId: undefined });
+                dispatch(setDatasetInStore({ ...dataset, dataId: undefined }));
             } else {
-                setDataset({
-                    ...dataset,
-                    dataId: parseInt(value)
-                });
+                dispatch(
+                    setDatasetInStore({
+                        ...dataset,
+                        dataId: parseInt(value)
+                    })
+                );
             }
             return;
         }
         setHasChanged(true);
-        setDataset({
-            ...dataset,
-            [columName]: value
-        });
+        dispatch(
+            setDatasetInStore({
+                ...dataset,
+                [columName]: value
+            })
+        );
     };
 
     const handleDropdownChange = (value, name: string): void => {
         setHasChanged(true);
-        setDataset({
-            ...dataset,
-            [name]: value
-        });
+        dispatch(
+            setDatasetInStore({
+                ...dataset,
+                [name]: value
+            })
+        );
     };
 
     const handleCancel = () => {
@@ -282,8 +288,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     useKeyEvents(handleCancel, addDataset, true);
 
     const isStandardDatasetAndCantEdit = isStandardDataset && generalDatasetpermissions.canEdit_PreApproved_Datasets;
-    const canEditDataset =
-        datasetFromDetails && datasetFromDetails.permissions && datasetFromDetails.permissions.editDataset;
+    const canEditDataset = dataset && dataset.permissions && dataset.permissions.editDataset;
     const canCreateStudySpecificDataset = location && location.state && location.state.canCreateStudySpecificDataset;
     const listOfVmsFromStudy = location && location.state && location.state.datasets;
 
@@ -308,7 +313,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         placeholder="Please add data set name..."
                         label="Dataset name"
                         meta="(required)"
-                        variant={returnTextfieldTypeBasedOninput(dataset?.name, true, undefined, vmNameAlreadyExist)}
+                        variant={returnTextfieldTypeBasedOninput(dataset?.name, false, undefined, vmNameAlreadyExist)}
                         helperText={dataset && dataset.name && returnHelperTextDatasetName()}
                         helperIcon={<Icon name="warning_filled" title="Warning" />}
                         style={{ width, backgroundColor: '#FFFFFF' }}

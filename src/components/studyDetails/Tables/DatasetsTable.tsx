@@ -76,7 +76,7 @@ const DatasetsTable = (props: any) => {
         if (row.studyId && !mouseHoverSandbox) {
             const url = '/studies/' + props.studyId + '/datasets/' + row.id;
             history.push(url);
-            props.onFallAddressBackChange(url);
+            props.onFallBackAddressChange(url);
         }
     };
 
@@ -117,10 +117,10 @@ const DatasetsTable = (props: any) => {
         <div style={{ width: '100%', marginBottom: '24px' }}>
             <DataTable
                 columns={editMode ? columns : columns.slice(0, 1).concat(columns.slice(2, 3))}
-                data={datasets}
+                data={Object.values(datasets)}
                 listItems={returnListOfItems}
                 cookiePrefix={'datasets-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode}
+                disablePagination={!editMode || (datasets && Object.values(datasets).length < 10)}
             />
         </div>
     );

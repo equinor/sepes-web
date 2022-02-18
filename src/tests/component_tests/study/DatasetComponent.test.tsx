@@ -4,6 +4,8 @@ import DataSetComponent from '../../../components/studyDetails/DataSet';
 import { StudyObj } from '../../../components/common/interfaces';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import mockStore from 'tests/mocks/mockStore';
+import { Provider } from 'react-redux';
 
 const study: StudyObj = {
     name: 'StudyName',
@@ -85,22 +87,22 @@ const studyWithoutPermissionToAddDataset: StudyObj = {
     wbsCodeValid: true
 };
 
-const mockFunc = (id: string) => {};
+const mockFunc = () => {};
 
 test('renders dataset component without permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText } = render(
-        <Router history={history}>
-            <DataSetComponent
-                study={study}
-                setStudy={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                wbsIsValid
-                studySaveInProgress={false}
-                onFallAddressBackChange={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: study } })}>
+            <Router history={history}>
+                <DataSetComponent
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    wbsIsValid
+                    studySaveInProgress={false}
+                    onFallBackAddressChange={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = getByText('Create study specific data set');
@@ -112,17 +114,17 @@ test('renders dataset component without permission to add dataset', () => {
 test('renders dataset component with permission to add dataset', () => {
     const history = createMemoryHistory();
     const { getByText, getByTestId } = render(
-        <Router history={history}>
-            <DataSetComponent
-                study={studyWithoutPermissionToAddDataset}
-                setStudy={mockFunc}
-                setUpdateCache={mockFunc}
-                updateCache={mockFunc}
-                wbsIsValid
-                studySaveInProgress={false}
-                onFallAddressBackChange={mockFunc}
-            />
-        </Router>
+        <Provider store={mockStore({ studies: { study: studyWithoutPermissionToAddDataset } })}>
+            <Router history={history}>
+                <DataSetComponent
+                    setUpdateCache={mockFunc}
+                    updateCache={mockFunc}
+                    wbsIsValid
+                    studySaveInProgress={false}
+                    onFallBackAddressChange={mockFunc}
+                />
+            </Router>
+        </Provider>
     );
 
     let linkElement = getByText('Create study specific data set');

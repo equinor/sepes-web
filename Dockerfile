@@ -31,6 +31,8 @@ ARG SEPES_AUTHORITY
 ARG SEPES_BASIC_SCOPE
 ARG SEPES_CLIENTID
 ARG INSTRUMENTATION_KEY
+ARG SEPES_CLIENTID_PROD
+ARG INSTRUMENTATION_KEY_PROD
 
 RUN mkdir -p /home/node/app/node_modules \
     && chown -R node:node /home/node/app
@@ -54,6 +56,8 @@ RUN export REACT_APP_SEPES_AUTHORITY=$(echo $SEPES_AUTHORITY|base64 -d) && \
     export REACT_APP_SEPES_CLIENTID=$(echo $SEPES_CLIENTID|base64 -d) && \
     export REACT_APP_SEPES_BASIC_SCOPE=$(echo $SEPES_BASIC_SCOPE|base64 -d) && \
     export REACT_APP_INSTRUMENTATION_KEY=$(echo $INSTRUMENTATION_KEY|base64 -d) && \
+    export REACT_APP_SEPES_CLIENTID_PROD=$(echo $SEPES_CLIENTID_PROD|base64 -d) && \
+    export REACT_APP_INSTRUMENTATION_KEY_PROD=$(echo $INSTRUMENTATION_KEY_PROD|base64 -d) && \
     npm run build:prod
 
 # RUN npm run build:prod

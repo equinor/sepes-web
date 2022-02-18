@@ -27,7 +27,7 @@ import {
 } from '../../common/helpers/sandboxHelpers';
 import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
-import { SandboxObj, DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
+import { DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import useKeyEvents from '../../common/hooks/useKeyEvents';
@@ -36,7 +36,8 @@ import Password from 'components/common/customComponents/Password';
 import HelperTexts from 'components/common/constants/HelperTexts';
 import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 
 const Wrapper = styled.div`
     height: auto;
@@ -83,7 +84,6 @@ const UnstyledList = styled.ul`
 `;
 
 type AddNewVmProps = {
-    sandbox: SandboxObj;
     setVms: any;
     vms: any;
     setActiveTab: any;
@@ -123,7 +123,6 @@ const width = '400px';
 
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
-        sandbox,
         setVms,
         vms,
         sizes,
@@ -141,6 +140,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         setHasChanged
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
+        const sandbox = useSelector(getSandboxFromStore());
         const [actualVmName, setActualVmName] = useState<string>('');
         const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
         const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();

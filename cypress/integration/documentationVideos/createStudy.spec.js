@@ -2,7 +2,6 @@
 describe('Create study', () => {
     const studyName = 'Study for documentation';
     before(() => {
-        cy.login();
         cy.clearViewport();
     });
 
@@ -21,7 +20,7 @@ describe('Create study', () => {
         });
         cy.get('[data-cy=new_study]').arrow({
             text: 'Click create study to go to the create-study form',
-            textSize: '3vh',
+            textSize: '2vh',
             blocking: true,
             duration: 5000
         });
