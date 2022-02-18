@@ -67,7 +67,7 @@ function New-DnsRecord {
             return $reply.Content | ConvertFrom-Json
         }
         else {
-            Write-Error "Something went wrong with function app deploy"
+            Write-Error "Something went wrong with DNS deploy"
         }
     }
     catch {

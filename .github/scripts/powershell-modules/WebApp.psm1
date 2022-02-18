@@ -362,9 +362,10 @@ function New-WebAppCertificate {
     $apiVersion = "2021-02-01"
     # Check if app service plan exist and get resource ID
     $aspId = (Get-AzureResource -Subscription $Subscription -Token $token -Name $AppServicePlan).id
-
+    write-verbose "Starting certificate job"
     try {
         # Check if webpp exist
+        Write-Verbose "Checking if webapp exisit"
         $check = Get-WebApp -Token $token -Name $Name -Subscription $Subscription -ResourceGroup $ResourceGroup
 
         if ($check.error.code -eq "ResourceNotFound") {
@@ -413,7 +414,6 @@ function New-WebAppCertificate {
         else {
             Write-Error "Unknow status code from webapp" -ErrorAction stop
         }
-        # Add the certificate bindin
     }
     catch {
         Write-Error $_.Exception -ErrorAction Stop
