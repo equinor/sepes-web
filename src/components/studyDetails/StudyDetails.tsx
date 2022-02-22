@@ -21,7 +21,7 @@ import { getStudyId } from '../../utils/CommonUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore, setStudyToInitialState } from 'store/studies/studiesSlice';
-import LoadingFullScreen from '../common/LoadingFullScreen';
+import LoadingFullScreenNew from '../common/LoadingFullScreenNew';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -157,7 +157,7 @@ const StudyDetails = () => {
                 ) : (
                     <LoadingWrapper />
                 )}
-                <LoadingFullScreen />
+                <LoadingFullScreenNew />
                 {!newStudy && (
                     <div style={{ margin: '32px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>

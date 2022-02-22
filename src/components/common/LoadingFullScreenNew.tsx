@@ -4,7 +4,7 @@ import './styles.scss';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import { useSelector } from 'react-redux';
 
-const LoadingFullScreen = () => {
+const LoadingFullScreenNew = () => {
     const showLoading = useSelector(getScreenLoadingFromStore());
 
     return (
@@ -16,8 +16,8 @@ const LoadingFullScreen = () => {
     );
 };
 
-LoadingFullScreen.defaultProps = {
+LoadingFullScreenNew.defaultProps = {
     showLoading: false
 };
 
-export default LoadingFullScreen;
+export default LoadingFullScreenNew;
