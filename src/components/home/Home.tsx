@@ -3,7 +3,7 @@ import { getStudiesUrl } from '../../services/ApiCallStrings';
 import Studies from './Studies';
 import { Button, Tooltip, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import LoadingFull from '../common/LoadingFullscreen';
+import LoadingFull from '../common/LoadingFull';
 import { useHistory } from 'react-router-dom';
 import { Permissions } from '../../index';
 import useFetchUrl from '../common/hooks/useFetchUrl';

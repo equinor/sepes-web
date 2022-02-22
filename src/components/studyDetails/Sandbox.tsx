@@ -23,7 +23,6 @@ type SandboxComponentProps = {
     setUpdateCache: any;
     updateCache: any;
     disabled: boolean;
-    setLoading: any;
     wbsIsValid: boolean | undefined;
     onFallBackAddressChange: any;
 };
@@ -33,7 +32,6 @@ const Sandbox: React.FC<SandboxComponentProps> = ({
     setUpdateCache,
     updateCache,
     disabled,
-    setLoading,
     wbsIsValid,
     onFallBackAddressChange
 }) => {
@@ -79,7 +77,6 @@ const Sandbox: React.FC<SandboxComponentProps> = ({
                         setToggle={setToggle}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
                     />
                 )}
