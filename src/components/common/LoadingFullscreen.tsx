@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { CircularProgress, Scrim } from '@equinor/eds-core-react';
 import './styles.scss';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import { useSelector } from 'react-redux';
 
-type StudyComponentFullProps = {
-    noTimeout?: boolean;
-};
+const LoadingFullScreen = () => {
+    const showLoading = useSelector(getScreenLoadingFromStore());
 
-const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) => {
-    const [showLoading, setShowLoading] = useState<boolean>(noTimeout);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowLoading(true);
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, []);
     return (
         <div>
             <Scrim open={showLoading}>
@@ -24,8 +16,8 @@ const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) =
     );
 };
 
-LoadingFull.defaultProps = {
-    noTimeout: false
+LoadingFullScreen.defaultProps = {
+    showLoading: false
 };
 
-export default LoadingFull;
+export default LoadingFullScreen;

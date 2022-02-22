@@ -3,7 +3,7 @@ import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
 import VmConfig from './components/VmConfig';
-import LoadingFull from '../common/LoadingFullscreen';
+import LoadingFull from '../common/LoadingFull';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import useFetchUrl from '../common/hooks/useFetchUrl';

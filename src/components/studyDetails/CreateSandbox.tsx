@@ -21,6 +21,7 @@ import { SandboxTextFieldsTooltip } from 'components/common/constants/TooltipTit
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -41,7 +42,6 @@ type CreateSandboxComponentProps = {
     setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
-    setLoading: any;
     wbsIsValid: boolean | undefined;
 };
 
@@ -54,7 +54,6 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setHasChanged,
     setUpdateCache,
     updateCache,
-    setLoading,
     wbsIsValid
 }) => {
     const history = useHistory();
@@ -100,15 +99,15 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         const studyId = getStudyId();
 
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         createSandbox(studyId, sandbox).then((result: any) => {
             if (result && !result.message) {
                 dispatch(setStudyInStore(result));
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {
                 console.log('Err');
-                setLoading(false);
+                dispatch(setScreenLoading(false));
             }
         });
     };

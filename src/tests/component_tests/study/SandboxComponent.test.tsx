@@ -90,7 +90,6 @@ test('renders dataset component without permission to add dataset', () => {
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     disabled={false}
-                    setLoading={mockFunc}
                     wbsIsValid
                     onFallBackAddressChange={mockFunc}
                 />
@@ -114,7 +113,6 @@ test('renders dataset component with permission to add dataset', () => {
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     disabled={true}
-                    setLoading={mockFunc}
                     wbsIsValid
                     onFallBackAddressChange={mockFunc}
                 />

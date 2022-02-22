@@ -10,7 +10,7 @@ import {
     removeStudyDataset
 } from '../../services/Api';
 import { isIterable, truncate } from '../common/helpers/helpers';
-import LoadingFull from '../common/LoadingFullscreen';
+import LoadingFull from '../common/LoadingFull';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';

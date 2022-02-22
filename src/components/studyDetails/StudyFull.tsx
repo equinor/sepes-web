@@ -34,6 +34,7 @@ import { StudyTextFieldsTooltip } from 'components/common/constants/TooltipTitle
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -145,7 +146,6 @@ type StudyComponentFullProps = {
     cache: any;
     setUpdateCache: any;
     updateCache: any;
-    setDeleteStudyInProgress: any;
     setWbsIsValid: any;
     wbsIsValid: boolean | undefined;
     setStudySaveInProgress: any;
@@ -161,7 +161,6 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     cache,
     setUpdateCache,
     updateCache,
-    setDeleteStudyInProgress,
     setWbsIsValid,
     wbsIsValid,
     setStudySaveInProgress
@@ -229,14 +228,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     }, [studyOnChange.wbsCode]);
 
     const deleteThisStudy = (): void => {
-        setDeleteStudyInProgress(true);
         setUserClickedDelete(false);
         setLoading(true);
+        dispatch(setScreenLoading(true));
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         closeStudy(study.id).then((result: any) => {
             setLoading(false);
             if (result && result.message) {
-                setDeleteStudyInProgress(true);
+                dispatch(setScreenLoading(false));
             } else {
                 history.push('/');
             }
