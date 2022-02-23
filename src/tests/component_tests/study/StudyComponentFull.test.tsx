@@ -141,7 +141,6 @@ const studyWithSandboxes: StudyObj = {
     wbsCodeValid: true
 };
 
-const loading = false;
 const mockFunc = (id: string) => {};
 test('renders StudyComponent full component with edit study', async () => {
     const history = createMemoryHistory();
@@ -151,10 +150,7 @@ test('renders StudyComponent full component with edit study', async () => {
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -200,10 +196,7 @@ test('renders StudyComponent full component with invalid study name', async () =
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -230,10 +223,7 @@ test('renders StudyComponent full component with invalid vendor name', async () 
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -272,10 +262,7 @@ test('renders StudyComponent full component with no permission to edit', async (
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -298,10 +285,7 @@ test('renders StudyComponent full component with  permission to delete', async (
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -338,10 +322,7 @@ test('renders StudyComponent full component with no permission to delete', async
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
@@ -377,10 +358,7 @@ test('renders StudyComponent full component with sandbox in study', async () => 
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setLoading={mockFunc}
-                    loading={loading}
                     setHasChanged={mockFunc}
-                    cache={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     hasChanged={false}
