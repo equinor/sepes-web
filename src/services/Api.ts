@@ -16,8 +16,8 @@ export const getStudyList = async () => {
     return apiRequestWithToken('api/studies', 'GET');
 };
 
-export const getStudy = async (id: string, controller?: any) => {
-    return apiRequestWithToken('api/studies/' + id, 'GET', undefined, controller && controller.signal);
+export const getStudy = async (id: string) => {
+    return apiRequestWithToken('api/studies/' + id, 'GET');
 };
 
 export const createStudy = async (study: StudyObj, imageUrl: string) => {

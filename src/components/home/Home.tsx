@@ -69,7 +69,7 @@ const Home = () => {
                                 data-cy="new_study"
                                 style={{ width: '336px' }}
                                 onClick={() => {
-                                    history.push('/studies');
+                                    history.push('/studies/');
                                 }}
                             >
                                 New study

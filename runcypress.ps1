@@ -15,7 +15,7 @@ $clientSecret = Get-AzKeyVaultSecret -vaultName "kv-sepes-dev" -name "sepes-cypr
 $localDatabase = "sepes-cypress"
 $localSqlInstance = ""
 $localTestDatabase = ""
-$localApiRelativePath = "../../sepes-api-2/sepes-api/src/Sepes.RestApi"
+$localApiRelativePath = "../../sepes-api/src/Sepes.RestApi"
 
 $currentConnectionString = ""
 $modulesNotFound = $false;
@@ -68,9 +68,9 @@ function Prepare() {
 
     # Seed database
     $scriptFile = "../cypress.sql"
-    Invoke-DbaQuery –SqlInstance $localSqlInstance –File $scriptFile –Database $localDatabase
+    Invoke-DbaQuery -SqlInstance $localSqlInstance -File $scriptFile -Database $localDatabase
 
-    cd -
+    cd -    
 }
 
 function CleanUp() {
@@ -101,7 +101,7 @@ function GetAccessToken([string]$clientId, [string]$tenantId, [string]$clientSec
     $oAuthReq = Invoke-RestMethod -Method Post -Uri https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token -Body $body
     
     $accessToken = $oAuthReq.access_token
-
+    Write-Host "$(CurrentLineStart)Access token ...$($accessToken)... was received" -ForegroundColor Green
     if ($accessToken.Length -gt 20) {
         # Write-Host "$accessToken"
         Write-Host "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received" -ForegroundColor Green
@@ -182,7 +182,7 @@ function GetEnvironmentVariables([String]$Path) {
 function CurrentLineStart() {
     $esc = [char]27
     $CurrentLine  = $Host.UI.RawUI.CursorPosition.Y + 1
-    Return "$esc[${CurrentLine};0H"
+    Return "$esc[${CurrentLine};"
 }
 
 function RunCypressInBrowserLightVersionAgainstLocalhost() {
@@ -264,8 +264,7 @@ if ($modulesNotFound) {
 
 $isApiRunning =  $(netstat -ano | findstr :44368)
 If ($isApiRunning -ne $null) {
-
-    Write-Host -ForegroundColor Red "`n   You need to shut down any active Api Server running on port :44368 before continuing"
+    Write-Host -ForegroundColor Red "`n   You need to shut down any active Api Server running on port :44368 before continuing`n"
     exit
 }
 

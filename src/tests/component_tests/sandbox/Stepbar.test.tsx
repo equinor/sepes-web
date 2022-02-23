@@ -8,8 +8,14 @@ import { mockStore } from '../../mocks/mockStore';
 
 const mockFunc = () => {};
 
-const initialStateWithPermissions = { sandboxes: { sandbox: sandboxWithAllPermissions, callGetResources: false } };
-const initialStateWithoutPermissions = { sandboxes: { sandbox: sandboxWithNoPermissions, callGetResources: false } };
+const initialStateWithPermissions = {
+    sandboxes: { sandbox: sandboxWithAllPermissions, callGetResources: false },
+    screenLoading: { showLoading: false }
+};
+const initialStateWithoutPermissions = {
+    sandboxes: { sandbox: sandboxWithNoPermissions, callGetResources: false },
+    screenLoading: { showLoading: false }
+};
 
 test('renders stepbar component without permissions', async () => {
     const history = createMemoryHistory();
@@ -21,14 +27,10 @@ test('renders stepbar component without permissions', async () => {
                     step={0}
                     studyId="1"
                     setStep={mockFunc}
-                    setLoading={mockFunc}
                     setNewPhase={mockFunc}
-                    setDeleteSandboxInProgress={mockFunc}
                     setNewCostanalysisLink={mockFunc}
                     controller={new AbortController()}
                     vmsWithOpenInternet={mockFunc}
-                    setMakeAvailableInProgress={mockFunc}
-                    makeAvailableInProgress={false}
                     setHasChanged={mockFunc}
                     updateCache={mockFunc}
                     setUpdateCache={mockFunc}
@@ -57,14 +59,10 @@ test('renders stepbar component with permissions', async () => {
                     step={0}
                     studyId="1"
                     setStep={mockFunc}
-                    setLoading={mockFunc}
                     setNewPhase={mockFunc}
-                    setDeleteSandboxInProgress={mockFunc}
                     setNewCostanalysisLink={mockFunc}
                     controller={new AbortController()}
                     vmsWithOpenInternet={mockFunc}
-                    setMakeAvailableInProgress={mockFunc}
-                    makeAvailableInProgress={false}
                     setHasChanged={mockFunc}
                     updateCache={mockFunc}
                     setUpdateCache={mockFunc}
