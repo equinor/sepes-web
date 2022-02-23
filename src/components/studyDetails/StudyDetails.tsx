@@ -13,8 +13,6 @@ import NoAccess from '../common/informationalComponents/NoAccess';
 import { resultsAndLearningsObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
-import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
 import { getStudyId } from '../../utils/CommonUtil';
@@ -22,6 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore, setStudyToInitialState } from 'store/studies/studiesSlice';
 import LoadingFullScreenNew from '../common/LoadingFullScreenNew';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import { getStudy } from 'services/Api';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -45,6 +46,7 @@ const StudyDetails = () => {
     const id = getStudyId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const study = useSelector(getStudyFromStore());
+    const showLoading = useSelector(getScreenLoadingFromStore());
     const dispatch = useDispatch();
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const location = useLocation<passedProps>();
@@ -55,25 +57,31 @@ const StudyDetails = () => {
         window.history.replaceState(null, '');
     }
 
+    const [notFound, setNotFound] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [studySaveInProgress, setStudySaveInProgress] = useState<boolean>(false);
-    const studyResponse = useFetchUrl(
-        getStudyByIdUrl(id),
-        undefined,
-        id ? true : false,
-        controller,
-        true,
-        dispatch,
-        setStudyInStore
-    );
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
 
     const permissions = useContext(Permissions);
-    const displayStudyInfo = !studyResponse.loading && study;
+    const displayStudyInfo = !showLoading && study;
 
     const displayPrompt = hasChanged || studySaveInProgress;
+
+    useEffect(() => {
+        if (!newStudy && !study.id) {
+            dispatch(setScreenLoading(true));
+            getStudy(id, controller).then((result: any) => {
+                dispatch(setScreenLoading(false));
+                if (result && !result.message) {
+                    dispatch(setStudyInStore(result));
+                } else {
+                    setNotFound(true);
+                }
+            });
+        }
+    }, [id]);
 
     useEffect(() => {
         return () => {
@@ -135,7 +143,7 @@ const StudyDetails = () => {
 
     return (
         <>
-            {studyResponse.notFound && <NotFound />}
+            {notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
                 <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />
@@ -143,11 +151,8 @@ const StudyDetails = () => {
                     <StudyComponentFull
                         newStudy={newStudy}
                         setNewStudy={setNewStudy}
-                        setLoading={studyResponse.setLoading}
-                        loading={studyResponse.loading}
                         setHasChanged={setHasChanged}
                         hasChanged={hasChanged}
-                        cache={studyResponse.cache}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setWbsIsValid={setWbsIsValid}
