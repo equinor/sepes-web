@@ -77,13 +77,13 @@ const StudyDetails = () => {
 
     const displayPrompt = hasChanged || studySaveInProgress;
 
-    // useEffect(() => {
-    //     if (studyResponse.loading) {
-    //         dispatch(setScreenLoading(true));
-    //     } else {
-    //         dispatch(setScreenLoading(false));
-    //     }
-    // }, [studyResponse.loading]);
+    useEffect(() => {
+        if (studyResponse.loading) {
+            dispatch(setScreenLoading(true));
+        } else {
+            dispatch(setScreenLoading(false));
+        }
+    }, [studyResponse.loading]);
 
     useEffect(() => {
         return () => {
