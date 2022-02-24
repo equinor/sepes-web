@@ -61,7 +61,7 @@ const StudyDetails = () => {
         undefined,
         id ? true : false,
         controller,
-        false,
+        true,
         dispatch,
         setStudyInStore
     );
