@@ -46,7 +46,7 @@ jobs:
           TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
           echo "::set-output name=TOKEN::$TOKEN"
 
-      - run: npm ci
+      - run: npm install
 
       # Only used for documentation videos 
       - name: npm install, build, and test
