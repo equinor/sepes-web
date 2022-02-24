@@ -44,10 +44,13 @@ export const sandboxesSlice = createSlice({
         },
         setSandboxInStore: (state: SandboxesState, action: PayloadAction<any>) => {
             return { ...state, sandbox: action.payload };
+        },
+        setSandboxToInitialState: (state: SandboxesState) => {
+            return { ...state, sandbox };
         }
     }
 });
 
-export const { setCallResources, setSandboxInStore } = sandboxesSlice.actions;
+export const { setCallResources, setSandboxInStore, setSandboxToInitialState } = sandboxesSlice.actions;
 
 export default sandboxesSlice.reducer;

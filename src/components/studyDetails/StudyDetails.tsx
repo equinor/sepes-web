@@ -21,8 +21,8 @@ import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore, setStudyToInitialState } from 'store/studies/studiesSlice';
 import LoadingFullScreenNew from '../common/LoadingFullScreenNew';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
-import { getStudy } from 'services/Api';
-import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import useFetchUrl from 'components/common/hooks/useFetchUrl';
+import { getStudyByIdUrl } from 'services/ApiCallStrings';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -46,7 +46,6 @@ const StudyDetails = () => {
     const id = getStudyId();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const study = useSelector(getStudyFromStore());
-    const showLoading = useSelector(getScreenLoadingFromStore());
     const dispatch = useDispatch();
     const [newStudy, setNewStudy] = useState<boolean>(id ? false : true);
     const location = useLocation<passedProps>();
@@ -57,7 +56,16 @@ const StudyDetails = () => {
         window.history.replaceState(null, '');
     }
 
-    const [notFound, setNotFound] = useState<boolean>(false);
+    const studyResponse = useFetchUrl(
+        getStudyByIdUrl(id),
+        undefined,
+        id ? true : false,
+        controller,
+        false,
+        dispatch,
+        setStudyInStore
+    );
+
     const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [studySaveInProgress, setStudySaveInProgress] = useState<boolean>(false);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
@@ -65,23 +73,17 @@ const StudyDetails = () => {
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
 
     const permissions = useContext(Permissions);
-    const displayStudyInfo = !showLoading && study;
+    const displayStudyInfo = !studyResponse.loading && study;
 
     const displayPrompt = hasChanged || studySaveInProgress;
 
     useEffect(() => {
-        if (!newStudy && !study.id) {
+        if (studyResponse.loading) {
             dispatch(setScreenLoading(true));
-            getStudy(id, controller).then((result: any) => {
-                dispatch(setScreenLoading(false));
-                if (result && !result.message) {
-                    dispatch(setStudyInStore(result));
-                } else {
-                    setNotFound(true);
-                }
-            });
+        } else {
+            dispatch(setScreenLoading(false));
         }
-    }, [id]);
+    }, [studyResponse.loading]);
 
     useEffect(() => {
         return () => {
@@ -143,7 +145,7 @@ const StudyDetails = () => {
 
     return (
         <>
-            {notFound && <NotFound />}
+            {studyResponse.notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
                 <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />

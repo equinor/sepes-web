@@ -101,13 +101,12 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         dispatch(setScreenLoading(true));
         createSandbox(studyId, sandbox).then((result: any) => {
+            dispatch(setScreenLoading(false));
             if (result && !result.message) {
                 dispatch(setStudyInStore(result));
-                dispatch(setScreenLoading(false));
                 history.push(studyId + '/sandboxes/' + result.id);
             } else {
                 console.log('Err');
-                dispatch(setScreenLoading(false));
             }
         });
     };

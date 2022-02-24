@@ -23,10 +23,13 @@ export const resourcesSlice = createSlice({
     reducers: {
         setResourcesInStore: (state: ResourcesState, action: PayloadAction<Array<ResourceItem>>) => {
             return { ...state, list: action.payload };
+        },
+        setResourcesToInitialState: (state: ResourcesState) => {
+            return { ...state, list: [] };
         }
     }
 });
 
-export const { setResourcesInStore } = resourcesSlice.actions;
+export const { setResourcesInStore, setResourcesToInitialState } = resourcesSlice.actions;
 
 export default resourcesSlice.reducer;
