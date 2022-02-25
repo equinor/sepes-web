@@ -10,7 +10,7 @@ import { getResourcesList, getSandbox } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCallResources, setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
+import { setCallResources, setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
 import { getCallResourcesStatus, getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setResourcesInStore } from 'store/resources/resourcesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
@@ -44,22 +44,23 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     useEffect(() => {
         dispatch(setScreenLoading(true));
-        getSandbox(sandboxId).then((result: any) => {
-            dispatch(setScreenLoading(false));
-            console.log(result);
-            if (result && !result.message) {
-                dispatch(setSandboxInStore(result));
-            } else {
-                setNotFound(true);
-            }
-        });
+        if (!sandbox.id) {
+            getSandbox(sandboxId).then((result: any) => {
+                dispatch(setScreenLoading(false));
+                if (result && !result.message) {
+                    dispatch(setSandboxInStore(result));
+                } else {
+                    setNotFound(true);
+                }
+            });
+        }
     }, [studyId, sandboxId]);
 
     useEffect(() => {
         return () => {
             controller.abort();
             controller = new AbortController();
-            dispatch(setSandboxInStore({}));
+            dispatch(setSandboxToInitialState());
         };
     }, []);
 
