@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import CoreDevDropdown from '../common/customComponents/Dropdown';
 import styled from 'styled-components';
-import { Button, Typography, TextField, DotProgress, Tooltip, Icon } from '@equinor/eds-core-react';
+import { Button, Typography, TextField, Tooltip, Icon } from '@equinor/eds-core-react';
 import { DatasetObj, DropdownObj } from '../common/interfaces';
 import {
     addStudySpecificDataset,
@@ -38,6 +38,9 @@ import { getStudyId, getDatasetId } from '../../utils/CommonUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import getDatasetFromStore from 'store/datasets/datasetsSelectors';
 import { setDatasetInStore } from 'store/datasets/datasetsSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -119,8 +122,8 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const history = useHistory();
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
     const dataset = useSelector(getDatasetFromStore());
+    const showLoading = useSelector(getScreenLoadingFromStore());
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState<boolean>(false);
     const [editDataset, setEditDataset] = useState<boolean>(editingDataset || false);
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
@@ -148,11 +151,11 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             return;
         }
         setUserPressedCreate(true);
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         const isDatasetspecificDataset = !isStandardDataset;
         if (!editDataset && isDatasetspecificDataset) {
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
@@ -160,6 +163,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         [getStudyByIdUrl(studyId)]: true,
                         [getDatasetsInStudyUrl(studyId)]: true
                     });
+                    dispatch(setDatasetInStore(result));
                     history.push('/studies/' + studyId + '/datasets/' + result.id);
                 } else {
                     setUserPressedCreate(false);
@@ -168,7 +172,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             });
         } else if (isDatasetspecificDataset) {
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
@@ -185,7 +189,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             });
         } else if (!editDataset) {
             createStandardDataset(dataset).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({
@@ -193,6 +197,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                         [getDatasetsUrl()]: true,
                         [getStandardDatasetUrl(result.id)]: true
                     });
+                    dispatch(setDatasetInStore(result));
                     history.push('/datasets/' + result.id);
                 } else {
                     setUserPressedCreate(false);
@@ -202,7 +207,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             });
         } else {
             updateStandardDataset(studyId, dataset).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 if (result && !result.message) {
                     setHasChanged(false);
                     setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
@@ -296,7 +301,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     return isStandardDatasetAndCantEdit || canEditDataset || canCreateStudySpecificDataset ? (
         <>
-            <Promt hasChanged={hasChanged || loading} fallBackAddress={fallBackAddress} />
+            <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
             <OuterWrapper>
                 <Wrapper>
                     <div>
@@ -411,20 +416,21 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
                             placement="right"
                         >
                             <Button
-                                disabled={checkForInputErrors(dataset) || loading || vmNameAlreadyExist}
+                                disabled={checkForInputErrors(dataset) || showLoading || vmNameAlreadyExist}
                                 onClick={addDataset}
                                 data-cy="dataset_save"
                                 data-testid="dataset_save"
                             >
-                                {loading ? <DotProgress color="primary" /> : 'Save'}
+                                Save
                             </Button>
                         </Tooltip>
-                        <Button disabled={userPressedCreate || loading} onClick={handleCancel} variant="outlined">
+                        <Button disabled={userPressedCreate || showLoading} onClick={handleCancel} variant="outlined">
                             Cancel
                         </Button>
                     </SaveCancelWrapper>
                 </Wrapper>
             </OuterWrapper>
+            <LoadingFullScreenNew />
         </>
     ) : (
         <NoAccess />
