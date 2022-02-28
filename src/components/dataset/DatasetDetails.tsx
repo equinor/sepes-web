@@ -476,7 +476,7 @@ const DatasetDetails = () => {
                                     style={{ float: 'right' }}
                                 />
                             </div>
-                            {(totalProgress > 0 || hasChanged) && (
+                            {((totalProgress > 0 && totalProgress < 100) || hasChanged) && (
                                 <div style={{ marginBottom: '16px' }}>
                                     <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
                                     <LinearProgress
