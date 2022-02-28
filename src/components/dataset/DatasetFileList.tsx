@@ -261,7 +261,7 @@ const DatasetFileList: React.FC<DatasetFileListProps> = ({
                                                 </Button>
                                             </EdsProvider>
                                         </AttachmentWrapper>
-                                        {_file.percent && numberOfFilesInProgress <= 100 && (
+                                        {(_file.percent < 100) && numberOfFilesInProgress <= 100 && (
                                             <LinearProgress
                                                 style={{
                                                     marginBottom: '16px',
