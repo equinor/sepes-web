@@ -4,6 +4,7 @@ import resourcesReducer from './resources/resourcesSlice';
 import studiesReducer from './studies/studiesSlice';
 import datasetsReducer from './datasets/datasetsSlice';
 import userSettingsReducer from './usersettings/userSettingsSlice';
+import screenLoadingReducer from './screenloading/screenLoadingSlice';
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         resources: resourcesReducer,
         studies: studiesReducer,
         datasets: datasetsReducer,
-        userSettings: userSettingsReducer
+        userSettings: userSettingsReducer,
+        screenLoading: screenLoadingReducer
     },
     devTools: process.env.NODE_ENV !== 'production'
 });

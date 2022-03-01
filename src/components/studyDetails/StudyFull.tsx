@@ -25,15 +25,15 @@ import {
 } from '../common/helpers/studyHelpers';
 import { useHistory } from 'react-router-dom';
 import { Label } from '../common/StyledComponents';
-import Loading from '../common/Loading';
 import DeleteResourceComponent from '../common/customComponents/DeleteResource';
-import { getStudiesUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
+import { getStudiesUrl } from '../../services/ApiCallStrings';
 import truncateLength from 'components/common/staticValues/lenghts';
 import useKeyEvents from '../common/hooks/useKeyEvents';
 import { StudyTextFieldsTooltip } from 'components/common/constants/TooltipTitleTexts';
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -138,14 +138,10 @@ let wbsController = new AbortController();
 type StudyComponentFullProps = {
     newStudy: boolean;
     setNewStudy: any;
-    setLoading: any;
-    loading: boolean;
     setHasChanged: any;
     hasChanged: boolean;
-    cache: any;
     setUpdateCache: any;
     updateCache: any;
-    setDeleteStudyInProgress: any;
     setWbsIsValid: any;
     wbsIsValid: boolean | undefined;
     setStudySaveInProgress: any;
@@ -154,14 +150,10 @@ type StudyComponentFullProps = {
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     newStudy,
     setNewStudy,
-    setLoading,
-    loading,
     setHasChanged,
     hasChanged,
-    cache,
     setUpdateCache,
     updateCache,
-    setDeleteStudyInProgress,
     setWbsIsValid,
     wbsIsValid,
     setStudySaveInProgress
@@ -229,17 +221,12 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     }, [studyOnChange.wbsCode]);
 
     const deleteThisStudy = (): void => {
-        setDeleteStudyInProgress(true);
         setUserClickedDelete(false);
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
-        closeStudy(study.id).then((result: any) => {
-            setLoading(false);
-            if (result && result.message) {
-                setDeleteStudyInProgress(true);
-            } else {
-                history.push('/');
-            }
+        closeStudy(study.id).then(() => {
+            dispatch(setScreenLoading(false));
+            history.push('/');
         });
     };
 
@@ -302,16 +289,14 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     );
 
     const sendStudyToApi = (study: StudyObj) => {
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         setStudySaveInProgress(true);
         if (newStudy) {
             createStudy(study, imageUrl).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 setStudySaveInProgress(false);
                 if (result && !result.message) {
-                    const newStudy = result;
-                    cache[getStudyByIdUrl(study.id)] = result;
-                    dispatch(setStudyInStore(newStudy));
+                    dispatch(setStudyInStore(result));
                     history.push('/studies/' + result.id);
                 } else {
                     console.log('Err');
@@ -325,10 +310,9 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             }
 
             updateStudy(study, imageUrl).then((result: any) => {
-                setLoading(false);
+                dispatch(setScreenLoading(false));
                 setStudySaveInProgress(false);
                 if (result && !result.message) {
-                    cache[getStudyByIdUrl(study.id)] = result;
                     setHasChanged(false);
                 } else {
                     console.log('Err');
@@ -379,281 +363,272 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                     type="study"
                 />
             )}
-            {!loading ? (
-                <Wrapper>
-                    <TitleWrapper editMode={editMode}>
-                        {!editMode ? (
-                            <>
-                                <Tooltip
-                                    title={name && name.length > truncateLength ? name : ''}
-                                    placement="top"
-                                    enterDelay={200}
-                                >
-                                    <TitleText>{truncate(name, truncateLength)}</TitleText>
-                                </Tooltip>
-                                <Tooltip
-                                    title={vendor && vendor.length > truncateLength ? vendor : ''}
-                                    placement="top"
-                                    enterDelay={500}
-                                >
-                                    <SmallIconWrapper>
-                                        <Icon color="#007079" name="business" size={24} />
-                                        <SmallText>{truncate(vendor, truncateLength)}</SmallText>
-                                    </SmallIconWrapper>
-                                </Tooltip>
-                                <SmallIconWrapper>
-                                    <Icon color="#007079" name="dollar" size={24} />
-                                    <SmallText>{wbsCode || '-'}</SmallText>
-                                </SmallIconWrapper>
-                            </>
-                        ) : (
-                            <>
-                                <TextField
-                                    id="textfield1"
-                                    placeholder="Name of study"
-                                    variant={returnTextfieldTypeBasedOninput(studyOnChange.name, true)}
-                                    onChange={(e: any) => handleChange('name', e.target.value)}
-                                    label="Name"
-                                    meta="(required)"
-                                    style={{ margin: 'auto', marginLeft: '0', resize: 'none' }}
-                                    value={studyOnChange.name}
-                                    data-cy="study_name"
-                                    autoComplete="off"
-                                    autoFocus
-                                    helperText={
-                                        studyOnChange.name && returnHelperText(studyOnChange.name.length, 50, 'study')
-                                    }
-                                    helperIcon={<Icon name="warning_filled" title="Warning" />}
-                                    inputIcon={
-                                        <Tooltip title={StudyTextFieldsTooltip.Name} placement="right">
-                                            <Icon name="info_circle" />
-                                        </Tooltip>
-                                    }
-                                />
-                                <TextField
-                                    id="textfield2"
-                                    autoComplete="off"
-                                    placeholder="Add vendor"
-                                    variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
-                                    onChange={(e: any) => handleChange('vendor', e.target.value)}
-                                    value={studyOnChange.vendor}
-                                    label="Vendor"
-                                    meta="(required)"
-                                    data-cy="study_vendor"
-                                    inputIcon={<Icon name="business" />}
-                                />
-                                <TextField
-                                    id="textfield3"
-                                    autoComplete="off"
-                                    placeholder="Add WBS"
-                                    onChange={(e: any) => handleChange('wbsCode', e.target.value)}
-                                    label="WBS"
-                                    value={studyOnChange.wbsCode}
-                                    data-cy="study_wbs"
-                                    inputIcon={
-                                        validateWbsInProgress ? (
-                                            <Tooltip title="Validating WBS..." placement="top">
-                                                <DotProgress />
-                                            </Tooltip>
-                                        ) : (
-                                            <Icon name="dollar" />
-                                        )
-                                    }
-                                    variant={returnWbsVariant(wbsOnChangeIsValid, studyOnChange.wbsCode)}
-                                    helperText={
-                                        wbsOnChangeIsValid === false && studyOnChange.wbsCode !== ''
-                                            ? 'Invalid WBS code'
-                                            : ''
-                                    }
-                                />
-                            </>
-                        )}
-                        <div>
-                            {!editMode ? (
-                                <SmallIconWrapper>
-                                    <Icon
-                                        color="#007079"
-                                        name={restricted ? 'visibility_off' : 'visibility'}
-                                        size={24}
-                                    />{' '}
-                                    <SmallText>{restricted ? 'Hidden' : 'Not hidden'}</SmallText>
-                                </SmallIconWrapper>
-                            ) : (
-                                <FormControlLabel
-                                    control={
-                                        <CheckBox
-                                            style={{ color: '#007079' }}
-                                            checked={studyOnChange.restricted}
-                                            onChange={() =>
-                                                setStudyOnChange({
-                                                    ...studyOnChange,
-                                                    restricted: !studyOnChange.restricted
-                                                })
-                                            }
-                                        />
-                                    }
-                                    label="Hidden study"
-                                />
-                            )}
-                        </div>
-                        {!editMode ? (
-                            <div>
-                                <Tooltip
-                                    title={
-                                        study.permissions && study.permissions.updateMetadata
-                                            ? ''
-                                            : 'You do not have access to edit this study'
-                                    }
-                                    placement="right"
-                                >
-                                    <Button
-                                        variant="outlined"
-                                        data-cy="edit_study"
-                                        onClick={() => setEditMode(true)}
-                                        style={{ width: '80px', marginTop: '12px' }}
-                                        disabled={study.permissions && !study.permissions.updateMetadata}
-                                    >
-                                        Edit
-                                    </Button>
-                                </Tooltip>
-                            </div>
-                        ) : (
-                            <div>
-                                <Label
-                                    style={{ color: '#000000', margin: '-16px 0 16px 32px', letterSpacing: '0.2px' }}
-                                >
-                                    Hidden studies are invisible in the Sepes portal except for invited participants.
-                                </Label>
-                            </div>
-                        )}
-                    </TitleWrapper>
+
+            <Wrapper>
+                <TitleWrapper editMode={editMode}>
                     {!editMode ? (
-                        <DescriptionWrapper>
-                            <Typography variant="body_long">{description}</Typography>
-                        </DescriptionWrapper>
+                        <>
+                            <Tooltip
+                                title={name && name.length > truncateLength ? name : ''}
+                                placement="top"
+                                enterDelay={200}
+                            >
+                                <TitleText>{truncate(name, truncateLength)}</TitleText>
+                            </Tooltip>
+                            <Tooltip
+                                title={vendor && vendor.length > truncateLength ? vendor : ''}
+                                placement="top"
+                                enterDelay={500}
+                            >
+                                <SmallIconWrapper>
+                                    <Icon color="#007079" name="business" size={24} />
+                                    <SmallText>{truncate(vendor, truncateLength)}</SmallText>
+                                </SmallIconWrapper>
+                            </Tooltip>
+                            <SmallIconWrapper>
+                                <Icon color="#007079" name="dollar" size={24} />
+                                <SmallText>{wbsCode || '-'}</SmallText>
+                            </SmallIconWrapper>
+                        </>
                     ) : (
-                        <DescriptioTextfieldnWrapper>
+                        <>
                             <TextField
-                                id="studyDescription"
+                                id="textfield1"
+                                placeholder="Name of study"
+                                variant={returnTextfieldTypeBasedOninput(studyOnChange.name, true)}
+                                onChange={(e: any) => handleChange('name', e.target.value)}
+                                label="Name"
+                                meta="(required)"
+                                style={{ margin: 'auto', marginLeft: '0', resize: 'none' }}
+                                value={studyOnChange.name}
+                                data-cy="study_name"
                                 autoComplete="off"
-                                placeholder="Describe the study"
-                                multiline
-                                onChange={(e: any) => handleChange('description', e.target.value)}
-                                meta={returnLimitMeta(512, studyOnChange.description)}
-                                label="Description"
-                                style={{ height: '152px', resize: 'none' }}
-                                value={studyOnChange.description}
-                                data-cy="study_description"
+                                autoFocus
+                                helperText={
+                                    studyOnChange.name && returnHelperText(studyOnChange.name.length, 50, 'study')
+                                }
+                                helperIcon={<Icon name="warning_filled" title="Warning" />}
+                                inputIcon={
+                                    <Tooltip title={StudyTextFieldsTooltip.Name} placement="right">
+                                        <Icon name="info_circle" />
+                                    </Tooltip>
+                                }
                             />
-                        </DescriptioTextfieldnWrapper>
+                            <TextField
+                                id="textfield2"
+                                autoComplete="off"
+                                placeholder="Add vendor"
+                                variant={checkIfRequiredFieldsAreNull(studyOnChange.vendor, userPressedCreate)}
+                                onChange={(e: any) => handleChange('vendor', e.target.value)}
+                                value={studyOnChange.vendor}
+                                label="Vendor"
+                                meta="(required)"
+                                data-cy="study_vendor"
+                                inputIcon={<Icon name="business" />}
+                            />
+                            <TextField
+                                id="textfield3"
+                                autoComplete="off"
+                                placeholder="Add WBS"
+                                onChange={(e: any) => handleChange('wbsCode', e.target.value)}
+                                label="WBS"
+                                value={studyOnChange.wbsCode}
+                                data-cy="study_wbs"
+                                inputIcon={
+                                    validateWbsInProgress ? (
+                                        <Tooltip title="Validating WBS..." placement="top">
+                                            <DotProgress />
+                                        </Tooltip>
+                                    ) : (
+                                        <Icon name="dollar" />
+                                    )
+                                }
+                                variant={returnWbsVariant(wbsOnChangeIsValid, studyOnChange.wbsCode)}
+                                helperText={
+                                    wbsOnChangeIsValid === false && studyOnChange.wbsCode !== ''
+                                        ? 'Invalid WBS code'
+                                        : ''
+                                }
+                            />
+                        </>
                     )}
                     <div>
-                        {editMode && !newStudy && (
-                            <div style={{ float: 'right', marginBottom: 'auto' }}>
-                                <Button
-                                    style={{
-                                        margin: '-13px',
-                                        display: study.permissions && study.permissions.closeStudy ? '' : 'none'
-                                    }}
-                                    variant="ghost_icon"
-                                    data-cy="study_options"
-                                    id="menuButton"
-                                    aria-labelledby="menuButton"
-                                    aria-expanded={isOpen}
-                                    onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
-                                    data-testid="study_delete_settings"
-                                >
-                                    <Icon color="#007079" name="settings" size={24} />
-                                </Button>
-
-                                <Menu
-                                    id="menuButton"
-                                    aria-labelledby="menuButton"
-                                    open={isOpen}
-                                    onClose={closeMenu}
-                                    anchorEl={buttonEl}
-                                    focus={focus}
-                                    placement="bottom-end"
-                                >
-                                    {optionsTemplate}
-                                </Menu>
-                            </div>
+                        {!editMode ? (
+                            <SmallIconWrapper>
+                                <Icon color="#007079" name={restricted ? 'visibility_off' : 'visibility'} size={24} />{' '}
+                                <SmallText>{restricted ? 'Hidden' : 'Not hidden'}</SmallText>
+                            </SmallIconWrapper>
+                        ) : (
+                            <FormControlLabel
+                                control={
+                                    <CheckBox
+                                        style={{ color: '#007079' }}
+                                        checked={studyOnChange.restricted}
+                                        onChange={() =>
+                                            setStudyOnChange({
+                                                ...studyOnChange,
+                                                restricted: !studyOnChange.restricted
+                                            })
+                                        }
+                                    />
+                                }
+                                label="Hidden study"
+                            />
                         )}
-                        <RightWrapper editMode={editMode}>
-                            <div>
-                                {!showImagePicker && (
-                                    <PictureWrapper editMode={editMode}>
-                                        <CustomLogoComponent logoUrl={logoUrl} center={editMode} />{' '}
-                                    </PictureWrapper>
-                                )}
-                                {editMode && (
-                                    <>
-                                        <div>
-                                            {showImagePicker && (
-                                                <PictureWrapper editMode={editMode}>
-                                                    <AddImageAndCompressionContainer
-                                                        setImageUrl={setImageUrl}
-                                                        imageUrl={imageUrl}
-                                                    />
-                                                </PictureWrapper>
-                                            )}
-                                            <Button
-                                                onClick={() => {
-                                                    if (imageUrl === '') {
-                                                        setShowImagePicker(!showImagePicker);
-                                                    }
-
-                                                    setImageUrl('');
-                                                    setStudyOnChange({ ...studyOnChange, logoUrl: '' });
-                                                }}
-                                                variant="outlined"
-                                                style={{ margin: '16px 0 20px 56px' }}
-                                                data-cy="change_logo"
-                                            >
-                                                Change logo
-                                            </Button>
-                                            <SaveCancelWrapper>
-                                                <Tooltip
-                                                    title={returnTooltipTextSaveStudy(
-                                                        wbsOnChangeIsValid,
-                                                        newStudy,
-                                                        study,
-                                                        studyOnChange,
-                                                        validateWbsInProgress
-                                                    )}
-                                                    placement="left"
-                                                >
-                                                    <Button
-                                                        data-cy="create_study"
-                                                        onClick={() => handleSave()}
-                                                        disabled={
-                                                            !validateUserInputStudy(
-                                                                studyOnChange,
-                                                                wbsOnChangeIsValid !== undefined
-                                                                    ? wbsOnChangeIsValid
-                                                                    : wbsIsValid,
-                                                                validateWbsInProgress,
-                                                                newStudy
-                                                            ) || validateWbsInProgress
-                                                        }
-                                                    >
-                                                        {newStudy ? 'Create' : 'Save'}
-                                                    </Button>
-                                                </Tooltip>
-                                                <Button variant="outlined" onClick={() => handleCancel()}>
-                                                    Cancel
-                                                </Button>
-                                            </SaveCancelWrapper>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </RightWrapper>
                     </div>
-                </Wrapper>
-            ) : (
-                <Loading />
-            )}
+                    {!editMode ? (
+                        <div>
+                            <Tooltip
+                                title={
+                                    study.permissions && study.permissions.updateMetadata
+                                        ? ''
+                                        : 'You do not have access to edit this study'
+                                }
+                                placement="right"
+                            >
+                                <Button
+                                    variant="outlined"
+                                    data-cy="edit_study"
+                                    onClick={() => setEditMode(true)}
+                                    style={{ width: '80px', marginTop: '12px' }}
+                                    disabled={study.permissions && !study.permissions.updateMetadata}
+                                >
+                                    Edit
+                                </Button>
+                            </Tooltip>
+                        </div>
+                    ) : (
+                        <div>
+                            <Label style={{ color: '#000000', margin: '-16px 0 16px 32px', letterSpacing: '0.2px' }}>
+                                Hidden studies are invisible in the Sepes portal except for invited participants.
+                            </Label>
+                        </div>
+                    )}
+                </TitleWrapper>
+                {!editMode ? (
+                    <DescriptionWrapper>
+                        <Typography variant="body_long">{description}</Typography>
+                    </DescriptionWrapper>
+                ) : (
+                    <DescriptioTextfieldnWrapper>
+                        <TextField
+                            id="studyDescription"
+                            autoComplete="off"
+                            placeholder="Describe the study"
+                            multiline
+                            onChange={(e: any) => handleChange('description', e.target.value)}
+                            meta={returnLimitMeta(512, studyOnChange.description)}
+                            label="Description"
+                            style={{ height: '152px', resize: 'none' }}
+                            value={studyOnChange.description}
+                            data-cy="study_description"
+                        />
+                    </DescriptioTextfieldnWrapper>
+                )}
+                <div>
+                    {editMode && !newStudy && (
+                        <div style={{ float: 'right', marginBottom: 'auto' }}>
+                            <Button
+                                style={{
+                                    margin: '-13px',
+                                    display: study.permissions && study.permissions.closeStudy ? '' : 'none'
+                                }}
+                                variant="ghost_icon"
+                                data-cy="study_options"
+                                id="menuButton"
+                                aria-labelledby="menuButton"
+                                aria-expanded={isOpen}
+                                onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                                data-testid="study_delete_settings"
+                            >
+                                <Icon color="#007079" name="settings" size={24} />
+                            </Button>
+
+                            <Menu
+                                id="menuButton"
+                                aria-labelledby="menuButton"
+                                open={isOpen}
+                                onClose={closeMenu}
+                                anchorEl={buttonEl}
+                                focus={focus}
+                                placement="bottom-end"
+                            >
+                                {optionsTemplate}
+                            </Menu>
+                        </div>
+                    )}
+                    <RightWrapper editMode={editMode}>
+                        <div>
+                            {!showImagePicker && (
+                                <PictureWrapper editMode={editMode}>
+                                    <CustomLogoComponent logoUrl={logoUrl} center={editMode} />{' '}
+                                </PictureWrapper>
+                            )}
+                            {editMode && (
+                                <>
+                                    <div>
+                                        {showImagePicker && (
+                                            <PictureWrapper editMode={editMode}>
+                                                <AddImageAndCompressionContainer
+                                                    setImageUrl={setImageUrl}
+                                                    imageUrl={imageUrl}
+                                                />
+                                            </PictureWrapper>
+                                        )}
+                                        <Button
+                                            onClick={() => {
+                                                if (imageUrl === '') {
+                                                    setShowImagePicker(!showImagePicker);
+                                                }
+
+                                                setImageUrl('');
+                                                setStudyOnChange({ ...studyOnChange, logoUrl: '' });
+                                            }}
+                                            variant="outlined"
+                                            style={{ margin: '16px 0 20px 56px' }}
+                                            data-cy="change_logo"
+                                        >
+                                            Change logo
+                                        </Button>
+                                        <SaveCancelWrapper>
+                                            <Tooltip
+                                                title={returnTooltipTextSaveStudy(
+                                                    wbsOnChangeIsValid,
+                                                    newStudy,
+                                                    study,
+                                                    studyOnChange,
+                                                    validateWbsInProgress
+                                                )}
+                                                placement="left"
+                                            >
+                                                <Button
+                                                    data-cy="create_study"
+                                                    onClick={() => handleSave()}
+                                                    disabled={
+                                                        !validateUserInputStudy(
+                                                            studyOnChange,
+                                                            wbsOnChangeIsValid !== undefined
+                                                                ? wbsOnChangeIsValid
+                                                                : wbsIsValid,
+                                                            validateWbsInProgress,
+                                                            newStudy
+                                                        ) || validateWbsInProgress
+                                                    }
+                                                >
+                                                    {newStudy ? 'Create' : 'Save'}
+                                                </Button>
+                                            </Tooltip>
+                                            <Button variant="outlined" onClick={() => handleCancel()}>
+                                                Cancel
+                                            </Button>
+                                        </SaveCancelWrapper>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </RightWrapper>
+                </div>
+            </Wrapper>
         </div>
     );
 };

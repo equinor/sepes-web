@@ -54,13 +54,12 @@ const Overview: React.FC<OverviewProps> = ({
     onFallBackAddressChange
 }) => {
     const study = useSelector(getStudyFromStore());
-    const { datasets, participants, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const resultsAndLearningsResponse = useFetchUrl(
-        getResultsAndLearningsUrl(id),
+        getResultsAndLearningsUrl(study.id),
         setResultsAndLearnings,
-        id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
         controller
     );
 
@@ -164,12 +163,12 @@ const Overview: React.FC<OverviewProps> = ({
             <div>
                 <SandboxTable onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
                 <DatasetsTable
-                    datasets={datasets}
+                    datasets={study.datasets}
                     editMode={false}
-                    studyId={id}
+                    studyId={study.id}
                     onFallBackAddressChange={onFallBackAddressChange}
                 />
-                <ParticipantTable participants={participants} editMode={false} />
+                <ParticipantTable participants={study.participants} editMode={false} />
             </div>
         </Wrapper>
     );

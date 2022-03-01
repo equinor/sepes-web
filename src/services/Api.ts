@@ -16,9 +16,8 @@ export const getStudyList = async () => {
     return apiRequestWithToken('api/studies', 'GET');
 };
 
-export const getStudy = async (id: string) => {
-    console.log('getStudy');
-    return apiRequestWithToken('api/studies/' + id, 'GET');
+export const getStudy = async (id: string, signal: any) => {
+    return apiRequestWithToken('api/studies/' + id, 'GET', undefined, signal);
 };
 
 export const createStudy = async (study: StudyObj, imageUrl: string) => {
@@ -72,8 +71,8 @@ export const editStudySpecificDataset = async (studyId: string, dataset?: Datase
     return apiRequestWithToken('api/studies/' + studyId + '/datasets/studyspecific/' + dataset?.id, 'PUT', dataset);
 };
 
-export const getDataset = async (datasetId: string, studyId: string) => {
-    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET');
+export const getDataset = async (datasetId: string, studyId: string, signal: any) => {
+    return apiRequestWithToken('api/studies/' + studyId + '/datasets/' + datasetId, 'GET', undefined, signal);
 };
 
 export const getStudySpecificDatasetResources = async (datasetId: string, studyId: string) => {
@@ -98,8 +97,8 @@ export const getStandardDatasetFiles = async (datasetId: string) => {
     return apiRequestWithToken('api/datasets/' + datasetId + '/files', 'GET');
 };
 
-export const getStandardDataset = async (datasetId: string) => {
-    return apiRequestWithToken('api/datasets/' + datasetId, 'GET');
+export const getStandardDataset = async (datasetId: string, signal: any) => {
+    return apiRequestWithToken('api/datasets/' + datasetId, 'GET', undefined, signal);
 };
 
 export const createStandardDataset = async (dataset?: DatasetObj) => {

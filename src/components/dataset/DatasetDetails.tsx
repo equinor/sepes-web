@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { Typography, Icon, LinearProgress, Chip, Switch, Breadcrumbs, Tooltip } from '@equinor/eds-core-react';
 import { DatasetResourcesObj } from '../common/interfaces';
 import {
+    getDataset,
     getDatasetSasToken,
+    getStandardDataset,
     getStudySpecificDatasetFiles,
     getStudySpecificDatasetResources,
     removeStudyDataset
 } from '../../services/Api';
 import { isIterable, truncate } from '../common/helpers/helpers';
-import LoadingFull from '../common/LoadingFullscreen';
 import CreateEditDataset from './CreateEditDataset';
 import Dropzone from '../common/upload/DropzoneFile';
 import { makeFileBlobFromUrl } from '../../auth/AuthFunctions';
 import { Permissions } from '../../index';
-import useFetchUrl from '../common/hooks/useFetchUrl';
 import { Label } from '../common/StyledComponents';
 import { useHistory, Link } from 'react-router-dom';
 import DeleteResourceComponent from '../common/customComponents/DeleteResource';
@@ -38,6 +38,9 @@ import { getDatasetFromStore } from '../../store/datasets/datasetsSelectors';
 import { setDatasetInStore, setDatasetToInitialState } from 'store/datasets/datasetsSlice';
 import { getDatasetFolderViewMode } from '../../store/usersettings/userSettingsSelectors';
 import { toggleDatasetFolderView } from 'store/usersettings/userSettingsSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -80,25 +83,15 @@ const DatasetDetails = () => {
     const datasetId = getDatasetId();
     const studyId = getStudyId();
     const dataset = useSelector(getDatasetFromStore());
+    const showLoading = useSelector(getScreenLoadingFromStore());
     const dispatch = useDispatch();
     const isDatasetFolderView = useSelector(getDatasetFolderViewMode());
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
-    const [datasetDeleteInProgress, setDatasetDeleteInProgress] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
     const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
     const [controller, setController] = useState<AbortController>(new AbortController());
-
-    const datasetResponse = useFetchUrl(
-        isStandard ? getStandardDatasetUrl(studyId) : getStudySpecificDatasetUrl(datasetId, studyId),
-        undefined,
-        undefined,
-        controller,
-        false,
-        dispatch,
-        setDatasetInStore
-    );
+    const [notFound, setNotFound] = useState(false);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
     const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -115,6 +108,24 @@ const DatasetDetails = () => {
     const [sasKeyExpired, setSasKeyExpired] = useState<boolean>(true);
     const [totalProgress, setTotalProgress] = useState<number>(0);
     const [numberOfFilesInProgress, setNumberOfFilesInProgress] = useState<number>(0);
+
+    useEffect(() => {
+        if (!dataset.id) {
+            dispatch(setScreenLoading(true));
+            const datasetApiCall = isStandard
+                ? getStandardDataset(datasetId, controller.signal)
+                : getDataset(datasetId, studyId, controller.signal);
+
+            datasetApiCall.then((result: any) => {
+                dispatch(setScreenLoading(false));
+                if (result && !result.message) {
+                    dispatch(setDatasetInStore(result));
+                } else {
+                    setNotFound(true);
+                }
+            });
+        }
+    }, [studyId, datasetId]);
 
     useEffect(() => {
         let timer: any;
@@ -272,27 +283,15 @@ const DatasetDetails = () => {
         setDatasetStorageAccountIsReady(res);
     };
 
-    const returnEnumberableFiles = () => {
-        const tempFiles: any = [];
-        files.forEach((_file) => {
-            const tempFile = _file;
-            Object.defineProperty(tempFile, 'size', { value: _file.size, enumerable: true });
-            tempFiles.push(_file);
-        });
-        return tempFiles;
-    };
-
     const deleteDataset = () => {
         setHasChanged(false);
         controllerFiles.abort();
         controllerFiles = new AbortController();
-        setLoading(true);
-        setDatasetDeleteInProgress(true);
+        dispatch(setScreenLoading(true));
         setUserClickedDelete(false);
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
         removeStudyDataset(datasetId).then((result: any) => {
-            console.log(result);
-            setLoading(false);
+            dispatch(setScreenLoading(false));
             if (result && !result.message) {
                 history.push('/studies/' + studyId);
             } else {
@@ -391,7 +390,7 @@ const DatasetDetails = () => {
     };
 
     return !showEditDataset ? (
-        !loadingFiles && !dataset.id && datasetResponse.notFound ? (
+        !loadingFiles && !dataset.id && notFound ? (
             <NotFound />
         ) : (
             <>
@@ -401,7 +400,6 @@ const DatasetDetails = () => {
                     customText="All downloads will cancel"
                 />
                 <OuterWrapper>
-                    {loading && <LoadingFull noTimeout={datasetDeleteInProgress} />}
                     {userClickedDelete && (
                         <DeleteResourceComponent
                             ResourceName={dataset?.name}
@@ -446,7 +444,7 @@ const DatasetDetails = () => {
                                     Back to datasets
                                 </Link>
                             )}
-                            {!datasetResponse.loading && (
+                            {!showLoading && (
                                 <Dropzone
                                     onDrop={(event: File[]) => handleFileDrop(event)}
                                     loading={
@@ -478,7 +476,7 @@ const DatasetDetails = () => {
                                     style={{ float: 'right' }}
                                 />
                             </div>
-                            {(totalProgress > 0 || hasChanged) && (
+                            {((totalProgress > 0 && totalProgress < 100) || hasChanged) && (
                                 <div style={{ marginBottom: '16px' }}>
                                     <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
                                     <LinearProgress
@@ -507,7 +505,7 @@ const DatasetDetails = () => {
                                 folderViewMode={isDatasetFolderView}
                             />
                         </div>
-                        {!datasetResponse.loading ? (
+                        {!showLoading ? (
                             <DatasetInformation
                                 dataset={dataset}
                                 storageAccountStatus={storageAccountStatus}
@@ -517,10 +515,11 @@ const DatasetDetails = () => {
                                 setUserClickedDelete={setUserClickedDelete}
                             />
                         ) : (
-                            <LoadingFull noTimeout={datasetDeleteInProgress} />
+                            ''
                         )}
                     </Wrapper>
                 </OuterWrapper>
+                <LoadingFullScreenNew />
             </>
         )
     ) : (
