@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/equinor/sepes-web/compare/1.4.0...1.4.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* axios upgrade failing cypress test ([3af463e](https://github.com/equinor/sepes-web/commit/3af463e5f859911de2598f05cb41b4875b508576))
+* **dataset:** file upload progress complete ([b658a36](https://github.com/equinor/sepes-web/commit/b658a36190e1b3526a0cd4633163588453a1e8c1)), closes [#1574](https://github.com/equinor/sepes-web/issues/1574)
+* **study:** error creating new study ([515db82](https://github.com/equinor/sepes-web/commit/515db82034e215c931daf48652d26d6e99bd869c)), closes [#1593](https://github.com/equinor/sepes-web/issues/1593)
+* upgrade @azure/msal-browser from 2.20.0 to 2.21.0 ([c3ff446](https://github.com/equinor/sepes-web/commit/c3ff4462326c8c124b4c5823be67dd7eb67327f7))
+* upgrade @types/node from 16.11.19 to 16.11.21 ([c751689](https://github.com/equinor/sepes-web/commit/c7516897adb7a1860dc3c04f0158a06689c468f0))
+* upgrade @types/react-router from 5.1.17 to 5.1.18 ([5e31f00](https://github.com/equinor/sepes-web/commit/5e31f00223d48a2b19e18c8585a3a730c6ca0b4c))
+* upgrade @types/styled-components from 5.1.19 to 5.1.21 ([ab5c48d](https://github.com/equinor/sepes-web/commit/ab5c48d085d611703d10a683192c216f7a8f6cfc))
+* upgrade axios from 0.24.0 to 0.25.0 ([22f6dec](https://github.com/equinor/sepes-web/commit/22f6dec2fb27f2d1b87f568a254b3f833abc2191))
+* upgrade node-forge from 1.0.0 to 1.1.0 ([814fb66](https://github.com/equinor/sepes-web/commit/814fb66ea21c056ba1ec9de511c30ca62fc31429))
+* upgrade react-dnd-html5-backend from 14.0.2 to 14.1.0 ([7386723](https://github.com/equinor/sepes-web/commit/7386723f78189faf14c81c1499c444e874968138))
+* upgrade react-dropzone from 11.4.2 to 11.5.1 ([b804c62](https://github.com/equinor/sepes-web/commit/b804c62a5a1721b3b8a4eb13d533a49d4df9cb35))
+
 ## [1.4.0](https://github.com/equinor/sepes-web/compare/1.3.0...1.4.0) (2022-02-10)
 
 
