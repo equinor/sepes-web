@@ -296,8 +296,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 dispatch(setScreenLoading(false));
                 setStudySaveInProgress(false);
                 if (result && !result.message) {
-                    const newStudy = result;
-                    dispatch(setStudyInStore(newStudy));
+                    dispatch(setStudyInStore(result));
                     history.push('/studies/' + result.id);
                 } else {
                     console.log('Err');
