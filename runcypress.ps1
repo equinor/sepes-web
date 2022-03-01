@@ -100,8 +100,7 @@ function GetAccessToken([string]$clientId, [string]$tenantId, [string]$clientSec
     $body = @{client_id=$clientId;client_secret=$clientSecret;grant_type="client_credentials";scope="${scope}/.default";}
     $oAuthReq = Invoke-RestMethod -Method Post -Uri https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token -Body $body
     
-    $accessToken = $oAuthReq.access_token
-    Write-Host "$(CurrentLineStart)Access token ...$($accessToken)... was received" -ForegroundColor Green
+    $accessToken = $oAuthReq.access_token    
     if ($accessToken.Length -gt 20) {
         # Write-Host "$accessToken"
         Write-Host "$(CurrentLineStart)Access token ...$($accessToken.substring(20, 20))... was received" -ForegroundColor Green

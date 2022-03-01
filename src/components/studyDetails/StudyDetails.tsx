@@ -69,7 +69,7 @@ const StudyDetails = () => {
     const displayPrompt = hasChanged || studySaveInProgress;
 
     useEffect(() => {
-        if (!newStudy || !study.id) {
+        if (!newStudy && id) {
             dispatch(setScreenLoading(true));
             getStudy(id, controller.signal).then((result: any) => {
                 dispatch(setScreenLoading(false));
