@@ -25,7 +25,6 @@ import {
     checkIfAddNewVmHasUnsavedChanges,
     checkIfVmNameAlreadyExists
 } from '../../common/helpers/sandboxHelpers';
-import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
 import { DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
@@ -186,7 +185,11 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                 setUsernameHelpText('');
             }
             if (name === 'dataDisks') {
-                value = [value];
+                if (value) {
+                    value = [value];
+                } else {
+                    value = [];
+                }
             }
             setVm({
                 ...vm,
@@ -453,17 +456,6 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         Leave empty if you have no special requirements.
                     </HelperTextWrapper>
                 </SizeFilterWrapper>
-                {/*<CoreDevDropdown
-                label="VM size"
-                options={filterList(sizes, filter)}
-                width={width}
-                onChange={handleDropdownChange}
-                name="size"
-                data-cy="vm_size"
-                meta="(required)"
-                useOverflow
-                tabIndex={0}
-            />*/}
                 <SingleSelect
                     handleSelectedItemChange={({ selectedItem }) =>
                         handleDropdownChange(returnKeyOfDisplayValue(selectedItem, sizes), 'size')
@@ -476,22 +468,20 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     data-cy="vm_size"
                     initialSelectedItem={returnDisplayName(sizes, vm.size)}
                 />
-                <CoreDevDropdown
-                    label="Data disk"
-                    options={disks}
-                    width={width}
-                    onChange={handleDropdownChange}
-                    name="dataDisks"
-                    data-cy="vm_dataDisks"
-                    useOverflow
-                    tabIndex={0}
-                    preSelectedValue={returnDisplayName(disks, vm.dataDisks[0])}
-                    helperText={
-                        vm.dataDisks.length > 0
-                            ? 'Data disk is not accessible until you initalize and partition the hardrive within the operating system'
-                            : ''
+                <SingleSelect
+                    handleSelectedItemChange={({ selectedItem }) =>
+                        handleDropdownChange(returnKeyOfDisplayValue(selectedItem, disks), 'dataDisks')
                     }
+                    label="Data disk"
+                    items={arrayObjectsToArrayString(disks)}
+                    className="singleSelect"
+                    placeholder="Please search/select..."
+                    data-cy="vm_dataDisks"
+                    initialSelectedItem={returnDisplayName(disks, vm.dataDisks[0])}
                 />
+                {vm.dataDisks.length > 0 ? (
+                    <Label label="Data disk is not accessible until you initalize and partition the hardrive within the operating system" />
+                ) : null}
                 <div>
                     <Label label="Estimated total" />
                     <Typography variant="h6" style={{ marginLeft: '8px' }}>
