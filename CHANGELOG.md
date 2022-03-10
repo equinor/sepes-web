@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/equinor/sepes-web/compare/1.4.1...1.4.2) (2022-03-10)
+
+
+### Bug Fixes
+
+* **vm:** deselect disk when creating a new VM ([62bdf1a](https://github.com/equinor/sepes-web/commit/62bdf1ab2d5d4eedc50c9cc9b2005b909f7b310d)), closes [#1599](https://github.com/equinor/sepes-web/issues/1599)
+
 ### [1.4.1](https://github.com/equinor/sepes-web/compare/1.4.0...1.4.1) (2022-03-01)
 
 
