@@ -19,16 +19,9 @@ type VmConfigProps = {
     updateCache: any;
     controller: AbortController;
     setVmsWithOpenInternet: any;
-    setHasChanged: any;
 };
 
-const VmConfig: React.FC<VmConfigProps> = ({
-    setUpdateCache,
-    updateCache,
-    controller,
-    setVmsWithOpenInternet,
-    setHasChanged
-}) => {
+const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, controller, setVmsWithOpenInternet }) => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const sandbox = useSelector(getSandboxFromStore());
     const [vms, setVms] = useState<any>([]);
@@ -130,7 +123,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         sizeFilter={sizeFilter}
                         setOsFilter={setOsFilter}
                         osFilter={osFilter}
-                        setHasChanged={setHasChanged}
                     />
                 ) : (
                     <div />
@@ -147,7 +139,6 @@ const VmConfig: React.FC<VmConfigProps> = ({
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setVmSaved={setVmSaved}
-                        setHasChangedGlobal={setHasChanged}
                         hasChangedVmRules={hasChangedVmRules}
                         setHasChangedVmRules={setHasChangedVmRules}
                     />

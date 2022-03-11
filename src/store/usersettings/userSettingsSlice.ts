@@ -4,6 +4,7 @@ export const datasetFolderViewSettingsName = 'is_dataset_folder_view';
 
 interface UserSettingsState {
     isDatasetFolderView: boolean;
+    hasUnsavedChanges: boolean;
 }
 
 //TODO: move to seperate file to handle all local-storage functions
@@ -18,7 +19,8 @@ const getBooleanValue = (key: string) => {
 };
 
 const initialState: UserSettingsState = {
-    isDatasetFolderView: getBooleanValue(datasetFolderViewSettingsName)
+    isDatasetFolderView: getBooleanValue(datasetFolderViewSettingsName),
+    hasUnsavedChanges: false
 };
 
 export const userSettingsSlice = createSlice({
@@ -28,10 +30,13 @@ export const userSettingsSlice = createSlice({
         toggleDatasetFolderView: (state: UserSettingsState, action: PayloadAction<boolean>) => {
             localStorage.setItem(datasetFolderViewSettingsName, action.payload ? 'true' : 'false');
             return { ...state, isDatasetFolderView: action.payload };
+        },
+        setHasUnsavedChangesValue: (state: UserSettingsState, action: PayloadAction<boolean>) => {
+            return { ...state, hasUnsavedChanges: action.payload };
         }
     }
 });
 
-export const { toggleDatasetFolderView } = userSettingsSlice.actions;
+export const { toggleDatasetFolderView, setHasUnsavedChangesValue } = userSettingsSlice.actions;
 
 export default userSettingsSlice.reducer;

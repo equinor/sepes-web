@@ -38,7 +38,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const showLoading = useSelector(getScreenLoadingFromStore());
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>((sandbox && sandbox.currentPhase) || undefined);
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const callGetResources = useSelector(getCallResourcesStatus());
     const [notFound, setNotFound] = useState<boolean>(false);
 
@@ -121,7 +120,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     return (
         <>
-            <Prompt hasChanged={hasChanged || showLoading} fallBackAddress={'/studies/' + studyId} />
+            <Prompt fallBackAddress={'/studies/' + studyId} />
             {!notFound ? (
                 step !== undefined ? (
                     <>
@@ -135,7 +134,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 setNewCostanalysisLink={setNewCostanalysisLink}
                                 controller={controller}
                                 vmsWithOpenInternet={vmsWithOpenInternet}
-                                setHasChanged={setHasChanged}
                                 updateCache={updateCache}
                                 setUpdateCache={setUpdateCache}
                             />
@@ -146,7 +144,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                     updateCache={updateCache}
                                     controller={controller}
                                     setVmsWithOpenInternet={setVmsWithOpenInternet}
-                                    setHasChanged={setHasChanged}
                                 />
                             )}
                         </Wrapper>

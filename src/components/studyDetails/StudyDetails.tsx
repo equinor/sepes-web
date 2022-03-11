@@ -56,7 +56,6 @@ const StudyDetails = () => {
         window.history.replaceState(null, '');
     }
 
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [studySaveInProgress, setStudySaveInProgress] = useState<boolean>(false);
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
@@ -65,8 +64,6 @@ const StudyDetails = () => {
     const [notFound, setNotFound] = useState<boolean>(false);
     const permissions = useContext(Permissions);
     const displayStudyInfo = !showLoading && study;
-
-    const displayPrompt = hasChanged || studySaveInProgress;
 
     useEffect(() => {
         if (!newStudy && id) {
@@ -115,7 +112,6 @@ const StudyDetails = () => {
             case 2:
                 return (
                     <SandBoxComponent
-                        setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         disabled={!(study.permissions && study.permissions.addRemoveSandbox && !studySaveInProgress)}
@@ -130,7 +126,6 @@ const StudyDetails = () => {
             default:
                 return (
                     <Overview
-                        setHasChanged={setHasChanged}
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         controller={controller}
@@ -145,13 +140,11 @@ const StudyDetails = () => {
             {notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
-                <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />
+                <Promt fallBackAddress={fallBackAddress} />
                 {displayStudyInfo ? (
                     <StudyComponentFull
                         newStudy={newStudy}
                         setNewStudy={setNewStudy}
-                        setHasChanged={setHasChanged}
-                        hasChanged={hasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         setWbsIsValid={setWbsIsValid}

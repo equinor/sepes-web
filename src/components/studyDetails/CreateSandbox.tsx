@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const Wrapper = styled.div`
     position: absolute;
@@ -39,7 +40,6 @@ const Wrapper = styled.div`
 
 type CreateSandboxComponentProps = {
     setToggle: any;
-    setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
     wbsIsValid: boolean | undefined;
@@ -51,7 +51,6 @@ const limits = {
 
 const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     setToggle,
-    setHasChanged,
     setUpdateCache,
     updateCache,
     wbsIsValid
@@ -65,7 +64,9 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     useClickOutside(wrapperRef, setToggle);
 
     useEffect(() => {
-        return () => setHasChanged(false);
+        return () => {
+            dispatch(setHasUnsavedChangesValue(false));
+        };
     }, []);
 
     const [sandbox, setSandbox] = useState<SandboxCreateObj>({
@@ -75,7 +76,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         id: ''
     });
     const handleChange = (columnName: string, value: string) => {
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         const setterValue = returnAllowedLengthOfString(limits, value, columnName);
         setSandbox({
             ...sandbox,
@@ -83,7 +84,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
         });
     };
     const handleDropdownChange = (value, name: string): void => {
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         setSandbox({
             ...sandbox,
             [name]: value
@@ -91,7 +92,7 @@ const CreateSandboxComponent: React.FC<CreateSandboxComponentProps> = ({
     };
 
     const CreateSandbox = () => {
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         if (!validateUserInputSandbox(sandbox, study)) {
             return;
         }

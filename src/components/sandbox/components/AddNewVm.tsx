@@ -37,6 +37,7 @@ import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTex
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const Wrapper = styled.div`
     height: auto;
@@ -97,7 +98,6 @@ type AddNewVmProps = {
     sizeFilter: any;
     setOsFilter: any;
     osFilter: any;
-    setHasChanged: any;
 };
 
 const limits = {
@@ -118,8 +118,6 @@ const osType = {
     recommended: 'recommended'
 };
 
-const width = '400px';
-
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
         setVms,
@@ -135,8 +133,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         setSizeFilter,
         sizeFilter,
         setOsFilter,
-        osFilter,
-        setHasChanged
+        osFilter
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
         const sandbox = useSelector(getSandboxFromStore());
@@ -176,11 +173,11 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         }, [vm.username, vm.operatingSystem]);
 
         useEffect(() => {
-            setHasChanged(checkIfAddNewVmHasUnsavedChanges(vm));
+            dispatch(setHasUnsavedChangesValue(checkIfAddNewVmHasUnsavedChanges(vm)));
         }, []);
 
         const handleDropdownChange = (value, name: string): void => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             if (name === 'operatingSystem') {
                 setUsernameHelpText('');
             }
@@ -198,7 +195,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         };
 
         const handleChange = (field: string, value: string) => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             if (!checkColumDoesNotExceedInputLength(limits, value, field)) {
                 return;
             }
@@ -209,7 +206,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         };
 
         const handlePasswordChange = (value: string) => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             setVm({
                 ...vm,
                 password: value
@@ -220,7 +217,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             if (!vmIsValid) {
                 return;
             }
-            setHasChanged(false);
+            dispatch(setHasUnsavedChangesValue(false));
             setLoading(true);
             setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
             createVirtualMachine(sandboxId, vm).then((result: any) => {
