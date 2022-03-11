@@ -59,7 +59,6 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     setNewPhase: any;
-    setNewCostanalysisLink: any;
     controller: AbortController;
     vmsWithOpenInternet: any;
     updateCache: any;
@@ -88,7 +87,6 @@ const StepBar: React.FC<StepBarProps> = ({
     studyId,
     sandboxId,
     setNewPhase,
-    setNewCostanalysisLink,
     controller,
     vmsWithOpenInternet,
     updateCache,
@@ -138,7 +136,6 @@ const StepBar: React.FC<StepBarProps> = ({
                     setSandboxHasVm,
                     setAllResourcesOk,
                     sandbox,
-                    setNewCostanalysisLink,
                     dispatch,
                     setSandboxInStore
                 );

@@ -95,10 +95,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
         }
     };
 
-    const setNewCostanalysisLink = (link: any) => {
-        dispatch(setSandboxInStore({ ...sandbox, setNewCostanalysisLink: link }));
-    };
-
     const returnStepComponent = () => {
         switch (step) {
             case 1:
@@ -131,7 +127,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 studyId={studyId}
                                 sandboxId={sandboxId}
                                 setNewPhase={setNewPhase}
-                                setNewCostanalysisLink={setNewCostanalysisLink}
                                 controller={controller}
                                 vmsWithOpenInternet={vmsWithOpenInternet}
                                 updateCache={updateCache}
