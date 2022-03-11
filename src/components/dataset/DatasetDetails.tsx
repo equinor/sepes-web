@@ -36,8 +36,8 @@ import './DatasetDetailsStyle.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDatasetFromStore } from '../../store/datasets/datasetsSelectors';
 import { setDatasetInStore, setDatasetToInitialState } from 'store/datasets/datasetsSlice';
-import { getDatasetFolderViewMode } from '../../store/usersettings/userSettingsSelectors';
-import { toggleDatasetFolderView } from 'store/usersettings/userSettingsSlice';
+import { getDatasetFolderViewMode, getUnsavedChangesValue } from '../../store/usersettings/userSettingsSelectors';
+import { setHasUnsavedChangesValue, toggleDatasetFolderView } from 'store/usersettings/userSettingsSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
@@ -85,6 +85,7 @@ const DatasetDetails = () => {
     const dataset = useSelector(getDatasetFromStore());
     const showLoading = useSelector(getScreenLoadingFromStore());
     const dispatch = useDispatch();
+    const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
     const isDatasetFolderView = useSelector(getDatasetFolderViewMode());
     const isStandard = checkUrlIfGeneralDataset();
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
@@ -94,7 +95,6 @@ const DatasetDetails = () => {
     const [notFound, setNotFound] = useState(false);
     const [showEditDataset, setShowEditDataset] = useState<boolean>(false);
     const [duplicateFiles, setDuplicateFiles] = useState<boolean>(false);
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [files, setFiles] = useState<any>([]);
     const [viewableFiles, setViewableFiles] = useState<any>([]);
     const [datasetStorageAccountIsReady, setDatasetStorageAccountIsReady] = useState<Boolean>(
@@ -183,9 +183,9 @@ const DatasetDetails = () => {
         const filesInProgress = progressArray.filter((x) => x.percent && x.percent > 0 && x.percent < 100);
 
         if (filesInProgress.length > 0) {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
         } else {
-            setHasChanged(false);
+            dispatch(setHasUnsavedChangesValue(false));
         }
         let totalSizeUploaded = 0;
         let totalSizeToUpload = 0;
@@ -196,7 +196,7 @@ const DatasetDetails = () => {
             }
         });
         let percent = Math.floor((totalSizeUploaded * 100) / totalSizeToUpload);
-        if (percent === 0 && hasChanged) {
+        if (percent === 0 && hasUnsavedChanges) {
             percent = 1;
         }
         setTotalProgress(percent);
@@ -284,7 +284,7 @@ const DatasetDetails = () => {
     };
 
     const deleteDataset = () => {
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         controllerFiles.abort();
         controllerFiles = new AbortController();
         dispatch(setScreenLoading(true));
@@ -308,7 +308,7 @@ const DatasetDetails = () => {
             return;
         }
 
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         const previousFiles = [...files];
         const tempFiles = [...files];
         tempFiles.unshift(..._files);
@@ -395,7 +395,6 @@ const DatasetDetails = () => {
         ) : (
             <>
                 <Prompt
-                    hasChanged={hasChanged}
                     fallBackAddress={!isStandard ? '/studies/' + studyId : undefined}
                     customText="All downloads will cancel"
                 />
@@ -476,7 +475,7 @@ const DatasetDetails = () => {
                                     style={{ float: 'right' }}
                                 />
                             </div>
-                            {((totalProgress > 0 && totalProgress < 100) || hasChanged) && (
+                            {((totalProgress > 0 && totalProgress < 100) || hasUnsavedChanges) && (
                                 <div style={{ marginBottom: '16px' }}>
                                     <Label style={{ marginBottom: '-16px', marginTop: '8px' }}>Total Progress</Label>
                                     <LinearProgress

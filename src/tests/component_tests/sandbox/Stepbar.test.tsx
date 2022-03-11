@@ -31,7 +31,6 @@ test('renders stepbar component without permissions', async () => {
                     setNewCostanalysisLink={mockFunc}
                     controller={new AbortController()}
                     vmsWithOpenInternet={mockFunc}
-                    setHasChanged={mockFunc}
                     updateCache={mockFunc}
                     setUpdateCache={mockFunc}
                 />
@@ -63,7 +62,6 @@ test('renders stepbar component with permissions', async () => {
                     setNewCostanalysisLink={mockFunc}
                     controller={new AbortController()}
                     vmsWithOpenInternet={mockFunc}
-                    setHasChanged={mockFunc}
                     updateCache={mockFunc}
                     setUpdateCache={mockFunc}
                 />

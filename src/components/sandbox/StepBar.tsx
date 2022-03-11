@@ -23,6 +23,7 @@ import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -61,7 +62,6 @@ type StepBarProps = {
     setNewCostanalysisLink: any;
     controller: AbortController;
     vmsWithOpenInternet: any;
-    setHasChanged: any;
     updateCache: any;
     setUpdateCache: any;
 };
@@ -91,7 +91,6 @@ const StepBar: React.FC<StepBarProps> = ({
     setNewCostanalysisLink,
     controller,
     vmsWithOpenInternet,
-    setHasChanged,
     updateCache,
     setUpdateCache
 }) => {
@@ -170,7 +169,7 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         setUserClickedDelete(false);
         dispatch(setScreenLoading(true));
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });

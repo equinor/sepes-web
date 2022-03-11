@@ -150,10 +150,8 @@ test('renders StudyComponent full component with edit study', async () => {
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -196,10 +194,8 @@ test('renders StudyComponent full component with invalid study name', async () =
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -223,10 +219,8 @@ test('renders StudyComponent full component with invalid vendor name', async () 
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -262,10 +256,8 @@ test('renders StudyComponent full component with no permission to edit', async (
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -285,10 +277,8 @@ test('renders StudyComponent full component with  permission to delete', async (
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -322,10 +312,8 @@ test('renders StudyComponent full component with no permission to delete', async
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}
@@ -358,10 +346,8 @@ test('renders StudyComponent full component with sandbox in study', async () => 
                 <StudyComponentFull
                     newStudy={false}
                     setNewStudy={mockFunc}
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
-                    hasChanged={false}
                     wbsIsValid={true}
                     setWbsIsValid={mockFunc}
                     setStudySaveInProgress={mockFunc}

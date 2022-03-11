@@ -19,7 +19,6 @@ const Wrapper = styled.div`
 `;
 
 type SandboxComponentProps = {
-    setHasChanged: any;
     setUpdateCache: any;
     updateCache: any;
     disabled: boolean;
@@ -28,7 +27,6 @@ type SandboxComponentProps = {
 };
 
 const Sandbox: React.FC<SandboxComponentProps> = ({
-    setHasChanged,
     setUpdateCache,
     updateCache,
     disabled,
@@ -73,7 +71,6 @@ const Sandbox: React.FC<SandboxComponentProps> = ({
                 </div>
                 {toggle && (
                     <CreateSandboxComponent
-                        setHasChanged={setHasChanged}
                         setToggle={setToggle}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}

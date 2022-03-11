@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, Prompt as ReactPrompt } from 'react-router-dom';
 import { Dialog, Button, Scrim } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
+import { useSelector } from 'react-redux';
 
 const { Actions, Title, CustomContent } = Dialog;
 
@@ -14,15 +16,16 @@ const TempButtonWrapper = styled.div`
 `;
 
 type PromptProps = {
-    hasChanged: boolean;
     fallBackAddress?: string;
     customText?: string;
 };
 
-const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText }) => {
+const Prompt: React.FC<PromptProps> = ({ fallBackAddress, customText }) => {
     const history = useHistory();
     const [visibleScrim, setVisibleScrim] = useState<boolean>(false);
     const [confirmedNavigation, setConfirmedNavigation] = useState<boolean>(false);
+
+    const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
 
     useEffect(() => {
         if (confirmedNavigation) {
@@ -42,7 +45,7 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
             if (history.location.key === nextLocation.key) {
                 return false;
             }
-            if (hasChanged) {
+            if (hasUnsavedChanges) {
                 //A boolean state to check if the page has any unsaved changes
                 setVisibleScrim(true);
                 //A workaround for Prompt replacing the URL after page reload, even if navigation is cancelled
@@ -57,7 +60,7 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
 
     return (
         <div>
-            <ReactPrompt when={hasChanged} message={handleBlockedNavigation} />
+            <ReactPrompt when={hasUnsavedChanges} message={handleBlockedNavigation} />
 
             <Scrim open={visibleScrim} onClose={() => setVisibleScrim(!visibleScrim)}>
                 <Dialog style={{ width: '400px', height: '220px' }}>
@@ -86,7 +89,6 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
                                 >
                                     Leave
                                 </Button>
-                                {/*<Button>Save as draft</Button>*/}
                             </TempButtonWrapper>
                         </Actions>
                     </span>
