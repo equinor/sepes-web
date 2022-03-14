@@ -16,6 +16,7 @@ import { setResourcesInStore } from 'store/resources/resourcesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
+import { setVirtualMachinesToInitialState } from 'store/virtualmachines/virtualMachinesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -60,6 +61,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
             controller.abort();
             controller = new AbortController();
             dispatch(setSandboxToInitialState());
+            dispatch(setVirtualMachinesToInitialState());
         };
     }, []);
 

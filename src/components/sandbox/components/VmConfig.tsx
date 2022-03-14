@@ -5,14 +5,15 @@ import { SizeObj, DropdownObj, OperatingSystemObj, VmObj } from '../../common/in
 import {
     getVirtualMachineDisks,
     getVirtualMachineSizes,
-    getVirtualMachineOperatingSystems
+    getVirtualMachineOperatingSystems,
+    getVirtualMachineForSandbox
 } from '../../../services/Api';
 import VmDetails from './VmDetails';
-import useFetchUrl from '../../common/hooks/useFetchUrl';
-import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
 import { checkIfAnyVmsHasOpenInternet } from 'components/common/helpers/sandboxHelpers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
 
 type VmConfigProps = {
     setUpdateCache: any;
@@ -22,9 +23,9 @@ type VmConfigProps = {
 };
 
 const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, controller, setVmsWithOpenInternet }) => {
+    const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState<number>(0);
     const sandbox = useSelector(getSandboxFromStore());
-    const [vms, setVms] = useState<any>([]);
     const [sizes, setSizes] = useState<SizeObj | undefined>(undefined);
     const [disks, setDisks] = useState<DropdownObj | undefined>(undefined);
     const [os, setOs] = useState<OperatingSystemObj | undefined>(undefined);
@@ -42,11 +43,23 @@ const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, contro
         dataDisks: []
     });
     const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
-    const vmsReponse = useFetchUrl(getVmsForSandboxUrl(sandbox.id), setVms, undefined, undefined, false);
     const [vmSaved, setVmSaved] = useState<Boolean>(false);
     const [sizeFilter, setSizeFilter] = useState<any>([]);
     const [osFilter, setOsFilter] = useState<any>([]);
     const showAddNewVm = sandbox.permissions && sandbox.permissions.update;
+    const vms = useSelector(getVirtualMachinesFromStore());
+    let vmsLoading = false;
+
+    useEffect(() => {
+        if (sandbox.id) {
+            getVirtualMachineForSandbox(sandbox.id).then((result: any) => {
+                vmsLoading = true;
+                if (result && !result.message) {
+                    dispatch(setVirtualMachinesInStore(result));
+                }
+            });
+        }
+    }, [sandbox.id]);
 
     useEffect(() => {
         if (vms.length > 0 && !showAddNewVm) {
@@ -109,8 +122,6 @@ const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, contro
             case 0:
                 return showAddNewVm ? (
                     <AddNewVm
-                        setVms={setVms}
-                        vms={vms}
                         sizes={sizes}
                         disks={disks}
                         setActiveTab={setActiveTab}
@@ -131,8 +142,6 @@ const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, contro
                 return (
                     <VmDetails
                         vm={vms[activeTab - 1]}
-                        setVms={setVms}
-                        vms={vms}
                         setActiveTab={setActiveTab}
                         index={activeTab - 1}
                         permissions={sandbox.permissions}
@@ -167,7 +176,7 @@ const VmConfig: React.FC<VmConfigProps> = ({ setUpdateCache, updateCache, contro
                         })
                     ) : (
                         <Tabs.Tab key={2} disabled>
-                            {vmsReponse.loading ? 'loading..' : 'No virtual machines yet..'}
+                            {vmsLoading ? 'loading..' : 'No virtual machines yet..'}
                         </Tabs.Tab>
                     )}
                 </Tabs.List>

@@ -38,6 +38,8 @@ import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
 
 const Wrapper = styled.div`
     height: auto;
@@ -84,8 +86,6 @@ const UnstyledList = styled.ul`
 `;
 
 type AddNewVmProps = {
-    setVms: any;
-    vms: any;
     setActiveTab: any;
     sizes?: SizeObj;
     disks?: DropdownObj;
@@ -120,8 +120,6 @@ const osType = {
 
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
-        setVms,
-        vms,
         sizes,
         disks,
         setActiveTab,
@@ -137,6 +135,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
         const sandbox = useSelector(getSandboxFromStore());
+        const vms = useSelector(getVirtualMachinesFromStore());
         const [actualVmName, setActualVmName] = useState<string>('');
         const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
         const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
@@ -240,7 +239,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     dispatch(setCallResources(true));
                     const vmsList: any = [...vms];
                     vmsList.push(result);
-                    setVms(vmsList);
+                    dispatch(setVirtualMachinesInStore(vmsList));
                     setActiveTab(vmsList.length);
                 }
                 setLoading(false);

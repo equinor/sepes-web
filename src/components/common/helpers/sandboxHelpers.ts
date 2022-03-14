@@ -242,7 +242,7 @@ export const allResourcesStatusOkAndAtleastOneVm = (
 const getCostAnalysisLinkToSandbox = (sandbox: SandboxObj, dispatch: any, setSandboxInStore: any) => {
     getSandboxCostAnalysis(sandbox.id).then((result: any) => {
         if (result && !result.message) {
-            dispatch(setSandboxInStore({ sandbox, linkToCostAnalysis: result }));
+            dispatch(setSandboxInStore({ ...sandbox, linkToCostAnalysis: result }));
         }
     });
 };

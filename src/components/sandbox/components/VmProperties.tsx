@@ -1,5 +1,5 @@
 /*eslint-disable no-shadow */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -7,8 +7,10 @@ import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResource';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
 
 const Wrapper = styled.div`
     margin-top: 16px;
@@ -27,8 +29,6 @@ const ItemText = styled.div`
 
 type VmPropertiesProps = {
     vmProperties: VmObj;
-    setVms: any;
-    vms: any;
     setActiveTab: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
@@ -37,8 +37,6 @@ type VmPropertiesProps = {
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
     vmProperties,
-    setVms,
-    vms,
     setActiveTab,
     permissions,
     setUpdateCache,
@@ -49,6 +47,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const { MemoryGB, numberOfCores } = size || {};
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const vms = useSelector(getVirtualMachinesFromStore());
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -73,7 +72,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setState({ ...state, buttonEl: null, focus });
     };
 
-    useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
+    //useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
@@ -83,7 +82,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                 dispatch(setCallResources(true));
                 const currentVms: any = [...vms];
                 currentVms.splice(vms.indexOf(vmProperties), 1);
-                setVms(currentVms);
+                dispatch(setVirtualMachinesInStore(currentVms));
             }
         });
     };
