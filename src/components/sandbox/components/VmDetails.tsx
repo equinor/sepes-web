@@ -26,6 +26,8 @@ import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import getResourcesFromStore from 'store/resources/resourcesSelectors';
 import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
 import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -42,9 +44,7 @@ const Wrapper = styled.div`
 `;
 
 type VmDetailsProps = {
-    vm: any;
-    setVms: any;
-    vms: any;
+    vm: any;   
     setActiveTab: any;
     index: number;
     permissions: SandboxPermissions;
@@ -80,9 +80,7 @@ const portsOptions = [
 const numberOfPorts = 65535;
 
 const VmDetails: React.FC<VmDetailsProps> = ({
-    vm,
-    setVms,
-    vms,
+    vm,   
     setActiveTab,
     index,
     permissions,
@@ -97,6 +95,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
     const dispatch = useDispatch();
     const resources = useSelector(getResourcesFromStore());
+    const vms = useSelector(getVirtualMachinesFromStore())
     const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
     let keyCount: number = 0;
 
@@ -126,7 +125,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].extendedInfo = result;
-                    setVms(tempsVms);
+                    dispatch(setVirtualMachinesInStore(tempsVms));
                 } else {
                     console.log('Err');
                 }
@@ -140,7 +139,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].rules = result;
-                    setVms(tempsVms);
+                    dispatch(setVirtualMachinesInStore(tempsVms));
                 } else {
                     console.log('Err');
                 }
@@ -156,7 +155,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
             } else {
                 console.log('Err');
             }
@@ -168,7 +167,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
             } else {
                 console.log('Err');
             }
@@ -233,7 +232,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         });
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const addOutBoundRule = () => {
@@ -246,7 +245,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         outboundRule.action = outboundRule.action === 1 ? 0 : 1;
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const saveRule = () => {
@@ -256,7 +255,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
                 dispatch(setCallResources(true));
                 setVmSaved(true);
             } else {
@@ -271,7 +270,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         currentRules[i][key] = value;
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const removeRule = (i: number) => {
@@ -280,7 +279,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         currentRules.splice(i, 1);
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const handleDropdownChange = (key: string, i: number, value?): void => {
@@ -295,7 +294,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const handleDropdownChangeClientIp = (value: any, name: string, ruleIndex): void => {
@@ -309,7 +308,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const getMyIp = async () => {
@@ -339,9 +338,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         <>
             <Wrapper>
                 <VmProperties
-                    vmProperties={vm}
-                    setVms={setVms}
-                    vms={vms}
+                    vmProperties={vm}                   
                     setActiveTab={setActiveTab}
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}

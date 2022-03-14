@@ -5,6 +5,7 @@ import studiesReducer from './studies/studiesSlice';
 import datasetsReducer from './datasets/datasetsSlice';
 import userSettingsReducer from './usersettings/userSettingsSlice';
 import screenLoadingReducer from './screenloading/screenLoadingSlice';
+import virtualMachinesReducer from './virtualmachines/virtualMachinesSlice';
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         resources: resourcesReducer,
         studies: studiesReducer,
         datasets: datasetsReducer,
+        virtualMachines: virtualMachinesReducer,
         userSettings: userSettingsReducer,
         screenLoading: screenLoadingReducer
     },
