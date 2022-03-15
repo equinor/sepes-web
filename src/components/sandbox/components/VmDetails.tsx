@@ -11,7 +11,7 @@ import {
     getVirtualMachineExtended,
     getVirtualMachineRule
 } from '../../../services/Api';
-import { inputErrorsVmRules, resourceStatus, resourceType } from '../../common/staticValues/types';
+import { resourceStatus, resourceType } from '../../common/staticValues/types';
 import { ButtonEnabledObj, SandboxPermissions } from '../../common/interfaces';
 import { checkIfValidIp, checkIfInputIsNumberWihoutCharacters } from '../../common/helpers/helpers';
 import '../../../styles/Table.scss';
@@ -24,6 +24,10 @@ import useKeyEvents from '../../common/hooks/useKeyEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import getResourcesFromStore from 'store/resources/resourcesSelectors';
+import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -40,16 +44,13 @@ const Wrapper = styled.div`
 `;
 
 type VmDetailsProps = {
-    vm: any;
-    setVms: any;
-    vms: any;
+    vm: any;   
     setActiveTab: any;
     index: number;
     permissions: SandboxPermissions;
     setUpdateCache: any;
     updateCache: any;
     setVmSaved: any;
-    setHasChangedGlobal?: any;
     hasChangedVmRules: any;
     setHasChangedVmRules: any;
 };
@@ -79,25 +80,23 @@ const portsOptions = [
 const numberOfPorts = 65535;
 
 const VmDetails: React.FC<VmDetailsProps> = ({
-    vm,
-    setVms,
-    vms,
+    vm,   
     setActiveTab,
     index,
     permissions,
     setUpdateCache,
     updateCache,
     setVmSaved,
-    setHasChangedGlobal,
     hasChangedVmRules,
     setHasChangedVmRules
 }) => {
     const [clientIp, setClientIp] = useState<string>('');
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
     const dispatch = useDispatch();
     const resources = useSelector(getResourcesFromStore());
+    const vms = useSelector(getVirtualMachinesFromStore())
+    const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
     let keyCount: number = 0;
 
     useEffect(() => {
@@ -112,12 +111,8 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     }, [index]);
 
     useEffect(() => {
-        setHasChanged(checkIfAnyVmRulesHasChanged(hasChangedVmRules));
+        dispatch(setHasUnsavedChangesValue(checkIfAnyVmRulesHasChanged(hasChangedVmRules)));
     }, [hasChangedVmRules]);
-
-    useEffect(() => {
-        setHasChangedGlobal(hasChanged);
-    }, [hasChanged]);
 
     const getKey = () => {
         const res = keyCount++;
@@ -130,7 +125,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].extendedInfo = result;
-                    setVms(tempsVms);
+                    dispatch(setVirtualMachinesInStore(tempsVms));
                 } else {
                     console.log('Err');
                 }
@@ -144,7 +139,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                 if (result && !result.message) {
                     const tempsVms: any = [...vms];
                     tempsVms[index].rules = result;
-                    setVms(tempsVms);
+                    dispatch(setVirtualMachinesInStore(tempsVms));
                 } else {
                     console.log('Err');
                 }
@@ -154,13 +149,13 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const resetRules = () => {
         setOutboundRuleChanged(false);
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         updateHasChanged(false);
         getVirtualMachineRule(vm.id).then((result: any) => {
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
             } else {
                 console.log('Err');
             }
@@ -172,7 +167,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].linkToExternalSystem = result.linkToExternalSystem;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
             } else {
                 console.log('Err');
             }
@@ -219,7 +214,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     };
 
     const addRule = () => {
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         updateHasChanged(true);
         let currentRules: any = [];
         if (vm.rules && vm.rules.length) {
@@ -237,7 +232,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         });
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const addOutBoundRule = () => {
@@ -250,7 +245,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         outboundRule.action = outboundRule.action === 1 ? 0 : 1;
         newRules[indexRule] = outboundRule;
         tempsVms[index].rules = newRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const saveRule = () => {
@@ -260,7 +255,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
             if (result && !result.message) {
                 const tempsVms: any = [...vms];
                 tempsVms[index].rules = result;
-                setVms(tempsVms);
+                dispatch(setVirtualMachinesInStore(tempsVms));
                 dispatch(setCallResources(true));
                 setVmSaved(true);
             } else {
@@ -275,7 +270,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         currentRules[i][key] = value;
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const removeRule = (i: number) => {
@@ -284,7 +279,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         currentRules.splice(i, 1);
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const handleDropdownChange = (key: string, i: number, value?): void => {
@@ -299,7 +294,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const handleDropdownChangeClientIp = (value: any, name: string, ruleIndex): void => {
@@ -313,7 +308,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         }
         const tempsVms: any = [...vms];
         tempsVms[index].rules = currentRules;
-        setVms(tempsVms);
+        dispatch(setVirtualMachinesInStore(tempsVms));
     };
 
     const getMyIp = async () => {
@@ -343,9 +338,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
         <>
             <Wrapper>
                 <VmProperties
-                    vmProperties={vm}
-                    setVms={setVms}
-                    vms={vms}
+                    vmProperties={vm}                   
                     setActiveTab={setActiveTab}
                     permissions={permissions}
                     setUpdateCache={setUpdateCache}
@@ -380,7 +373,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         data-cy="vm_rule_description"
                                                         disabled={!permissions.editInboundRules}
                                                         autoComplete="off"
-                                                        autoFocus={hasChanged}
+                                                        autoFocus={hasUnsavedChanges}
                                                     />
                                                 </Cell>
                                                 <Cell>
@@ -450,7 +443,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                                                         <Tooltip
                                                             title={
                                                                 checkIfInputIsNumberWihoutCharacters(rule.port) ||
-                                                                !hasChanged
+                                                                !hasUnsavedChanges
                                                                     ? ''
                                                                     : 'Not a valid port number (0-65535)'
                                                             }
@@ -554,7 +547,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
                     </Table>
                     <div style={{ float: 'right', margin: '24px 16px 24px 16px' }}>
                         <Tooltip
-                            title={saveIsEnabled.enabled || !hasChanged ? '' : saveIsEnabled.error}
+                            title={saveIsEnabled.enabled || !hasUnsavedChanges ? '' : saveIsEnabled.error}
                             placement="left"
                         >
                             <Button

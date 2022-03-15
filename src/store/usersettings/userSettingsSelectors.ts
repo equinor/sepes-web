@@ -2,11 +2,11 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 
 export const getDatasetFolderViewMode = () =>
-    createSelector(
-        [(state: RootState) => state.userSettings.isDatasetFolderView],
-        (isDatasetFolderView) => {
-            return isDatasetFolderView;
-        }
-    );
+    createSelector([(state: RootState) => state.userSettings.isDatasetFolderView], (isDatasetFolderView) => {
+        return isDatasetFolderView;
+    });
 
-export default getDatasetFolderViewMode;
+export const getUnsavedChangesValue = () =>
+    createSelector([(state: RootState) => state.userSettings.hasUnsavedChanges], (hasUnsavedChanges) => {
+        return hasUnsavedChanges;
+    });

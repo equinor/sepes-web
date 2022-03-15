@@ -16,6 +16,7 @@ import { setResourcesInStore } from 'store/resources/resourcesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
+import { setVirtualMachinesToInitialState } from 'store/virtualmachines/virtualMachinesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -38,7 +39,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const showLoading = useSelector(getScreenLoadingFromStore());
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>((sandbox && sandbox.currentPhase) || undefined);
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const callGetResources = useSelector(getCallResourcesStatus());
     const [notFound, setNotFound] = useState<boolean>(false);
 
@@ -61,6 +61,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
             controller.abort();
             controller = new AbortController();
             dispatch(setSandboxToInitialState());
+            dispatch(setVirtualMachinesToInitialState());
         };
     }, []);
 
@@ -96,10 +97,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
         }
     };
 
-    const setNewCostanalysisLink = (link: any) => {
-        dispatch(setSandboxInStore({ ...sandbox, setNewCostanalysisLink: link }));
-    };
-
     const returnStepComponent = () => {
         switch (step) {
             case 1:
@@ -121,7 +118,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     return (
         <>
-            <Prompt hasChanged={hasChanged || showLoading} fallBackAddress={'/studies/' + studyId} />
+            <Prompt fallBackAddress={'/studies/' + studyId} />
             {!notFound ? (
                 step !== undefined ? (
                     <>
@@ -132,10 +129,8 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 studyId={studyId}
                                 sandboxId={sandboxId}
                                 setNewPhase={setNewPhase}
-                                setNewCostanalysisLink={setNewCostanalysisLink}
                                 controller={controller}
                                 vmsWithOpenInternet={vmsWithOpenInternet}
-                                setHasChanged={setHasChanged}
                                 updateCache={updateCache}
                                 setUpdateCache={setUpdateCache}
                             />
@@ -146,7 +141,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                     updateCache={updateCache}
                                     controller={controller}
                                     setVmsWithOpenInternet={setVmsWithOpenInternet}
-                                    setHasChanged={setHasChanged}
                                 />
                             )}
                         </Wrapper>

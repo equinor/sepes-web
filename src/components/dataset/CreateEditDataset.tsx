@@ -41,6 +41,7 @@ import { setDatasetInStore } from 'store/datasets/datasetsSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const OuterWrapper = styled.div`
     position: absolute;
@@ -128,7 +129,6 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     const [regions, setRegions] = useState<DropdownObj>();
     useFetchUrl(getRegionsUrl(), setRegions);
     const [userPressedCreate, setUserPressedCreate] = useState<boolean>(false);
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
     const generalDatasetpermissions = useContext(Permissions);
     const location = useLocation<passedProps>();
@@ -157,7 +157,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             addStudySpecificDataset(studyId, dataset).then((result: any) => {
                 dispatch(setScreenLoading(false));
                 if (result && !result.message) {
-                    setHasChanged(false);
+                    dispatch(setHasUnsavedChangesValue(false));
                     setUpdateCache({
                         ...updateCache,
                         [getStudyByIdUrl(studyId)]: true,
@@ -174,7 +174,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             editStudySpecificDataset(studyId, dataset).then((result: any) => {
                 dispatch(setScreenLoading(false));
                 if (result && !result.message) {
-                    setHasChanged(false);
+                    dispatch(setHasUnsavedChangesValue(false));
                     setUpdateCache({
                         ...updateCache,
                         [getStudyByIdUrl(studyId)]: true,
@@ -191,7 +191,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             createStandardDataset(dataset).then((result: any) => {
                 dispatch(setScreenLoading(false));
                 if (result && !result.message) {
-                    setHasChanged(false);
+                    dispatch(setHasUnsavedChangesValue(false));
                     setUpdateCache({
                         ...updateCache,
                         [getDatasetsUrl()]: true,
@@ -209,7 +209,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             updateStandardDataset(studyId, dataset).then((result: any) => {
                 dispatch(setScreenLoading(false));
                 if (result && !result.message) {
-                    setHasChanged(false);
+                    dispatch(setHasUnsavedChangesValue(false));
                     setUpdateCache({ ...updateCache, 'datasets/': true, [getStandardDatasetUrl(studyId)]: true });
                     dispatch(setDatasetInStore(result));
                     setShowEditDataset(false);
@@ -239,7 +239,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
             }
             return;
         }
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         dispatch(
             setDatasetInStore({
                 ...dataset,
@@ -249,7 +249,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
     };
 
     const handleDropdownChange = (value, name: string): void => {
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         dispatch(
             setDatasetInStore({
                 ...dataset,
@@ -301,7 +301,7 @@ const CreateEditDataset: React.FC<CreateEditDatasetProps> = ({
 
     return isStandardDatasetAndCantEdit || canEditDataset || canCreateStudySpecificDataset ? (
         <>
-            <Promt hasChanged={hasChanged} fallBackAddress={fallBackAddress} />
+            <Promt fallBackAddress={fallBackAddress} />
             <OuterWrapper>
                 <Wrapper>
                     <div>

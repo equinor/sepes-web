@@ -34,6 +34,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const TitleText = styled.span`
     font-size: 28px;
@@ -138,8 +140,6 @@ let wbsController = new AbortController();
 type StudyComponentFullProps = {
     newStudy: boolean;
     setNewStudy: any;
-    setHasChanged: any;
-    hasChanged: boolean;
     setUpdateCache: any;
     updateCache: any;
     setWbsIsValid: any;
@@ -150,8 +150,6 @@ type StudyComponentFullProps = {
 const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     newStudy,
     setNewStudy,
-    setHasChanged,
-    hasChanged,
     setUpdateCache,
     updateCache,
     setWbsIsValid,
@@ -161,6 +159,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const history = useHistory();
     const study = useSelector(getStudyFromStore());
     const dispatch = useDispatch();
+    const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
     const { logoUrl, name, description, wbsCode, vendor, restricted } = study;
     const [studyOnChange, setStudyOnChange] = useState<StudyObj>(study);
     const [editMode, setEditMode] = useState<boolean>(newStudy);
@@ -204,17 +203,17 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
             wbsController = new AbortController();
         }
         // Set validateWbsInProgress to true immediately to prevent quicky adding a invalid wbs
-        if (hasChanged && !newStudy && checkIfStudyHasActiveResources(study)) {
+        if (hasUnsavedChanges && !newStudy && checkIfStudyHasActiveResources(study)) {
             setValidateWbsInProgress(true);
         }
 
         const timeoutId = setTimeout(() => {
-            if (hasChanged) {
+            if (hasUnsavedChanges) {
                 validateWbsOnChange(studyOnChange.wbsCode);
             }
         }, 500);
         return () => {
-            setHasChanged(false);
+            dispatch(setHasUnsavedChangesValue(false));
             setWbsOnChangeIsValid(undefined);
             clearTimeout(timeoutId);
         };
@@ -233,7 +232,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     const handleSave = () => {
         setUpdateCache({ ...updateCache, [getStudiesUrl()]: true });
         setShowImagePicker(false);
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         if (wbsOnChangeIsValid !== undefined) {
             setWbsIsValid(wbsOnChangeIsValid);
         }
@@ -313,7 +312,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
                 dispatch(setScreenLoading(false));
                 setStudySaveInProgress(false);
                 if (result && !result.message) {
-                    setHasChanged(false);
+                    dispatch(setHasUnsavedChangesValue(false));
                 } else {
                     console.log('Err');
                 }
@@ -322,7 +321,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const handleCancel = () => {
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         if (newStudy) {
             history.push('/');
             return;
@@ -334,7 +333,7 @@ const StudyComponentFull: React.FC<StudyComponentFullProps> = ({
     };
 
     const handleChange = (columnName: string, value: string): void => {
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         const setterValue = returnAllowedLengthOfString(limits, value, columnName);
         setStudyOnChange({
             ...studyOnChange,
