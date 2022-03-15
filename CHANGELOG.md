@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/equinor/sepes-web/compare/1.4.2...1.4.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* **sandbox:** error while creating sandboxes ([36eeb1f](https://github.com/equinor/sepes-web/commit/36eeb1f148978f42fce414ad324b2e200b852f8d)), closes [#1606](https://github.com/equinor/sepes-web/issues/1606) [#1607](https://github.com/equinor/sepes-web/issues/1607)
+
 ### [1.4.2](https://github.com/equinor/sepes-web/compare/1.4.1...1.4.2) (2022-03-10)
 
 
