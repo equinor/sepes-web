@@ -265,43 +265,49 @@ const VmDetails: React.FC<VmDetailsProps> = ({
 
     const updateRule = (i: number, value: string, key: string) => {
         updateHasChanged(true);
-        const currentRules: any = [...vm.rules];
-        currentRules[i][key] = value;
-        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: currentRules }));
+        const vmRules = vm.rules.map((rule, index) => {
+            if (index === i) {
+                return { ...rule, [key]: value };
+            }
+
+            return rule;
+        });
+        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: vmRules }));
     };
 
     const removeRule = (i: number) => {
         updateHasChanged(true);
-        const currentRules: any = [...vm.rules];
-        currentRules.splice(i, 1);
-        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: currentRules }));
+        const vmRules: any = [...vm.rules];
+        vmRules.splice(i, 1);
+        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: vmRules }));
     };
 
     const handleDropdownChange = (key: string, i: number, value?): void => {
         updateHasChanged(true);
-        const currentRules: any = [...vm.rules];
-        currentRules[i][key] = value;
-        if (value === protocolOptions.HTTP) {
-            currentRules[i].port = ports.HTTP;
-        }
-        if (value === protocolOptions.HTTPS) {
-            currentRules[i].port = ports.HTTPS;
-        }
+        const vmRules = vm.rules.map((rule, index) => {
+            if (index === i) {
+                const port = value === protocolOptions.HTTP ? ports.HTTP : ports.HTTPS;
+                return { ...rule, [key]: value, port: port };
+            }
 
-        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: currentRules }));
+            return rule;
+        });
+
+        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: vmRules }));
     };
 
     const handleDropdownChangeClientIp = (value: any, name: string, ruleIndex): void => {
-        updateHasChanged(true);
-        const currentRules: any = [...vm.rules];
-        if (value === '1') {
-            currentRules[ruleIndex][name] = true;
-            currentRules[ruleIndex].ip = clientIp;
-        } else {
-            currentRules[ruleIndex][name] = false;
-        }
+        updateHasChanged(true);        
+        const vmRules = vm.rules.map((rule, index) => {
+            if (index === ruleIndex) {               
+                const useClientIp = value === '1' ? true: false;
+                return { ...rule, [name]: useClientIp, ip: clientIp };
+            }
+            
+            return rule;
+        });
 
-        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: currentRules }));
+        dispatch(updateVirtualMachineRules({ vmId: vm.id, rules: vmRules }));
     };
 
     const getMyIp = async () => {
