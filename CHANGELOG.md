@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.4](https://github.com/equinor/sepes-web/compare/1.4.3...1.4.4) (2022-03-22)
+
+
+### Bug Fixes
+
+* **vm:** fix vm firewall creation error ([2e9dd81](https://github.com/equinor/sepes-web/commit/2e9dd8196081aba96f72297af27a4ae12588451b)), closes [#1615](https://github.com/equinor/sepes-web/issues/1615)
+
 ### [1.4.3](https://github.com/equinor/sepes-web/compare/1.4.2...1.4.3) (2022-03-15)
 
 
