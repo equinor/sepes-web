@@ -155,7 +155,7 @@ describe('Vendor admin', () => {
         cy.get('[data-cy="vm_delete"]').should('not.have.attr', 'disabled');
         // cy.get('[data-cy="vm_delete"]').should('be.enabled');
 
-        cy.get('[data-cy=vm_add_rule]').should('be.disabled');
+        //cy.get('[data-cy=vm_add_rule]').should('be.disabled');
 
         cy.get('[data-cy=sandbox_more_options]').click({ force: true });
         cy.get('[data-cy=sandbox_delete]').should('not.have.attr', 'disabled');
