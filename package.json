@@ -64,6 +64,7 @@
         "build": "react-scripts build",
         "build:prod": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --detectOpenHandles",
+        "lint": "eslint src --ext .ts --ext .tsx",
         "eject": "react-scripts eject",
         "commit": "git-cz",
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
