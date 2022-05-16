@@ -1,4 +1,5 @@
 declare global {
+    // eslint-disable-next-line no-unused-vars
     interface Window {
         tinymce?: any;
         CYPRESS: any;
