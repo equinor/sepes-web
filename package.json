@@ -59,6 +59,7 @@
         "typescript": "^4.4.2"
     },
     "scripts": {
+        "postinstall": "husky install",
         "start": "react-scripts -r @cypress/instrument-cra start",
         "start:prod": "node local.index.js",
         "build": "react-scripts build",
@@ -89,6 +90,8 @@
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.13.0",
         "@babel/plugin-syntax-typescript": "^7.12.13",
+        "@commitlint/cli": "^17.0.0",
+        "@commitlint/config-conventional": "^17.0.0",
         "@cypress/code-coverage": "^3.9.12",
         "@cypress/instrument-cra": "^1.1.1",
         "@typescript-eslint/eslint-plugin": "^5.7.0",
@@ -106,6 +109,7 @@
         "eslint-plugin-react": "^7.27.1",
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-plugin-typescript": "^0.14.0",
+        "husky": "^8.0.1",
         "jest-watch-typeahead": "^0.6.5",
         "progress-bar-webpack-plugin": "^2.1.0",
         "webpack-bundle-analyzer": "^4.5.0"
