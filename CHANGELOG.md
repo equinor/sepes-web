@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/equinor/sepes-web/compare/1.4.4...1.4.5) (2022-05-23)
+
+
+### Bug Fixes
+
+* **participants:** add clear functionality ([0302043](https://github.com/equinor/sepes-web/commit/0302043f56d1d465b8295cc25ef498b07cfbfe3d)), closes [#1621](https://github.com/equinor/sepes-web/issues/1621)
+* **sandbox:** enable make available button when criteria is met ([b7baae7](https://github.com/equinor/sepes-web/commit/b7baae7e10dc59b44260e108b19a13408c669c1b)), closes [#1626](https://github.com/equinor/sepes-web/issues/1626)
+* **vm:** properties display ([8b3d84e](https://github.com/equinor/sepes-web/commit/8b3d84e2f27b6df492548150e4d69b1762db1760)), closes [#1622](https://github.com/equinor/sepes-web/issues/1622)
+
 ### [1.4.4](https://github.com/equinor/sepes-web/compare/1.4.3...1.4.4) (2022-03-22)
 
 
