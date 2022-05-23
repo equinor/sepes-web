@@ -59,11 +59,13 @@
         "typescript": "^4.4.2"
     },
     "scripts": {
+        "postinstall": "husky install",
         "start": "react-scripts -r @cypress/instrument-cra start",
         "start:prod": "node local.index.js",
         "build": "react-scripts build",
         "build:prod": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
         "test": "react-scripts test --detectOpenHandles",
+        "lint": "eslint src --ext .ts --ext .tsx",
         "eject": "react-scripts eject",
         "commit": "git-cz",
         "report:combined": "npx nyc report --reporter lcov --reporter text --report-dir coverage",
@@ -88,12 +90,14 @@
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.13.0",
         "@babel/plugin-syntax-typescript": "^7.12.13",
+        "@commitlint/cli": "^17.0.0",
+        "@commitlint/config-conventional": "^17.0.0",
         "@cypress/code-coverage": "^3.9.12",
         "@cypress/instrument-cra": "^1.1.1",
         "@typescript-eslint/eslint-plugin": "^5.7.0",
         "@typescript-eslint/parser": "^5.7.0",
         "@typescript-eslint/typescript-estree": "^5.7.0",
-        "cypress": "^7.6.0",
+        "cypress": "^7.7.0",
         "cypress-dark": "^1.7.14",
         "cypress-file-upload": "^5.0.7",
         "cypress-movie": "^3.0.20",
@@ -105,6 +109,7 @@
         "eslint-plugin-react": "^7.27.1",
         "eslint-plugin-react-hooks": "^4.3.0",
         "eslint-plugin-typescript": "^0.14.0",
+        "husky": "^8.0.1",
         "jest-watch-typeahead": "^0.6.5",
         "progress-bar-webpack-plugin": "^2.1.0",
         "webpack-bundle-analyzer": "^4.5.0"

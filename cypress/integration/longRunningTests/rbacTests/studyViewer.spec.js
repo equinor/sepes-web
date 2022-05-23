@@ -144,7 +144,7 @@ describe('Study viewer vm', () => {
 
         cy.get('[data-cy=sandbox_make_available]').should('be.disabled');
 
-        cy.get('[data-cy=add_dataset_to_sandbox_check]').should('be.disabled');
+        //cy.get('[data-cy=add_dataset_to_sandbox_check]').should('be.disabled');
 
         cy.get('[data-cy=vm_more_actions]').click({ force: true });
         cy.get('[data-cy="vm_delete"]').should('have.attr', 'disabled', 'disabled');

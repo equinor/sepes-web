@@ -31,6 +31,7 @@ import {
     warning_filled,
     close,
     chevron_right,
+    chevron_left,
     account_circle,
     report_bug,
     exit_to_app,
@@ -67,6 +68,7 @@ const icons = {
     warning_filled,
     close,
     chevron_right,
+    chevron_left,
     account_circle,
     report_bug,
     exit_to_app,
@@ -76,7 +78,7 @@ const icons = {
 Icon.add(icons);
 
 export const EquinorIcon = (
-    name: string,
+    name: keyof typeof icons,
     color: string,
     size: 24 | 16 | 32 | 40 | 48 | undefined,
     onClick?: any,
