@@ -10,6 +10,8 @@ import { getEnvironment } from 'components/common/helpers/helpers';
 import { comment_chat, exit_to_app, info_circle, report_bug, account_circle } from '@equinor/eds-icons';
 import createEnquiry from 'services/serviceNowApiService';
 
+export const environmentLabel = 'This is a non-production build. Data can and will be removed. Environment: ';
+
 const { Header } = TopBar;
 const Wrapper = styled.div`
     z-index: 99;
@@ -136,7 +138,7 @@ const Bar = () => {
 
     const optionsTemplate = (
         <>
-            <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
+            <Menu.Item data-cy="top-bar-user-info" style={{ borderBottom: '1px solid #dcdcdc' }}>
                 <div>
                     <Typography variant="h6">{permissions.fullName}</Typography>
                     <Typography variant="meta">{permissions.userName}</Typography>
@@ -186,12 +188,12 @@ const Bar = () => {
     const environment = getEnvironment();
     return (
         <Wrapper>
-            <TopBar>
-                <Header>{LEFT_CHOICES[leftChoice]}</Header>
+            <TopBar data-cy="top-bar">
+                <Header data-cy="home_link">{LEFT_CHOICES[leftChoice]}</Header>
                 {/*CENTER_CHOICES[centerChoice]*/}
                 {environment !== 'PROD' && environment !== 'MOCKUSER' && (
-                    <EnvironmentMessage>
-                        This is a non-production build. Data can and will be removed. Environment: {getEnvironment()}
+                    <EnvironmentMessage data-cy="environment-msg">
+                        {environmentLabel} {environment}
                     </EnvironmentMessage>
                 )}
                 <TopBar.Actions>
@@ -200,11 +202,11 @@ const Bar = () => {
                         variant="ghost"
                         style={{ marginLeft: '25px' }}
                         onClick={() => redirectToExternalLink(documentationLink)}
-                        data-cy="documentation_link"
+                        data-cy="documentation-link"
                     >
                         Documentation
                     </Button>
-                    <Button id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackDialogVisible(true)}>
+                    <Button data-cy="feedback-btn" id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackDialogVisible(true)}>
                         <Icon
                             style={{ cursor: 'pointer' }}
                             size={24}
@@ -218,6 +220,7 @@ const Bar = () => {
                         id="menuButton"
                         variant="ghost_icon"
                         onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                        data-cy="top-bar-menu-btn"
                     >
                         <Icon
                             style={{ cursor: 'pointer' }}
@@ -236,6 +239,7 @@ const Bar = () => {
                         anchorEl={buttonEl}
                         focus={focus}
                         placement="bottom-start"
+                        data-cy="top-bar-menu"
                     >
                         {optionsTemplate}
                     </Menu>
@@ -246,6 +250,7 @@ const Bar = () => {
                 open={isFeedbackDialogVisible}
                 isDismissable
                 onClose={() => setIsFeedbackDialogVisible(!isFeedbackDialogVisible)}
+                data-cy="feedback-dialog"
             >
                 <Dialog.Header>
                     <Typography variant="h2">Feedback form</Typography>
@@ -270,7 +275,7 @@ const Bar = () => {
                     <Button onClick={handleSendFeedback} disabled={!description} style={{ marginRight: '5px' }}>
                         Send
                     </Button>
-                    <Button onClick={handleCloseFeedbackDialog} variant="ghost">
+                    <Button onClick={handleCloseFeedbackDialog} data-cy="feedback-cancel-btn" variant="ghost">
                         Cancel
                     </Button>
                 </Dialog.Actions>

@@ -1,10 +1,3 @@
-const mockUserName = 'mock@test.com';
-enum MockRoles {
-    'Admin' = 'Admin',
-    'Sponsor' = 'Sponsor',
-    'DatasetAdmin' = 'Dataset admin'
-}
-
 describe('TopBar', () => {
     before(() => {
         cy.login();
@@ -17,9 +10,6 @@ describe('TopBar', () => {
 
     it('does not display environment message for MOCKUSER', () => {
         cy.get('[data-cy=environment-msg]').should('not.exist');
-
-
-       
     });
 
     it('displays link to documentation', () => {
@@ -51,9 +41,9 @@ describe('TopBar', () => {
         cy.get('[data-cy=top-bar-menu').should('be.visible');
         cy.get('[data-cy=top-bar-user-info')
             .children()
-            .should('contain', mockUserName)
-            .and('contain', MockRoles.Admin)
-            .and('contain', MockRoles.Sponsor)
-            .and('contain', MockRoles.DatasetAdmin);
+            .should('contain', 'mock@test.com')
+            .and('contain', 'Admin')
+            .and('contain', 'Sponsor')
+            .and('contain', 'Dataset admin');
     });
 });
