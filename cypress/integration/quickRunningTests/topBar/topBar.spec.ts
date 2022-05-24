@@ -2,10 +2,10 @@ describe('TopBar', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        cy.waitForWbsCheck();
     });
 
     it('displays sepes home link', () => {
+        cy.wait(2000);
         cy.get('[data-cy=home-link]').should('be.visible');
     });
 
