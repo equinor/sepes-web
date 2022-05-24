@@ -31,7 +31,7 @@ import 'cypress-file-upload';
 Cypress.Commands.add('login', (accessType = 'ADMIN') => {
     // const cyToken = '';
     // window.localStorage.setItem('cyToken', cyToken);
-    window.localStorage.setItem('cyToken', Cypress.env('cyAccessToken'));
+    window.localStorage.setItem('cyToken', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImpTMVhvMU9XRGpfNTJ2YndHTmd2UU8yVnpNYyJ9.eyJhdWQiOiJlOTBjYmI2MS04OTZlLTRlYzctYWEzNy0yMzUxMTcwMGUxZWQiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vM2FhNGEyMzUtYjZlMi00OGQ1LTkxOTUtN2ZjZjA1YjQ1OWIwL3YyLjAiLCJpYXQiOjE2NTI5NTQ1NjIsIm5iZiI6MTY1Mjk1NDU2MiwiZXhwIjoxNjUyOTYwMjIxLCJhaW8iOiJBVlFBcS84VEFBQUFRbi9JUHAraHN0dVVHU2dqQ0Y3YkxxeGgzNjNLMUZHQ2J2MVRHWkRxTGtmNzVsWEZpREZ5WUlSaFZjVmJndDludmNMenROcXczeEVCM0xySWpYTDhUYWdjVEQveThXNXpRYzM1dVVCbmJwcz0iLCJhenAiOiJlOTBjYmI2MS04OTZlLTRlYzctYWEzNy0yMzUxMTcwMGUxZWQiLCJhenBhY3IiOiIwIiwiZW1haWwiOiJKT05FVEBlcXVpbm9yLmNvbSIsImZhbWlseV9uYW1lIjoiVG9yZ2Vyc2VuIiwiZ2l2ZW5fbmFtZSI6IkpvbmUiLCJuYW1lIjoiSm9uZSBUb3JnZXJzZW4iLCJvaWQiOiI0NzE4ZGRkMS03MGE2LTQ1N2ItOTUxMi00MGE5NGFiYjZmNTIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJKT05FVEBlcXVpbm9yLmNvbSIsInJoIjoiMC5BUUlBTmFLa091SzIxVWlSbFhfUEJiUlpzR0c3RE9sdWljZE9xamNqVVJjQTRlMENBSUEuIiwicm9sZXMiOlsiU2VwZXMtQWRtaW4iLCJTZXBlcy1FbXBsb3llZSJdLCJzY3AiOiJHcm91cC5SZWFkLkFsbCBHcm91cE1lbWJlci5SZWFkLkFsbCBVc2VyLlJlYWQgVXNlci5SZWFkLkFsbCBVc2VyLkltcGVyc29uYXRpb24iLCJzdWIiOiJUS0tGQ1BVVUNXUWxHN0dLYW1YTG01Q2NZVVM0RTdkYlQ5Z25WV0xTenVNIiwidGlkIjoiM2FhNGEyMzUtYjZlMi00OGQ1LTkxOTUtN2ZjZjA1YjQ1OWIwIiwidXBuIjoiSk9ORVRAZXF1aW5vci5jb20iLCJ1dGkiOiJNSHdPQ0VtTzdrcVpnTjB5eWVRUkFBIiwidmVyIjoiMi4wIn0.Gq6eafpS8r3G9To5_z1SCRvqp2QteVhcdYShSKwu0RAXNlK78UlbnxGz3BxU0kkw8UWEfiJp6ClBjcIq8mTu6GmladdQ1TQpBJ8tWTOuxYD2RFi6b8SyNhGz0mzuooZBwkNOWkQKR1pT3HAitfq4wAywVS3sowDh-fG-AuKknsxzcNgMrf9hSphBl1k2NHo6jsp4XIuFvoegrvUXbRU4oDGnMH-WQNuD--SYXw8SJyfKpbptHnd-tySL6L0garaPhJ8qQvvvZGNY1NeAAaRmZCX_4SFo5vi4Xff9yZ3ZsdkRbE6j3vn_iKh7rmaFNLwze5-ecj_Q1ZNasCURvDD83Q');
 });
 
 Cypress.Commands.add('createStudy', (studyName) => {
@@ -86,7 +86,7 @@ Cypress.Commands.add('createDataset', () => {
     cy.contains('Norway East').click({ force: true });
     cy.get('[data-cy=dataset_classification]').click({ force: true });
     cy.contains('Open').click({ force: true });
-    cy.get('[data-cy=dataset_dataId]').type(1);
+    cy.get('[data-cy=dataset_dataId]').type('1');
     cy.get('[data-cy=dataset_save]').click({ force: true });
 });
 
@@ -223,7 +223,10 @@ Cypress.Commands.add('switchToSandboxesTab', () => {
 Cypress.Commands.add('refreshPage', () => {
     cy.location('href', { log: false }).then((url) => {
         cy.visit(url, {
-            onBeforeLoad: (win) => (win.fetch = null)
+            onBeforeLoad: (win) =>
+                cy.stub(window, 'fetch').resolves({
+                    json: () => Promise.resolve(null)
+                })
         });
     });
 });
@@ -242,7 +245,7 @@ Cypress.Commands.add('isNotActionable', function (selector, done) {
         });
 });
 
-let LOCAL_STORAGE_MEMORY = {};
+let LOCAL_STORAGE_MEMORY: { [key: string]: any } = {};
 
 Cypress.Commands.add('saveLocalStorageCache', () => {
     Object.keys(localStorage).forEach((key) => {
@@ -269,5 +272,5 @@ Cypress.Commands.add('clearViewport', () => {
     sidebar.setAttribute('style', 'opacity: 0');
 
     const header = window.parent.document.querySelector('.runner.container header');
-    header.setAttribute('style', 'opacity: 0');
+    header?.setAttribute('style', 'opacity: 0');
 });
