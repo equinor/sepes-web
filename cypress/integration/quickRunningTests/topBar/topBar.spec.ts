@@ -5,7 +5,7 @@ describe('TopBar', () => {
     });
 
     it('displays sepes home link', () => {
-        cy.get('[data-cy=home_link]').should('be.visible');
+        cy.get('[data-cy=home-link]').should('be.visible');
     });
 
     it('does not display environment message for MOCKUSER', () => {

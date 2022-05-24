@@ -189,7 +189,7 @@ const Bar = () => {
     return (
         <Wrapper>
             <TopBar data-cy="top-bar">
-                <Header data-cy="home_link">{LEFT_CHOICES[leftChoice]}</Header>
+                <Header data-cy="home-link">{LEFT_CHOICES[leftChoice]}</Header>
                 {/*CENTER_CHOICES[centerChoice]*/}
                 {environment !== 'PROD' && environment !== 'MOCKUSER' && (
                     <EnvironmentMessage data-cy="environment-msg">
