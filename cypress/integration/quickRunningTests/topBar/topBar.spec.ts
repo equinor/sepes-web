@@ -2,6 +2,7 @@ describe('TopBar', () => {
     before(() => {
         cy.login();
         cy.visit('/');
+        cy.waitForWbsCheck();
     });
 
     it('displays sepes home link', () => {
@@ -18,13 +19,13 @@ describe('TopBar', () => {
 
     it('displays feedback button and dialog', () => {
         // Open dialog
-        const btn = cy.get('[data-cy=feedback-btn');
+        const btn = cy.get('[data-cy=feedback-btn]');
         btn.should('be.visible');
         btn.click();
-        cy.get('[data-cy=feedback-dialog').should('be.visible');
+        cy.get('[data-cy=feedback-dialog]').should('be.visible');
 
         // Cancel dialog
-        cy.get('[data-cy=feedback-cancel-btn').click();
+        cy.get('[data-cy=feedback-cancel-btn]').click();
     });
 
     before(() => {
@@ -33,13 +34,13 @@ describe('TopBar', () => {
 
     it('displays top bar menu', () => {
         // Open menu
-        const btn = cy.get('[data-cy=top-bar-menu-btn');
+        const btn = cy.get('[data-cy=top-bar-menu-btn]');
         btn.should('be.visible');
         btn.click();
 
         // Test user info item
-        cy.get('[data-cy=top-bar-menu').should('be.visible');
-        cy.get('[data-cy=top-bar-user-info')
+        cy.get('[data-cy=top-bar-menu]').should('be.visible');
+        cy.get('[data-cy=top-bar-user-info]')
             .children()
             .should('contain', 'mock@test.com')
             .and('contain', 'Admin')
