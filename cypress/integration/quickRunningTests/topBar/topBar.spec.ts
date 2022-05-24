@@ -2,46 +2,24 @@ describe('TopBar', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-    });
-
-    beforeEach(() => {
-        Cypress.Cookies.preserveOnce('cyToken');
-        cy.login();
-
-    });
-
-    it('displays sepes home link', () => {
-        cy.get('[data-cy=home-link]').should('be.visible');
-    });
-
-    it('does not display environment message for MOCKUSER', () => {
-        cy.get('[data-cy=environment-msg]').should('not.exist');
-    });
-
-    it('displays link to documentation', () => {
-        cy.get('[data-cy=documentation-link]').should('be.visible');
-    });
-
-    it('displays feedback button and dialog', () => {
-        // Open dialog
-        const btn = cy.get('[data-cy=feedback-btn]');
-        btn.should('be.visible');
-        btn.click();
-        cy.get('[data-cy=feedback-dialog]').should('be.visible');
-
-        // Cancel dialog
-        cy.get('[data-cy=feedback-cancel-btn]').click();
-    });
-
-    before(() => {
         cy.mockOutPermissions();
     });
 
-    it('displays top bar menu', () => {
+    it('displays the correct information', () => {
+        cy.get('[data-cy=home-link]').should('be.visible');
+        cy.get('[data-cy=environment-msg]').should('not.exist');
+        cy.get('[data-cy=documentation-link]').should('be.visible');
+
+        // Open feedback dialog
+        cy.get('[data-cy=feedback-btn]').should('be.visible').click();
+        cy.get('[data-cy=feedback-dialog]').should('be.visible');
+
+        // Cancel feedback dialog
+        cy.get('[data-cy=feedback-cancel-btn]').click();
+
+        
         // Open menu
-        const btn = cy.get('[data-cy=top-bar-menu-btn]');
-        btn.should('be.visible');
-        btn.click();
+        cy.get('[data-cy=top-bar-menu-btn]').should('be.visible').click();
 
         // Test user info item
         cy.get('[data-cy=top-bar-menu]').should('be.visible');
@@ -52,4 +30,5 @@ describe('TopBar', () => {
             .and('contain', 'Sponsor')
             .and('contain', 'Dataset admin');
     });
+
 });
