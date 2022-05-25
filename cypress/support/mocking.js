@@ -30,7 +30,7 @@ Cypress.Commands.add('mockOutPermissions', () => {
 Cypress.Commands.add('mockOutStudyParticipant', () => {
     cy.intercept('api/participants/*', { fixture: 'study/studyParticipant.json' });
 });
-Cypress.Commands.add('mockOutAvailableRoles', () => {
+Cypress.Commands.add('mockOutAvailableroles', () => {
     cy.intercept('api/studies/*/availableroles', { fixture: 'study/availableRoles.json' });
 });
 // Data set mocks
@@ -72,7 +72,7 @@ Cypress.Commands.add('mockOutAllCallsForCreateSandboxAndVirtualmachineDocsTest',
     cy.mockOutAvailableDataset();
     cy.mockOutVmSizes();
     cy.mockOutVmDisks();
-    cy.mockOutVmOperatingSystems();
+    cy.mockOutVmOperatingsystems();
     cy.mockOutSandboxResources();
     cy.mockOutSandboxCostAnalysis();
     cy.mockOutRegions();
@@ -114,7 +114,7 @@ Cypress.Commands.add('mockOutVmDisks', () => {
     });
 });
 
-Cypress.Commands.add('mockOutVmOperatingSystems', () => {
+Cypress.Commands.add('mockOutVmOperatingsystems', () => {
     cy.intercept('/api/virtualmachines/*/operatingsystems', {
         fixture: 'sandbox/vmOperatingsystems.json'
     });
@@ -193,12 +193,12 @@ Cypress.Commands.add('mockOutRbacTests', () => {
     cy.mockOutSandboxResources();
     cy.mockOutAvailableDataset(true);
     cy.mockOutVmSizes();
-    cy.mockOutVmOperatingSystems();
+    cy.mockOutVmOperatingsystems();
     cy.mockOutCalculateVmName();
     cy.mockOutSandboxCostAnalysis();
     cy.mockOutVmDisks();
     cy.mockOutValidateVmUsername();
     cy.mockOutCalculateVmPrice();
     cy.mockOutDeleteStudy();
-    cy.mockOutAvailableRoles();
+    cy.mockOutAvailableroles();
 });

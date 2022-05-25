@@ -86,7 +86,7 @@ Cypress.Commands.add('createDataset', () => {
     cy.contains('Norway East').click({ force: true });
     cy.get('[data-cy=dataset_classification]').click({ force: true });
     cy.contains('Open').click({ force: true });
-    cy.get('[data-cy=dataset_dataId]').type('1');
+    cy.get('[data-cy=dataset_dataId]').type(1);
     cy.get('[data-cy=dataset_save]').click({ force: true });
 });
 
@@ -223,10 +223,7 @@ Cypress.Commands.add('switchToSandboxesTab', () => {
 Cypress.Commands.add('refreshPage', () => {
     cy.location('href', { log: false }).then((url) => {
         cy.visit(url, {
-            onBeforeLoad: (win) =>
-                cy.stub(window, 'fetch').resolves({
-                    json: () => Promise.resolve(null)
-                })
+            onBeforeLoad: (win) => (win.fetch = null)
         });
     });
 });
@@ -245,7 +242,7 @@ Cypress.Commands.add('isNotActionable', function (selector, done) {
         });
 });
 
-let LOCAL_STORAGE_MEMORY: { [key: string]: any } = {};
+let LOCAL_STORAGE_MEMORY = {};
 
 Cypress.Commands.add('saveLocalStorageCache', () => {
     Object.keys(localStorage).forEach((key) => {
@@ -272,5 +269,5 @@ Cypress.Commands.add('clearViewport', () => {
     sidebar.setAttribute('style', 'opacity: 0');
 
     const header = window.parent.document.querySelector('.runner.container header');
-    header?.setAttribute('style', 'opacity: 0');
+    header.setAttribute('style', 'opacity: 0');
 });
