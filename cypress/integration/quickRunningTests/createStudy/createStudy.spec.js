@@ -51,7 +51,7 @@ describe('Create study', () => {
         cy.get('[data-cy=dataset_name]').type('cy name edit');
         cy.get('[data-cy=dataset_classification]').click({ force: true });
         cy.contains('Internal').click({ force: true });
-        cy.get('[data-cy=dataset_dataId]').type('2');
+        cy.get('[data-cy=dataset_dataId]').type(2);
         cy.get('[data-cy=dataset_save]').click({ force: true });
     });
 
