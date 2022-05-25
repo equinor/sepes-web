@@ -1,8 +1,6 @@
-const _ = Cypress._;
-
 import 'cypress-file-upload';
 
-Cypress.Commands.add('createStudyForDocumentation', (studyName) => {
+Cypress.Commands.add('createStudyForDocumentation', (studyName: string) => {
     cy.visit('/');
     cy.text('Now we will create a study', {
         duration: 2000,
