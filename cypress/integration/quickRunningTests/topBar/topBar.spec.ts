@@ -1,11 +1,11 @@
-describe('TopBar', () => {
+xdescribe('TopBar', () => {
     before(() => {
         cy.login();
         cy.visit('/');
         cy.mockOutPermissions();
     });
 
-    it('displays the correct information', () => {
+    xit('displays the correct information', () => {
         cy.get('[data-cy=home-link]').should('be.visible');
         cy.get('[data-cy=environment-msg]').should('not.exist');
         cy.get('[data-cy=documentation-link]').should('be.visible');
