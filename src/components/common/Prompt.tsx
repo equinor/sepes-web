@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, Prompt as ReactPrompt } from 'react-router-dom';
-import { Dialog, Button, Scrim } from '@equinor/eds-core-react';
+import { Button, Dialog } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-
-const { Actions, Title, CustomContent } = Dialog;
+import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
+import { useSelector } from 'react-redux';
 
 const TempButtonWrapper = styled.div`
     display: grid;
@@ -14,15 +14,16 @@ const TempButtonWrapper = styled.div`
 `;
 
 type PromptProps = {
-    hasChanged: boolean;
     fallBackAddress?: string;
     customText?: string;
 };
 
-const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText }) => {
+const Prompt: React.FC<PromptProps> = ({ fallBackAddress, customText }) => {
     const history = useHistory();
-    const [visibleScrim, setVisibleScrim] = useState<boolean>(false);
+    const [isPromptVisible, setIsPromptVisible] = useState<boolean>(false);
     const [confirmedNavigation, setConfirmedNavigation] = useState<boolean>(false);
+
+    const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
 
     useEffect(() => {
         if (confirmedNavigation) {
@@ -42,9 +43,9 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
             if (history.location.key === nextLocation.key) {
                 return false;
             }
-            if (hasChanged) {
+            if (hasUnsavedChanges) {
                 //A boolean state to check if the page has any unsaved changes
-                setVisibleScrim(true);
+                setIsPromptVisible(true);
                 //A workaround for Prompt replacing the URL after page reload, even if navigation is cancelled
                 if (currentPath?.current !== nextLocation.pathname && action === 'POP') {
                     window.history.forward();
@@ -57,41 +58,41 @@ const Prompt: React.FC<PromptProps> = ({ hasChanged, fallBackAddress, customText
 
     return (
         <div>
-            <ReactPrompt when={hasChanged} message={handleBlockedNavigation} />
-
-            <Scrim open={visibleScrim} onClose={() => setVisibleScrim(!visibleScrim)}>
-                <Dialog style={{ width: '400px', height: '220px' }}>
-                    <Title>Unsaved changes</Title>
-                    <CustomContent scrollable={false}>
-                        Are you sure you want to leave this page? <br />
-                        {customText || 'All unsaved changes will be lost.'}
-                    </CustomContent>
-                    <span style={{ marginLeft: 'auto' }}>
-                        <Actions>
-                            <TempButtonWrapper>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => {
-                                        setVisibleScrim(false);
-                                    }}
-                                >
-                                    Stay on page
-                                </Button>
-                                <Button
-                                    color="danger"
-                                    onClick={() => {
-                                        setVisibleScrim(false);
-                                        setConfirmedNavigation(true);
-                                    }}
-                                >
-                                    Leave
-                                </Button>
-                                {/*<Button>Save as draft</Button>*/}
-                            </TempButtonWrapper>
-                        </Actions>
-                    </span>
-                </Dialog>
-            </Scrim>
+            <ReactPrompt when={hasUnsavedChanges} message={handleBlockedNavigation} />
+            <Dialog
+                style={{ width: '400px', height: '220px' }}
+                open={isPromptVisible}
+                onClose={() => setIsPromptVisible(!isPromptVisible)}
+            >
+                <Dialog.Header>Unsaved changes</Dialog.Header>
+                <Dialog.Content>
+                    Are you sure you want to leave this page? <br />
+                    {customText || 'All unsaved changes will be lost.'}
+                </Dialog.Content>
+                <span style={{ marginLeft: 'auto' }}>
+                    <Dialog.Actions>
+                        <TempButtonWrapper>
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    setIsPromptVisible(false);
+                                }}
+                            >
+                                Stay on page
+                            </Button>
+                            <Button
+                                color="danger"
+                                onClick={() => {
+                                    setIsPromptVisible(false);
+                                    setConfirmedNavigation(true);
+                                }}
+                            >
+                                Leave
+                            </Button>
+                        </TempButtonWrapper>
+                    </Dialog.Actions>
+                </span>
+            </Dialog>
         </div>
     );
 };

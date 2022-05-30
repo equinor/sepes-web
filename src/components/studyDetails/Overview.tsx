@@ -10,8 +10,9 @@ import styled from 'styled-components';
 import { getResultsAndLearningsUrl } from '../../services/ApiCallStrings';
 import useFetchUrl from 'components/common/hooks/useFetchUrl';
 import useKeyEvents from 'components/common/hooks/useKeyEvents';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const Wrapper = styled.div`
     margin-top: 8px;
@@ -39,7 +40,6 @@ const TableWrapper = styled.div<{ canReadResandLearns: boolean }>`
 const resultsAndLearningsLimit = 4096;
 
 type OverviewProps = {
-    setHasChanged: any;
     setResultsAndLearnings: any;
     resultsAndLearnings: any;
     controller: AbortController;
@@ -47,20 +47,18 @@ type OverviewProps = {
 };
 
 const Overview: React.FC<OverviewProps> = ({
-    setHasChanged,
     setResultsAndLearnings,
     resultsAndLearnings,
     controller,
     onFallBackAddressChange
 }) => {
     const study = useSelector(getStudyFromStore());
-    const { datasets, participants, id } = study;
     const [editMode, setEditMode] = useState<boolean>(false);
-
+    const dispatch = useDispatch();
     const resultsAndLearningsResponse = useFetchUrl(
-        getResultsAndLearningsUrl(id),
+        getResultsAndLearningsUrl(study.id),
         setResultsAndLearnings,
-        id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
+        study.id !== '' && study.permissions && study.permissions.readResulsAndLearnings,
         controller
     );
 
@@ -68,12 +66,12 @@ const Overview: React.FC<OverviewProps> = ({
         if (evt.target.value && evt.target.value.length > resultsAndLearningsLimit) {
             return;
         }
-        setHasChanged(true);
+        dispatch(setHasUnsavedChangesValue(true));
         setResultsAndLearnings({ resultsAndLearnings: evt.target.value });
     };
 
     const handleSave = () => {
-        setHasChanged(false);
+        dispatch(setHasUnsavedChangesValue(false));
         resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] = resultsAndLearnings;
         setEditMode(false);
         editResultsAndLearnings(resultsAndLearnings, study.id).then((result: any) => {
@@ -86,7 +84,7 @@ const Overview: React.FC<OverviewProps> = ({
     const handleCancel = () => {
         setEditMode(!editMode);
         if (editMode) {
-            setHasChanged(false);
+            dispatch(setHasUnsavedChangesValue(false));
             setResultsAndLearnings(
                 resultsAndLearningsResponse.cache[getResultsAndLearningsUrl(study.id)] || { resultsAndLearnings: '' }
             );
@@ -164,12 +162,12 @@ const Overview: React.FC<OverviewProps> = ({
             <div>
                 <SandboxTable onFallBackAddressChange={onFallBackAddressChange} editMode={editMode} />
                 <DatasetsTable
-                    datasets={datasets}
+                    datasets={study.datasets}
                     editMode={false}
-                    studyId={id}
+                    studyId={study.id}
                     onFallBackAddressChange={onFallBackAddressChange}
                 />
-                <ParticipantTable participants={participants} editMode={false} />
+                <ParticipantTable participants={study.participants} editMode={false} />
             </div>
         </Wrapper>
     );

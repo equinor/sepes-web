@@ -56,8 +56,7 @@ test('renders StudyComponent full component with invalid study name', () => {
     const { getByText } = render(
         <Provider store={mockStore({ studies: { study: study } })}>
             <Router history={history}>
-                <Overview
-                    setHasChanged={mockFunc}
+                <Overview                   
                     setResultsAndLearnings={mockFunc}
                     resultsAndLearnings={resultsAndLearnings}
                     controller={new AbortController()}

@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { CircularProgress, Scrim } from '@equinor/eds-core-react';
 import './styles.scss';
 
-type StudyComponentFullProps = {
+type LoadingComponentFullProps = {
     noTimeout?: boolean;
 };
 
-const LoadingFull: React.FC<StudyComponentFullProps> = ({ noTimeout = false }) => {
+const LoadingFull: React.FC<LoadingComponentFullProps> = ({ noTimeout = false }) => {
     const [showLoading, setShowLoading] = useState<boolean>(noTimeout);
-
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowLoading(true);

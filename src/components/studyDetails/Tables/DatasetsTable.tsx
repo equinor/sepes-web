@@ -117,10 +117,10 @@ const DatasetsTable = (props: any) => {
         <div style={{ width: '100%', marginBottom: '24px' }}>
             <DataTable
                 columns={editMode ? columns : columns.slice(0, 1).concat(columns.slice(2, 3))}
-                data={Object.values(datasets)}
+                data={datasets}
                 listItems={returnListOfItems}
                 cookiePrefix={'datasets-editMode' + editMode + getStudyId()}
-                disablePagination={!editMode || (datasets && Object.values(datasets).length < 10)}
+                disablePagination={!editMode || (datasets && datasets.length < 10)}
             />
         </div>
     );

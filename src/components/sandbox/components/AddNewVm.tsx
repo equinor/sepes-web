@@ -25,7 +25,6 @@ import {
     checkIfAddNewVmHasUnsavedChanges,
     checkIfVmNameAlreadyExists
 } from '../../common/helpers/sandboxHelpers';
-import CoreDevDropdown from '../../common/customComponents/Dropdown';
 import { createVirtualMachine, getVmName, getVirtualMachineCost } from '../../../services/Api';
 import { DropdownObj, SizeObj, VmObj, CalculateNameObj } from '../../common/interfaces';
 import styled from 'styled-components';
@@ -38,6 +37,9 @@ import { VmTextFieldsTooltip } from 'components/common/constants/TooltipTitleTex
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
 
 const Wrapper = styled.div`
     height: auto;
@@ -84,8 +86,6 @@ const UnstyledList = styled.ul`
 `;
 
 type AddNewVmProps = {
-    setVms: any;
-    vms: any;
     setActiveTab: any;
     sizes?: SizeObj;
     disks?: DropdownObj;
@@ -98,7 +98,6 @@ type AddNewVmProps = {
     sizeFilter: any;
     setOsFilter: any;
     osFilter: any;
-    setHasChanged: any;
 };
 
 const limits = {
@@ -119,12 +118,8 @@ const osType = {
     recommended: 'recommended'
 };
 
-const width = '400px';
-
 const AddNewVm: React.FC<AddNewVmProps> = React.memo(
     ({
-        setVms,
-        vms,
         sizes,
         disks,
         setActiveTab,
@@ -136,11 +131,11 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         setSizeFilter,
         sizeFilter,
         setOsFilter,
-        osFilter,
-        setHasChanged
+        osFilter
     }) => {
         const sandboxId = window.location.pathname.split('/')[4];
         const sandbox = useSelector(getSandboxFromStore());
+        const vms = useSelector(getVirtualMachinesFromStore());
         const [actualVmName, setActualVmName] = useState<string>('');
         const [usernameIsValid, setUsernameIsValid] = useState<boolean | undefined>(undefined);
         const [vmEstimatedCost, setVmEstimatedCost] = useState<any>();
@@ -177,16 +172,20 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         }, [vm.username, vm.operatingSystem]);
 
         useEffect(() => {
-            setHasChanged(checkIfAddNewVmHasUnsavedChanges(vm));
+            dispatch(setHasUnsavedChangesValue(checkIfAddNewVmHasUnsavedChanges(vm)));
         }, []);
 
         const handleDropdownChange = (value, name: string): void => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             if (name === 'operatingSystem') {
                 setUsernameHelpText('');
             }
             if (name === 'dataDisks') {
-                value = [value];
+                if (value) {
+                    value = [value];
+                } else {
+                    value = [];
+                }
             }
             setVm({
                 ...vm,
@@ -195,7 +194,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         };
 
         const handleChange = (field: string, value: string) => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             if (!checkColumDoesNotExceedInputLength(limits, value, field)) {
                 return;
             }
@@ -206,7 +205,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
         };
 
         const handlePasswordChange = (value: string) => {
-            setHasChanged(true);
+            dispatch(setHasUnsavedChangesValue(true));
             setVm({
                 ...vm,
                 password: value
@@ -217,7 +216,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
             if (!vmIsValid) {
                 return;
             }
-            setHasChanged(false);
+            dispatch(setHasUnsavedChangesValue(false));
             setLoading(true);
             setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandbox.id)]: true });
             createVirtualMachine(sandboxId, vm).then((result: any) => {
@@ -240,7 +239,7 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     dispatch(setCallResources(true));
                     const vmsList: any = [...vms];
                     vmsList.push(result);
-                    setVms(vmsList);
+                    dispatch(setVirtualMachinesInStore(vmsList));
                     setActiveTab(vmsList.length);
                 }
                 setLoading(false);
@@ -453,17 +452,6 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                         Leave empty if you have no special requirements.
                     </HelperTextWrapper>
                 </SizeFilterWrapper>
-                {/*<CoreDevDropdown
-                label="VM size"
-                options={filterList(sizes, filter)}
-                width={width}
-                onChange={handleDropdownChange}
-                name="size"
-                data-cy="vm_size"
-                meta="(required)"
-                useOverflow
-                tabIndex={0}
-            />*/}
                 <SingleSelect
                     handleSelectedItemChange={({ selectedItem }) =>
                         handleDropdownChange(returnKeyOfDisplayValue(selectedItem, sizes), 'size')
@@ -476,22 +464,20 @@ const AddNewVm: React.FC<AddNewVmProps> = React.memo(
                     data-cy="vm_size"
                     initialSelectedItem={returnDisplayName(sizes, vm.size)}
                 />
-                <CoreDevDropdown
-                    label="Data disk"
-                    options={disks}
-                    width={width}
-                    onChange={handleDropdownChange}
-                    name="dataDisks"
-                    data-cy="vm_dataDisks"
-                    useOverflow
-                    tabIndex={0}
-                    preSelectedValue={returnDisplayName(disks, vm.dataDisks[0])}
-                    helperText={
-                        vm.dataDisks.length > 0
-                            ? 'Data disk is not accessible until you initalize and partition the hardrive within the operating system'
-                            : ''
+                <SingleSelect
+                    handleSelectedItemChange={({ selectedItem }) =>
+                        handleDropdownChange(returnKeyOfDisplayValue(selectedItem, disks), 'dataDisks')
                     }
+                    label="Data disk"
+                    items={arrayObjectsToArrayString(disks)}
+                    className="singleSelect"
+                    placeholder="Please search/select..."
+                    data-cy="vm_dataDisks"
+                    initialSelectedItem={returnDisplayName(disks, vm.dataDisks[0])}
                 />
+                {vm.dataDisks.length > 0 ? (
+                    <Label label="Data disk is not accessible until you initalize and partition the hardrive within the operating system" />
+                ) : null}
                 <div>
                     <Label label="Estimated total" />
                     <Typography variant="h6" style={{ marginLeft: '8px' }}>

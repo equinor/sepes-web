@@ -2,6 +2,115 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.4](https://github.com/equinor/sepes-web/compare/1.4.3...1.4.4) (2022-03-22)
+
+
+### Bug Fixes
+
+* **vm:** fix vm firewall creation error ([2e9dd81](https://github.com/equinor/sepes-web/commit/2e9dd8196081aba96f72297af27a4ae12588451b)), closes [#1615](https://github.com/equinor/sepes-web/issues/1615)
+
+### [1.4.3](https://github.com/equinor/sepes-web/compare/1.4.2...1.4.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* **sandbox:** error while creating sandboxes ([36eeb1f](https://github.com/equinor/sepes-web/commit/36eeb1f148978f42fce414ad324b2e200b852f8d)), closes [#1606](https://github.com/equinor/sepes-web/issues/1606) [#1607](https://github.com/equinor/sepes-web/issues/1607)
+
+### [1.4.2](https://github.com/equinor/sepes-web/compare/1.4.1...1.4.2) (2022-03-10)
+
+
+### Bug Fixes
+
+* **vm:** deselect disk when creating a new VM ([62bdf1a](https://github.com/equinor/sepes-web/commit/62bdf1ab2d5d4eedc50c9cc9b2005b909f7b310d)), closes [#1599](https://github.com/equinor/sepes-web/issues/1599)
+
+### [1.4.1](https://github.com/equinor/sepes-web/compare/1.4.0...1.4.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* axios upgrade failing cypress test ([3af463e](https://github.com/equinor/sepes-web/commit/3af463e5f859911de2598f05cb41b4875b508576))
+* **dataset:** file upload progress complete ([b658a36](https://github.com/equinor/sepes-web/commit/b658a36190e1b3526a0cd4633163588453a1e8c1)), closes [#1574](https://github.com/equinor/sepes-web/issues/1574)
+* **study:** error creating new study ([515db82](https://github.com/equinor/sepes-web/commit/515db82034e215c931daf48652d26d6e99bd869c)), closes [#1593](https://github.com/equinor/sepes-web/issues/1593)
+* upgrade @azure/msal-browser from 2.20.0 to 2.21.0 ([c3ff446](https://github.com/equinor/sepes-web/commit/c3ff4462326c8c124b4c5823be67dd7eb67327f7))
+* upgrade @types/node from 16.11.19 to 16.11.21 ([c751689](https://github.com/equinor/sepes-web/commit/c7516897adb7a1860dc3c04f0158a06689c468f0))
+* upgrade @types/react-router from 5.1.17 to 5.1.18 ([5e31f00](https://github.com/equinor/sepes-web/commit/5e31f00223d48a2b19e18c8585a3a730c6ca0b4c))
+* upgrade @types/styled-components from 5.1.19 to 5.1.21 ([ab5c48d](https://github.com/equinor/sepes-web/commit/ab5c48d085d611703d10a683192c216f7a8f6cfc))
+* upgrade axios from 0.24.0 to 0.25.0 ([22f6dec](https://github.com/equinor/sepes-web/commit/22f6dec2fb27f2d1b87f568a254b3f833abc2191))
+* upgrade node-forge from 1.0.0 to 1.1.0 ([814fb66](https://github.com/equinor/sepes-web/commit/814fb66ea21c056ba1ec9de511c30ca62fc31429))
+* upgrade react-dnd-html5-backend from 14.0.2 to 14.1.0 ([7386723](https://github.com/equinor/sepes-web/commit/7386723f78189faf14c81c1499c444e874968138))
+* upgrade react-dropzone from 11.4.2 to 11.5.1 ([b804c62](https://github.com/equinor/sepes-web/commit/b804c62a5a1721b3b8a4eb13d533a49d4df9cb35))
+
+## [1.4.0](https://github.com/equinor/sepes-web/compare/1.3.0...1.4.0) (2022-02-10)
+
+
+### Features
+
+* **vm:** show vm creation error ([6360759](https://github.com/equinor/sepes-web/commit/6360759eb201fb474f0398fa20845b1c3d91c20b)), closes [#1565](https://github.com/equinor/sepes-web/issues/1565)
+
+## [1.3.0](https://github.com/equinor/sepes-web/compare/1.2.2...1.3.0) (2022-02-08)
+
+
+### Features
+
+* add feedback form ([3baea75](https://github.com/equinor/sepes-web/commit/3baea75ddc808ef5990f04e5f903a807fdddb233)), closes [#1356](https://github.com/equinor/sepes-web/issues/1356)
+* **dataset:** save folder view mode ([d3755d4](https://github.com/equinor/sepes-web/commit/d3755d4b840bbfa53941c7d9899ea5fd0231a3c3)), closes [#1455](https://github.com/equinor/sepes-web/issues/1455)
+* feedback form improvements ([ad3685e](https://github.com/equinor/sepes-web/commit/ad3685e736c343900b36a7a94bc1b1752c85fbd8)), closes [#1562](https://github.com/equinor/sepes-web/issues/1562)
+* improvements to send feedback UI ([c1e3794](https://github.com/equinor/sepes-web/commit/c1e37945fed1988aa56e09c071d221810f0b1d57)), closes [#1559](https://github.com/equinor/sepes-web/issues/1559)
+
+
+### Bug Fixes
+
+* **study:** infinite loading screen when create study throws error ([1bd21c7](https://github.com/equinor/sepes-web/commit/1bd21c7723877e28989875b08ef490467c31022e)), closes [#1549](https://github.com/equinor/sepes-web/issues/1549)
+* upgrade @types/node from 16.11.18 to 16.11.19 ([2106747](https://github.com/equinor/sepes-web/commit/2106747a8b44df5822085803a4de8de688e2ec69))
+* upgrade expect from 27.4.2 to 27.4.6 ([34f1235](https://github.com/equinor/sepes-web/commit/34f1235f3f990af8b0a0b202e613c9841306ce3a))
+
+### [1.2.2](https://github.com/equinor/sepes-web/compare/1.2.1...1.2.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* **study:** fix long loading screen ([f84da54](https://github.com/equinor/sepes-web/commit/f84da5456e437c997b3b48c4b1f6e503830d1e2e)), closes [#1464](https://github.com/equinor/sepes-web/issues/1464)
+* **study:** fix long loading screen ([0f4e887](https://github.com/equinor/sepes-web/commit/0f4e887d38b6bd105d5ab34e2413bf5605c76beb)), closes [#1464](https://github.com/equinor/sepes-web/issues/1464)
+* upgrade @types/node from 16.11.17 to 16.11.18 ([239073f](https://github.com/equinor/sepes-web/commit/239073f4c420d0ed0b78b3cae1e489124ca10ee8))
+
+### [1.2.1](https://github.com/equinor/sepes-web/compare/1.2.0...1.2.1) (2022-01-25)
+
+## [1.2.0](https://github.com/equinor/sepes-web/compare/1.1.3...1.2.0) (2022-01-25)
+
+
+### Features
+
+* add redux toolkit ([958d74f](https://github.com/equinor/sepes-web/commit/958d74ff2a99f4090b538a1439afa783afb85a21)), closes [#1474](https://github.com/equinor/sepes-web/issues/1474)
+* add sorting and pagination to participant table ([#1389](https://github.com/equinor/sepes-web/issues/1389)) ([7d4686d](https://github.com/equinor/sepes-web/commit/7d4686d191d14aa7c234cfb0778dcfc6b3a7b256)), closes [#1387](https://github.com/equinor/sepes-web/issues/1387)
+* display current roles in top bar ([6d4d5ea](https://github.com/equinor/sepes-web/commit/6d4d5eafc62d522d05b6f8705aeb78eb9e21e28a))
+* **study:** be able to sort data set list by column ([#1475](https://github.com/equinor/sepes-web/issues/1475)) ([4474b3f](https://github.com/equinor/sepes-web/commit/4474b3f2a093ba939c345a22fadb8809f0393ba7)), closes [#1465](https://github.com/equinor/sepes-web/issues/1465)
+* **study:** be able to sort sandbox list by column ([#1479](https://github.com/equinor/sepes-web/issues/1479)) ([af2bd7d](https://github.com/equinor/sepes-web/commit/af2bd7df6a0cab2c9a78e2877cdeb7e235c6acc2)), closes [#1466](https://github.com/equinor/sepes-web/issues/1466)
+* support delete file in folder view ([#1456](https://github.com/equinor/sepes-web/issues/1456)) ([79ba7af](https://github.com/equinor/sepes-web/commit/79ba7af1b864fd22d5346a0926979e914de20a85))
+
+
+### Bug Fixes
+
+* add rate limit ([1604cd9](https://github.com/equinor/sepes-web/commit/1604cd9d87d31929b84f1e93922d0576e5341e59)), closes [#1469](https://github.com/equinor/sepes-web/issues/1469)
+* add rate limiting ([41f4488](https://github.com/equinor/sepes-web/commit/41f44881a754fc9ab393221d2c37d9089f3fb2b4)), closes [#1469](https://github.com/equinor/sepes-web/issues/1469)
+* **dataset:** fix name validation ([382d4c7](https://github.com/equinor/sepes-web/commit/382d4c7bcb022a33a64fb94490cf92ca880e07f8)), closes [#1461](https://github.com/equinor/sepes-web/issues/1461)
+* **dataset:** fix navigation to dataset page ([ea76d58](https://github.com/equinor/sepes-web/commit/ea76d58d6d04daccaa7c90535c65e77e6982fe11)), closes [#1478](https://github.com/equinor/sepes-web/issues/1478)
+* deployment process ([#1421](https://github.com/equinor/sepes-web/issues/1421)) ([2f910b3](https://github.com/equinor/sepes-web/commit/2f910b3524bb594d04ed31e0650f899d0bd6c52f))
+* display search tip with less than 3 characters ([2cc6e32](https://github.com/equinor/sepes-web/commit/2cc6e329fe4cb8d1c7805e73457837c0bc04d177)), closes [#1264](https://github.com/equinor/sepes-web/issues/1264)
+* error cresting new a sandbox ([97a353f](https://github.com/equinor/sepes-web/commit/97a353f0726dc74adec450aea34bbd0fa6532886)), closes [#1526](https://github.com/equinor/sepes-web/issues/1526)
+* instantly disable save study when typing in the wbs field ([#1472](https://github.com/equinor/sepes-web/issues/1472)) ([8485d0c](https://github.com/equinor/sepes-web/commit/8485d0c7c58c35f4d0b061d028ca8701fde0a12f)), closes [#1460](https://github.com/equinor/sepes-web/issues/1460)
+* issue with deleting sandbox with unsaved changes ([874356d](https://github.com/equinor/sepes-web/commit/874356db6eb7b361fec0bf6616bc658b63c367b6)), closes [#1437](https://github.com/equinor/sepes-web/issues/1437)
+* mock documentation test create study ([#1490](https://github.com/equinor/sepes-web/issues/1490)) ([0f73c8f](https://github.com/equinor/sepes-web/commit/0f73c8f4adfe1af5388127c1f0dbc556b896ff43))
+* package.json & package-lock.json to reduce vulnerabilities ([7618b72](https://github.com/equinor/sepes-web/commit/7618b7245146f5e61393443c862c432a032f89d6))
+* pagination fix and some refactor ([108b959](https://github.com/equinor/sepes-web/commit/108b959ff43fd40d49dc7f6d2d480ba5fd453979)), closes [#1478](https://github.com/equinor/sepes-web/issues/1478) [#1476](https://github.com/equinor/sepes-web/issues/1476)
+* remove cypress-plugin-retries ([ec65f4c](https://github.com/equinor/sepes-web/commit/ec65f4cdf234dc2de410a0b27fc186bca1821a0f))
+* remove interfering save shortcut ([#1480](https://github.com/equinor/sepes-web/issues/1480)) ([5fa5770](https://github.com/equinor/sepes-web/commit/5fa5770b21a32891f11178a27aafb214dcce26aa)), closes [#1458](https://github.com/equinor/sepes-web/issues/1458) [#1459](https://github.com/equinor/sepes-web/issues/1459)
+* update rate limit to 6.2.0 ([#1524](https://github.com/equinor/sepes-web/issues/1524)) ([13c2e18](https://github.com/equinor/sepes-web/commit/13c2e18d40ce6778cd52b7f19ee0007e26cb9d2d))
+* upgrade axios from 0.21.4 to 0.24.0 ([ddb6e8c](https://github.com/equinor/sepes-web/commit/ddb6e8caa0f38a695a3244ee660113ff72dd2130))
+* upgrade eds to 0.17.0 ([4b9d62f](https://github.com/equinor/sepes-web/commit/4b9d62ffb9bb4348f36050def59e720be095ae5b))
+* upgrade react-scripts to 5.0.0 ([#1401](https://github.com/equinor/sepes-web/issues/1401)) ([84c3b14](https://github.com/equinor/sepes-web/commit/84c3b1401916403e92416c49e20029f59a8267eb))
+* upgrade sass-loader and node-sass ([#1412](https://github.com/equinor/sepes-web/issues/1412)) ([724cc3b](https://github.com/equinor/sepes-web/commit/724cc3b1c9be5aefc4fdf7757164eeb0cea26f33))
+* validate data set names ([293980b](https://github.com/equinor/sepes-web/commit/293980b8da0b02564c3cbc2cfffbef7d1a91847a)), closes [#1384](https://github.com/equinor/sepes-web/issues/1384)
+
 ### [1.1.3](https://github.com/equinor/sepes-web/compare/1.1.2...1.1.3) (2022-01-06)
 
 ### [1.1.2](https://github.com/equinor/sepes-web/compare/1.1.1...1.1.2) (2021-12-27)

@@ -8,20 +8,21 @@ import SandBoxComponent from './Sandbox';
 import Overview from './Overview';
 import { Tabs } from '@equinor/eds-core-react';
 import Promt from '../common/Prompt';
-import LoadingFull from '../common/LoadingFullscreen';
 import { Permissions } from '../../index';
 import NoAccess from '../common/informationalComponents/NoAccess';
 import { resultsAndLearningsObj } from '../common/interfaces';
 import { UpdateCache } from '../../App';
 import Cookies from 'js-cookie';
-import useFetchUrl from '../common/hooks/useFetchUrl';
-import { getStudyByIdUrl } from '../../services/ApiCallStrings';
 import NotFound from '../common/informationalComponents/NotFound';
 import { useLocation } from 'react-router-dom';
 import { getStudyId } from '../../utils/CommonUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore, setStudyToInitialState } from 'store/studies/studiesSlice';
+import LoadingFullScreenNew from '../common/LoadingFullScreenNew';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import { getStudy } from 'services/Api';
 
 const LoadingWrapper = styled.div`
     height: 196px;
@@ -55,27 +56,28 @@ const StudyDetails = () => {
         window.history.replaceState(null, '');
     }
 
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
-    const [deleteStudyInProgress, setDeleteStudyInProgress] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
     const [studySaveInProgress, setStudySaveInProgress] = useState<boolean>(false);
-    const studyResponse = useFetchUrl(
-        getStudyByIdUrl(id),
-        undefined,
-        id ? true : false,
-        controller,
-        true,
-        dispatch,
-        setStudyInStore
-    );
     const [wbsIsValid, setWbsIsValid] = useState<boolean | undefined>(undefined);
     const [resultsAndLearnings, setResultsAndLearnings] = useState<resultsAndLearningsObj>({ resultsAndLearnings: '' });
     const [fallBackAddress, setFallBackAddress] = useState<string>('/');
-
+    const showLoading = useSelector(getScreenLoadingFromStore());
+    const [notFound, setNotFound] = useState<boolean>(false);
     const permissions = useContext(Permissions);
-    const displayStudyInfo = !studyResponse.loading && study;
-    const noTimeout: any = deleteStudyInProgress || loading;
-    const displayPrompt = hasChanged || studySaveInProgress;
+    const displayStudyInfo = !showLoading && study;
+
+    useEffect(() => {
+        if (!newStudy && id) {
+            dispatch(setScreenLoading(true));
+            getStudy(id, controller.signal).then((result: any) => {
+                dispatch(setScreenLoading(false));
+                if (result && !result.message) {
+                    dispatch(setStudyInStore(result));
+                } else {
+                    setNotFound(true);
+                }
+            });
+        }
+    }, [id]);
 
     useEffect(() => {
         return () => {
@@ -110,11 +112,9 @@ const StudyDetails = () => {
             case 2:
                 return (
                     <SandBoxComponent
-                        setHasChanged={setHasChanged}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
                         disabled={!(study.permissions && study.permissions.addRemoveSandbox && !studySaveInProgress)}
-                        setLoading={setLoading}
                         wbsIsValid={wbsIsValid}
                         onFallBackAddressChange={handleFallbackAddressChange}
                     />
@@ -126,7 +126,6 @@ const StudyDetails = () => {
             default:
                 return (
                     <Overview
-                        setHasChanged={setHasChanged}
                         setResultsAndLearnings={setResultsAndLearnings}
                         resultsAndLearnings={resultsAndLearnings}
                         controller={controller}
@@ -138,22 +137,16 @@ const StudyDetails = () => {
 
     return (
         <>
-            {studyResponse.notFound && <NotFound />}
+            {notFound && <NotFound />}
             {!permissions.canCreateStudy && newStudy && <NoAccess />}
             <>
-                <Promt hasChanged={displayPrompt} fallBackAddress={fallBackAddress} />
+                <Promt fallBackAddress={fallBackAddress} />
                 {displayStudyInfo ? (
                     <StudyComponentFull
                         newStudy={newStudy}
                         setNewStudy={setNewStudy}
-                        setLoading={studyResponse.setLoading}
-                        loading={studyResponse.loading}
-                        setHasChanged={setHasChanged}
-                        hasChanged={hasChanged}
-                        cache={studyResponse.cache}
                         setUpdateCache={setUpdateCache}
                         updateCache={updateCache}
-                        setDeleteStudyInProgress={setDeleteStudyInProgress}
                         setWbsIsValid={setWbsIsValid}
                         wbsIsValid={wbsIsValid}
                         setStudySaveInProgress={setStudySaveInProgress}
@@ -161,7 +154,7 @@ const StudyDetails = () => {
                 ) : (
                     <LoadingWrapper />
                 )}
-                {(studyResponse.loading || loading) && <LoadingFull noTimeout={noTimeout} />}
+                <LoadingFullScreenNew />
                 {!newStudy && (
                     <div style={{ margin: '32px 32px 32px 32px', backgroundColor: '#ffffff', borderRadius: '4px' }}>
                         <Tabs activeTab={activeTab} variant="fullWidth" onChange={(e: any) => setActiveTab(e)}>

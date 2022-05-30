@@ -3,18 +3,20 @@ import StepBar from './StepBar';
 import SandboxConfig from './SandboxConfig';
 import Execution from './Execution';
 import VmConfig from './components/VmConfig';
-import LoadingFull from '../common/LoadingFullscreen';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
-import useFetchUrl from '../common/hooks/useFetchUrl';
 import NotFound from '../common/informationalComponents/NotFound';
-import { getResourcesList } from '../../services/Api';
+import { getResourcesList, getSandbox } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCallResources, setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
+import { setCallResources, setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
 import { getCallResourcesStatus, getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setResourcesInStore } from 'store/resources/resourcesSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
+import { setVirtualMachinesToInitialState } from 'store/virtualmachines/virtualMachinesSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,29 +35,33 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const { updateCache, setUpdateCache } = useContext(UpdateCache);
 
     const dispatch = useDispatch();
-    const SandboxResponse = useFetchUrl(
-        'sandboxes/' + sandboxId,
-        undefined,
-        undefined,
-        undefined,
-        false,
-        dispatch,
-        setSandboxInStore
-    );
-
     const sandbox = useSelector(getSandboxFromStore());
-    const [deleteSandboxInProgress, setDeleteSandboxInProgress] = useState<boolean>(false);
+    const showLoading = useSelector(getScreenLoadingFromStore());
     const [vmsWithOpenInternet, setVmsWithOpenInternet] = useState<boolean>(false);
-    const [makeAvailableInProgress, setMakeAvailableInProgress] = useState<boolean>(false);
     const [step, setStep] = useState<number | undefined>((sandbox && sandbox.currentPhase) || undefined);
-    const [hasChanged, setHasChanged] = useState<boolean>(false);
     const callGetResources = useSelector(getCallResourcesStatus());
+    const [notFound, setNotFound] = useState<boolean>(false);
+
+    useEffect(() => {
+        dispatch(setScreenLoading(true));
+        if (!sandbox.id) {
+            getSandbox(sandboxId).then((result: any) => {
+                dispatch(setScreenLoading(false));
+                if (result && !result.message) {
+                    dispatch(setSandboxInStore(result));
+                } else {
+                    setNotFound(true);
+                }
+            });
+        }
+    }, [studyId, sandboxId]);
 
     useEffect(() => {
         return () => {
             controller.abort();
             controller = new AbortController();
-            dispatch(setSandboxInStore({}));
+            dispatch(setSandboxToInitialState());
+            dispatch(setVirtualMachinesToInitialState());
         };
     }, []);
 
@@ -69,10 +75,10 @@ const Sandbox: React.FC<SandboxProps> = () => {
     useEffect(() => {
         if (sandbox && sandbox.currentPhase) {
             setNewPhase(sandbox.currentPhase);
-        } else if (sandbox.currentPhase !== undefined && !SandboxResponse.loading) {
+        } else if (sandbox.currentPhase !== undefined && !showLoading) {
             setNewPhase(sandbox.currentPhase);
         }
-    }, [SandboxResponse.loading, sandbox.currentPhase]);
+    }, [showLoading, sandbox.currentPhase]);
 
     const getResources = () => {
         getResourcesList(sandboxId, controller.signal).then((result: any) => {
@@ -89,10 +95,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
             setStep(phase);
             dispatch(setSandboxInStore({ ...sandbox, currentPhase: phase }));
         }
-    };
-
-    const setNewCostanalysisLink = (link: any) => {
-        dispatch(setSandboxInStore({ ...sandbox, setNewCostanalysisLink: link }));
     };
 
     const returnStepComponent = () => {
@@ -116,28 +118,19 @@ const Sandbox: React.FC<SandboxProps> = () => {
 
     return (
         <>
-            <Prompt hasChanged={hasChanged || SandboxResponse.loading} fallBackAddress={'/studies/' + studyId} />
-            {!SandboxResponse.notFound ? (
+            <Prompt fallBackAddress={'/studies/' + studyId} />
+            {!notFound ? (
                 step !== undefined ? (
                     <>
-                        {SandboxResponse.loading && (
-                            <LoadingFull noTimeout={deleteSandboxInProgress || makeAvailableInProgress} />
-                        )}
                         <Wrapper>
                             <StepBar
                                 step={step}
                                 setStep={setStep}
                                 studyId={studyId}
                                 sandboxId={sandboxId}
-                                setLoading={SandboxResponse.setLoading}
                                 setNewPhase={setNewPhase}
-                                setDeleteSandboxInProgress={setDeleteSandboxInProgress}
-                                setNewCostanalysisLink={setNewCostanalysisLink}
                                 controller={controller}
                                 vmsWithOpenInternet={vmsWithOpenInternet}
-                                makeAvailableInProgress={makeAvailableInProgress}
-                                setMakeAvailableInProgress={setMakeAvailableInProgress}
-                                setHasChanged={setHasChanged}
                                 updateCache={updateCache}
                                 setUpdateCache={setUpdateCache}
                             />
@@ -148,17 +141,17 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                     updateCache={updateCache}
                                     controller={controller}
                                     setVmsWithOpenInternet={setVmsWithOpenInternet}
-                                    setHasChanged={setHasChanged}
                                 />
                             )}
                         </Wrapper>
                     </>
                 ) : (
-                    <LoadingFull noTimeout={deleteSandboxInProgress} />
+                    ''
                 )
             ) : (
                 <NotFound />
             )}
+            <LoadingFullScreenNew />
         </>
     );
 };

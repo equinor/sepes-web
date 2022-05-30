@@ -10,7 +10,6 @@ import { getPermissions } from './services/Api';
 import { GeneralPermissions } from './components/common/interfaces';
 import NoApi from './components/common/informationalComponents/NoApi';
 import GeneralError from './components/common/informationalComponents/GeneralError';
-import LoadingFull from 'components/common/LoadingFullscreen';
 import { Provider } from 'react-redux';
 import { store } from 'store';
 
@@ -28,7 +27,6 @@ export const Permissions = React.createContext<GeneralPermissions>({
 });
 
 const renderApp = async (user) => {
-    ReactDOM.render(<LoadingFull />, document.getElementById('root'));
     await getPermissions().then((result: any) => {
         if (result && (result.requestId || result.errors)) {
             return ReactDOM.render(<GeneralError />, document.getElementById('root'));

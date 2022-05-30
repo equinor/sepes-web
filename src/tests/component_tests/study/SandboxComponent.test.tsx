@@ -86,11 +86,9 @@ test('renders dataset component without permission to add dataset', () => {
         <Provider store={mockStore({ studies: { study: study } })}>
             <Router history={history}>
                 <Sandbox
-                    setHasChanged={mockFunc}
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     disabled={false}
-                    setLoading={mockFunc}
                     wbsIsValid
                     onFallBackAddressChange={mockFunc}
                 />
@@ -109,12 +107,10 @@ test('renders dataset component with permission to add dataset', () => {
     const { getByText, getByTestId } = render(
         <Provider store={mockStore({ studies: { study: studyWithoutPermissionToAddDataset } })}>
             <Router history={history}>
-                <Sandbox
-                    setHasChanged={mockFunc}
+                <Sandbox                   
                     setUpdateCache={mockFunc}
                     updateCache={mockFunc}
                     disabled={true}
-                    setLoading={mockFunc}
                     wbsIsValid
                     onFallBackAddressChange={mockFunc}
                 />

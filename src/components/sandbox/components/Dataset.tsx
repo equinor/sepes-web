@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Table, Checkbox, Tooltip } from '@equinor/eds-core-react';
-import { AvailableDatasetObj, SandboxObj } from '../../common/interfaces';
+import { AvailableDatasetObj, DatasetObj, SandboxObj } from '../../common/interfaces';
 import { deleteDatasetForSandbox, putDatasetForSandbox } from '../../../services/Api';
 import useFetchUrl from '../../common/hooks/useFetchUrl';
 import {
@@ -61,10 +61,24 @@ const Dataset: React.FC<DatasetProps> = ({ sandboxId, updateCache, setUpdateCach
                 if (result && result.message) {
                     console.log('Err');
                 } else {
+                    const filteredDatasets = result.datasets.reduce((acc: DatasetObj[], value: AvailableDatasetObj) => {
+                        if (value.addedToSandbox) {
+                            acc.push({
+                                ...value,
+                                studyId,
+                                studyName: sandbox.studyName,
+                                permissions: {
+                                    editDataset: false,
+                                    deleteDataset: false
+                                }
+                            });
+                        }
+                        return acc;
+                    }, []);
                     dispatch(
                         setSandboxInStore({
                             ...sandbox,
-                            datasets: { ...sandbox.datasets, dataset },
+                            datasets: filteredDatasets,
                             restrictionDisplayText: result.restrictionDisplayText
                         })
                     );
@@ -79,7 +93,7 @@ const Dataset: React.FC<DatasetProps> = ({ sandboxId, updateCache, setUpdateCach
                     dispatch(
                         setSandboxInStore({
                             ...sandbox,
-                            datasets: Object.values(sandbox.datasets).filter((d) => d.id === dataset.datasetId),
+                            datasets: sandbox.datasets.filter((d: any) => d.datasetId !== dataset.datasetId),
                             restrictionDisplayText: result.restrictionDisplayText
                         })
                     );

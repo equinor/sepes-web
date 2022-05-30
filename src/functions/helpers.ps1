@@ -33,7 +33,7 @@ function ClearLines([int32]$Count=7) {
 function DrawLine([int]$x, [int]$y, [int]$length){
     [Console]::SetCursorPosition($x,$y)
 
-    $linechar=“-“
+    $linechar="-"
     $vert=0
     $horz=1
 

@@ -18,9 +18,12 @@ import {
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
 import { useDispatch, useSelector } from 'react-redux';
-import { setResourcesInStore } from 'store/resources/resourcesSlice';
+import { setResourcesInStore, setResourcesToInitialState } from 'store/resources/resourcesSlice';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
-import { setSandboxInStore } from 'store/sandboxes/sandboxesSlice';
+import { setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
+import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
+import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
+import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 
 const Wrapper = styled.div`
     display: grid;
@@ -55,15 +58,9 @@ type StepBarProps = {
     step: number;
     studyId: string;
     sandboxId: string;
-    setLoading: any;
     setNewPhase: any;
-    setDeleteSandboxInProgress: any;
-    setNewCostanalysisLink: any;
     controller: AbortController;
     vmsWithOpenInternet: any;
-    setMakeAvailableInProgress: any;
-    makeAvailableInProgress: boolean;
-    setHasChanged: any;
     updateCache: any;
     setUpdateCache: any;
 };
@@ -89,15 +86,9 @@ const StepBar: React.FC<StepBarProps> = ({
     setStep,
     studyId,
     sandboxId,
-    setLoading,
     setNewPhase,
-    setDeleteSandboxInProgress,
-    setNewCostanalysisLink,
     controller,
     vmsWithOpenInternet,
-    setMakeAvailableInProgress,
-    makeAvailableInProgress,
-    setHasChanged,
     updateCache,
     setUpdateCache
 }) => {
@@ -110,6 +101,7 @@ const StepBar: React.FC<StepBarProps> = ({
     const [anyVmWithOpenInternet, setAnyVmWithOpenInternet] = useState<boolean>(false);
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const sandbox = useSelector(getSandboxFromStore());
+    const showLoading = useSelector(getScreenLoadingFromStore());
 
     useEffect(() => {
         let timer: any;
@@ -144,7 +136,6 @@ const StepBar: React.FC<StepBarProps> = ({
                     setSandboxHasVm,
                     setAllResourcesOk,
                     sandbox,
-                    setNewCostanalysisLink,
                     dispatch,
                     setSandboxInStore
                 );
@@ -175,16 +166,14 @@ const StepBar: React.FC<StepBarProps> = ({
     };
 
     const deleteThisSandbox = (): void => {
-        setHasChanged(false);
-        setDeleteSandboxInProgress(true);
+        dispatch(setHasUnsavedChangesValue(false));
         setUserClickedDelete(false);
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
-        deleteSandbox(sandboxId).then((result: any) => {
-            setLoading(false);
-            if (result && result.message) {
-                setDeleteSandboxInProgress(false);
-            }
+        deleteSandbox(sandboxId).then(() => {
+            dispatch(setScreenLoading(false));
+            dispatch(setSandboxToInitialState());
+            dispatch(setResourcesToInitialState());
             history.push('/studies/' + studyId);
         });
     };
@@ -192,11 +181,9 @@ const StepBar: React.FC<StepBarProps> = ({
     const makeThisSandboxAvailable = (): void => {
         setUserClickedMakeAvailable(false);
         setUpdateCache({ ...updateCache, [getSandboxByIdUrl(sandboxId)]: true });
-        setMakeAvailableInProgress(true);
-        setLoading(true);
+        dispatch(setScreenLoading(true));
         makeAvailable(sandboxId).then((result: any) => {
-            setLoading(false);
-            setMakeAvailableInProgress(false);
+            dispatch(setScreenLoading(false));
             if (result.message || result.errors) {
                 setNewPhase(0);
             } else {
@@ -293,7 +280,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                             sandbox.permissions &&
                                             sandbox.permissions.increasePhase &&
                                             sandbox.datasets.length > 0 &&
-                                            !makeAvailableInProgress &&
+                                            !showLoading &&
                                             allResourcesOk &&
                                             !vmsWithOpenInternet
                                         )

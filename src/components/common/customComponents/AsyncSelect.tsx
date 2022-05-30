@@ -14,6 +14,7 @@ type AsynchSelectProps = {
     disabled?: boolean;
     loadOptions?: any;
     datacy: string;
+    onKeyDownFn?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // eslint-disable-line no-unused-vars
 };
 
 export const equinorTheme = (theme: any) => ({
@@ -41,7 +42,8 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
     isRequired,
     disabled,
     loadOptions,
-    datacy
+    datacy,
+    onKeyDownFn,
 }) => {
     return (
         <span style={style}>
@@ -55,6 +57,7 @@ const AsynchSelect: React.FC<AsynchSelectProps> = ({
                 onInputChange={onInputChange}
                 isDisabled={disabled}
                 data-cy={datacy}
+                onKeyDown={onKeyDownFn}
             />
         </span>
     );
@@ -64,7 +67,8 @@ AsynchSelect.defaultProps = {
     style: undefined,
     isRequired: undefined,
     disabled: undefined,
-    loadOptions: undefined
+    loadOptions: undefined,
+    onKeyDownFn: () => {},
 };
 
 export default AsynchSelect;

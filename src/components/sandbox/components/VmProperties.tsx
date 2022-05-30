@@ -1,5 +1,5 @@
 /*eslint-disable no-shadow */
-import React, { useState, useEffect } from 'react';
+import React, { ReactElement, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Typography, Tooltip, Menu } from '@equinor/eds-core-react';
 import { EquinorIcon } from '../../common/StyledComponents';
@@ -7,14 +7,29 @@ import { SandboxPermissions, VmObj } from '../../common/interfaces';
 import { deleteVirtualMachine } from '../../../services/Api';
 import DeleteResourceComponent from '../../common/customComponents/DeleteResource';
 import { getVmsForSandboxUrl } from '../../../services/ApiCallStrings';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
+import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
+import { setVirtualMachinesInStore } from 'store/virtualmachines/virtualMachinesSlice';
 
 const Wrapper = styled.div`
     margin-top: 16px;
-    display: grid;
-    grid-template-columns: 80px 2fr;
-    grid-gap: 8px;
+    display: flex;
+    flex-direction: column;
+`;
+
+const TextWrapper = styled.div`
+display: flex;                                                                                                                                                                                
+flex-direction: row;
+flex-wrap: wrap;
+align-items: center;
+padding: 1px 0;
+p:nth-child(1){
+    flex-basis: 33%;
+}
+p:nth-child(2){
+    flex-basis: 66%;
+}
 `;
 
 const BtnWrapper = styled.div`
@@ -27,8 +42,6 @@ const ItemText = styled.div`
 
 type VmPropertiesProps = {
     vmProperties: VmObj;
-    setVms: any;
-    vms: any;
     setActiveTab: any;
     permissions: SandboxPermissions;
     setUpdateCache: any;
@@ -37,8 +50,6 @@ type VmPropertiesProps = {
 
 const VmProperties: React.FC<VmPropertiesProps> = ({
     vmProperties,
-    setVms,
-    vms,
     setActiveTab,
     permissions,
     setUpdateCache,
@@ -49,6 +60,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
     const { MemoryGB, numberOfCores } = size || {};
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const vms = useSelector(getVirtualMachinesFromStore());
 
     const [state, setState] = React.useState<{
         buttonEl: any;
@@ -73,7 +85,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
         setState({ ...state, buttonEl: null, focus });
     };
 
-    useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
+    //useEffect(() => {}, [vmProperties.linkToExternalSystem, setVms]);
 
     const deleteVm = (): void => {
         setUpdateCache({ ...updateCache, [getVmsForSandboxUrl(sandboxId)]: true });
@@ -83,7 +95,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                 dispatch(setCallResources(true));
                 const currentVms: any = [...vms];
                 currentVms.splice(vms.indexOf(vmProperties), 1);
-                setVms(currentVms);
+                dispatch(setVirtualMachinesInStore(currentVms));
             }
         });
     };
@@ -113,7 +125,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     disabled={!(permissions.update && vmProperties.linkToExternalSystem !== null)}
                     className="reset_password"
                 >
-                    {EquinorIcon('key', '#6F6F6F', 24, () => {}, true)}
+                    {EquinorIcon('key', '#6F6F6F', 24, () => { }, true)}
                     <ItemText>Reset password</ItemText>
                 </Menu.Item>
             </Tooltip>
@@ -125,11 +137,19 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     disabled={!permissions.update}
                     data-cy="vm_delete"
                 >
-                    {EquinorIcon('delete_forever', '#EB0000', 24, () => {}, true)}
+                    {EquinorIcon('delete_forever', '#EB0000', 24, () => { }, true)}
                     <ItemText style={{ color: '#EB0000' }}>Delete virtual machine</ItemText>
                 </Menu.Item>
             </Tooltip>
         </>
+    );
+
+    const PropertiesContainer = ({ title, value, style = {} }): ReactElement<HTMLDivElement> | null =>
+    (
+        <TextWrapper style={style}>
+            <Typography variant="body_short">{title}</Typography>
+            <Typography variant="body_short">{value || '-'}</Typography>
+        </TextWrapper>
     );
 
     return (
@@ -149,31 +169,13 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
             <div>
                 <Typography variant="h2">Properties</Typography>
                 <Wrapper>
-                    <div>
-                        <Typography variant="body_short">OS</Typography>
-                        <Typography variant="body_short">Public IP</Typography>
-                        <Typography variant="body_short">Private IP</Typography>
-                        {/*<div>DNS name</div>*/}
-                        <Typography variant="body_short">Location</Typography>
-                        <Typography variant="body_short" style={{ marginTop: '16px' }}>
-                            Size
-                        </Typography>
-                        <Typography variant="body_short">vCPUs</Typography>
-                        <Typography variant="body_short">RAM</Typography>
-                    </div>
-
-                    <div>
-                        <Typography variant="body_short">{vmProperties.operatingSystem || '-'}</Typography>
-                        <Typography variant="body_short">{publicIp || '-'}</Typography>
-                        <Typography variant="body_short">{privateIp || '-'}</Typography>
-                        {/*<div>sb.env04-asdasdaas</div>*/}
-                        <Typography variant="body_short">{vmProperties.region}</Typography>
-                        <Typography variant="body_short" style={{ marginTop: '16px' }}>
-                            {sizeName || '-'}
-                        </Typography>
-                        <Typography variant="body_short">{numberOfCores || '-'}</Typography>
-                        <Typography variant="body_short">{MemoryGB ? MemoryGB + 'MB' : '-'}</Typography>
-                    </div>
+                    <PropertiesContainer title="OS" value={vmProperties.operatingSystem} />
+                    <PropertiesContainer title="Public IP" value={publicIp} />
+                    <PropertiesContainer title="Private IP" value={privateIp} />
+                    <PropertiesContainer title="Location" value={vmProperties.region} />
+                    <PropertiesContainer title="Size" value={sizeName} style={{ marginTop: '16px' }} />
+                    <PropertiesContainer title="vCPUs" value={numberOfCores} />
+                    <PropertiesContainer title="RAM" value={MemoryGB ? MemoryGB + 'MB' : '-'} />
                 </Wrapper>
                 <BtnWrapper>
                     <div style={{ marginTop: '24px' }}>
@@ -192,7 +194,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                                 >
                                     Connect to virtual machine
                                     <div style={{ marginLeft: 'auto' }}>
-                                        {EquinorIcon('external_link', '#FFFFFF', 24, () => {}, true)}
+                                        {EquinorIcon('external_link', '#FFFFFF', 24, () => { }, true)}
                                     </div>
                                 </Button>
                             </Tooltip>
@@ -211,7 +213,7 @@ const VmProperties: React.FC<VmPropertiesProps> = ({
                     >
                         More actions
                         <div style={{ marginLeft: 'auto' }}>
-                            {EquinorIcon('arrow_drop_down', '#007079', 24, () => {}, true)}
+                            {EquinorIcon('arrow_drop_down', '#007079', 24, () => { }, true)}
                         </div>
                     </Button>
                 </BtnWrapper>

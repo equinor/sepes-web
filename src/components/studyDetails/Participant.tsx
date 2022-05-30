@@ -18,6 +18,7 @@ import StudyTextSnippets from 'components/common/constants/StudyTextSnippets';
 import { useDispatch, useSelector } from 'react-redux';
 import getStudyFromStore from 'store/studies/studiesSelector';
 import { setStudyInStore } from 'store/studies/studiesSlice';
+import { EquinorIcon } from 'components/common/StyledComponents';
 
 const Wrapper = styled.div`
     display: grid;
@@ -33,6 +34,25 @@ const SearchWrapper = styled.div`
     flex-wrap: wrap;
     align-items: center;
     gap: 16px;
+`;
+
+const SearchContainer = styled.div`
+    width: 380px; 
+    margin-top: -16px; 
+    position: relative;
+    .btn--clear{
+        width: 36px;
+        height: 36px;
+        position: absolute;
+        top: 32%;
+        right: 36px;                        
+        &:hover{
+            background-color: transparent;
+            svg {
+                fill: rgb(111, 111, 111);
+            }
+        }
+    }
 `;
 
 const TableWrapper = styled.div`
@@ -60,7 +80,7 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [debounce, setDebounce] = useState({ cb: () => {}, delay: 500 });
+    const [debounce, setDebounce] = useState({ cb: () => { }, delay: 500 });
     const cyToken = window.localStorage.getItem('cyToken');
 
     // Listen to changes of debounce (function, delay), when it does clear the previos timeout and set the new one.
@@ -162,6 +182,21 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
         setSelectedParticipant(participant);
     };
 
+    const clearSelectedParticipant = () => {
+        setText('');
+        setParticipantNotSelected(true);
+        setSelectedParticipant(undefined);
+        setRole('');
+        setRoleNotSelected(true);
+        setText(StudyTextSnippets.MinimumCharactersToSearch);
+    };
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.code === 'Delete' || e.code === 'Backspace') {
+            clearSelectedParticipant();
+        }
+    };
+
     const handleChange = (value) => {
         setRole(value);
         setRoleNotSelected(false);
@@ -194,11 +229,12 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
                     }
                     placement="top"
                 >
-                    <div style={{ width: '380px', marginTop: '-16px' }}>
+                    <SearchContainer>
                         <AsynchSelect
                             label="Add participants"
                             onChange={(option: any) => selectParticipant(option)}
                             placeholder=""
+                            onKeyDownFn={(e) => onKeyDown(e)}
                             selectedOption={{ value: 'Search..', label: text }}
                             onInputChange={handleInputChange}
                             disabled={study.permissions && !study.permissions.addRemoveParticipant}
@@ -207,7 +243,17 @@ const Paricipant: React.FC<ParicipantComponentProps> = ({ setUpdateCache, update
                             }
                             datacy="participant_search"
                         />
-                    </div>
+                        {
+                            !participantNotSelected &&
+                            <Button
+                                className="btn--clear"
+                                variant="ghost"
+                                onClick={() => clearSelectedParticipant()}
+                                data-cy="participant_clear"
+                            >{EquinorIcon('clear', 'hsl(0, 0%, 80%)', 16)}
+                            </Button>
+                        }
+                    </SearchContainer>
                 </Tooltip>
                 <Tooltip
                     title={

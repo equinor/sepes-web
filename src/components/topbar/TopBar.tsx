@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-fragments, no-shadow */
 import React, { Fragment, useContext, useState } from 'react';
 import styled from 'styled-components';
-import { TopBar, Icon, Button, Menu, Typography, Dialog, Scrim, TextField } from '@equinor/eds-core-react';
+import { TopBar, Icon, Button, Menu, Typography, Dialog, TextField } from '@equinor/eds-core-react';
 // import NavTabs from './NavTabs';
 import { UserConfig, Permissions } from '../../index';
 import { Link, useHistory } from 'react-router-dom';
@@ -10,9 +10,9 @@ import { getEnvironment } from 'components/common/helpers/helpers';
 import { comment_chat, exit_to_app, info_circle, report_bug, account_circle } from '@equinor/eds-icons';
 import createEnquiry from 'services/serviceNowApiService';
 
-const { Header } = TopBar;
-const { Actions, Title, CustomContent } = Dialog;
+export const environmentLabel = 'This is a non-production build. Data can and will be removed. Environment: ';
 
+const { Header } = TopBar;
 const Wrapper = styled.div`
     z-index: 99;
     top: 0;
@@ -73,8 +73,8 @@ const Bar = () => {
     const user = useContext(UserConfig);
     const permissions = useContext(Permissions);
     const [description, setDescription] = useState('');
-    const [isFeedbackScrimVisible, setIsFeedbackScrimVisible] = useState(false);
-    const [isServiceNowRefScrimVisible, setIServiceNowRefScrimVisible] = useState(false);
+    const [isFeedbackDialogVisible, setIsFeedbackDialogVisible] = useState(false);
+    const [isServiceNowRefDialogVisible, setIServiceNowRefDialogVisible] = useState(false);
     const [serviceNowReference, setServiceNowReference] = useState('');
 
     const openMenu = (
@@ -120,15 +120,15 @@ const Bar = () => {
     };
 
     const handleCloseFeedbackDialog = () => {
-        setIsFeedbackScrimVisible(false);
+        setIsFeedbackDialogVisible(false);
     };
 
     const handleSendFeedback = () => {
         const category = 'incident';
         createEnquiry(category, description).then((response: any) => {
-            setIsFeedbackScrimVisible(false);
+            setIsFeedbackDialogVisible(false);
             if (response.result.status === 'success') {
-                setIServiceNowRefScrimVisible(true);
+                setIServiceNowRefDialogVisible(true);
                 setServiceNowReference(response.result.details.number);
             } else {
                 console.log('Err');
@@ -138,7 +138,7 @@ const Bar = () => {
 
     const optionsTemplate = (
         <>
-            <Menu.Item style={{ borderBottom: '1px solid #dcdcdc' }}>
+            <Menu.Item data-cy="top-bar-user-info" style={{ borderBottom: '1px solid #dcdcdc' }}>
                 <div>
                     <Typography variant="h6">{permissions.fullName}</Typography>
                     <Typography variant="meta">{permissions.userName}</Typography>
@@ -188,12 +188,12 @@ const Bar = () => {
     const environment = getEnvironment();
     return (
         <Wrapper>
-            <TopBar>
-                <Header>{LEFT_CHOICES[leftChoice]}</Header>
+            <TopBar data-cy="top-bar">
+                <Header data-cy="home-link">{LEFT_CHOICES[leftChoice]}</Header>
                 {/*CENTER_CHOICES[centerChoice]*/}
                 {environment !== 'PROD' && environment !== 'MOCKUSER' && (
-                    <EnvironmentMessage>
-                        This is a non-production build. Data can and will be removed. Environment: {getEnvironment()}
+                    <EnvironmentMessage data-cy="environment-msg">
+                        {environmentLabel} {environment}
                     </EnvironmentMessage>
                 )}
                 <TopBar.Actions>
@@ -202,11 +202,11 @@ const Bar = () => {
                         variant="ghost"
                         style={{ marginLeft: '25px' }}
                         onClick={() => redirectToExternalLink(documentationLink)}
-                        data-cy="documentation_link"
+                        data-cy="documentation-link"
                     >
                         Documentation
                     </Button>
-                    <Button id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackScrimVisible(true)}>
+                    <Button data-cy="feedback-btn" id="sendFeedbackButton" variant="ghost" onClick={() => setIsFeedbackDialogVisible(true)}>
                         <Icon
                             style={{ cursor: 'pointer' }}
                             size={24}
@@ -220,6 +220,7 @@ const Bar = () => {
                         id="menuButton"
                         variant="ghost_icon"
                         onClick={(e) => (isOpen ? closeMenu() : openMenu(e, 'first'))}
+                        data-cy="top-bar-menu-btn"
                     >
                         <Icon
                             style={{ cursor: 'pointer' }}
@@ -238,68 +239,67 @@ const Bar = () => {
                         anchorEl={buttonEl}
                         focus={focus}
                         placement="bottom-start"
+                        data-cy="top-bar-menu"
                     >
                         {optionsTemplate}
                     </Menu>
                 </TopBar.Actions>
             </TopBar>
-
-            <Scrim
-                open={isFeedbackScrimVisible}
+            <Dialog
+                style={{ width: '500px', height: '370px' }}
+                open={isFeedbackDialogVisible}
                 isDismissable
-                onClose={() => setIsFeedbackScrimVisible(!isFeedbackScrimVisible)}
+                onClose={() => setIsFeedbackDialogVisible(!isFeedbackDialogVisible)}
+                data-cy="feedback-dialog"
             >
-                <Dialog style={{ width: '500px', height: '370px' }}>
-                    <Title>
-                        <Typography variant="h2">Feedback form</Typography>
-                    </Title>
-                    <CustomContent scrollable={false}>
-                        <TextField
-                            label="Description"
-                            placeholder="Please provide a short description"
-                            multiline
-                            rows={7}
-                            id="descriptionField"
-                            style={{ resize: 'none' }}
-                            onChange={(e) => setDescription(e.target.value)}
-                            variant="default"
-                            autoFocus
-                        />
-                        <Typography variant="caption" style={{ marginTop: '5px' }}>
-                            Please note that your feedback will be sent to ServiceNow.
-                        </Typography>
-                    </CustomContent>
-                    <Actions>
-                        <Button onClick={handleSendFeedback} disabled={!description} style={{ marginRight: '5px' }}>
-                            Send
-                        </Button>
-                        <Button onClick={handleCloseFeedbackDialog} variant="ghost">
-                            Cancel
-                        </Button>
-                    </Actions>
-                </Dialog>
-            </Scrim>
-            <Scrim
-                open={isServiceNowRefScrimVisible}
+                <Dialog.Header>
+                    <Typography variant="h2">Feedback form</Typography>
+                </Dialog.Header>
+                <Dialog.Content>
+                    <TextField
+                        label="Description"
+                        placeholder="Please provide a short description"
+                        multiline
+                        rows={7}
+                        id="descriptionField"
+                        style={{ resize: 'none' }}
+                        onChange={(e) => setDescription(e.target.value)}
+                        variant="default"
+                        autoFocus
+                    />
+                    <Typography variant="caption" style={{ marginTop: '5px' }}>
+                        Please note that your feedback will be sent to ServiceNow.
+                    </Typography>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button onClick={handleSendFeedback} disabled={!description} style={{ marginRight: '5px' }}>
+                        Send
+                    </Button>
+                    <Button onClick={handleCloseFeedbackDialog} data-cy="feedback-cancel-btn" variant="ghost">
+                        Cancel
+                    </Button>
+                </Dialog.Actions>
+            </Dialog>
+            <Dialog
+                style={{ width: '450px', height: '250px' }}
+                open={isServiceNowRefDialogVisible}
                 isDismissable
-                onClose={() => setIServiceNowRefScrimVisible(!isServiceNowRefScrimVisible)}
+                onClose={() => setIServiceNowRefDialogVisible(!isServiceNowRefDialogVisible)}
             >
-                <Dialog style={{ width: '450px', height: '250px' }}>
-                    <CustomContent scrollable={false}>
-                        <Typography variant="h3">Thank you for your feedback!</Typography>
-                        <Typography variant="body_short" style={{ marginTop: '20px' }}>
-                            We have created a ServiceNow enquiry with the following task reference. You will receive an
-                            email shortly. Please click the link to the task in the email to follow up in ServiceNow.
-                        </Typography>
-                        <Typography variant="body_short_bold" style={{ marginTop: '20px' }}>
-                            {serviceNowReference}
-                        </Typography>
-                    </CustomContent>
-                    <Actions>
-                        <Button onClick={() => setIServiceNowRefScrimVisible(false)}>Ok</Button>
-                    </Actions>
-                </Dialog>
-            </Scrim>
+                <Dialog.Header>Thank you for your feedback!</Dialog.Header>
+                <Dialog.Content>
+                    <Typography variant="body_short">
+                        We have created a ServiceNow enquiry with the following task reference. You will receive an
+                        email shortly. Please click the link to the task in the email to follow up in ServiceNow.
+                    </Typography>
+                    <Typography variant="body_short_bold" style={{ marginTop: '20px' }}>
+                        {serviceNowReference}
+                    </Typography>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button onClick={() => setIServiceNowRefDialogVisible(false)}>Ok</Button>
+                </Dialog.Actions>
+            </Dialog>
         </Wrapper>
     );
 };
