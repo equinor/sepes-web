@@ -23,16 +23,16 @@ import {
 import useKeyEvents from '../../common/hooks/useKeyEvents';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources } from 'store/sandboxes/sandboxesSlice';
-import getResourcesFromStore from 'store/resources/resourcesSelectors';
 import { getUnsavedChangesValue } from 'store/usersettings/userSettingsSelectors';
 import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
 import getVirtualMachinesFromStore from 'store/virtualmachines/virtualMachinesSelector';
 import {
-    setVirtualMachinesInStore,
     updateVirtualMachineExtendedInfo,
     updateVirtualMachineLinkToExternalSystem,
     updateVirtualMachineRules
 } from 'store/virtualmachines/virtualMachinesSlice';
+import { useGetResourceListQuery } from 'store/resources/resourceApi';
+import { getSandboxId } from 'utils/CommonUtil';
 
 const { Body, Row, Cell, Head } = Table;
 
@@ -99,7 +99,7 @@ const VmDetails: React.FC<VmDetailsProps> = ({
     const [outboundRuleChanged, setOutboundRuleChanged] = useState<boolean>(false);
     const [saveIsEnabled, setSaveIsEnabled] = useState<ButtonEnabledObj>({ enabled: false, error: '' });
     const dispatch = useDispatch();
-    const resources = useSelector(getResourcesFromStore());
+    const {data: resources} = useGetResourceListQuery(getSandboxId());
     const vms = useSelector(getVirtualMachinesFromStore());
     const hasUnsavedChanges = useSelector(getUnsavedChangesValue());
     let keyCount: number = 0;

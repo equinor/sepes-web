@@ -205,48 +205,6 @@ export const returnToolTipForMakeAvailable = (
     return '';
 };
 
-export const allResourcesStatusOkAndAtleastOneVm = (
-    resourcesIn,
-    setAnyVmWithOpenInternet,
-    setSandboxHasVm,
-    setAllResourcesOk,
-    sandbox,
-    dispatch: any,
-    setSandboxInStore: any
-) => {
-    let res = true;
-    if (!resourcesIn || !Array.isArray(resourcesIn)) {
-        return res;
-    }
-    let hasVm = false;
-    let noOpenInternet = true;
-    resourcesIn.map((resource: any) => {
-        if (resource.status !== resourceStatus.ok) {
-            res = false;
-        }
-        if (resource.type === resourceType.virtualMachine) {
-            hasVm = true;
-            if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
-                noOpenInternet = false;
-            }
-        }
-        if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
-            getCostAnalysisLinkToSandbox(sandbox, dispatch, setSandboxInStore);
-        }
-    });
-    setAnyVmWithOpenInternet(!noOpenInternet);
-    setSandboxHasVm(hasVm);
-    setAllResourcesOk(res && hasVm && noOpenInternet);
-};
-
-const getCostAnalysisLinkToSandbox = (sandbox: SandboxObj, dispatch: any, setSandboxInStore: any) => {
-    getSandboxCostAnalysis(sandbox.id).then((result: any) => {
-        if (result && !result.message) {
-            dispatch(setSandboxInStore({ ...sandbox, linkToCostAnalysis: result }));
-        }
-    });
-};
-
 export const validateUsername = (
     vm: VmObj,
     os: any,
