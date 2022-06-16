@@ -1,5 +1,5 @@
 /*eslint-disable consistent-return */
-import { getSandboxCostAnalysis, validateVmUsername } from 'services/Api';
+import { validateVmUsername } from 'services/Api';
 import {
     AvailableDatasetObj,
     ButtonEnabledObj,
@@ -11,7 +11,7 @@ import {
     VmObj,
     VmUsernameObj
 } from '../interfaces';
-import { inputErrorsVmRules, resourceStatus, resourceType } from '../staticValues/types';
+import { inputErrorsVmRules } from '../staticValues/types';
 import {
     checkIfInputIsNumberWihoutCharacters,
     checkIfValidIp,
