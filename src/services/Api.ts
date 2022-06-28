@@ -135,10 +135,6 @@ export const deleteSandbox = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId, 'DELETE');
 };
 
-export const getResourcesList = async (sandboxId: string, signal: any) => {
-    return apiRequestWithToken('api/sandboxes/' + sandboxId + '/resources', 'GET', undefined, signal);
-};
-
 export const getSandboxCostAnalysis = async (sandboxId: string) => {
     return apiRequestWithToken('api/sandboxes/' + sandboxId + '/costanalysis', 'GET');
 };

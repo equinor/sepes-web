@@ -8,22 +8,23 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import DeleteResourceComponent from '../common/customComponents/DeleteResource';
 import { EquinorIcon } from '../common/StyledComponents';
-import { deleteSandbox, getResourcesList, makeAvailable } from '../../services/Api';
+import { deleteSandbox, getSandboxCostAnalysis, makeAvailable } from '../../services/Api';
 import { getSandboxByIdUrl, getStudyByIdUrl } from '../../services/ApiCallStrings';
 import SureToProceed from '../common/customComponents/SureToProceed';
 import {
-    allResourcesStatusOkAndAtleastOneVm,
     returnToolTipForMakeAvailable
 } from 'components/common/helpers/sandboxHelpers';
 import BreadcrumbTruncate from 'components/common/customComponents/infoDisplayComponents/BreadcrumbTruncate';
 import { StepBarDescriptions, StepBarLabels } from 'components/common/constants/StepBarTexts';
 import { useDispatch, useSelector } from 'react-redux';
-import { setResourcesInStore, setResourcesToInitialState } from 'store/resources/resourcesSlice';
 import { getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
 import { setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import { setHasUnsavedChangesValue } from 'store/usersettings/userSettingsSlice';
+import { ResourceItem, useGetResourceListQuery } from 'store/resources/resourceApi';
+import { getSandboxId } from 'utils/CommonUtil';
+import { resourceStatus, resourceType } from 'components/common/staticValues/types';
 
 const Wrapper = styled.div`
     display: grid;
@@ -59,7 +60,6 @@ type StepBarProps = {
     studyId: string;
     sandboxId: string;
     setNewPhase: any;
-    controller: AbortController;
     vmsWithOpenInternet: any;
     updateCache: any;
     setUpdateCache: any;
@@ -78,7 +78,6 @@ const getSteps = () => {
     ];
 };
 
-let resourcesFailed = false;
 const interval = 20000; //20 seconds
 
 const StepBar: React.FC<StepBarProps> = ({
@@ -87,7 +86,6 @@ const StepBar: React.FC<StepBarProps> = ({
     studyId,
     sandboxId,
     setNewPhase,
-    controller,
     vmsWithOpenInternet,
     updateCache,
     setUpdateCache
@@ -102,45 +100,57 @@ const StepBar: React.FC<StepBarProps> = ({
     const [userClickedDelete, setUserClickedDelete] = useState<boolean>(false);
     const sandbox = useSelector(getSandboxFromStore());
     const showLoading = useSelector(getScreenLoadingFromStore());
+    const [pollingInterval, setPollingInterval] = useState(interval);
+    const { data: resources } = useGetResourceListQuery(getSandboxId(), { pollingInterval });
 
     useEffect(() => {
-        let timer: any;
-        try {
-            timer = setInterval(async () => {
-                if (!userClickedDelete && !resourcesFailed) {
-                    getResources();
-                }
-            }, interval);
-        } catch (e) {
-            console.log(e);
+        if (resources?.length) {
+            updateResourceStatus(resources);
         }
-        return () => {
-            clearInterval(timer);
-            resourcesFailed = false;
-        };
-    }, [userClickedDelete]);
-    useEffect(() => {
-        getResources();
-    }, []);
+    }, [resources]);
 
-    const getResources = () => {
-        getResourcesList(sandboxId, controller.signal).then((result: any) => {
-            if (result && (result.errors || result.message)) {
-                resourcesFailed = true;
-                console.log('Err');
-            } else {
-                dispatch(setResourcesInStore(result));
-                allResourcesStatusOkAndAtleastOneVm(
-                    result,
-                    setAnyVmWithOpenInternet,
-                    setSandboxHasVm,
-                    setAllResourcesOk,
-                    sandbox,
-                    dispatch,
-                    setSandboxInStore
-                );
+    const updateResourceStatus = (resources: ResourceItem[]): void => {
+        let res = true;
+        let hasVm = false;
+        let noOpenInternet = true;
+        let hasFailed = false;
+        resources.forEach((resource: ResourceItem) => {
+            if (resource.status?.includes(resourceStatus.failed)) {
+                if (resource.status.includes('/')) {
+                    const [firstString, secondString] = resource.status.split('/');
+                    const attempts = +firstString[firstString.length - 1];
+                    const maxAttempts = +secondString[0];
+                    if (attempts >= maxAttempts) {
+                        hasFailed = true;
+                    }
+                } else {
+                    hasFailed = true;
+                }
+            }
+            if (resource.status !== resourceStatus.ok) {
+                res = false;
+            }
+            if (resource.type === resourceType.virtualMachine) {
+                hasVm = true;
+                if (resource.additionalProperties && resource.additionalProperties.InternetIsOpen) {
+                    noOpenInternet = false;
+                }
+            }
+            if (resource.type === resourceType.resourceGroup && sandbox.linkToCostAnalysis === null) {
+                getSandboxCostAnalysis(sandbox.id).then((result: any) => {
+                    if (result && !result.message) {
+                        dispatch(setSandboxInStore({ ...sandbox, linkToCostAnalysis: result }));
+                    }
+                });
             }
         });
+        const isAllResourcesOk = res && hasVm && noOpenInternet;
+        const pollingInterval = isAllResourcesOk || hasFailed ? 0 : interval;
+        console.log('setting interval: ', pollingInterval);
+        setPollingInterval(pollingInterval);
+        setAnyVmWithOpenInternet(!noOpenInternet);
+        setSandboxHasVm(hasVm);
+        setAllResourcesOk(isAllResourcesOk);
     };
 
     const [state, setState] = React.useState<{
@@ -170,10 +180,10 @@ const StepBar: React.FC<StepBarProps> = ({
         setUserClickedDelete(false);
         dispatch(setScreenLoading(true));
         setUpdateCache({ ...updateCache, [getStudyByIdUrl(studyId)]: true });
+        setPollingInterval(0);
         deleteSandbox(sandboxId).then(() => {
             dispatch(setScreenLoading(false));
             dispatch(setSandboxToInitialState());
-            dispatch(setResourcesToInitialState());
             history.push('/studies/' + studyId);
         });
     };
@@ -287,7 +297,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                     }
                                 >
                                     <span style={{ marginLeft: '0' }}>Make available</span>
-                                    {EquinorIcon('chevron_right', '#FFFFFF', 24, () => {}, true)}
+                                    {EquinorIcon('chevron_right', '#FFFFFF', 24, () => { }, true)}
                                 </Button>
                             </Tooltip>
                         </div>
@@ -329,7 +339,7 @@ const StepBar: React.FC<StepBarProps> = ({
                                 setStep(0);
                             }}
                         >
-                            {EquinorIcon('chevron_left', '#007079', 16, () => {}, true)}Make Available
+                            {EquinorIcon('chevron_left', '#007079', 16, () => { }, true)}Make Available
                         </Button>
                         {returnOptionsButton()}
                     </BtnTwoWrapper>
