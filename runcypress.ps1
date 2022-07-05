@@ -194,7 +194,7 @@ function RunCypressInBrowserLightVersionAgainstLocalhost() {
     $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
 
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
-    $task1 = { npx cypress open --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
+    $task1 = { npx cypress open --config-file "cypress.config.ts" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
 
@@ -206,7 +206,7 @@ function RunCypressInBrowserLightVersionLocalAgainstDev() {
 
     $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
-    $task1 = { npx cypress open --config-file "cypress.dev.json" --env cyAccessToken=$Using:accessToken }
+    $task1 = { npx cypress open --config-file "cypress.config.ts" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
 
@@ -218,7 +218,7 @@ function RunCypressInConsoleLightVersion() {
 
     $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
-    $task1 = { npx cypress run --config-file "cypress.json" --env cyAccessToken=$Using:accessToken }
+    $task1 = { npx cypress run --config-file "cypress.config.ts" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 }
 
@@ -230,7 +230,7 @@ function RunCypressInConsoleLightVersionOnlyQuickTests() {
 
     $accessToken = GetAccessToken -clientId $clientId -tenantId $tenantId -clientSecret $clientSecret -scope $scope
     Write-Host "Run Cypress in browser `n" -ForegroundColor Blue
-    $task1 = { npx cypress run --config-file "cypress.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$Using:accessToken }
+    $task1 = { npx cypress run --config-file "cypress.config.ts" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=$Using:accessToken }
     $job1 = Start-Job -ScriptBlock $task1
 
     $null = Wait-Job -Job $job1
