@@ -100,14 +100,16 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npm start
-        run: cypress run --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+        run: | 
+          npm start 
+          cypress run --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       - name: Run long running cypress tests  
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npm start
-        run: cypress run --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
+        run: | 
+          npm start
+          cypress run --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
 
       - name: Save screenshots if failure
