@@ -10,7 +10,20 @@ on:
   - cron:  '0 4 * * 1,2,3,4,5'
 
 jobs:
-  build:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          build: npm run build
+          start: npm start
+
+  # build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -29,7 +42,7 @@ jobs:
         prNumber="$(cut -d'/' -f3 <<<${{ github.ref }})"
         docker build -f ci.Dockerfile -t ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber .
         docker push ${{ secrets.ACR_URL }}/sepes-web:pr-$prNumber
-  ci:
+  # ci:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'Do not run tests') == false 
     steps:
@@ -125,96 +138,3 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
-      # Temporary comment out until we have fix for getting cypress coverage
-      # - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
-
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Cypress-Coverage-report
-      #     path: coverage/lcov-report/
-
-      # - run: npx nyc report --reporter=text-summary > cypress_test_summary.txt
-      #   if: ${{ github.event_name == 'pull_request' }}
-
-      # - run: sed '2d' cypress_test_summary.txt > cypress_test_summary2.txt
-      #   if: ${{ github.event_name == 'pull_request' }}
-
-      # - run: sed '1 a Cypress Test Result' cypress_test_summary2.txt > cypress_test_summary3.txt
-      #   if: ${{ github.event_name == 'pull_request' }}
-
-      # - name: comment PR
-      #   uses: machine-learning-apps/pr-comment@master
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     path: cypress_test_summary3.txt
-
-      # - run: npx nyc report --reporter json  --report-dir coverage
-
-      # - name: Create jest coverage report
-      #   run: npm test -- --coverage --watchAll=false --coverageDirectory=jest-coverage
-      #   continue-on-error: true
-
-
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Jest-Coverage-report
-      #     path: jest-coverage/lcov-report/
-
-      # - name: copy file
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "./jest-coverage/coverage-final.json"
-      #     target: "./coverage/coverage-final-jest.json"
-
-
-      # - run: npx nyc report --reporter html --reporter text-summary --reporter text -t coverage --report-dir totalCoverage > totalCoverage.txt
-
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Total coverage report
-      #     path: totalCoverage
-
-      # - run: sed '6!d' totalCoverage.txt > totalCoverage2.txt
-
-      # - run: awk '{print $3}' totalCoverage2.txt
-
-      # - run : echo "::set-output name=COVERAGE_PERCENT::$( awk '{print $3}' totalCoverage2.txt)"
-      #   id: coveragePercentage
-
-      # # - uses: gliech/create-github-secret-action@v1.4.9
-      # #   # if: github.ref == 'refs/heads/develop'
-      # #   with:
-      # #     name: coverage_percentage
-      # #     value: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-      # #     pa_token: ${{ secrets.PA_TOKEN }}
-
-
-      # - name: Create Awesome Badge
-      #   uses: schneegans/dynamic-badges-action@v1.1.0
-      #   if: github.ref == 'refs/heads/develop'
-      #   with:
-      #     auth: ${{ secrets.GIST_SECRET }}
-      #     gistID: 66a47f0b2d120954c140e9d2b61c3d7b
-      #     filename: test.json
-      #     label: Coverage
-      #     message: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-      #     color: orangee
-
-      # # - uses: Amadevus/pwsh-script@v2
-      # #   id: my-script
-      # #   env:
-      # #     COVERAGE_PERCENT_NOW: ${{steps.coveragePercentage.outputs.COVERAGE_PERCENT}}
-      # #     COVERAGE_PERCENT_BEFORE: ${{ secrets.COVERAGE_PERCENTAGE }}
-      # #   with:
-      # #     script: ./.github/scripts/coverageChange.ps1 ${{env.COVERAGE_PERCENT_NOW}} ${{env.COVERAGE_PERCENT_BEFORE}}
-
-      # # - name: comment coverage PR
-      # #   uses: unsplash/comment-on-pr@master
-      # #   if: ${{ contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
-      # #   env:
-      # #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # #   with:
-      # #     msg: ${{ steps.my-script.outputs.result }}
-      # #     check_for_duplicate_msg: true 
