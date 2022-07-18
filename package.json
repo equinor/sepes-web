@@ -23,7 +23,7 @@
         "@types/styled-components": "^5.1.21",
         "axios": "^0.26.0",
         "browser-image-compression": "^1.0.15",
-        "commitizen": "^4.2.4",
+        "commitizen": "^4.2.5",
         "cypress-multi-reporters": "^1.5.0",
         "expect": "^27.4.6",
         "express-rate-limit": "^6.2.0",
