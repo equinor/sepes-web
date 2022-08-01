@@ -26,6 +26,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.ts')(on, config)
     },
-    baseUrl: 'http://localhost:3000/',
+    baseUrl: 'https://frontend-sepes-web-dev.radix.equinor.com/',
   },
 })
