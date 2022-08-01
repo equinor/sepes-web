@@ -6,17 +6,17 @@ import VmConfig from './components/VmConfig';
 import styled from 'styled-components';
 import { UpdateCache } from '../../App';
 import NotFound from '../common/informationalComponents/NotFound';
-import { getResourcesList, getSandbox } from '../../services/Api';
+import { getSandbox } from '../../services/Api';
 import { getStudyId, getSandboxId } from '../../utils/CommonUtil';
 import Prompt from 'components/common/Prompt';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCallResources, setSandboxInStore, setSandboxToInitialState } from 'store/sandboxes/sandboxesSlice';
 import { getCallResourcesStatus, getSandboxFromStore } from 'store/sandboxes/sanboxesSelectors';
-import { setResourcesInStore } from 'store/resources/resourcesSlice';
 import { setScreenLoading } from 'store/screenloading/screenLoadingSlice';
 import getScreenLoadingFromStore from 'store/screenloading/screenLoadingSelector';
 import LoadingFullScreenNew from 'components/common/LoadingFullScreenNew';
 import { setVirtualMachinesToInitialState } from 'store/virtualmachines/virtualMachinesSlice';
+import { useLazyGetResourceListQuery } from 'store/resources/resourceApi';
 
 const Wrapper = styled.div`
     display: grid;
@@ -41,6 +41,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     const [step, setStep] = useState<number | undefined>((sandbox && sandbox.currentPhase) || undefined);
     const callGetResources = useSelector(getCallResourcesStatus());
     const [notFound, setNotFound] = useState<boolean>(false);
+    const [getResourceListTrigger] = useLazyGetResourceListQuery();
 
     useEffect(() => {
         dispatch(setScreenLoading(true));
@@ -81,13 +82,7 @@ const Sandbox: React.FC<SandboxProps> = () => {
     }, [showLoading, sandbox.currentPhase]);
 
     const getResources = () => {
-        getResourcesList(sandboxId, controller.signal).then((result: any) => {
-            if (result && (result.errors || result.message)) {
-                console.log('Err');
-            } else {
-                dispatch(setResourcesInStore(result));
-            }
-        });
+        getResourceListTrigger(sandboxId);
     };
 
     const setNewPhase = (phase: any) => {
@@ -129,7 +124,6 @@ const Sandbox: React.FC<SandboxProps> = () => {
                                 studyId={studyId}
                                 sandboxId={sandboxId}
                                 setNewPhase={setNewPhase}
-                                controller={controller}
                                 vmsWithOpenInternet={vmsWithOpenInternet}
                                 updateCache={updateCache}
                                 setUpdateCache={setUpdateCache}
