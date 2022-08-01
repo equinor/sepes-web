@@ -148,12 +148,12 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       - name: Run long running cypress tests  
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
+        run: npx cypress run --spec "cypress/integration/longRunningTests/**/*" --env cyAccessToken=$token
         if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'Run all tests') }}
         
       # - name: Run all tests in Chromium browser
@@ -262,7 +262,7 @@ jobs:
       - name: Run quick running cypress tests
         env:
           token: ${{ steps.id-token.outputs.TOKEN }}
-        run: npx cypress run --config-file "cypress_chromium.dev.json" --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
+        run: npx cypress run --spec "cypress/integration/quickRunningTests/**/*" --env cyAccessToken=${{env.token}}
 
       # Temporary comment out until we have fix for getting cypress coverage
       # - run: npx nyc report --reporter lcov --reporter text --report-dir coverage
