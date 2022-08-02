@@ -29,3 +29,17 @@ jobs:
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
           env: cyAccessToken=${{env.token}}
+          
+      - name: Save screenshots if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Save videos if failure
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
