@@ -27,6 +27,5 @@ jobs:
         with:
           build: npm run build
           start: npm start
-          spec: cypress/e2e/quickRunningTests/*
+          spec: cypress/e2e/quickRunningTests/**
           env: cyAccessToken=${{env.token}}
-          
