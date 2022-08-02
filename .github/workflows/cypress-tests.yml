@@ -29,7 +29,8 @@ jobs:
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
           env: cyAccessToken=${{env.token}}
-          
+          config-file: cypress.config.ts
+
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
         if: failure()

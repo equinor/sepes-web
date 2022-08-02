@@ -10,7 +10,10 @@ export default defineConfig({
     nodeVersion: 'system',
     chromeWebSecurity: false,
     e2e: {
-      baseUrl: 'http://localhost:3000',
+        baseUrl: 'http://localhost:3000',
+        env: {
+            API_URL: 'https://backend-sepes-api-dev.radix.equinor.com/',
+        }
     },
     env: {
         TENANT_ID: '',
