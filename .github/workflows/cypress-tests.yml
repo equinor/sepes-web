@@ -28,7 +28,7 @@ jobs:
           build: npm run build
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
-          env: cyAccessToken=${{env.token}}
+          env: cyAccessToken=${{env.token}},apiUrl=https://backend-sepes-api-dev.radix.equinor.com/,API_URL=https://backend-sepes-api-dev.radix.equinor.com/
           config-file: cypress.config.ts
 
       - name: Save screenshots if failure
