@@ -8,10 +8,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_DEV_CREDENTIALS }}
+
+      - name: Retrieve token
+        id: id-token
+        run: |
+          TOKEN=`pwsh ./.github/scripts/GetAccessToken.ps1 ${{ secrets.MOCK_USER_CLIENT_ID }} ${{ secrets.AZURE_TENANT_ID }} ${{ secrets.MOCK_USER_SECRET }} ${{ secrets.MOCK_USER_SCOPE }}`
+          echo "::set-output name=TOKEN::$TOKEN"
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
+        env:
+          token: ${{ steps.id-token.outputs.TOKEN }}
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
           start: npm start
+          spec: cypress/e2e/quickRunningTests/*
+          env: cyAccessToken=${{env.token}}
+          
