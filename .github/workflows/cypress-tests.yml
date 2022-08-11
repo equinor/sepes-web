@@ -44,3 +44,6 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
+
+          ## Add steps for documentation videos
+          ## Add steps for long running tests
