@@ -22,13 +22,14 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         env:
-          token: ${{ steps.id-token.outputs.TOKEN }}
+          cyAccessToken: ${{ steps.id-token.outputs.TOKEN }}
+          REACT_APP_SEPES_API_URL: https://backend-sepes-api-dev.radix.equinor.com/'
+          API_URL: https://backend-sepes-api-dev.radix.equinor.com/'
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
-          env: cyAccessToken=${{env.token}},apiUrl=https://backend-sepes-api-dev.radix.equinor.com/,API_URL=https://backend-sepes-api-dev.radix.equinor.com/
           config-file: cypress.config.ts
 
       - name: Save screenshots if failure
@@ -44,3 +45,6 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
+
+          ## Add steps for documentation videos
+          ## Add steps for long running tests
