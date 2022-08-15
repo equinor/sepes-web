@@ -26,6 +26,7 @@ jobs:
           REACT_APP_SEPES_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
           REACT_APP_SEPES_BASE_API_URL: https://backend-sepes-api-prod.radix.equinor.com/
           API_URL: https://backend-sepes-api-dev.radix.equinor.com/
+          REACT_APP_INSTRUMENTATION_KEY: ecc4b596-05ae-4d7b-806f-69c3fa7b15d5
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
