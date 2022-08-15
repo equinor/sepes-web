@@ -31,7 +31,7 @@ jobs:
         with:
           build: npm run build
           start: npm start
-          spec: cypress/e2e/quickRunningTests/topBar/**
+          spec: cypress/e2e/quickRunningTests/**
           config-file: cypress.config.ts
 
       - name: Save screenshots if failure
