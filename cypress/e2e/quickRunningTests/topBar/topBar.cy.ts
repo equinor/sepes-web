@@ -1,8 +1,8 @@
 describe('TopBar', () => {
     before(() => {
+        cy.log(`${JSON.stringify(Cypress.env())}`)
         cy.login();
         cy.visit('/');
-        cy.log(`${Cypress.env()}`)
         cy.mockOutPermissions();
     });
 
@@ -18,7 +18,6 @@ describe('TopBar', () => {
         // Cancel feedback dialog
         cy.get('[data-cy=feedback-cancel-btn]').click();
 
-        
         // Open menu
         cy.get('[data-cy=top-bar-menu-btn]').should('be.visible').click();
 
