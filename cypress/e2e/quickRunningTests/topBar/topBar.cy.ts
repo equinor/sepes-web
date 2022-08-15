@@ -2,7 +2,7 @@ describe('TopBar', () => {
     before(() => {
         cy.login();
         cy.visit('/');
-        console.log(Cypress.env())
+        cy.log(`${Cypress.env()}`)
         cy.mockOutPermissions();
     });
 

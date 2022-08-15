@@ -23,9 +23,9 @@ jobs:
       - name: Cypress run
         env:
           cyAccessToken: ${{ steps.id-token.outputs.TOKEN }}
-          REACT_APP_SEPES_API_URL: https://backend-sepes-api-dev.radix.equinor.com/',
-          REACT_APP_SEPES_BASE_API_URL: "https://backend-sepes-api-prod.radix.equinor.com/"
-          API_URL: https://backend-sepes-api-dev.radix.equinor.com/'
+          REACT_APP_SEPES_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
+          REACT_APP_SEPES_BASE_API_URL: https://backend-sepes-api-prod.radix.equinor.com/
+          API_URL: https://backend-sepes-api-dev.radix.equinor.com/
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
