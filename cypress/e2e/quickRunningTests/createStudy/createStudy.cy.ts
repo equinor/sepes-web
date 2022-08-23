@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 describe('Create study', () => {
+    
     let studyName = 'Cypress Test';
     before(() => {
+        cy.log(`${JSON.stringify(Cypress.env())}`)
         cy.login();
         cy.createStudyWithLogo(studyName);
     });
