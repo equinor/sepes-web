@@ -22,6 +22,7 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         env:
+          CYPRESS_AccessToken: ${{ steps.id-token.outputs.TOKEN }}
           cyAccessToken: ${{ steps.id-token.outputs.TOKEN }}
           REACT_APP_SEPES_API_URL: https://backend-sepes-api-dev.radix.equinor.com/
           REACT_APP_SEPES_BASE_API_URL: https://backend-sepes-api-prod.radix.equinor.com/
@@ -33,6 +34,7 @@ jobs:
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
           config-file: cypress.config.ts
+        run: echo "token :${{ steps.id-token.outputs.TOKEN }}"
 
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
