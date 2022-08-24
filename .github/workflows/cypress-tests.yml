@@ -34,7 +34,6 @@ jobs:
           start: npm start
           spec: cypress/e2e/quickRunningTests/**
           config-file: cypress.config.ts
-        run: echo "token :${{ steps.id-token.outputs.TOKEN }}"
 
       - name: Save screenshots if failure
         uses: actions/upload-artifact@v1
