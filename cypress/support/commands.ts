@@ -33,7 +33,7 @@ Cypress.Commands.add('login', (accessType = 'ADMIN') => {
     // window.localStorage.setItem('cyToken', cyToken);
     window.localStorage.setItem('cyToken', Cypress.env('CYPRESS_AccessToken'));
     cy.log('token: ', window.localStorage.getItem('cyToken'));
-    cy.log('CYPRESS_token: ', window.localStorage.getItem('CYPRESS_accessToken'));
+    cy.log('CYPRESS_token: ', window.localStorage.getItem('CYPRESS_AccessToken'));
 });
 
 Cypress.Commands.add('createStudy', (studyName) => {
