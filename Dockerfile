@@ -25,7 +25,7 @@
 
 FROM node:14-alpine as build
 # RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-RUN apk update && apk install zlib1g -y
+RUN apk update && apk install zlib1g
 # ARG TENANT_ID
 ARG SEPES_AUTHORITY
 ARG SEPES_BASIC_SCOPE
