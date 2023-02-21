@@ -1,8 +1,8 @@
 import React from 'react';
 import Bar from './topbar/TopBar';
 import ErrorBoundary from './common/ErrorBoundary';
-import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import { ReactNotifications } from 'react-notifications-component';
 
 const Layout = (props: any) => {
     return (
@@ -10,7 +10,7 @@ const Layout = (props: any) => {
             <Bar />
             <div style={{ marginBottom: '92px' }} />
             <ErrorBoundary appInsights={props.appInsights}>
-                <ReactNotification />
+                <ReactNotifications />
                 {props.children}
             </ErrorBoundary>
         </>
