@@ -12,7 +12,7 @@
         "@opentelemetry/api": "^1.0.4",
         "@peculiar/webcrypto": "^1.1.7",
         "@redux-requests/core": "^1.6.2",
-        "@reduxjs/toolkit": "^1.9.2",
+        "@reduxjs/toolkit": "^1.9.3",
         "@testing-library/jest-dom": "^5.1.0",
         "@testing-library/react": "^9.5.0",
         "@types/node": "^16.11.21",
