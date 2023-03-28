@@ -1,122 +1,70 @@
-[![Cypress tests](https://github.com/equinor/sepes-web/actions/workflows/cypress-tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml) ![check-code-coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bonyfusbouvet/23de1b364d9cc694bdec9181f24c8e43/raw/test.json)
-[![CodeQL](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml)
-![](https://byob.yarr.is/equinor/sepes-api/breaking_change_status)
+# Getting Started with Create React App
 
-# sepes-web
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Source code for the Sepes web application
+## Available Scripts
 
-## Making commits
+In the project directory, you can run:
 
-Use conventional commits as described in https://github.com/equinor/sdscoredev-handbook#git-commits
+### `npm start`
 
-Valid `scope`-s for Sepes are:
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
--   study
--   sandbox
--   dataset
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-## Run Tests
+### `npm test`
 
-The command "npm run test" or "npm test" runs all tests with filename including .test.filename. There are two dummy tests in the projects already under the folder named "tests". To get coverage, append the command "-- --coverage". So it will be "npm run test -- --coverage".
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## Run Cypress locally
+### `npm run build`
 
-There is a script named runcypress.ps1 in the repo. When you run this script you will get two options: One for running cypress in console, and one in window mode. These tests will run as a mock user and is a true E2E test.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Old way:
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-The command "npx cypress open" will open a new window containg all the cypress tests in the project. Clicking one will open a broweser window and run the test. The tests need an Token to work. To get this token is now a manual process. Before running a test. do these steps:
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-1. Npm start and run the application
-2. Open your browser and navigate to application
-3. Click F12 and go to the application tab
-4. Find "Session Store" and look after "access token". A very long string of numbers and charachters. Copy it
-5. Paste access token into the variable "cyToken" in cypress/support/commands.js
-6. Run npx cypress open
+### `npm run eject`
 
-### Testing in pipeline and coverage raport
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Jest and cypress test will run with every pull request. Long cypress test will be put in it's own folder and rund at night time. To get the coverage report, click on either the jest or cypress action, and it will be an artifact there.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-With pull request, the pipeline will create comments with a short overview of the results from testing.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-### Run all/none tests in pull request
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-When creating a PR, you can pick a label named "Run all tests" to run all the cypress tests in the project. If you are wondering what tests will run, look in the cypress folder.
+## Learn More
 
-If you do not want to run any tests, pick the label named "Do not run tests".
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-If you change labels, they will only apply if you push a new commit or create a new pull request. You can not add a label and rerun the tests after creating a pull request (Without commiting).
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-## Setup locally
+### Code Splitting
 
-1. Clone project into local folder
-2. Npm install in root folder of project
-3. Create a file named "docker-compose.yml". Inside this file, you can create environment variables that can be used in the app. For instance ClientID or redirectUris
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-```javascript
-version: "3.7"
-services:
-  web:
-    build: .
-    ports:
-      - 8080:3000
-    environment:
-      - REACT_APP_SEPES_REDIRECT_URI=http://localhost:8080/
-      - REACT_APP_SEPES_BASE_API_URL=http://localhost:8081/
-      - REACT_APP_SEPES_AUTHORITY=https://login.microsoftonline.com/placeyourIdHere
-      - REACT_APP_SEPES_CLIENTID=123
-```
+### Analyzing the Bundle Size
 
-4. The environment variables are used in the AuthConfig and AuthFunctions files under the "Auth" folder. These needs to be the same as the radixconfig variables (used in the pipeline) and docker-compose.yml (local variables) files.
-5. To run the app, run "Docker-compose up -d --build
-    - If it does not work properly, try a different version of docker compose. Top line in docker-compose.yml.
-6. To take down the app, run Docker-compose down
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-## Run in production mode
+### Making a Progressive Web App
 
-### Run in Docker
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-```
-docker build -f local.Dockerfile -t sepes-local .
-```
+### Advanced Configuration
 
-```
-docker run -p 3000:3000 -d sepes-local
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Run locally
+### Deployment
 
-First you need to build a production build of the app
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-```
-npm run build
-```
+### `npm run build` fails to minify
 
-Then you can run it with this command
-
-```
-npm run start:prod
-```
-
-### Add new environment variables
-
-If you need to add a new enviornment variable, you have to do the following
-
-1. Add a build secret(s) to the radixconfig-yaml file.
-2. Create a branch with the changes and commit the to the MASTER branch
-3. Go to https://console.radix.equinor.com/applications/sepes-web/config/
-4. Add the values of the secrets under build secrets
-5. Go to the DockerFile
-6. Add an ARG with the build secret(s)
-
-```
-ARG SEPES_NEW_VARIABLE
-```
-7. Then add it as an export statement
-
-```
-export REACT_APP_SEPES_NEW_VARIABLE=$(echo $SEPES_AUTHORITY|base64 -d)
-```
-8. Variable should be available under process.env.REACT_APP_SEPES_NEW_VARIABLE
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

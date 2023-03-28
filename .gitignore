@@ -4,8 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/.vs
-/docker-compose.yml
+
 # testing
 /coverage
 
@@ -18,21 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-[Bb]in/
-[Oo]bj/
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/docker-compose.yml
-
-#code coverage
-.nyc_output
-/cypress-coverage
-/jest-coverage
-/.env
-/cypress/screenshots
-/totalCoverage
-/cypress/videos/
-/temp
-/deployment/node_modules

@@ -1,5 +1,0 @@
-{
-    "classification": "Open",
-    "restrictionDisplayText": "Inbound network traffic from internet will be turned off but can be opened by a Sepes admin, Sponsor, Sponsor rep. or Vendor admin. Inbound network traffic from the Equinor network will also be turned off but can in the same way be opened by Sepes Admin, Sponsor, Sponsor rep or Vendor admin.\r\n\r\n Outbound network traffic to internet will be turned off but can be opened on request from a Sepes admin, Sponsor, Sponsor rep or Vendor admin.",
-    "datasets": [{ "datasetId": 4647, "name": "docs2342", "classification": "Open", "addedToSandbox": false }]
-}
