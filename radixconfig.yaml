@@ -14,10 +14,10 @@ spec:
   environments:
     - name: prod
       build:
-        from: decommissioned
+        from: master
     - name: dev
       build:
-        from: decommissioned
+        from: develop
   components:
     - name: frontend
       ports:
