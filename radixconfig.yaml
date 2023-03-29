@@ -17,7 +17,7 @@ spec:
         from: master
     - name: dev
       build:
-        from: develop
+        from: decommissioned
   components:
     - name: frontend
       ports:
