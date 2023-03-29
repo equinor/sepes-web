@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { GeneralPermissions } from './components/common/interfaces';
 
 const renderApp = async (user) => {
     return ReactDOM.render(<App />, document.getElementById('root'));
