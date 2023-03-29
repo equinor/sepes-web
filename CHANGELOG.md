@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.7](https://github.com/equinor/sepes-web/compare/1.4.6...1.4.7) (2023-03-29)
+
 ### [1.4.6](https://github.com/equinor/sepes-web/compare/1.4.5...1.4.6) (2023-03-29)
 
 ### [1.4.5](https://github.com/equinor/sepes-web/compare/1.4.4...1.4.5) (2022-05-23)
