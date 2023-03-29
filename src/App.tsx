@@ -13,8 +13,6 @@ import NotFound from './components/common/informationalComponents/NotFound';
 import ReleaseNotes from './components/releaseNotes/ReleaseNotes';
 import { getEnvironment } from 'components/common/helpers/helpers';
 
-//test
-
 interface IContextProps {
     updateCache: any;
     setUpdateCache: any;
