@@ -1,6 +1,6 @@
 {
     "name": "sepes-web",
-    "version": "1.4.8",
+    "version": "1.4.9",
     "private": true,
     "dependencies": {
         "@azure/core-asynciterator-polyfill": "^1.0.0",
