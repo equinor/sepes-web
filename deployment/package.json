@@ -1,0 +1,20 @@
+{
+    "name": "sepes-deployment",
+    "version": "1.0.0",
+    "description": "Sepes Deployment",
+    "author": "Hans Kristian Vik Olsen <HANOL@equinor.com>",
+    "license": "MIT",
+    "main": "app.js",
+    "type": "commonjs",
+    "keywords": [
+        "sepes",
+        "nodejs",
+        "bootstrap",
+        "express"
+    ],
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-rate-limit": "^6.1.0",
+        "squirrelly": "7.9.2"
+    }
+}
