@@ -1,3 +1,6 @@
+> This repository is archived due to Sepes being decomissioned and as of Q2 2023 not in production. 
+
+
 [![Cypress tests](https://github.com/equinor/sepes-web/actions/workflows/cypress-tests.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/cypress_jest_tests.yml) ![check-code-coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bonyfusbouvet/23de1b364d9cc694bdec9181f24c8e43/raw/test.json)
 [![CodeQL](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/equinor/sepes-web/actions/workflows/codeql-analysis.yml)
 ![](https://byob.yarr.is/equinor/sepes-api/breaking_change_status)
